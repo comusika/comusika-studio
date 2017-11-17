@@ -1,0 +1,83 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.7'
+version = '0.1.0-SNAPSHOT'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'com.frinika.FrinikaMain'
+    ext.appArgs = '-dev'
+}
+
+def configureExec(task) {
+    task.main = mainClass
+    task.classpath = sourceSets.main.runtimeClasspath
+    task.args appArgs
+}
+
+task run(type: JavaExec) {
+    task -> configureExec(task)
+}
+
+task debug(type: JavaExec) {
+    task -> configureExec(task)
+    debug = true
+}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        options.fork = true
+        options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar"
+        options.bootClasspath += "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
+
+// Disable tests on build
+check.dependsOn.remove(test)
+
+dependencies {
+    compile(project(':modules:frinika-core'))
+    compile(project(':modules:frinika-frame'))
+    compile(project(':modules:frinika-mod'))
+    compile(project(':modules:frinika-radio'))
+    compile(project(':modules:frinika-notation'))
+    compile(project(':modules:frinika-sequencer'))
+    compile(project(':modules:frinika-project'))
+    compile(project(':modules:frinika-frogdisco'))
+    compile(project(':modules:frinika-rasmusdsp'))
+    compile(project(':modules:frinika-mystudio'))
+    compile 'com.apple:AppleJavaExtensions:1.4'
+    compile 'com.jgoodies:looks:2.1.4'
+
+    runtime ':FrinikaJVSTSynth'
+    runtime ':FrinikaVideoSynth'
+    runtime ':FrinikaVorbisSPI'
+    runtime ':gervill'
+    runtime 'org.codehaus.groovy:groovy-all:2.0.1'
+    runtime ':jjack'
+    runtime ':jogg:0.0.7'
+    runtime 'org.jcraft:jorbis:0.0.17'
+    runtime ':jVorbis'
+    runtime ':JVstHost'
+    runtime ':Logging'
+    runtime ':MRJAdapter'
+    runtime ':vorbis-java'
+    runtime 'com.googlecode.soundlibs:vorbisspi:1.0.3-1'
+    runtime 'com.apple:AppleJavaExtensions:1.4'
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': mainClass,
+            'Class-Path': configurations.runtime.collect {'../lib/' + it.getName() }.join(' ')
+        )
+    }
+}

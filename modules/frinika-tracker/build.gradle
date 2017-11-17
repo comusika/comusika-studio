@@ -1,0 +1,47 @@
+apply plugin: 'java'
+
+sourceCompatibility = '1.7'
+version = '0.1.0-SNAPSHOT'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        options.fork = true
+        options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar"
+        options.bootClasspath += "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
+    }
+}
+
+task testJar(type: Jar, dependsOn: testClasses) {
+    baseName = "test-${project.archivesBaseName}"
+    from sourceSets.test.output
+    classifier "tests"
+}
+
+configurations {
+    tests
+}
+
+artifacts {
+    tests testJar
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
+
+// Disable tests on build
+check.dependsOn.remove(test)
+
+dependencies {
+    compile(project(':modules:frinika-core'))
+    compile(project(':modules:frinika-synth'))
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+}
