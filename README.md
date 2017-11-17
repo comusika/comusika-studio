@@ -1,37 +1,30 @@
-Frinika Studio - Java Digital Audio Workstation
-===============================================
+Frinika Studio
+==============
 
-Frinika Studio is fork of frinika (http://frinika.com)Frinthesia is free game / learning tool for piano keyboards / MIDI instruments build.
+Frinika Studio is fork of frinika (http://frinika.com).
 
-Screenshot
-----------
+Frinika is a free, complete music workstation software for Linux, Windows, Mac OSX and other operating systems running Java. 
+It features sequencer, soft-synths, realtime effects and audio recording.
 
-![Frinthesia Screenshot](images/screenshot.png?raw=true)
+Some of the features:
 
-Homepage: https://github.com/hajdam/frinthesia (temporary)
+<ul>
+<li>Sequencer</li>
+<li>Piano roll</li>
+<li>Amiga-style tracker</li>
+<li>Notation</li>
+<li>Audio recording</li>
+<li>Soft synths</li>
+<li>Mixer</li>
+<li>Effects</li>
+<li>Mastering</li>
+<li>VST/VSTi support</li>
+</ul>
 
 Code is based on Frinika music workstation software: http://frinika.com
 
-Development Plan
-----------------
-
-- Basic Steps:
-  - Swing GUI application opening MIDI file
-  - Rotate Frinika's Piano roll
-  - MIDI instrument playing matching to MIDI file to compute score
-  - Adding "wait to play" mode
-  - Browsing MIDI files on local disc drives
-
-- Advanced Steps:
-  - Changing graphical appearance
-  - MIDI keyboards setup
-  - Mode for notes displaying
-  ...
-
 Structure
 ---------
-
-As the project is currently in alpha stage, repository contains complete resources for distribution package with following folders:
 
  * doc - Documentation + related presentations
  * gradle - Gradle wrapper
