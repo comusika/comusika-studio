@@ -1,37 +1,3 @@
-package com.frinika;
-
-import static com.frinika.base.FrinikaAudioSystem.getAudioServer;
-import static com.frinika.base.FrinikaAudioSystem.installClient;
-import static com.frinika.frame.FrinikaFrame.addProjectFocusListener;
-import com.frinika.frame.WelcomeDialog;
-import com.frinika.frame.action.CreateProjectAction;
-import com.frinika.frame.action.OpenProjectAction;
-import static com.frinika.frame.action.OpenProjectAction.setSelectedFile;
-import static com.frinika.global.FrinikaConfig.SETUP_DONE;
-import static com.frinika.global.FrinikaConfig.lastProjectFile;
-import static com.frinika.global.Toolbox.extractFromJar;
-import static com.frinika.localization.CurrentLocale.getMessage;
-import com.frinika.project.ProjectContainer;
-import static com.frinika.project.dialog.SplashDialog.closeSplash;
-import static com.frinika.project.dialog.SplashDialog.showSplash;
-import com.frinika.project.gui.ProjectFocusListener;
-import static com.frinika.settings.SetupDialog.showSettingsModal;
-import static com.frinika.tootX.midi.MidiInDeviceManager.close;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import static java.io.File.pathSeparator;
-import java.io.IOException;
-import static java.lang.Runtime.getRuntime;
-import static java.lang.System.err;
-import static java.lang.System.exit;
-import static java.lang.System.getProperty;
-import static java.lang.System.out;
-import static java.lang.System.setProperty;
-import static javax.swing.UIManager.setLookAndFeel;
-import javax.swing.UnsupportedLookAndFeelException;
-
 /*
  * Created on Mar 6, 2006
  *
@@ -55,159 +21,211 @@ import javax.swing.UnsupportedLookAndFeelException;
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.frinika;
+
+import com.frinika.frame.WelcomeDialog;
+import com.frinika.project.dialog.SplashDialog;
+import com.frinika.global.FrinikaConfig;
+import com.frinika.global.Toolbox;
+import com.frinika.localization.CurrentLocale;
+import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.project.ProjectContainer;
+import com.frinika.frame.FrinikaFrame;
+import com.frinika.frame.action.CreateProjectAction;
+import com.frinika.frame.action.OpenProjectAction;
+import com.frinika.project.dialog.VersionProperties;
+import com.frinika.project.gui.ProjectFocusListener;
+import com.frinika.settings.SetupDialog;
+import com.frinika.tootX.midi.MidiInDeviceManager;
+
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.UIManager;
 
 /**
  * The main entry class for Frinika
- * 
+ *
  * @author Peter Johan Salomonsen
  */
 public class FrinikaMain {
 
-	static FrinikaExitHandler exitHook = null;
+    static FrinikaExitHandler exitHook = null;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) throws Exception {
-		
-		prepareRunningFromSingleJar();
-		
-		configureUI();
+    /**
+     * @param args
+     */
+    public static void main(String[] args) throws Exception {
 
-		try {
-			int n = 1;
-	
-			Object[] options = { getMessage("welcome.new_project"),
-					getMessage("welcome.open_existing"),
-					getMessage("welcome.settings"), getMessage("welcome.quit") };
+        parseArguments(args);
 
-			//String setup = FrinikaConfig.getProperty("multiplexed_audio");
-			
-			WelcomeDialog welcome= new WelcomeDialog(options);
+        prepareRunningFromSingleJar();
 
-			//if (setup == null) {
-			if ( !SETUP_DONE ) {
-			//	welcome = new WelcomeDialog(options);
-				welcome.setModal(false);
-				welcome.setVisible(true);
-				showSettingsModal();
-				welcome.setVisible(false);
-			} 
-			
-			
-			welcome.setModal(true);
+        configureUI();
 
-			welcome.addButtonActionListener(2, new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					showSettingsModal();
-				}
-			});
+        try {
+            int n = 1;
 
-			welcome.setVisible(true);
+            Object[] options = {CurrentLocale.getMessage("welcome.new_project"),
+                CurrentLocale.getMessage("welcome.open_existing"),
+                CurrentLocale.getMessage("welcome.settings"), CurrentLocale.getMessage("welcome.quit")};
 
-		
-			n = welcome.getSelectedOption();
+            //String setup = FrinikaConfig.getProperty("multiplexed_audio");
+            WelcomeDialog welcome = new WelcomeDialog(options);
 
-			switch (n) {
-			case -1:
-				exit(0);
-				break;
-			case 0:
-				// new ProjectFrame(new ProjectContainer());
-				showSplash();
-				new CreateProjectAction().actionPerformed(null);
-				break;
-			case 1:
-				showSplash();
-				String lastFile = lastProjectFile();
-				if (lastFile != null)
-					setSelectedFile(new File(lastFile));
-				new OpenProjectAction().actionPerformed(null);
-				break;
-			case 3:
-				exit(0);
-				break;
+            //if (setup == null) {
+            if (!FrinikaConfig.SETUP_DONE) {
+                //	welcome = new WelcomeDialog(options);
+                welcome.setModal(false);
+                welcome.setVisible(true);
+                SetupDialog.showSettingsModal();
+                welcome.setVisible(false);
+            }
 
-			default:
-				assert (false);
-			}
+            welcome.setModal(true);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			exit(-1); // new ProjectFrame(new ProjectContainer());
-		}
+            welcome.addButtonActionListener(2, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    SetupDialog.showSettingsModal();
+                }
+            });
 
-		exitHook = new FrinikaExitHandler();
-		getRuntime().addShutdownHook(exitHook);
+            welcome.setVisible(true);
 
-		addProjectFocusListener(new ProjectFocusListener() {
+            n = welcome.getSelectedOption();
 
-			public void projectFocusNotify(ProjectContainer project) {
-				installClient(project.getAudioClient());
-			}
+            switch (n) {
+                case -1:
+                    System.exit(0);
+                    break;
+                case 0:
+                    // new ProjectFrame(new ProjectContainer());
+                    SplashDialog.showSplash();
+                    new CreateProjectAction().actionPerformed(null);
+                    break;
+                case 1:
+                    SplashDialog.showSplash();
+                    String lastFile = FrinikaConfig.lastProjectFile();
+                    if (lastFile != null) {
+                        OpenProjectAction.setSelectedFile(new File(lastFile));
+                    }
+                    new OpenProjectAction().actionPerformed(null);
+                    break;
+                case 3:
+                    System.exit(0);
+                    break;
 
-		});
+                default:
+                    assert (false);
+            }
 
-		closeSplash();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1); // new ProjectFrame(new ProjectContainer());
+        }
 
-		getAudioServer().start();
-	}
+        exitHook = new FrinikaExitHandler();
+        Runtime.getRuntime().addShutdownHook(exitHook);
 
-	public static void configureUI() {
+        FrinikaFrame.addProjectFocusListener(new ProjectFocusListener() {
 
-		String lcOSName = getProperty("os.name").toLowerCase();
+            public void projectFocusNotify(ProjectContainer project) {
+                FrinikaAudioSystem.installClient(project.getAudioClient());
+            }
 
-		try {
-			setLookAndFeel(new PlasticXPLookAndFeel());
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+        });
 
-	}
+        SplashDialog.closeSplash();
 
-	static class FrinikaExitHandler extends Thread {
-		public void run() {
-			close();
-			close();
+        FrinikaAudioSystem.getAudioServer().start();
+    }
+
+    public static void configureUI() {
+
+        String lcOSName = System.getProperty("os.name").toLowerCase();
+
+        try {
+            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    static class FrinikaExitHandler extends Thread {
+
+        public void run() {
+            MidiInDeviceManager.close();
+            FrinikaAudioSystem.close();
 //			SwingUtilities.invokeLater(new Runnable() {
 //				public void run() {
 //					System.out.println(" Closing ALL midi devices ");
 //					ProjectContainer.closeAllMidiOutDevices();
 //				}
 //			});
-		}
-	}
+        }
+    }
 
-	/**
-	 * Detect whether running from a single .jar-file (e.g. via "java -jar frinika.jar").
-	 * In this case, copy native binary libraries to a file-system accessible location
-	 * where the JVM can load them from.
-	 * (There is a comparable mechanism already implemented in 
-	 * com.frinika.priority.Priority, but this here works for all native libraries,
-	 * esp. libjjack.so.)
-	 * (Jens)
-	 */
-	public static void prepareRunningFromSingleJar() {
-		String classpath = getProperty("java.class.path");
-		if ( classpath.indexOf(pathSeparator) == -1 ) { // no pathSeparator: single entry classpath
-			if (classpath.endsWith(".jar")) {
-				File file = new File(classpath);
-				if (file.exists() && file.isFile()) { // yes, running from 1 jar
-					String osarch = getProperty("os.arch");
-					String osname = getProperty("os.name");
-					String libPrefix = "lib/" + osarch + "/" + osname + "/";
-					String tmp = getProperty("java.io.tmpdir");
-					File tmpdir = new File(tmp);
-					try {
-						out.println("extracting files from "+libPrefix+" to "+tmpdir.getAbsolutePath()+":");
-						extractFromJar(file, libPrefix, tmpdir);
-						setProperty("java.library.path", tmp);
-					} catch (IOException ioe) {
-						err.println("Native library extraction failed. Problems may occur.");
-						ioe.printStackTrace();
-					}
-				}
-			}
-		}
-	}
+    /**
+     * Detect whether running from a single .jar-file (e.g. via "java -jar
+     * frinika.jar"). In this case, copy native binary libraries to a
+     * file-system accessible location where the JVM can load them from. (There
+     * is a comparable mechanism already implemented in
+     * com.frinika.priority.Priority, but this here works for all native
+     * libraries, esp. libjjack.so.) (Jens)
+     */
+    public static void prepareRunningFromSingleJar() {
+        String classpath = System.getProperty("java.class.path");
+        if (classpath.indexOf(File.pathSeparator) == -1) { // no pathSeparator: single entry classpath
+            if (classpath.endsWith(".jar")) {
+                File file = new File(classpath);
+                if (file.exists() && file.isFile()) { // yes, running from 1 jar
+                    String osarch = System.getProperty("os.arch");
+                    String osname = System.getProperty("os.name");
+                    String libPrefix = "lib/" + osarch + "/" + osname + "/";
+                    String tmp = System.getProperty("java.io.tmpdir");
+                    File tmpdir = new File(tmp);
+                    try {
+                        System.out.println("extracting files from " + libPrefix + " to " + tmpdir.getAbsolutePath() + ":");
+                        Toolbox.extractFromJar(file, libPrefix, tmpdir);
+                        System.setProperty("java.library.path", tmp);
+                    } catch (IOException ioe) {
+                        System.err.println("Native library extraction failed. Problems may occur.");
+                        ioe.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public static void parseArguments(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("--help")) {
+                System.out.println("Command usage is java -jar frinika.jar [options]");
+                System.out.println("Available options:");
+                System.out.println("-h, --help: Display this help message and exit.");
+                System.out.println("-v, --version: Display the version number and exit");
+                System.out.println("-c, --config [path]: Specifies an alternate file at 'path' to use as a config.");
+                System.out.println("\tExample: java -jar frinika.jar -c ~/Documents/Config.xml");
+                System.exit(0);
+            } else if (arg.equalsIgnoreCase("-v") || arg.equalsIgnoreCase("--version")) {
+                System.out.println("Frinika version " + VersionProperties.getVersion() + " (build date " + VersionProperties.getBuildDate() + ")");
+                System.exit(0);
+            } else if (arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("--config")) {
+                i++;
+                if (i >= args.length) {
+                    System.err.println("Error: a path must be specified to with the " + arg + " argument.");
+                    System.exit(-1);
+                }
+                String path = args[i];
+                FrinikaConfig.setConfigLocation(path);
+            } else {
+                System.out.println("Unknown argument " + arg + ", ignoring.");
+                System.out.println("For help with command line usage, please see java -jar frinika.jar --help");
+            }
+        }
+    }
 }

@@ -488,9 +488,10 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
     	if (multiEvents == null ) return;
     //	System.out.println("Committing " + multiEvents.size() + " events");
         for(MultiEvent multiEvent : multiEvents)  {
-        	long tick=multiEvent.getStartTick();
-        	if (tick >= getStartTick() && tick < getEndTick())
-        		multiEvent.commitAdd();
+//        	long tick=multiEvent.getStartTick();
+                // PJS: Removed this if since this notes will be displayed but not played otherwise
+        	//if (tick >= getStartTick() && tick < getEndTick())
+                    multiEvent.commitAdd();
         }
     }
 

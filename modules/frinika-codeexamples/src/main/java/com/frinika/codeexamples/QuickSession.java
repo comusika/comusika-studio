@@ -9,7 +9,7 @@ import com.frinika.voiceserver.AudioContext;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 /*
  * Created on Mar 8, 2006
@@ -73,7 +73,7 @@ public class QuickSession {
 		//Create a MidiLane and set the Midi out device
 		
 		MidiLane midiLane = project.createMidiLane();
-		Vector<String> midiInList = FrinikaConfig.getMidiInDeviceList();
+		List<String> midiInList = FrinikaConfig.getMidiInDeviceList();
 		// Use same midi out as midi in
 		throw new  Exception("FIXME");
 //		SynthWrapper midiOut = new SynthWrapper(null,MidiHub.getMidiOutDeviceByName(midiInList.get(0)));

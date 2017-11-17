@@ -29,7 +29,7 @@ import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PropertiesEditor;
 import java.awt.Frame;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -107,10 +107,10 @@ public class ConfigDialogPanel extends JPanel {
     }
     
     private void refreshMidiInDevicesList() {
-        final Vector<String> v = FrinikaConfig.getMidiInDeviceList();
+        final List<String> v = FrinikaConfig.getMidiInDeviceList();
         listInputDevices.setModel(new javax.swing.AbstractListModel() {
             public int getSize() { return v.size(); }
-            public Object getElementAt(int i) { return v.elementAt(i); }
+            public Object getElementAt(int i) { return v.get(i); }
         });
     }
     
@@ -803,7 +803,7 @@ public class ConfigDialogPanel extends JPanel {
         if (inDev == null) {
         	return;
         }
-        Vector<String> vv = FrinikaConfig.getMidiInDeviceList();
+        List<String> vv = FrinikaConfig.getMidiInDeviceList();
         vv.add(inDev);
         FrinikaConfig.setMidiInDeviceList(vv);
         refreshMidiInDevicesList();
@@ -813,7 +813,7 @@ public class ConfigDialogPanel extends JPanel {
         // remove currently selected midi input device
         String device = listInputDevices.getSelectedValue().toString();
         if (device != null) {
-            Vector v = FrinikaConfig.getMidiInDeviceList();
+            List<String> v = FrinikaConfig.getMidiInDeviceList();
             v.remove(device);
             FrinikaConfig.setMidiInDeviceList(v);
             refreshMidiInDevicesList();

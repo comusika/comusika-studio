@@ -5,13 +5,16 @@ apply plugin: 'com.bmuschko.izpack'
 version = '0.1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '3.2'
+    gradleVersion = '4.0'
 }
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
 distZip.dependsOn project(':tools').subprojects.assemble
+distZip.dependsOn project(':tools:frinika').tasks['launch4j']
 distTar.dependsOn project(':tools').subprojects.assemble
+distTar.dependsOn project(':tools:frinika').tasks['launch4j']
+
 
 distributions {
     main {
@@ -20,11 +23,20 @@ distributions {
 
             from project.rootDir
             include 'license.txt'
+            include 'changes.txt'
+            include 'frinika-changes.txt'
             from 'src/dist'
             include 'readme.txt'
+            include 'frinika-studio.bat'
+            include 'frinika-studio.sh'
+
+            from project(':tools:frinika').projectDir.absolutePath + '/build/launch4j'
+            include "frinika-studio.exe"
 
             into('lib') {
                 from 'lib'
+                include '*.txt'
+                include 'native/**'
             }
             project(':modules').subprojects.each { p ->
                 p.plugins.withType(JavaPlugin) {
@@ -43,10 +55,10 @@ distributions {
                         include '*'
                     }
 
-                    into('bin') {
+                    into('') {
                         from p.jar.archivePath
                         include '*'
-                        rename { filename -> p.name + ".jar" }
+                        rename { filename -> p.name + "-studio.jar" }
                     }
                 }
             }
@@ -54,12 +66,8 @@ distributions {
                 from 'doc'
                 include '**'
             }
-            into('resources') {
-                from 'resources'
-                include '**'
-            }
-            into('bin/lib') {
-                from 'lib/native'
+            into('samples') {
+                from 'resources/samples'
                 include '**'
             }
         }
@@ -79,9 +87,9 @@ buildscript {
 izpack {
     baseDir = file("$buildDir/distributions")
     installFile = file('src/install-definition.xml')
-    outputFile = file("$buildDir/distributions/frinthesia-${version}-installer.jar")
+    outputFile = file("$buildDir/distributions/frinika-studio-${version}-installer.jar")
     compression = 'deflate'
     compressionLevel = 9
-    appProperties = ['app.group': 'frinthesia', 'app.name': 'frinthesia', 'app.title': 'Frinthesia',
-                     'app.version': version, 'app.subpath': "frinthesia-$version"]
+    appProperties = ['app.group': 'frinika-studio', 'app.name': 'frinika-studio', 'app.title': 'Frinika Studio',
+                     'app.version': version, 'app.subpath': "frinika-studio-$version"]
 }
