@@ -222,10 +222,12 @@ public class LoopPanel extends JPanel {
 
 		sequencer.addSongPositionListener(new SwingSongPositionListenerWrapper(new SongPositionListener() {
 
+                        @Override
 			public void notifyTickPosition(long tick) {
 				setText();
 			}
 
+                        @Override
 			public boolean requiresNotificationOnEachTick() {
 				return false;
 			}
@@ -240,6 +242,7 @@ public class LoopPanel extends JPanel {
 	void initComponents() {		
 		sectionStartTimeSelector = new TimeSelector(getMessage("globaltoolbar.loop.start"), 0l, project, TimeFormat.BAR_BEAT_TICK);
 		sectionStartTimeSelector.addChangeListener(new ChangeListener() {
+                        @Override
 			public void stateChanged(ChangeEvent e) {
 				sequencer.setLoopStartPoint(sectionStartTimeSelector.getTicks());
 			}
@@ -248,6 +251,7 @@ public class LoopPanel extends JPanel {
 
 		sectionEndTimeSelector = new TimeSelector(getMessage("globaltoolbar.loop.end"), 0l, project, TimeFormat.BAR_BEAT_TICK);
 		sectionEndTimeSelector.addChangeListener(new ChangeListener() {
+                        @Override
 			public void stateChanged(ChangeEvent e) {
 				sequencer.setLoopEndPoint(sectionEndTimeSelector.getTicks());
 			}
@@ -260,6 +264,7 @@ public class LoopPanel extends JPanel {
                 loopButton.setSelected(sequencer.getLoopCount() != 0);
                 
 		loopButton.addItemListener(new ItemListener() {
+                        @Override
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);

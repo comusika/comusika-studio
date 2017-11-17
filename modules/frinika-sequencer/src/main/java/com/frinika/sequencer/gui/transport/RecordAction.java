@@ -26,6 +26,7 @@ public class RecordAction extends AbstractAction {
 	}
 	
 	
+        @Override
     public void actionPerformed(ActionEvent e) {
         
         final JOptionPane recordingOptionPane = new JOptionPane(getMessage("sequencer.recording.takes"));
@@ -35,6 +36,7 @@ public class RecordAction extends AbstractAction {
 
         recordingOptionPane.addPropertyChangeListener(new PropertyChangeListener() {
 
+                @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 String prop = evt.getPropertyName();
 

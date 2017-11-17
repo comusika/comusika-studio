@@ -41,7 +41,7 @@ public class MidiDeviceRouter  {
 
   
     public MidiDeviceRouter() {
-        map = new Hashtable<MidiDevice.Info, MidiEventRouter>();
+        map = new Hashtable<>();
     }
 
     /**

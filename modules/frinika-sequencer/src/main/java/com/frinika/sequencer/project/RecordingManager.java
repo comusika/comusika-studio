@@ -35,8 +35,8 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
     MultiPart multiPart;
     MidiPart lastPart;
     // The current recording take - will be added to recordingTake when recording is stopped, or in case of a loop - and provided that there are multievents in the take
-    protected Vector<MultiEvent> currentRecordingTake = new Vector<MultiEvent>();
-    protected HashMap<Integer, NoteEvent> pendingNoteEvents = new HashMap<Integer, NoteEvent>();
+    protected Vector<MultiEvent> currentRecordingTake = new Vector<>();
+    protected HashMap<Integer, NoteEvent> pendingNoteEvents = new HashMap<>();
     protected FrinikaSequencer sequencer;
     long lastTick = -1;
     protected Stack stack;
@@ -54,10 +54,12 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
         looped = false;
     }
 
+    @Override
     public boolean requiresNotificationOnEachTick() {
         return false;
     }
 
+    @Override
     public void midiMessage(MidiMessage message) {
 
         if (!sequencer.isRecording()) {
@@ -171,6 +173,7 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
         currentRecordingTake.clear();
     }
 
+    @Override
     public void notifyTickPosition(long tick) {
 
 
@@ -251,6 +254,7 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
 
     }
 
+    @Override
     public void beforeStart() {
 
         //     recording = sequencer.isRecording();
@@ -271,6 +275,7 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
         debug("Before START");
     }
 
+    @Override
     public void start() {
         if (!sequencer.isRecording()) {
             reset();
@@ -279,6 +284,7 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
 
     }
 
+    @Override
     public void stop() {
         //    recording = false;
         reset();

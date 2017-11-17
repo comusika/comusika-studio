@@ -21,9 +21,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis;
-
 
 import rasmus.interpreter.sampled.util.FFT;
 
@@ -37,41 +35,36 @@ import rasmus.interpreter.sampled.util.FFT;
  */
 public interface SpectrumDataBuilder {
 
-	
-	// 
-	void addSizeObserver(SpectrogramDataListener  synth);
+    // 
+    void addSizeObserver(SpectrogramDataListener synth);
 
-	// check there is valid data at chunkPtr
-	boolean validAt(long chunkPtr);
+    // check there is valid data at chunkPtr
+    boolean validAt(long chunkPtr);
 
-	// get the bin frequencies
-	float[] getFreqArray();
+    // get the bin frequencies
+    float[] getFreqArray();
 
-	// get the magnitude at this chunk
-	float[] getMagnitudeAt(long chunkPtr);
-	//float[] getSMagnitudeAt(long chunkPtr);
+    // get the magnitude at this chunk
+    float[] getMagnitudeAt(long chunkPtr);
+    //float[] getSMagnitudeAt(long chunkPtr);
 
-	// get the frequency calculated using dPhase/dt  at this chunk
-	float[] getPhaseFreqAt(long chunkPtr);
+    // get the frequency calculated using dPhase/dt  at this chunk
+    float[] getPhaseFreqAt(long chunkPtr);
 
-	
-	int getChunkRenderedCount();
+    int getChunkRenderedCount();
 
-	int getBinCount();
+    int getBinCount();
 
-	int getSizeInChunks();
+    int getSizeInChunks();
 
-	// get whole magnitude array
-	float[][] getMagnitude();
+    // get whole magnitude array
+    float[][] getMagnitude();
 
-	void dispose();
+    void dispose();
 
-	StaticSpectrogramSynth getSynth();
+    StaticSpectrogramSynth getSynth();
 
-	FFT getFFT();
+    FFT getFFT();
 
-	//float[][] getSMagnitude();
-
-	
-
+    //float[][] getSMagnitude();
 }

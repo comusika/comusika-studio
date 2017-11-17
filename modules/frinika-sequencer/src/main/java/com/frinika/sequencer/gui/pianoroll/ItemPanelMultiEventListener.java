@@ -38,6 +38,7 @@ public class ItemPanelMultiEventListener implements  SelectionListener<MultiEven
 	}
 	
 	
+        @Override
 	public void selectionChanged(SelectionContainer<? extends MultiEvent> src) {
 		pianoRoll.repaintItems();	
 	}

@@ -43,6 +43,7 @@ public class CutAction extends AbstractAction {
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
     public void actionPerformed(ActionEvent e) {
 			
 		project.getEditHistoryContainer().mark(getMessage("sequencer.project.cut"));
@@ -66,7 +67,7 @@ public class CutAction extends AbstractAction {
         else
             project.clipBoard().copy(list,project);
 
-        Vector<Selectable> list2=new Vector<Selectable>(list);
+        Vector<Selectable> list2=new Vector<>(list);
 		for (Selectable it:list2) {
 			it.removeFromModel();
 		}

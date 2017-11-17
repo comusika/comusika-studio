@@ -21,38 +21,40 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.io;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-
 public class VanillaRandomAccessFile implements RandomAccessFileIF {
 
-	private RandomAccessFile raf;
+    private RandomAccessFile raf;
 
-	public VanillaRandomAccessFile(RandomAccessFile raf) {
-		this.raf=raf;
-	}
-	public RandomAccessFile getRandomAccessFile() {
-		// TODO Auto-generated method stub
-		return raf;
-	}
+    public VanillaRandomAccessFile(RandomAccessFile raf) {
+        this.raf = raf;
+    }
 
-	public long length() throws IOException {
-		// TODO Auto-generated method stub
-		return raf.length();
-	}
+    @Override
+    public RandomAccessFile getRandomAccessFile() {
+        // TODO Auto-generated method stub
+        return raf;
+    }
 
-	public int read(byte[] byteBuff, int offset, int n, boolean realTime)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return raf.read(byteBuff,offset,n);
-	}
+    @Override
+    public long length() throws IOException {
+        // TODO Auto-generated method stub
+        return raf.length();
+    }
 
-	public void seek(long l, boolean realTime) throws IOException {
-		raf.seek(l);
-	}
+    @Override
+    public int read(byte[] byteBuff, int offset, int n, boolean realTime)
+            throws IOException {
+        // TODO Auto-generated method stub
+        return raf.read(byteBuff, offset, n);
+    }
 
+    @Override
+    public void seek(long l, boolean realTime) throws IOException {
+        raf.seek(l);
+    }
 }

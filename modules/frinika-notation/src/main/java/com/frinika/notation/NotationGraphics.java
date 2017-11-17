@@ -161,13 +161,12 @@ public class NotationGraphics {
 	private static Font loadFont(String filename)
 	{
 		try {
-			InputStream is = NotationGraphics.class.getResourceAsStream(filename);
-			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-			is.close();
+                    Font font;
+                try (InputStream is = NotationGraphics.class.getResourceAsStream(filename)) {
+                    font = Font.createFont(Font.TRUETYPE_FONT, is);
+                }
 			return font;
-		} catch (FontFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
 		}		
 		return null;
@@ -611,11 +610,11 @@ public class NotationGraphics {
 		float x;
 		int dur;
 		int mark = 0;
-		List<Note> notes = new ArrayList<Note>();
+		List<Note> notes = new ArrayList<>();
 	}
 
-	private TreeMap<Float, TimePart> note_group_xlist = new TreeMap<Float, TimePart>();
-	private ArrayList<Note> note_group_list = new ArrayList<Note>();
+	private TreeMap<Float, TimePart> note_group_xlist = new TreeMap<>();
+	private ArrayList<Note> note_group_list = new ArrayList<>();
 	private Note addNoteToGroup(Note notepart)
 	{
 		note_group_list.add(notepart);
@@ -742,6 +741,7 @@ public class NotationGraphics {
 			timepart.notes.toArray(notes);
 			Arrays.sort(notes, new Comparator<Note>()
 					{
+                                                @Override
 						public int compare(Note o1, Note o2) {
 							return o2.note - o1.note;
 						}				

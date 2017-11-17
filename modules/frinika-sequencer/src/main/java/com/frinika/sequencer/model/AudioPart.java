@@ -266,6 +266,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 		return clone;
 	}
 
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		AudioPart clone = (AudioPart) object;
 		audioDir = clone.audioDir;
@@ -297,6 +298,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @see com.frinika.sequencer.model.Selectable#deepCopy(com.frinika.sequencer.model.Selectable)
 	 */
+        @Override
 	public Selectable deepCopy(Selectable parent) {
 		AudioPart clone = new AudioPart((AudioLane) parent);
 		// clone.startTick=startTick;
@@ -313,6 +315,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 		return clone;
 	}
 
+        @Override
 	public void deepMove(long dTick) {
 
 		double tick1 = lane.getProject().tickAtMicros(realStartTimeInMicros);
@@ -344,6 +347,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @return start of the part in ticks
 	 */
+        @Override
 	public long getStartTick() {
 		return (long) lane.getProject().getTempoList().getTickAtTime((realStartTimeInMicros + envelope.tOn)/1000000.0);
 	}
@@ -352,6 +356,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @return end tick of the part
 	 */
+        @Override
 	public long getEndTick() {
 		return (long) lane.getProject().getTempoList().getTickAtTime((realStartTimeInMicros + envelope.tOff)/1000000.0);
 	}
@@ -361,6 +366,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @return length of the part in secs
 	 */
+        @Override
 	public double  getDurationInSecs(){
 		return (envelope.tOff-envelope.tOn)/1000000.0;		
 	}
@@ -369,6 +375,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @return start of the part in secs
 	 */
+        @Override
 	public double getStartInSecs() {
 		return (realStartTimeInMicros + envelope.tOn)/1000000.0;
 		
@@ -378,6 +385,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @return end  of the part in secs
 	 */
+        @Override
 	public double getEndInSecs() {
 		return (realStartTimeInMicros + envelope.tOff)/1000000.0;
 	}
@@ -389,6 +397,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @see com.frinika.sequencer.model.Part#commitEventsRemove()
 	 */
+        @Override
 	public void commitEventsRemove() {
 
 	}
@@ -400,10 +409,12 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * 
 	 * @see com.frinika.sequencer.model.Part#commitEventsAdd()
 	 */
+        @Override
 	public void commitEventsAdd() {
 		refreshEnvelope();
 	}
 
+        @Override
 	public void onLoad() throws FileNotFoundException {
 
 		File clipFile = new File(audioDir, audioFileName);
@@ -444,6 +455,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 	 * @return
 	 * @throws IOException
 	 */
+        @Override
 	public AudioReader createAudioReader() throws IOException {
 		File clipFile = new File(audioDir, audioFileName);
 		VanillaRandomAccessFile rafG = new VanillaRandomAccessFile(
@@ -477,6 +489,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 
 	transient Rectangle lastRect = null;
 
+        @Override
 	public void drawThumbNail(Graphics2D g, Rectangle rect, PartView panel) {
 		// System. out.println(" Draw thumb nail 1");
 		if (outputProcess == null || thumbNailIn == null)
@@ -494,6 +507,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 		g.setPaintMode();
 	}
 
+        @Override
 	public void moveContentsBy(double dTick, Lane dstLane) {
 
 		double tick1 = lane.getProject().tickAtMicros(realStartTimeInMicros);
@@ -509,6 +523,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 		// commitEventsAdd();
 	}
 
+        @Override
 	public String toString() {
 		String ret = hashCode() + ":" + audioDir + "/" + audioFileName + "|"
 				+ realStartTimeInMicros;
@@ -684,6 +699,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 			return true;
 		}
 
+                @Override
 		synchronized public void run() {
 			assert (runThread == Thread.currentThread());
 			while (true) {
@@ -787,6 +803,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 			tOn = Math.max(0, on1);
 		}
 
+                @Override
 		public Object clone() {
 			Envelope clone = new Envelope();
 
@@ -933,6 +950,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 
 	
 	
+        @Override
 	public void setStartInSecs(double start) {
 		
 		envelope.setTOn(start*1000000.0 - realStartTimeInMicros);
@@ -948,6 +966,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 
 	
 	
+        @Override
 	public void setEndInSecs(double end) {
 		envelope.setTOff(1000000.0*end - realStartTimeInMicros);
 		

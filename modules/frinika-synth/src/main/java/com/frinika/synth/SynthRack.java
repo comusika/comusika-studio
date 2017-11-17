@@ -35,9 +35,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -77,6 +79,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 
 	private static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class.getResource("/icons/frinika.png"));
 	
+        @Override
 	public Icon getIcon()
 	{
 		if(icon.getIconHeight() > 16 || icon.getIconWidth() > 16)
@@ -107,6 +110,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage, long)
          */
+        @Override
         public void send(MidiMessage message, long timeStamp) {
             try
             {
@@ -164,18 +168,19 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#close()
          */
+        @Override
         public void close() {
             // TODO Auto-generated method stub
             
         }
         
     };
-    List<Receiver> receivers = new ArrayList<Receiver>();
+    List<Receiver> receivers = new ArrayList<>();
     {
         receivers.add(receiver);
     }
 
-    List<Transmitter> transmitters = new ArrayList<Transmitter>();
+    List<Transmitter> transmitters = new ArrayList<>();
 
 	SynthRackGUI gui;
 	// Previously - one synth per channel - now one synth per program (in the future also banks will be supported)
@@ -183,7 +188,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	
 	MidiChannel[] midiChannels = new MidiChannel[16];
 	
-    private Vector<GlobalInstrumentNameListener> globalInstrumentNameListeners = new Vector<GlobalInstrumentNameListener>();
+    private Vector<GlobalInstrumentNameListener> globalInstrumentNameListeners = new Vector<>();
 	private SynthRackSoundbank soundbank = new SynthRackSoundbank();
 	
         private float tempoBPM = 100f;
@@ -261,6 +266,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
             gui.initLoadSynthSetupProgress(
             new Thread()
             {
+                @Override
                 public void run()
                 {
                     loadSynthSetupThread(setup);
@@ -307,7 +313,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
                 if(gui!=null)
                     gui.notifyLoadSynthSetupProgress((n*100)/setup.getSynthClassNames().length,synths[n].getInstrumentName());
             }
-            catch(Exception e) { 
+            catch(ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException e) { 
             	e.printStackTrace(); 
             	}
         }
@@ -325,7 +331,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 			out.writeObject(setup);
 		}
-		catch(Exception e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -339,7 +345,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 			SynthSettings setup = (SynthSettings)in.readObject();
 			loadSynthSetup(setup);
         }
-		catch(Exception e)
+		catch(IOException | ClassNotFoundException e)
 		{
 			e.printStackTrace();
 		}
@@ -349,6 +355,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getMaxPolyphony()
 	 */
+        @Override
 	public int getMaxPolyphony() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -357,6 +364,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getLatency()
 	 */
+        @Override
 	public long getLatency() {
 		return voiceServer.getLatency();
 	}
@@ -364,6 +372,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getChannels()
 	 */
+        @Override
 	public MidiChannel[] getChannels() {
 		return null;
 	}
@@ -371,6 +380,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getVoiceStatus()
 	 */
+        @Override
 	public VoiceStatus[] getVoiceStatus() {
 		// TODO Auto-generated method stub
 		return null;
@@ -379,6 +389,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#isSoundbankSupported(javax.sound.midi.Soundbank)
 	 */
+        @Override
 	public boolean isSoundbankSupported(Soundbank soundbank) {
 		// TODO Auto-generated method stub
 		return false;
@@ -387,6 +398,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#loadInstrument(javax.sound.midi.Instrument)
 	 */
+        @Override
 	public boolean loadInstrument(Instrument instrument) {
 		// TODO Auto-generated method stub
 		return false;
@@ -395,6 +407,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#unloadInstrument(javax.sound.midi.Instrument)
 	 */
+        @Override
 	public void unloadInstrument(Instrument instrument) {
 		// TODO Auto-generated method stub
 		
@@ -403,6 +416,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#remapInstrument(javax.sound.midi.Instrument, javax.sound.midi.Instrument)
 	 */
+        @Override
 	public boolean remapInstrument(Instrument from, Instrument to) {
 		// TODO Auto-generated method stub
 		return false;
@@ -411,6 +425,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getDefaultSoundbank()
 	 */
+        @Override
 	public Soundbank getDefaultSoundbank() {
 		// TODO Auto-generated method stub
 		return null;
@@ -419,6 +434,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getAvailableInstruments()
 	 */
+        @Override
 	public Instrument[] getAvailableInstruments() {
 		// No default instruments for SynthRack - hence no instruments returned
 		return new Instrument[0];
@@ -427,6 +443,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#getLoadedInstruments()
 	 */
+        @Override
 	public Instrument[] getLoadedInstruments() {
 		return soundbank.getInstruments();
 	}
@@ -434,6 +451,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#loadAllInstruments(javax.sound.midi.Soundbank)
 	 */
+        @Override
 	public boolean loadAllInstruments(Soundbank soundbank) {
 		// TODO Auto-generated method stub
 		return false;
@@ -442,6 +460,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#unloadAllInstruments(javax.sound.midi.Soundbank)
 	 */
+        @Override
 	public void unloadAllInstruments(Soundbank soundbank) {
 		// TODO Auto-generated method stub
 
@@ -450,6 +469,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#loadInstruments(javax.sound.midi.Soundbank, javax.sound.midi.Patch[])
 	 */
+        @Override
 	public boolean loadInstruments(Soundbank soundbank, Patch[] patchList) {
 		// TODO Auto-generated method stub
 		return false;
@@ -458,6 +478,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.Synthesizer#unloadInstruments(javax.sound.midi.Soundbank, javax.sound.midi.Patch[])
 	 */
+        @Override
 	public void unloadInstruments(Soundbank soundbank, Patch[] patchList) {
 		// TODO Auto-generated method stub
 		
@@ -466,6 +487,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#getDeviceInfo()
 	 */
+        @Override
 	public MidiDevice.Info getDeviceInfo() {
 		return deviceInfo;
 	}
@@ -473,18 +495,21 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#open()
 	 */
+        @Override
 	public void open(){
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#close()
 	 */
+        @Override
 	public void close() {
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#isOpen()
 	 */
+        @Override
 	public boolean isOpen() {
 		// TODO Auto-generated method stub
 		return false;
@@ -493,6 +518,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#getMicrosecondPosition()
 	 */
+        @Override
 	public long getMicrosecondPosition() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -501,6 +527,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#getMaxReceivers()
 	 */
+        @Override
 	public int getMaxReceivers() {
 		return -1;
 	}
@@ -508,6 +535,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#getMaxTransmitters()
 	 */
+        @Override
 	public int getMaxTransmitters() {
 		return 0;
 	}
@@ -515,6 +543,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#getReceiver()
 	 */
+        @Override
 	public Receiver getReceiver() throws MidiUnavailableException {
 	    return receiver;
 	}
@@ -523,6 +552,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	 * @see javax.sound.midi.MidiDevice#getReceivers()
 	 */
 	@SuppressWarnings("unchecked")
+        @Override
     public List getReceivers() {
 		return receivers;
 	}
@@ -530,6 +560,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiDevice#getTransmitter()
 	 */
+        @Override
 	public Transmitter getTransmitter() throws MidiUnavailableException {
 		return null;
 	}
@@ -538,6 +569,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 	 * @see javax.sound.midi.MidiDevice#getTransmitters()
 	 */
 	@SuppressWarnings("unchecked")
+        @Override
     public List getTransmitters() {
 		return transmitters;
 	}
@@ -552,6 +584,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
     /* (non-Javadoc)
      * @see com.petersalomonsen.mystudio.mysynth.InstrumentNameListener#instrumentNameChange(java.lang.String)
      */
+        @Override
     public void instrumentNameChange(Synth synth,String instrumentName) {
         for(int n=0;n<synths.length;n++)
             if(synth.equals(synths[n]))
@@ -574,10 +607,12 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
     /**
      * over to provide easier GUI manufactoring
      */
+        @Override
     public String toString() {
     	return getDeviceInfo().toString();
     }
 
+        @Override
 	public Object[] getList() {
 		// TODO Auto-generated method stub
 		return synths;
@@ -603,6 +638,7 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
         	MasterVoice.getDefaultInstance().initialize(voiceServer);
 	}
 
+        @Override
 	public Line getLine(javax.sound.sampled.Line.Info info) throws LineUnavailableException {
 		return new TargetDataLine() {
 
@@ -610,15 +646,18 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 			float[] floatBuffer = null;
 			FloatBuffer flView = null;
 			
+                @Override
 			public void open(AudioFormat format) throws LineUnavailableException {
 			
 			}
 
+                @Override
 			public void open(AudioFormat format, int bufferSize) throws LineUnavailableException {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public int read(byte[] b, int off, int len) {
 				// TODO implement a proper read method
 				if(buf==null || buf.capacity()!=len)
@@ -638,111 +677,133 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 				return len;
 			}
 
+                @Override
 			public int available() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                @Override
 			public void drain() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public void flush() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public int getBufferSize() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                @Override
 			public AudioFormat getFormat() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                @Override
 			public int getFramePosition() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                @Override
 			public float getLevel() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                @Override
 			public long getLongFramePosition() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                @Override
 			public long getMicrosecondPosition() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                @Override
 			public boolean isActive() {
 				// TODO Auto-generated method stub
 				return false;
 			}
 
+                @Override
 			public boolean isRunning() {
 				// TODO Auto-generated method stub
 				return false;
 			}
 
+                @Override
 			public void start() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public void stop() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public void addLineListener(LineListener listener) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public void close() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public Control getControl(Type control) {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                @Override
 			public Control[] getControls() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                @Override
 			public javax.sound.sampled.Line.Info getLineInfo() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                @Override
 			public boolean isControlSupported(Type control) {
 				// TODO Auto-generated method stub
 				return false;
 			}
 
+                @Override
 			public boolean isOpen() {
 				// TODO Auto-generated method stub
 				return false;
 			}
 
+                @Override
 			public void open() throws LineUnavailableException {
 				// TODO Auto-generated method stub
 				
 			}
 
+                @Override
 			public void removeLineListener(LineListener listener) {
 				// TODO Auto-generated method stub
 				
@@ -751,91 +812,109 @@ public class SynthRack implements Synthesizer, InstrumentNameListener,ChannelLis
 		};
 	}
 
+        @Override
 	public int getMaxLines(javax.sound.sampled.Line.Info info) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public javax.sound.sampled.Mixer.Info getMixerInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public javax.sound.sampled.Line.Info[] getSourceLineInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public javax.sound.sampled.Line.Info[] getSourceLineInfo(javax.sound.sampled.Line.Info info) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public Line[] getSourceLines() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public javax.sound.sampled.Line.Info[] getTargetLineInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public javax.sound.sampled.Line.Info[] getTargetLineInfo(javax.sound.sampled.Line.Info info) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public Line[] getTargetLines() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public boolean isLineSupported(javax.sound.sampled.Line.Info info) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public boolean isSynchronizationSupported(Line[] lines, boolean maintainSync) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public void synchronize(Line[] lines, boolean maintainSync) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void unsynchronize(Line[] lines) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void addLineListener(LineListener listener) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public Control getControl(Type control) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public Control[] getControls() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public javax.sound.sampled.Line.Info getLineInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public boolean isControlSupported(Type control) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public void removeLineListener(LineListener listener) {
 		// TODO Auto-generated method stub
 		

@@ -45,6 +45,7 @@ public class CollaspLaneAction extends AbstractAction {
 		this.project=project;		
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		Lane root = this.project.getProjectContainer().getProjectLane();
 		visit(root);

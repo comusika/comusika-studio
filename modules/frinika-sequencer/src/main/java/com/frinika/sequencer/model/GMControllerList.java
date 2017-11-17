@@ -76,6 +76,7 @@ public class GMControllerList implements ControllerListProvider {
 		tmp.toArray(cntrls);
 	}
 		
+    @Override
 	public Object[] getList() {
 		return cntrls;
 	}

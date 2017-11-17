@@ -57,6 +57,7 @@ public class FrinikaBezierSynth extends Synth{
         changePatch(bezierWaves.p);
     }
     
+    @Override
     public void noteOn(int noteNumber, int velocity) {
         Oscillator voice = new FrinikaBezierVoice(this,noteNumber);
         voice.setNoteNumber(noteNumber);

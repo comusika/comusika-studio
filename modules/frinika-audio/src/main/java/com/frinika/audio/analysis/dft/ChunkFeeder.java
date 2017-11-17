@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 import com.frinika.audio.analysis.DataBuilder;
@@ -32,181 +31,165 @@ import java.io.IOException;
 import uk.org.toot.audio.core.AudioBuffer;
 
 public class ChunkFeeder extends DataBuilder {
-	
-	
-	
-	FFTSpectrumClient client;
-	
-	
-	private int chunkStartInSamples;
-	int chunksize;
-	int fftsize;
-	
-	private LimitedAudioReader reader;
-	
-	int chunkPtr = 0;
-	int nFrame;
-	private int sizeInChunks;
-	private Dimension size;
-	private int nBin;
-	ChunkReaderProcess process;
 
-	public void setParameters(int chunkSize, int fftsize,LimitedAudioReader reader,ChunkReaderProcess process,FFTSpectrumClient client) {
+    FFTSpectrumClient client;
 
-		abortConstruction();
-		this.reader=reader;
-		this.process=process;
-		this.client=client;
-		
-		if (chunkSize == this.chunksize && fftsize == this.fftsize)
-			return;
-	
-		nFrame = (int) reader.getEnvelopedLengthInFrames();
-		System.out.println(" NFRAME = "+ nFrame);
-		if (nFrame == 0 ) {
-			
-			System.out.println(" Seeting nFrame to 1000000 ");
-			nFrame=100000;			
-		}
-	
-		
-		this.chunksize = chunkSize;
-		this.fftsize = fftsize;
-		sizeInChunks = nFrame / chunksize;
-		
-		System.out.println("SIZE IN CHUNKS = "+ sizeInChunks);
-		double dt=chunkSize/reader.getSampleRate();
-		process.setParameters(fftsize,process.getSampleRate());
-		
-		nBin=process.getBinCount();
-		
-		size = new Dimension(sizeInChunks, nBin);
-		client.setSize(sizeInChunks, nBin,process.getFreqArray(),dt);
-		
-		startConstruction();
+    private int chunkStartInSamples;
+    int chunksize;
+    int fftsize;
 
-	}
-	
-	protected void doWork() {
+    private LimitedAudioReader reader;
 
-		
-	
-		
-		/*
+    int chunkPtr = 0;
+    int nFrame;
+    private int sizeInChunks;
+    private Dimension size;
+    private int nBin;
+    ChunkReaderProcess process;
+
+    public void setParameters(int chunkSize, int fftsize, LimitedAudioReader reader, ChunkReaderProcess process, FFTSpectrumClient client) {
+
+        abortConstruction();
+        this.reader = reader;
+        this.process = process;
+        this.client = client;
+
+        if (chunkSize == this.chunksize && fftsize == this.fftsize) {
+            return;
+        }
+
+        nFrame = (int) reader.getEnvelopedLengthInFrames();
+        System.out.println(" NFRAME = " + nFrame);
+        if (nFrame == 0) {
+
+            System.out.println(" Seeting nFrame to 1000000 ");
+            nFrame = 100000;
+        }
+
+        this.chunksize = chunkSize;
+        this.fftsize = fftsize;
+        sizeInChunks = nFrame / chunksize;
+
+        System.out.println("SIZE IN CHUNKS = " + sizeInChunks);
+        double dt = chunkSize / reader.getSampleRate();
+        process.setParameters(fftsize, process.getSampleRate());
+
+        nBin = process.getBinCount();
+
+        size = new Dimension(sizeInChunks, nBin);
+        client.setSize(sizeInChunks, nBin, process.getFreqArray(), dt);
+
+        startConstruction();
+    }
+
+    @Override
+    protected void doWork() {
+
+        /*
 		 * Here the size of arrays changes any user should synchronize with me
 		 * here
-		 */
-	
-	
+         */
+        double fftOut[] = new double[fftsize * 2];
+        double input[] = new double[fftsize];
 
-		double fftOut[] = new double[fftsize*2];
-		double input[] = new double[fftsize];
+        try {
+            reader.seekEnvelopeStart(false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		try {
-			reader.seekEnvelopeStart(false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        //	double testF = minF * 2;
+        // reader = new SInDoubleSource(testF,Fs);
+        int ch = reader.getChannels();
 
-	//	double testF = minF * 2;
-		// reader = new SInDoubleSource(testF,Fs);
+        //	int nFrames = reader.getLengthInFrames();
+        int nRead = 0;
 
-		int ch = reader.getChannels();
+        AudioBuffer buffer = new AudioBuffer("TEMP", ch, chunksize, 44100);
+        // double buffer[] = new double[chunksize * ch];
 
-	//	int nFrames = reader.getLengthInFrames();
-		int nRead = 0;
+        chunkPtr = 0;  //  -fftsize / chunksize / 2;
 
-		AudioBuffer buffer = new AudioBuffer("TEMP", ch, chunksize, 44100);
-		// double buffer[] = new double[chunksize * ch];
+        //	int extraChunks = -chunkPtr;
+        notifySizeObservers();
 
-		chunkPtr = 0;  //  -fftsize / chunksize / 2;
+        chunkStartInSamples = 0;
 
-	//	int extraChunks = -chunkPtr;
+        double maxV = 0.0;
+        do {
+            if (Thread.interrupted()) {
+                return;
+            }
+            if (fftsize != chunksize) {
+                for (int i = 0; i < fftsize - chunksize; i++) {
+                    input[i] = input[i + chunksize];
+                }
+            }
 
-		notifySizeObservers();
+            buffer.makeSilence();
+            try {
+                reader.processAudio(buffer);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            nRead += chunksize;
 
-		chunkStartInSamples = 0;
+            // System.out.println(reader.getCurrentFrame());
+            float left[] = buffer.getChannel(0);
 
-		double maxV=0.0;
-		do {
-			if (Thread.interrupted()) {
-				return;
-			}
-			if (fftsize != chunksize) {
-				for (int i = 0; i < fftsize - chunksize; i++)
-					input[i] = input[i + chunksize];
-			}
+            for (int i = fftsize - chunksize, j = 0; i < fftsize; i++, j++) {
+                // if (ch == 2)
+                // input[i] = buffer[2 * j + 1];
+                // else
+                input[i] = left[j];
+            }
 
-			buffer.makeSilence();
-			try {
-				reader.processAudio(buffer);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			nRead += chunksize;
+            for (int i = 0; i < fftsize; i++) {
+                fftOut[i] = input[i];
+            }
 
-			// System.out.println(reader.getCurrentFrame());
+            double spectrum[] = process.process(fftOut);
 
-			float left[] = buffer.getChannel(0);
+            client.process(spectrum, nBin);
 
-			for (int i = fftsize - chunksize, j = 0; i < fftsize; i++, j++) {
-				// if (ch == 2)
-				// input[i] = buffer[2 * j + 1];
-				// else
-				input[i] = left[j];
-			}
+            chunkPtr++;
 
-			for(int i=0;i<fftsize;i++) fftOut[i]=input[i];
-			
-			double spectrum[]=process.process(fftOut);
+            chunkStartInSamples += chunksize;
 
-			client.process(spectrum,nBin);
-			
-			chunkPtr++;
-			
-			chunkStartInSamples += chunksize;
+            // } while (!reader.eof() && chunkPtr < sizeInChunks);
+        } while (chunkPtr < sizeInChunks);
+        System.out.println(" DATA BUILT maqxV " + maxV);
+        notifyMoreDataObservers();
+    }
 
-			
-			// } while (!reader.eof() && chunkPtr < sizeInChunks);
-		} while (chunkPtr < sizeInChunks);
-		System.out.println(" DATA BUILT maqxV " + maxV);
-		notifyMoreDataObservers();
-	}
-	
-	
+    public void addSizeObserver(SpectrogramDataListener o) {
+        sizeObservers.add(o);
+    }
 
-	public void addSizeObserver(SpectrogramDataListener o) {
-		sizeObservers.add(o);
-	}
+    void notifySizeObservers() {
+        for (SpectrogramDataListener o : sizeObservers) {
+            o.notifySizeChange(size);
+        }
+    }
 
-	void notifySizeObservers() {
-		for (SpectrogramDataListener o : sizeObservers)
-			o.notifySizeChange(size);
+    void notifyMoreDataObservers() {
+        for (SpectrogramDataListener o : sizeObservers) {
+            o.notifyMoreDataReady();
+        }
+    }
 
-	}
+    public long chunkStartInSamples(long chunkPtr) {
+        return chunkStartInSamples + chunkPtr * chunksize;
+    }
 
-	void notifyMoreDataObservers() {
-		for (SpectrogramDataListener o : sizeObservers)
-			o.notifyMoreDataReady();
+    public int getChunkAtFrame(long framePtr) {
+        int chunkPtr = (int) ((framePtr - chunkStartInSamples) / chunksize);
+        return chunkPtr;
+    }
 
-	}
-
-	
-	public long chunkStartInSamples(long chunkPtr) {
-
-		return chunkStartInSamples + chunkPtr * chunksize;
-	}
-
-	public int getChunkAtFrame(long framePtr) {
-
-		int chunkPtr = (int) ((framePtr - chunkStartInSamples) / chunksize);
-
-		return chunkPtr;
-	}
-
-	public boolean validAt(long chunkPtr2) {
-		return chunkPtr2 >= 0 && chunkPtr2 < this.chunkPtr;
-	}
+    public boolean validAt(long chunkPtr2) {
+        return chunkPtr2 >= 0 && chunkPtr2 < this.chunkPtr;
+    }
 }

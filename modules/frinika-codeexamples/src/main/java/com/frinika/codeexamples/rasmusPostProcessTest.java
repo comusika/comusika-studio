@@ -84,10 +84,8 @@ public class rasmusPostProcessTest {
 			audiosession.close();
 			interpreter.close();
 
-		} catch (IOException e) {
+		} catch (IOException | ScriptParserException e) {
 			e.printStackTrace();
-		} catch (ScriptParserException e1) {
-			e1.printStackTrace();
 		}
 	}
 

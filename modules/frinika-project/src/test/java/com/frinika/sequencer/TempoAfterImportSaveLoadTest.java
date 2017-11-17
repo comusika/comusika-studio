@@ -1,6 +1,7 @@
 package com.frinika.sequencer;
 
 import com.frinika.project.ProjectContainer;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.Sequence;
@@ -39,6 +40,7 @@ public class TempoAfterImportSaveLoadTest extends TestCase {
 	float tempo = 114;
 	int resolution = 480;
 	
+        @Override
     protected void setUp() throws Exception {
         super.setUp();	
         seq = new Sequence(Sequence.PPQ, resolution,1);
@@ -56,7 +58,7 @@ public class TempoAfterImportSaveLoadTest extends TestCase {
 			},3);
 			MidiEvent tempoEvent = new MidiEvent(tempoMsg,0);
             seq.getTracks()[0].add(tempoEvent);
-		} catch (Exception e) {
+		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
 		}
 	}

@@ -34,6 +34,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -93,9 +94,10 @@ public class BounceToLane extends JDialog implements Runnable {
             
             this.setLocationRelativeTo(frame);
             this.setVisible(true);
-        } catch(Exception e) {}
+        } catch(IOException e) {}
     }
     
+    @Override
     public void run() {
     	// Stop audio server
     	project.getAudioServer().stop();
@@ -110,7 +112,7 @@ public class BounceToLane extends JDialog implements Runnable {
             sequencer.stop();
             sequencer.setRealtime(true);
             BounceToLane.this.dispose();
-        } catch(Exception e) {
+        } catch(IOException e) {
         	e.printStackTrace();
         }
         // Restore output process (mixer) from project and restart audio server

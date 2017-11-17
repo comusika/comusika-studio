@@ -129,6 +129,7 @@ public class SysexEvent extends MultiEvent {
 
 						project.getEditHistoryContainer().mark(getMessage("sequencer.sysex.edit_sysex"));
 						EditHistoryAction action = new EditHistoryAction() {
+                                                        @Override
 							public void redo() {
 								SysexEvent.this.macro = s;
 								SysexEvent.this.commitRemove();
@@ -136,6 +137,7 @@ public class SysexEvent extends MultiEvent {
 								SysexEvent.this.commitAdd();
 							}
 							
+                                                        @Override
 							public void undo() {
 								SysexEvent.this.macro = oldMacroString;
 								SysexEvent.this.commitRemove();
@@ -162,9 +164,9 @@ public class SysexEvent extends MultiEvent {
 	 */
 	@Override
 	public void commitAddImpl() {
-    	for (int i = 0; i < midiEvents.length; i++) {
-            getTrack().add(midiEvents[i]);
-    	}
+            for (MidiEvent midiEvent : midiEvents) {
+                getTrack().add(midiEvent);
+            }
         zombie=false;
 	}
 
@@ -173,9 +175,9 @@ public class SysexEvent extends MultiEvent {
 	 */
 	@Override
 	void commitRemoveImpl() {
-    	for (int i = 0; i < midiEvents.length; i++) {
-            getTrack().remove(midiEvents[i]);
-    	}
+            for (MidiEvent midiEvent : midiEvents) {
+                getTrack().remove(midiEvent);
+            }
         zombie=true;
 	}
 
@@ -190,6 +192,7 @@ public class SysexEvent extends MultiEvent {
 	/* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.EditHistoryRecordable#restoreFromClone(com.frinika.sequencer.model.EditHistoryRecordable)
 	 */
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		SysexEvent other = (SysexEvent)object;
 		this.part = other.part;

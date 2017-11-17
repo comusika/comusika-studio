@@ -53,7 +53,7 @@ public class MyMidiRenderer extends InputStream{
     
 	byte[] buffer;
 	
-	HashMap<FrinikaTrackWrapper,Integer> trackIndex = new HashMap<FrinikaTrackWrapper,Integer>();
+	HashMap<FrinikaTrackWrapper,Integer> trackIndex = new HashMap<>();
 	
 	int readpos = 0;
 	byte[] byteBuffer = null; 
@@ -76,16 +76,19 @@ public class MyMidiRenderer extends InputStream{
 		
 		AudioProcess audioProcess = new AudioProcess() {
 
+                        @Override
 			public void close() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void open() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public int processAudio(AudioBuffer buffer) {
 				
 				if(byteBuffer == null) 
@@ -178,6 +181,7 @@ public class MyMidiRenderer extends InputStream{
 	/* (non-Javadoc)
 	 * @see java.io.InputStream#read()
 	 */
+        @Override
 	public int read() throws IOException {
 		if(bufferPos == 0)
 		{
@@ -209,6 +213,7 @@ public class MyMidiRenderer extends InputStream{
 		return(ret);
 	}	
 	
+        @Override
 	public int read(byte[] b, int off, int len) throws IOException {
 		
 		for (int i = off; i < len; i++) {
@@ -241,6 +246,7 @@ public class MyMidiRenderer extends InputStream{
 		return len;				
 	}
 
+        @Override
 	public int read(byte[] b) throws IOException {
 		return read(b, 0, b.length);
 	}

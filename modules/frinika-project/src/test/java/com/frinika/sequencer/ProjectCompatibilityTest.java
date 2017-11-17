@@ -47,6 +47,7 @@ public class ProjectCompatibilityTest  extends TestCase {
 
 	float tempo = 120f;
 	
+        @Override
 	protected void setUp() throws Exception
 	{
 		FrinikaSequence sequence = new FrinikaSequence(Sequence.PPQ, 128, 1);

@@ -215,12 +215,15 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         return scroller;
     }
 
+    @Override
     public void componentHidden(ComponentEvent arg0) {
     }
 
+    @Override
     public void componentMoved(ComponentEvent arg0) {
     }
 
+    @Override
     public synchronized void componentResized(ComponentEvent arg0) {
 
         Dimension newSize = getSize();
@@ -259,6 +262,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         repaint(); // TODO move up ?
     }
 
+    @Override
     public void componentShown(ComponentEvent arg0) {
     }
 
@@ -309,6 +313,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     // abstract public void notifySelectionChange();
     static Rectangle dirtyRect = new Rectangle();
 
+    @Override
     public synchronized void notifyTickPosition(long tick) {
 
         //if (this instanceof PartView ) System.out.println("A" + tick);
@@ -865,6 +870,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         return (long) tt;
     }
 
+    @Override
     abstract public double getSnapQuantization();
 
     abstract public boolean isSnapQuantized();
@@ -1131,6 +1137,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
 
     public abstract void setTimeAtX(int x);
 
+    @Override
     public boolean requiresNotificationOnEachTick() {
         return false;
     }
@@ -1174,6 +1181,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         repaint();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
 
         // System.out.println(g.getClip());
@@ -1270,6 +1278,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     public void writeDraggedAt(Point p) {
     }
 
+    @Override
     abstract public void setSnapQuantization(double quant);
 
     /*

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.plugins.reverb;
 
 import com.frinika.tootX.plugins.*;
@@ -30,19 +29,19 @@ import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.spi.AudioServiceProvider;
 
 public class ReverbServiceProvider extends AudioServiceProvider {
-	public ReverbServiceProvider() {
-		super(uk.org.toot.audio.id.ProviderId.FRINIKA_PROVIDER_ID,
-				"Frinika Plugins", "Reverb", "0.1");
-		addControls(ReverbControls.class, Ids.REVERB_MODULE,"Freeverb", "Reverb", "0.1");
-		add(ReverbProcess.class, "Freeverb", "Reverb", "0.1");
-	}
 
-	public AudioProcess createProcessor(AudioControls c) {
-		if (c instanceof ReverbProcessVariables) {
-			return new ReverbProcess((ReverbProcessVariables) c);
-		}
-		return null; // caller then tries another provider
-	}
+    public ReverbServiceProvider() {
+        super(uk.org.toot.audio.id.ProviderId.FRINIKA_PROVIDER_ID,
+                "Frinika Plugins", "Reverb", "0.1");
+        addControls(ReverbControls.class, Ids.REVERB_MODULE, "Freeverb", "Reverb", "0.1");
+        add(ReverbProcess.class, "Freeverb", "Reverb", "0.1");
+    }
+
+    @Override
+    public AudioProcess createProcessor(AudioControls c) {
+        if (c instanceof ReverbProcessVariables) {
+            return new ReverbProcess((ReverbProcessVariables) c);
+        }
+        return null; // caller then tries another provider
+    }
 }
-
-

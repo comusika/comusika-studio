@@ -39,6 +39,7 @@ public class E70set extends E70SysexMacroAbstract {
 	 * arg[0]: address
 	 * arg[1]..arg[n]: bytes to send
 	 */
+        @Override
 	public byte[] parse(int[] args) {
 		int address = args[0];
 		byte[] data = new byte[args.length-1];

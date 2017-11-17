@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import com.frinika.audio.DynamicMixer;
@@ -32,49 +31,53 @@ import javax.swing.JMenuBar;
 
 public class AudioAnalysisFrame extends FocusFrame {
 
-	AudioAnalysisPanel panel;
-	public AudioAnalysisFrame(AudioReaderFactory part,DynamicMixer mixer) {
-		setJMenuBar(new JMenuBar());
-		setContentPane(panel=new AudioAnalysisPanel(part,mixer,this,getKeyboardFocusManager()));
-		addWindowListener(new WindowListener() {
+    AudioAnalysisPanel panel;
 
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+    public AudioAnalysisFrame(AudioReaderFactory part, DynamicMixer mixer) {
+        init(part, mixer);
+    }
 
-			public void windowClosing(WindowEvent e) {
-				panel.dispose();
-		//		this.dispose();
-			}
+    private void init(AudioReaderFactory part, DynamicMixer mixer) {
+        setJMenuBar(new JMenuBar());
+        setContentPane(panel = new AudioAnalysisPanel(part, mixer, this, getKeyboardFocusManager()));
+        addWindowListener(new WindowListener() {
 
-			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowOpened(WindowEvent e) {
+                // TODO Auto-generated method stub
 
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            }
 
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowClosing(WindowEvent e) {
+                panel.dispose();
+                //		this.dispose();
+            }
 
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void windowClosed(WindowEvent e) {
+                // TODO Auto-generated method stub
+            }
 
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
-	}
-	
+            @Override
+            public void windowIconified(WindowEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
 }
-

@@ -53,16 +53,17 @@ public class RecorderGUI extends JFrame implements RecordProgressListener{
         stageLabel = new JLabel("Waiting for MIDI note on to start recording");
         new Thread()
         {
+            @Override
             public void run()
             {
                 while(stage==0)
                 {
                     if(stage==0) // In case of concurrent modifications 
                         stageLabel.setForeground(Color.BLACK);
-                    try { Thread.sleep(500); } catch(Exception e ) {}
+                    try { Thread.sleep(500); } catch(InterruptedException e ) {}
                     if(stage==0) // In case of concurrent modifications
                         stageLabel.setForeground(stageLabel.getBackground());
-                    try { Thread.sleep(500); } catch(Exception e ) {}
+                    try { Thread.sleep(500); } catch(InterruptedException e ) {}
                 }
             }
         }.start();
@@ -80,6 +81,7 @@ public class RecorderGUI extends JFrame implements RecordProgressListener{
         validate();
     }
 
+    @Override
     public void updateProgress(int samplesRecorded) {
         if(samplesRecorded>0 && stage == 0)
         {
@@ -91,6 +93,7 @@ public class RecorderGUI extends JFrame implements RecordProgressListener{
         progressBar.setValue(samplesRecorded);
     }
 
+    @Override
     public void finished() {
         stageLabel.setForeground(Color.GREEN);
         stageLabel.setText("Finished recording");

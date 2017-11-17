@@ -21,15 +21,13 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 import com.frinika.audio.io.LimitedAudioReader;
 
 public interface FFTSpectrogramControlable {
 
-	double getSampleRate();
+    double getSampleRate();
 
-	void setParameters(int i, int j,LimitedAudioReader reader);
-
+    void setParameters(int i, int j, LimitedAudioReader reader);
 }

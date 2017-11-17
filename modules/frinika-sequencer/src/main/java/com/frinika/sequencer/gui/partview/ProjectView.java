@@ -38,6 +38,7 @@ public class ProjectView extends LaneView {
 	}
 	
 
+        @Override
 	protected void makeButtons() {
 		add(new JLabel("PROJECT VIEW (TODO)"),gc);
 			gc.weighty = 1.0;

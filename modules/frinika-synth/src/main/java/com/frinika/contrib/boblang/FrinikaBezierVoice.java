@@ -45,6 +45,7 @@ public class FrinikaBezierVoice extends Oscillator {
                                                   1);
     }
 
+    @Override
     public void release()
     {
         if(!triggeredRelease)
@@ -52,6 +53,7 @@ public class FrinikaBezierVoice extends Oscillator {
             synth.getAudioOutput().interruptTransmitter(this,new VoiceInterrupt()
 
                 {
+                @Override
                     public void doInterrupt() {
                         release = true;
                         bezierPlayingNote.setRelease();

@@ -21,30 +21,25 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.plugins.analysis;
 
-
-
-import com.frinika.tootX.plugins.*;
+import com.frinika.tootX.plugins.Ids;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LinearLaw;
 
-
 public class AnalysisControls extends AudioControls implements
-		AnalysisProcessVariables {
+        AnalysisProcessVariables {
 
 //	private FloatControl mix;
 //	private FloatControl level;
 //	private FloatControl room;
 //	private FloatControl damp;
 //	private FloatControl width;
-	
-	   protected static final ControlLaw UNITY_LIN_LAW = new LinearLaw(0f, 1f, "");
-	   
-	public AnalysisControls() {
-		super(Ids.ANALYSIS_MODULE, "Analysis");
+    protected static final ControlLaw UNITY_LIN_LAW = new LinearLaw(0f, 1f, "");
+
+    public AnalysisControls() {
+        super(Ids.ANALYSIS_MODULE, "Analysis");
 //		mix  = new FloatControl(0,"mix",UNITY_LIN_LAW,.01f, .3f,"dry","mix","wet");
 //		mix.setInsertColor(Color.BLUE);
 //		level  = new FloatControl(0,"level",UNITY_LIN_LAW,.01f, .3f);
@@ -68,7 +63,7 @@ public class AnalysisControls extends AudioControls implements
 //		row.add(mix);
 //		col.add(row);
 //		add(col);
-	}
+    }
 
 //	public float getMix() {
 //		return mix.getValue();
@@ -90,8 +85,8 @@ public class AnalysisControls extends AudioControls implements
 //	public float getRoomSize() {
 //		return room.getValue();
 //	}
-	
-	public boolean canBypass() { return true; }
-	
+    @Override
+    public boolean canBypass() {
+        return true;
+    }
 }
-

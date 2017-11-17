@@ -15,6 +15,7 @@ public class SynchronizedVoiceTest extends TestCase {
 	/**
 	 * Set up the test
 	 */
+        @Override
 	protected void setUp() throws Exception
 	{
 		this.voiceServer = new VoiceServer() {

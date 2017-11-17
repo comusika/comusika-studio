@@ -406,7 +406,7 @@ public class JavascriptScope extends ScriptableObject {
 		this.project = project;
 		this.dialog = dialog;
 		timeUtils = new TimeUtils(project);
-		wrapperCache = new HashMap<Object, Object>();
+		wrapperCache = new HashMap<>();
 		
 		song = new Song(project);
 		selection = new Selection(events);
@@ -579,17 +579,17 @@ public class JavascriptScope extends ScriptableObject {
 					StringTokenizer st = new StringTokenizer(suffices, ";", false);
 					int count = st.countTokens();
 					s = new String[count][2];
-					for (int i = 0; i < s.length; i++) {
-						String suf = st.nextToken();
-						int space = suf.indexOf(' ');
-						if (space == -1) {
-							s[i][0] = suf;
-							s[i][1] = "";
-						} else {
-							s[i][0] = suf.substring(0, space);
-							s[i][1] = suf.substring(space+1);
-						}
-					}
+                                    for (String[] item : s) {
+                                        String suf = st.nextToken();
+                                        int space = suf.indexOf(' ');
+                                        if (space == -1) {
+                                            item[0] = suf;
+                                            item[1] = "";
+                                        } else {
+                                            item[0] = suf.substring(0, space);
+                                            item[1] = suf.substring(space+1);
+                                        }
+                                    }
 				}
 			} else {
 				s = new String[0][0];
@@ -676,17 +676,18 @@ public class JavascriptScope extends ScriptableObject {
 
 	public String fileRead(String filename) {
 		try {
-			FileReader in = new FileReader(filename);
-			StringBuffer sb = new StringBuffer();
-			char[] c = new char[1024];
-			int hasRead;
-			do {
-				hasRead = in.read(c);
-				if (hasRead > 0) {
-					sb.append(c, 0, hasRead);
-				}
-			} while (hasRead == c.length);
-			in.close();
+                    StringBuffer sb;
+                    try (FileReader in = new FileReader(filename)) {
+                        sb = new StringBuffer();
+                        char[] c = new char[1024];
+                        int hasRead;
+                        do {
+                            hasRead = in.read(c);
+                            if (hasRead > 0) {
+                                sb.append(c, 0, hasRead);
+                            }
+                        } while (hasRead == c.length);
+                    }
 			return sb.toString();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -696,9 +697,9 @@ public class JavascriptScope extends ScriptableObject {
 	
 	public boolean fileWrite(String filename, String data) {
 		try {
-			FileWriter out = new FileWriter(filename);
-			out.write(data);
-			out.close();
+                    try (FileWriter out = new FileWriter(filename)) {
+                        out.write(data);
+                    }
 			return true;
 		} catch (IOException ioe) {
 			return false;
@@ -736,7 +737,7 @@ public class JavascriptScope extends ScriptableObject {
 			} else {
 				return p.waitFor();
 			}
-		} catch (Exception e) {
+		} catch (IOException | InterruptedException e) {
 			project.error(e);
 			return -1;
 		}
@@ -754,6 +755,7 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object[] getSystemLanes() {
 			return (new Converter(p.getProjectLane().getFamilyLanes()) {
+                                @Override
 				protected Object createWrapper(Object o) {
 					return new Lane((com.frinika.sequencer.model.Lane) o);
 				}
@@ -762,6 +764,7 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object[] getLanes() {
 			return (new Converter(p.getProjectLane().getChildren()) {
+                                @Override
 				protected Object createWrapper(Object o) {
 					return new Lane((com.frinika.sequencer.model.Lane) o);
 				}
@@ -770,6 +773,7 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object[] getMidiLanes() {
 			return (new Converter(p.getLanes(), MidiLane.class) {
+                                @Override
 				protected Object createWrapper(Object o) {
 					return new Lane((com.frinika.sequencer.model.Lane) o);
 				}
@@ -778,6 +782,7 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object[] getAudioLanes() {
 			return (new Converter(p.getLanes(), AudioLane.class) {
+                                @Override
 				protected Object createWrapper(Object o) {
 					return new Lane((com.frinika.sequencer.model.Lane) o);
 				}
@@ -786,6 +791,7 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object[] getTextLanes() {
 			return (new Converter(p.getLanes(), TextLane.class) {
+                                @Override
 				protected Object createWrapper(Object o) {
 					return new Lane((com.frinika.sequencer.model.Lane) o);
 				}
@@ -833,6 +839,7 @@ public class JavascriptScope extends ScriptableObject {
 			//final boolean playing = true;
 			final Object lock = new Object();
 			SongPositionListener spl = new SongPositionListener() {
+                                @Override
 				public void notifyTickPosition(long t) {
 					FrinikaSequencer sequencer = project.getSequencer();
 					if (t >= tick) {
@@ -843,6 +850,7 @@ public class JavascriptScope extends ScriptableObject {
 						//sequencer.removeSongPositionListener(this); // would lead to ConcurrentModificationException, so see below
 					}
 				}
+                                @Override
 				public boolean requiresNotificationOnEachTick() {
 					return true; // but we're not costy
 				}
@@ -888,7 +896,7 @@ public class JavascriptScope extends ScriptableObject {
 			if (file != null) {
 				try {
 					p.saveProject(file);
-				} catch (Throwable t) {
+				} catch (IOException t) {
 					project.error(t);
 				}
 			} else {
@@ -903,7 +911,7 @@ public class JavascriptScope extends ScriptableObject {
 					p.saveProject(file); // itentionally does not set
 											// lastSaved... value of project
 											// like manual saving
-				} catch (Throwable t) {
+				} catch (IOException t) {
 					project.error(t);
 				}
 			} else {
@@ -964,11 +972,11 @@ public class JavascriptScope extends ScriptableObject {
 		
 		public Object getLane(String name) {
 			Object[] lanes = getSystemLanes();
-			for (int i = 0; i < lanes.length; i++) {
-				if ( name.equals( ((Lane)lanes[i]).getName() ) ) {
-					return lanes[i];
-				}
-			}
+                    for (Object lane : lanes) {
+                        if (name.equals(((Lane) lane).getName())) {
+                            return lane;
+                        }
+                    }
 			return null;
 		}
 
@@ -1011,6 +1019,7 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object[] getParts() {
 			return (new Converter(l.getParts()) {
+                                @Override
 				protected Object createWrapper(Object o) {
 					return new Part((com.frinika.sequencer.model.Part) o,
 							Lane.this);
@@ -1053,11 +1062,11 @@ public class JavascriptScope extends ScriptableObject {
 
 		public Object getPart(int startTick) {
 			Object[] parts = getParts();
-			for (int i = 0; i < parts.length; i++) {
-				if ( startTick == ((Part)parts[i]).getStartTick() ) {
-					return parts[i];
-				}
-			}
+                    for (Object part : parts) {
+                        if (startTick == ((Part) part).getStartTick()) {
+                            return part;
+                        }
+                    }
 			return null;
 		}
 

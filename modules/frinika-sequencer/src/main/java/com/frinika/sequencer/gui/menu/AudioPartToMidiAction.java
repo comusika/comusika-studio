@@ -48,10 +48,12 @@ public class AudioPartToMidiAction extends AbstractAction {
 		this.project = project;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 
 		Thread t = new Thread() {
 
+                @Override
 			public void run() {
 				Part part = project.getProjectContainer()
 						.getPartSelection().getFocus();

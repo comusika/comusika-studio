@@ -40,8 +40,8 @@ public class RecordingDialog extends JDialog
 {
     private static final long serialVersionUID = 1L;
 
-    Vector<Integer> recordingTakeNumbers = new Vector<Integer>();
-    Vector<JToggleButton> recordingTakeTogglers = new Vector<JToggleButton>();
+    Vector<Integer> recordingTakeNumbers = new Vector<>();
+    Vector<JToggleButton> recordingTakeTogglers = new Vector<>();
     
     int numberOfTakes = 1;
    
@@ -77,7 +77,7 @@ public class RecordingDialog extends JDialog
      * @return
      */
     public int[] getDeployableTakes() {
-        Vector<Integer> deployableTakes = new Vector<Integer>();
+        Vector<Integer> deployableTakes = new Vector<>();
         
         for(int n = 0;n<recordingTakeTogglers.size();n++)
         {

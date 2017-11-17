@@ -56,9 +56,9 @@ import javax.swing.KeyStroke;
  * @author Peter Johan Salomonsen
  */
 public class EditHistoryContainer {
-	private Vector<EditHistoryAction> editHistory = new Vector<EditHistoryAction>();
+	private Vector<EditHistoryAction> editHistory = new Vector<>();
 
-	private Vector<EditHistoryMark> editHistoryMarks = new Vector<EditHistoryMark>();
+	private Vector<EditHistoryMark> editHistoryMarks = new Vector<>();
 
 	private int redoMarkIndex = 0;
 
@@ -66,7 +66,7 @@ public class EditHistoryContainer {
 
 	private JMenuItem redoMenuItem;
 
-	private Vector<EditHistoryListener> editHistoryListeners = new Vector<EditHistoryListener>();
+	private Vector<EditHistoryListener> editHistoryListeners = new Vector<>();
    
     /**
      * Set to false during undo or redo operations so that these operations are not recorded as well.
@@ -85,6 +85,7 @@ public class EditHistoryContainer {
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		undoMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				undo();
 
@@ -98,6 +99,7 @@ public class EditHistoryContainer {
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		redoMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				redo();
 			}
@@ -184,7 +186,7 @@ public class EditHistoryContainer {
 	 * 
 	 */
 	public void notifyEditHistoryListeners() {
-		Vector<EditHistoryAction> editHistoryActions = new Vector<EditHistoryAction>();
+		Vector<EditHistoryAction> editHistoryActions = new Vector<>();
 
 		if (redoMarkIndex > 0) {
 			int lastIndex = editHistoryMarks.get(redoMarkIndex - 1)

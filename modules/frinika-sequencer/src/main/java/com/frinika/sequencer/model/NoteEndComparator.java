@@ -26,6 +26,7 @@ import java.util.Comparator;
 
 public class NoteEndComparator implements Comparator <NoteEvent> {
 
+        @Override
 	public int compare(NoteEvent arg0, NoteEvent arg1) {
 		long t0=  arg0.getEndTick();
 		long t1 = arg1.getEndTick();

@@ -62,6 +62,7 @@ public class LatencyTester extends Observable  {
 	
 	AudioClient client=new AudioClient() {
 
+                @Override
 		public void work(int bufSize) {
 			
 			if (first) {
@@ -82,6 +83,7 @@ public class LatencyTester extends Observable  {
 
 		}
 
+                @Override
 		public void setEnabled(boolean b) {
 			// TODO ????
 		}
@@ -136,6 +138,7 @@ public class LatencyTester extends Observable  {
 
 		long count = 0;
 
+                @Override
 		public int processAudio(AudioBuffer buf) {
 			int n = buf.getSampleCount();
 			float buff[] = buf.getChannel(0);
@@ -148,11 +151,13 @@ public class LatencyTester extends Observable  {
 			return AUDIO_OK;
 		}
 
+                @Override
 		public void open() {
 			// TODO Auto-generated method stub
 
 		}
 
+                @Override
 		public void close() {
 			// TODO Auto-generated method stub
 
@@ -174,6 +179,7 @@ public class LatencyTester extends Observable  {
 			threshold = 0.2f;
 		}
 
+                @Override
 		public int processAudio(AudioBuffer buf) {
 			int n = buf.getSampleCount();
 			float buff[] = buf.getChannel(0);
@@ -190,11 +196,13 @@ public class LatencyTester extends Observable  {
 			return AUDIO_OK;
 		}
 
+                @Override
 		public void open() {
 			// TODO Auto-generated method stub
 
 		}
 
+                @Override
 		public void close() {
 			// TODO Auto-generated method stub
 
@@ -214,6 +222,7 @@ public class LatencyTester extends Observable  {
 		
 		l.addObserver(new Observer() {
 
+                        @Override
 			public void update(Observable o, Object arg) {
 				System.out.println(" latency is "+l.getLatencyInMillis() +"mS");
 			}

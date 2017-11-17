@@ -52,7 +52,7 @@ public class PcMidiInputDriver extends MidiInputBase implements Receiver {
       Transmitter t = dev.getTransmitter ();
       t.setReceiver (this);
     }
-    catch (Exception e) {
+    catch (MidiUnavailableException e) {
       String m = "PcMidiInputDriver reports exception\n";
       m += e.toString ();
       JOptionPane.showMessageDialog (null,
@@ -71,6 +71,7 @@ public class PcMidiInputDriver extends MidiInputBase implements Receiver {
   /**
     Required method that doesn't do anything
   */
+  @Override
   public void close () {
     System.out.println ("Receiver Close requested");
   } // close
@@ -79,6 +80,7 @@ public class PcMidiInputDriver extends MidiInputBase implements Receiver {
     Paradoxically, this method is called when a midi message is
     received from the input port.
   */
+  @Override
   public void send (MidiMessage message, long timeStamp) {
     // Extract the appropriate fields from the message
     ShortMessage m = (ShortMessage) message;

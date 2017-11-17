@@ -35,9 +35,9 @@ import uk.org.toot.audio.core.AudioProcess;
  * @author Peter Johan Salomonsen
  */
 public class RadioAudioProcess implements AudioProcess {
-    HashSet<RadioStreamTargetDataLine> tdLines = new HashSet<RadioStreamTargetDataLine>();
-    ArrayList<RadioStreamTargetDataLine> newTdLines = new ArrayList<RadioStreamTargetDataLine>();
-    ArrayList<RadioStreamTargetDataLine> closedTdLines = new ArrayList<RadioStreamTargetDataLine>();
+    HashSet<RadioStreamTargetDataLine> tdLines = new HashSet<>();
+    ArrayList<RadioStreamTargetDataLine> newTdLines = new ArrayList<>();
+    ArrayList<RadioStreamTargetDataLine> closedTdLines = new ArrayList<>();
 
     ProjectContainer project;
 
@@ -46,10 +46,12 @@ public class RadioAudioProcess implements AudioProcess {
     }
 
 
+    @Override
     public void open() throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int processAudio(AudioBuffer buffer) {
         /**
          * Convert floats to bytes - this is for export wav
@@ -119,6 +121,7 @@ public class RadioAudioProcess implements AudioProcess {
         return tdl;
     }
 
+    @Override
     public void close() throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }

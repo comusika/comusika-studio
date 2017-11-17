@@ -65,11 +65,13 @@ public class TempoListEditAction extends AbstractAction {
 
 	JFrame frame;
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@SuppressWarnings("serial")
+                @Override
 			public void run() {
 
 				if (frame == null) {
@@ -83,6 +85,7 @@ public class TempoListEditAction extends AbstractAction {
 
 						TempoListListener listener = new TempoListListener() {
 
+                                @Override
 							public void notifyTempoListChange() {
 								fireTableDataChanged();
 							}
@@ -93,15 +96,18 @@ public class TempoListEditAction extends AbstractAction {
 							list.addTempoListListener(listener);
 						}
 
+                            @Override
 						public int getColumnCount() {
 							return 3;
 						}
 
+                            @Override
 						public int getRowCount() {
 							list.reco();
 							return list.size() + 1;
 						}
 
+                            @Override
 						public Object getValueAt(int row, int col) {
 							if (row >= list.size())
 								return "";
@@ -117,12 +123,14 @@ public class TempoListEditAction extends AbstractAction {
 							return "";
 						}
 
+                            @Override
 						public boolean isCellEditable(int row, int col) {
 							if (row == 0 && col == 0)
 								return false;
 							return col == 0 || (col == 1 && row>0) || col == 2;
 						}
 
+                            @Override
 						public void setValueAt(Object value, int row, int col) {
 							boolean newE = row >= list.size();
 
@@ -158,7 +166,7 @@ public class TempoListEditAction extends AbstractAction {
 								list.add(tick, bpm);
 								list.reco();
 								list.notifyListeners();
-							} catch (Exception e) {
+							} catch (NumberFormatException e) {
 								e.printStackTrace();
 							}
 							fireTableDataChanged();
@@ -181,11 +189,13 @@ public class TempoListEditAction extends AbstractAction {
 						TimeSelector ts = new TimeSelector(project
 								.getProjectContainer());
 
+                            @Override
 						public Object getCellEditorValue() {
 							return ts.getString();
 						}
 
 						// Implement the one method defined by TableCellEditor.
+                            @Override
 						public Component getTableCellEditorComponent(
 								JTable table, Object value, boolean isSelected,
 								int row, int column) {

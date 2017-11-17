@@ -70,6 +70,7 @@ import rasmus.midi.provider.RasmusSynthesizer;
 public class MODImporter {
 
 	private static class ModulesFileFilter extends FileFilter {
+                @Override
 		public boolean accept(File f) {	
 			if(f.isDirectory()) return true;
 			if(!f.isFile()) return false;		
@@ -82,6 +83,7 @@ public class MODImporter {
 			return false;
 		}
 
+                @Override
 		public String getDescription() {
 			return "Module Files (*.mod,*.xm,*.s3m,*.stm,*.it,*.zip)";
 		}
@@ -123,7 +125,7 @@ public class MODImporter {
 	}
 	class XNoteEvents
 	{	
-		ArrayList<XNoteEvent> events = new ArrayList<XNoteEvent>();
+		ArrayList<XNoteEvent> events = new ArrayList<>();
 		int track;
 		boolean note_active = false;
 		public void processEvent(int note, int instrument, double pitch, double volume, double pan)
@@ -371,31 +373,29 @@ public class MODImporter {
 	}
 	public void finish()
 	{
-		for (int i = 0; i < events.length; i++) {
-			events[i].commit();
-		}
-
-
-		// Remove empty parts
-		for (int i = 0; i < lanes.length; i++) {			
-			Part[] parts = new Part[lanes[i].getParts().size()];
-			lanes[i].getParts().toArray(parts);
-			for (int j = 0; j < parts.length; j++) {
-				if(parts[j] instanceof MidiPart)
-				{
-					MidiPart mpart = (MidiPart)parts[j];
-					if(mpart.getMultiEvents().isEmpty())
-					{
-						mpart.removeFromModel();
-					}
-				}
-			}
-		}
-		
-		// Remove lanes not used
-		for (int i = 0; i < lanes.length; i++) {
-			if(lanes[i].getParts().size() == 0) lanes[i].removeFromModel();
-		}		
+            for (XNoteEvents event : events) {
+                event.commit();
+            }
+            // Remove empty parts
+            for (MidiLane lane : lanes) {
+                Part[] parts = new Part[lane.getParts().size()];
+                lane.getParts().toArray(parts);
+                for (Part part : parts) {
+                    if (part instanceof MidiPart) {
+                        MidiPart mpart = (MidiPart) part;
+                        if(mpart.getMultiEvents().isEmpty())
+                        {
+                            mpart.removeFromModel();
+                        }
+                    }
+                }
+            }
+            // Remove lanes not used
+            for (MidiLane lane : lanes) {
+                if (lane.getParts().size() == 0) {
+                    lane.removeFromModel();
+                }
+            }		
 		
 	}
 	
@@ -478,7 +478,7 @@ public class MODImporter {
 			
 			if(ins.getNumberOfSamples() > 1)
 			{
-				HashMap<Sample, String> sample_table = new HashMap<Sample, String>();
+				HashMap<Sample, String> sample_table = new HashMap<>();
 				for (int j = 0; j < ins.getNumberOfSamples(); j++) {
 					
 					Sample sample = ins.getSampleByNum(0);
@@ -571,6 +571,7 @@ public class MODImporter {
 		}
 		
 		int index = -1;
+                @Override
 		public int read() throws IOException {
 			if(index == lastindex) return -1;
 			index++;
@@ -582,7 +583,7 @@ public class MODImporter {
 		}
 	}
 	
-	HashMap<Sample, File> samplestempfiles = new HashMap<Sample, File>();
+	HashMap<Sample, File> samplestempfiles = new HashMap<>();
 	private File getSampleFile(Sample sample)
 	{
 		if(sample == null) return null;
@@ -681,7 +682,7 @@ public class MODImporter {
 			
 			field.setAccessible(true);
 			ts = (TrackState[])field.get(ms);
-		} catch (Exception e1) {
+		} catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e1) {
 			e1.printStackTrace();
 		}  		
 		
@@ -691,7 +692,7 @@ public class MODImporter {
         	boolean ok = true;
         	int last_position = ms.getPosition();
         	
-        	TreeSet<String> loop_detection = new TreeSet<String>();
+        	TreeSet<String> loop_detection = new TreeSet<>();
         	
         	String pos_id = ms.getPosition() + ":" + ms.getDivision();
         	loop_detection.add(pos_id);
@@ -1007,6 +1008,7 @@ public class MODImporter {
 			}
 		}
 		
+                @Override
 		public void setTrack(
 		        short[] sampleData,
 		        double offset,
@@ -1058,45 +1060,57 @@ public class MODImporter {
 		}
 
 		double lastplaytime = 0;
+                @Override
 		public void play(double arg0) throws PlayerException {
 			lastplaytime = arg0;	
 		}
 
+                @Override
 		public int getNumberOfTracks() {
 			return 0;
 		}
 
+                @Override
 		public void setAmplification(double arg0) {
 		}
 
+                @Override
 		public double getAmplification() {
 			return 0;
 		}
 
+                @Override
 		public void setVolume(double arg0) {
 		}
 
+                @Override
 		public double getVolume() {
 			return 0;
 		}
 
+                @Override
 		public void setBalance(double arg0) {
 		}
 
+                @Override
 		public double getBalance() {
 			return 0;
 		}
 
+                @Override
 		public void setSeparation(double arg0) {
 		}
 
+                @Override
 		public double getSeparation() {
 			return 0;
 		}
 
+                @Override
 		public void setMute(int arg0, boolean arg1) {
 		}
 
+                @Override
 		public boolean isMute(int arg0) {
 			return false;
 		}
@@ -1166,7 +1180,7 @@ public class MODImporter {
 			
 			field.setAccessible(true);
 			ts = (TrackState[])field.get(ms);
-		} catch (Exception e1) {
+		} catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e1) {
 			e1.printStackTrace();
 		}  		
 		
@@ -1176,7 +1190,7 @@ public class MODImporter {
         	boolean ok = true;
         	int last_position = ms.getPosition();
         	
-        	TreeSet<String> loop_detection = new TreeSet<String>();
+        	TreeSet<String> loop_detection = new TreeSet<>();
         	
         	String pos_id = ms.getPosition() + ":" + ms.getDivision();
         	loop_detection.add(pos_id);

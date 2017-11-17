@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -40,7 +41,7 @@ import javax.swing.JPanel;
 public class MidiInDevicePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	Vector<JCheckBox> boxes = new Vector<JCheckBox>();
+	Vector<JCheckBox> boxes = new Vector<>();
 
 	public MidiInDevicePanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -49,15 +50,16 @@ public class MidiInDevicePanel extends JPanel {
 
 		Info infos[] = MidiSystem.getMidiDeviceInfo();
 
-		Vector<String> names = new Vector<String>();
+		Vector<String> names = new Vector<>();
 
 		for (String name : FrinikaConfig.getMidiInDeviceList()) {
 			names.add(name);
 		}
 
 		ActionListener act = new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
-				Vector<String> list = new Vector<String>();
+				Vector<String> list = new Vector<>();
 				for (JCheckBox box : boxes) {
 					if (box.isSelected()) {
 						list.add(box.getText());
@@ -82,7 +84,7 @@ public class MidiInDevicePanel extends JPanel {
 					box.addActionListener(act);
 					add(box);
 				}
-			} catch (Exception e1) {
+			} catch (MidiUnavailableException e1) {
 				// TODO Auto-generated catch block
 				Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Error opening mididevice "+info.getName(),e1);
 			}

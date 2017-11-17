@@ -89,10 +89,12 @@ public class TransportPanel extends JPanel {
 		project.getSequencer()
 				.addSongPositionListener(new SwingSongPositionListenerWrapper(new SongPositionListener() {
 
+                                        @Override
 					public void notifyTickPosition(long tick) {
 						setTime();
 					}
 
+                                        @Override
 					public boolean requiresNotificationOnEachTick() {
 						// TODO Auto-generated method stub
 						return false;
@@ -112,6 +114,7 @@ public class TransportPanel extends JPanel {
 		final JButton previousButton = new JButton(new ImageIcon(ClassLoader
 				.getSystemResource("icons/previous.png")));
 		previousButton.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 //				System.out
 //						.println("Not implemented yet! Setting tickposition to 0");
@@ -140,6 +143,7 @@ public class TransportPanel extends JPanel {
 		final JButton nextButton = new JButton(new ImageIcon(ClassLoader
 				.getSystemResource("icons/next.png")));
 		nextButton.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Not implemented yet!");
 			}
@@ -171,6 +175,7 @@ public class TransportPanel extends JPanel {
 			{
 				JMenuItem item=new JMenuItem("bar.beat.tick");
 				item.addActionListener(new ActionListener(){
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						displayMode=BAR_BEAT_TICK;
 						setTime();
@@ -180,6 +185,7 @@ public class TransportPanel extends JPanel {
 			
 				item=new JMenuItem("frames");
 				item.addActionListener(new ActionListener(){
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						displayMode=FRAME;
 						setTime();
@@ -190,6 +196,7 @@ public class TransportPanel extends JPanel {
 					
 				item=new JMenuItem("time");
 				item.addActionListener(new ActionListener(){
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						displayMode=TIME;
 						setTime();
@@ -200,26 +207,31 @@ public class TransportPanel extends JPanel {
 				
 			}
 			
+                        @Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mousePressed(MouseEvent e) {
 				menu.show(timeDisplayPanel, 0, 0);
 				
 			}
 
+                        @Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 				

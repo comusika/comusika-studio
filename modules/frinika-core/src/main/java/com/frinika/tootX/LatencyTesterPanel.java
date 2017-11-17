@@ -54,6 +54,7 @@ public class LatencyTesterPanel extends JPanel {
 		add(new JLabel("samples latency. (current value="+lat+")"));
 		tester.addObserver(new Observer() {
 
+                        @Override
 			public void update(Observable o, Object arg) {
 				String str;
 				int latency = tester.getLatencyInSamples();
@@ -73,6 +74,7 @@ public class LatencyTesterPanel extends JPanel {
 	
 		set.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 			
 				int lat=Integer.parseInt(latencyLabel.getText());
@@ -91,6 +93,7 @@ public class LatencyTesterPanel extends JPanel {
 	
 		set.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				tester.reset();
 			}	
@@ -103,6 +106,7 @@ public class LatencyTesterPanel extends JPanel {
 	
 		abort.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();				
 			}
@@ -115,14 +119,17 @@ public class LatencyTesterPanel extends JPanel {
 		if (frame != null) {
 			frame.addWindowListener(new WindowListener(){
 
+                                @Override
 				public void windowActivated(WindowEvent e) {
 					// TODO Auto-generated method stub
 					
 				}
 
+                                @Override
 				public void windowClosed(WindowEvent e) {
 				}
 
+                                @Override
 				public void windowClosing(WindowEvent e) {
 					if (tester!=null) tester.stop();
 					tester=null;
@@ -133,21 +140,25 @@ public class LatencyTesterPanel extends JPanel {
 					
 				}
 
+                                @Override
 				public void windowDeactivated(WindowEvent e) {
 					// TODO Auto-generated method stub
 					
 				}
 
+                                @Override
 				public void windowDeiconified(WindowEvent e) {
 					// TODO Auto-generated method stub
 					
 				}
 
+                                @Override
 				public void windowIconified(WindowEvent e) {
 					// TODO Auto-generated method stub
 					
 				}
 
+                                @Override
 				public void windowOpened(WindowEvent e) {
 					// TODO Auto-generated method stub
 					

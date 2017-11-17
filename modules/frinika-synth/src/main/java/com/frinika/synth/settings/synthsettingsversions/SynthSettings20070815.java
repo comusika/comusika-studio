@@ -38,28 +38,33 @@ public class SynthSettings20070815 implements SynthSettings,Serializable
     /**
      * @return Returns the synthClassNames.
      */
+    @Override
     public String[] getSynthClassNames() {
         return synthClassNames;
     }
     /**
      * @param synthClassNames The synthClassNames to set.
      */
+    @Override
     public void setSynthClassNames(String[] synthClassNames) {
         this.synthClassNames = synthClassNames;
     }
     /**
      * @return Returns the synthSettings.
      */
+    @Override
     public Serializable[] getSynthSettings() {
         return synthSettings;
     }
     /**
      * @param synthSettings The synthSettings to set.
      */
+    @Override
     public void setSynthSettings(Serializable[] synthSettings) {
         this.synthSettings = synthSettings;
     }
     
+    @Override
 	public boolean hasProgramChangeEvent() {
 		return true;
 	}

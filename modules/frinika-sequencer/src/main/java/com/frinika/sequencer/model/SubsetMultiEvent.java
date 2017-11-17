@@ -60,6 +60,7 @@ public final class SubsetMultiEvent extends MultiEvent {
     /**
      * n/a
      */
+    @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		
 	}

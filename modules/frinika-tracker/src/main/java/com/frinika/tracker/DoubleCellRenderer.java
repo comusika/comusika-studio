@@ -36,10 +36,11 @@ public class DoubleCellRenderer extends DefaultTableCellRenderer {
 	/* (non-Javadoc)
 	 * @see javax.swing.JLabel#getText()
 	 */
+        @Override
 	public String getText() {
 		try
 		{
 			return(numberFormat.format(Double.parseDouble(super.getText())));
-		} catch(Exception e) { return(super.getText()); }
+		} catch(NumberFormatException e) { return(super.getText()); }
 	}
 }

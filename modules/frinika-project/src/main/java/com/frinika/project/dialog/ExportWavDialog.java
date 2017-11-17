@@ -33,6 +33,7 @@ import com.frinika.tools.ProgressBarInputStream;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.File;
+import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -100,9 +101,10 @@ public class ExportWavDialog extends JDialog implements Runnable {
             
             this.setLocationRelativeTo(frame);
             this.setVisible(true);
-        } catch(Exception e) {}
+        } catch(IOException | InterruptedException e) {}
     }
     
+    @Override
     public void run() {
     	// Stop audio server
     
@@ -118,7 +120,7 @@ public class ExportWavDialog extends JDialog implements Runnable {
             sequencer.stop();
             sequencer.setRealtime(true);
             ExportWavDialog.this.dispose();
-        } catch(Exception e) {
+        } catch(IOException e) {
         	e.printStackTrace();
         }
         // Restore output process (mixer) from project and restart audio server

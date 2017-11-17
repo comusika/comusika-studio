@@ -59,6 +59,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the freqSpread.
      */
+    @Override
     public float getFreqSpread() {
         return freqSpread;
     }
@@ -67,6 +68,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param freqSpread The freqSpread to set.
      */
+    @Override
     public void setFreqSpread(float freqSpread) {
         this.freqSpread = freqSpread;
     }    
@@ -74,6 +76,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the layers.
      */
+    @Override
     public int getLayers() {
         return layers;
     }
@@ -82,6 +85,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param layers The layers to set.
      */
+    @Override
     public void setLayers(int layers) {
         this.layers = layers;
     }    
@@ -89,6 +93,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the loPassAttack.
      */
+    @Override
     public int getLoPassAttack() {
         return loPassAttack;
     }
@@ -97,6 +102,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param loPassAttack The loPassAttack to set.
      */
+    @Override
     public void setLoPassAttack(int loPassAttack) {
         this.loPassAttack = loPassAttack;
     }
@@ -105,6 +111,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the loPassDecay.
      */
+    @Override
     public int getLoPassDecay() {
         return loPassDecay;
     }
@@ -113,6 +120,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param loPassDecay The loPassDecay to set.
      */
+    @Override
     public void setLoPassDecay(int loPassDecay) {
         this.loPassDecay = loPassDecay;
     }
@@ -121,6 +129,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the loPassMax.
      */
+    @Override
     public int getLoPassMax() {
         return loPassMax;
     }
@@ -129,6 +138,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param loPassMax The loPassMax to set.
      */
+    @Override
     public void setLoPassMax(int loPassMax) {
         this.loPassMax = loPassMax;
     }
@@ -137,6 +147,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the loPassRelease.
      */
+    @Override
     public int getLoPassRelease() {
         return loPassRelease;
     }
@@ -145,6 +156,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param loPassRelease The loPassRelease to set.
      */
+    @Override
     public void setLoPassRelease(int loPassRelease) {
         this.loPassRelease = loPassRelease;
     }
@@ -153,6 +165,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the loPassSustain.
      */
+    @Override
     public int getLoPassSustain() {
         return loPassSustain;
     }
@@ -161,6 +174,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param loPassSustain The loPassSustain to set.
      */
+    @Override
     public void setLoPassSustain(int loPassSustain) {
         this.loPassSustain = loPassSustain;
     }
@@ -169,6 +183,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the volAttack.
      */
+    @Override
     public int getVolAttack() {
         return volAttack;
     }
@@ -177,6 +192,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param volAttack The volAttack to set.
      */
+    @Override
     public void setVolAttack(int volAttack) {
         this.volAttack = volAttack;
     }
@@ -185,6 +201,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the volDecay.
      */
+    @Override
     public int getVolDecay() {
         return volDecay;
     }
@@ -193,6 +210,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param volDecay The volDecay to set.
      */
+    @Override
     public void setVolDecay(int volDecay) {
         this.volDecay = volDecay;
     }
@@ -201,6 +219,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the volRelease.
      */
+    @Override
     public int getVolRelease() {
         return volRelease;
     }
@@ -209,6 +228,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param volRelease The volRelease to set.
      */
+    @Override
     public void setVolRelease(int volRelease) {
         this.volRelease = volRelease;
     }
@@ -217,6 +237,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the volSustain.
      */
+    @Override
     public int getVolSustain() {
         return volSustain;
     }
@@ -225,6 +246,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param volSustain The volSustain to set.
      */
+    @Override
     public void setVolSustain(int volSustain) {
         this.volSustain = volSustain;
     }
@@ -233,6 +255,7 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @return Returns the waveform.
      */
+    @Override
     public float[] getWaveform() {
         return waveform;
     }
@@ -241,14 +264,17 @@ public class AnalogikaSettings20050303 implements AnalogikaSettings,Serializable
     /**
      * @param waveform The waveform to set.
      */
+    @Override
     public void setWaveform(float[] waveform) {
         this.waveform = waveform;
     }
 
+    @Override
     public String getInstrumentName() {
         return instrumentName;
     }
 
+    @Override
     public void setInstrumentName(String instrumentName) {
         this.instrumentName = instrumentName;
     }

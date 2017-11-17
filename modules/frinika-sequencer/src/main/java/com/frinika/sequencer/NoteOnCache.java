@@ -36,7 +36,7 @@ import javax.sound.midi.ShortMessage;
  *
  */
 public class NoteOnCache {
-    private HashMap<Receiver,HashSet<Integer>> pendingNoteOffs = new HashMap<Receiver,HashSet<Integer>>();
+    private HashMap<Receiver,HashSet<Integer>> pendingNoteOffs = new HashMap<>();
         
     public final void interceptMessage(MidiMessage msg, Receiver receiver)
     {

@@ -74,68 +74,56 @@ public class PlaySynth {
 		}
 
 		MidiDevice outDev = MidiSystem.getMidiDevice(synthInfo);
-		AudioSynthesizer audosynth = (AudioSynthesizer) outDev;
+            try (AudioSynthesizer audosynth = (AudioSynthesizer) outDev) {
+                MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+                MidiDevice dev = null;
+                for (Info info : infos) {
+                    System.out.println(info.getName());
+                }
+                for (Info info : infos) {
+                    //	System.out.println(infos[i].getName());
+                    //		if (infos[i].getName().equals("SL [hw:1,0]"))
+                    if (info.getName().equals("CP300 [hw:2,0]")) // if(infos[i].getName().equals("MIDI Yoke NT: 1"))
+                    {
+                        MidiDevice.Info rtinfo = info;
+                        dev = MidiSystem.getMidiDevice(rtinfo);
+                        if (dev.getMaxTransmitters() != 0)
+                            break;
+                        dev = null;
+                    }
+                }
+                if (dev == null) return;
+                dev.open();
+                final AudioProcess synthVoice = createSynthAudioProcess(audosynth);
+                // Connect the synth audio directly to the output
+                AudioClient client = new AudioClient() {
+                    @Override
+                    public void setEnabled(boolean arg0) {
+                    }
 
-        MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
-		MidiDevice dev = null;
-		for (int i = 0; i < infos.length; i++) {
-			System.out.println(infos[i].getName());
-        }
-
-		for (int i = 0; i < infos.length; i++) {
-		//	System.out.println(infos[i].getName());
-	//		if (infos[i].getName().equals("SL [hw:1,0]"))
-            if (infos[i].getName().equals("CP300 [hw:2,0]"))
-
-			// if(infos[i].getName().equals("MIDI Yoke NT: 1"))
-			{
-				MidiDevice.Info rtinfo = infos[i];
-				dev = MidiSystem.getMidiDevice(rtinfo);
-				if (dev.getMaxTransmitters() != 0)
-					break;
-				dev = null;
-			}
-		}
-		if (dev == null) return;
-		dev.open();
-
-	
-	
-
-		final AudioProcess synthVoice = createSynthAudioProcess(audosynth);
-
-		// Connect the synth audio directly to the output
-		AudioClient client = new AudioClient() {
-			public void setEnabled(boolean arg0) {
-			}
-
-			public void work(int arg0) {
-				synthVoice.processAudio(buff);
-				out.processAudio(buff);
-			}
-		};
-
-		// Load a sound font
-	
-		// Connect synth to the midi input
-		Receiver du = audosynth.getReceiver();
-		dev.getTransmitter().setReceiver(new FilterReceiver(du));
-		
-		
-		// start the audio server
-		server.setClient(client);
-		server.start();
-		
-		serverConfig = AudioServerServices
-		.createServerConfiguration(server);
-		configure();
-		System.out.println("Is active, press enter to stop");
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		br.readLine();
-
-		System.out.println("Stop...");
-		dev.close();
-		audosynth.close();
+                    @Override
+                    public void work(int arg0) {
+                        synthVoice.processAudio(buff);
+                        out.processAudio(buff);
+                    }
+                };
+                // Load a sound font
+                
+                // Connect synth to the midi input
+                Receiver du = audosynth.getReceiver();
+                dev.getTransmitter().setReceiver(new FilterReceiver(du));
+                // start the audio server
+                server.setClient(client);
+                server.start();
+                serverConfig = AudioServerServices
+                        .createServerConfiguration(server);
+                configure();
+                System.out.println("Is active, press enter to stop");
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                br.readLine();
+                System.out.println("Stop...");
+                dev.close();
+            }
 		System.exit(0);
 	}
 
@@ -148,6 +136,7 @@ public class PlaySynth {
 
 		}
 
+                @Override
 		public void send(MidiMessage mess, long timeStamp) {
 			if (mess.getStatus() >= ShortMessage.MIDI_TIME_CODE) {
 	//			 System.out.println(mess + " " + mess.getStatus() );
@@ -173,6 +162,7 @@ public class PlaySynth {
 			chained.send(mess, -1);
 		}
 
+                @Override
 		public void close() {
 			chained.close();
 		}
@@ -198,12 +188,15 @@ public class PlaySynth {
 
 			FloatBuffer floatBuffer = null;
 
+                        @Override
 			public void close() {
 			}
 
+                        @Override
 			public void open() {
 			}
 
+                        @Override
 			public int processAudio(AudioBuffer buffer) {
 				if (buffer == null)
 					return 0;

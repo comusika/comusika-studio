@@ -113,6 +113,7 @@ public class NoteLengthPopup extends JPopupMenu implements ActionListener {
 
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 	
 		for (int i=0;i<notes.length;i++) {

@@ -55,11 +55,13 @@ public class SpinTweakerPanel extends JPanel implements ChangeListener {
 		add(spin);
 		spin.getEditor().addMouseListener(new MouseListener(){
 
+                        @Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mouseEntered(MouseEvent e) {
 				System.out.println("N");
 
@@ -69,17 +71,20 @@ public class SpinTweakerPanel extends JPanel implements ChangeListener {
 				
 			}
 
+                        @Override
 			public void mouseExited(MouseEvent e) {
 				System.out.println("X");
 				spin.getEditor().getRootPane().requestFocusInWindow();
 				
 			}
 
+                        @Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
@@ -105,6 +110,7 @@ public class SpinTweakerPanel extends JPanel implements ChangeListener {
 //		p.add(new JLabel(t.getLabel()), spin);
 //	}
 
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		t.set(model.getNumber());
 		model.setValue(t.getNumber());

@@ -46,6 +46,7 @@ class ScriptThread extends Thread {
 		this.dialog = dialog;
 	}
 		
+        @Override
 	public void run() {
 		FrinikaScriptingEngine.runningScripts.put(script, this);
 		FrinikaScriptingEngine.notifyScriptListeners(script, script);

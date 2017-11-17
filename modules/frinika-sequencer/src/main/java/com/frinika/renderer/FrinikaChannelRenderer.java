@@ -42,7 +42,7 @@ public class FrinikaChannelRenderer implements Runnable {
 	
 	FrinikaDeviceRenderer dev_render;
 	int channel;
-	ArrayList<FrinikaTrackWrapper> tracks = new ArrayList<FrinikaTrackWrapper>();
+	ArrayList<FrinikaTrackWrapper> tracks = new ArrayList<>();
 	FrinikaMidiPacketProvider packetprovider;
 	Thread render_thread;
 	CachedRender packet_render;
@@ -131,6 +131,7 @@ public class FrinikaChannelRenderer implements Runnable {
 	int circularbuffer_write_pos = 0;
 	int circularbuffer_avail = 0;
 		
+        @Override
 	public void run()
 	{
 		while(active)

@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 
 /**
@@ -90,13 +91,13 @@ public class TempoList implements Serializable {
 
 		in.defaultReadObject();
 
-		treeSet = new TreeMap<Long, MyTempoEvent>();
+		treeSet = new TreeMap<>();
 
 		for (MyTempoEvent e : list) {
 			treeSet.put(e.tick, e);
 		}
 		dirty = true;
-		listeners = new Vector<TempoListListener>();
+		listeners = new Vector<>();
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException {
@@ -106,10 +107,10 @@ public class TempoList implements Serializable {
 
 	public TempoList(double ticksPerBeat, AbstractSequencerProjectContainer project) {
 		this.project = project;
-		treeSet = new TreeMap<Long, MyTempoEvent>();
-		list = new Vector<MyTempoEvent>();
+		treeSet = new TreeMap<>();
+		list = new Vector<>();
 		this.ticksPerBeat = ticksPerBeat;
-		listeners = new Vector<TempoListListener>();
+		listeners = new Vector<>();
 	}
 
 	/**
@@ -169,7 +170,7 @@ public class TempoList implements Serializable {
 					MidiEvent tempoEvent = new MidiEvent(tempoMsg, e.getKey());
 					e.getValue().tempoEvent = tempoEvent;
 					tempoTrack.add(tempoEvent);
-				} catch (Exception ex) {
+				} catch (InvalidMidiDataException ex) {
 					ex.printStackTrace();
 				}
 			}

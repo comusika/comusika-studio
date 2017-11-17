@@ -34,11 +34,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sound.midi.Instrument;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
@@ -70,6 +72,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	
 	private static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class.getResource("/icons/frinika.png"));
 	
+        @Override
 	public Icon getIcon()
 	{
 		if(icon.getIconHeight() > 16 || icon.getIconWidth() > 16)
@@ -121,6 +124,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 			 * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage,
 			 *      long)
 			 */
+                        @Override
 			public void send(MidiMessage message, long timeStamp) {
 
 				// if it's a note then use note device
@@ -148,18 +152,19 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 					if (defRecv != null)
 						defRecv.send(message, timeStamp);
 
-				} catch (Exception e) {
+				} catch (InvalidMidiDataException e) {
 					// For debugging
 					e.printStackTrace();
 				}
 			}
 
+                        @Override
 			public void close() {
 				// TODO Auto-generated method stub
 			}
 		};
 
-		receivers = new ArrayList<Receiver>();
+		receivers = new ArrayList<>();
 		receivers.add(receiver);
 
 	}
@@ -170,7 +175,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 			ObjectOutputStream out = new ObjectOutputStream(
 					new FileOutputStream(file));
 			// out.writeObject(setup);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println(" DRUM MAP SAVE ");
@@ -182,7 +187,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 					file));
 			// SynthSettings setup = (SynthSettings)in.readObject();
 			// loadSynthSetup(setup);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println(" DRUM MAP LOAD ");
@@ -335,6 +340,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getDeviceInfo()
 	 */
+        @Override
 	public Info getDeviceInfo() {
 		// TODO Auto-generated method stub
 		return deviceInfo;
@@ -345,6 +351,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#open()
 	 */
+        @Override
 	public void open() throws MidiUnavailableException {
 	}
 
@@ -353,6 +360,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#close()
 	 */
+        @Override
 	public void close() {
 	}
 
@@ -361,6 +369,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#isOpen()
 	 */
+        @Override
 	public boolean isOpen() {
 		// TODO Auto-generated method stub
 		return false;
@@ -371,6 +380,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getMicrosecondPosition()
 	 */
+        @Override
 	public long getMicrosecondPosition() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -381,6 +391,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getMaxReceivers()
 	 */
+        @Override
 	public int getMaxReceivers() {
 		return -1;
 	}
@@ -390,6 +401,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getMaxTransmitters()
 	 */
+        @Override
 	public int getMaxTransmitters() {
 		return 0;
 	}
@@ -399,6 +411,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getReceiver()
 	 */
+        @Override
 	public Receiver getReceiver() throws MidiUnavailableException {
 		return receiver;
 	}
@@ -409,6 +422,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * @see javax.sound.midi.MidiDevice#getReceivers()
 	 */
 	@SuppressWarnings("unchecked")
+        @Override
 	public List getReceivers() {
 		return receivers;
 	}
@@ -418,6 +432,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getTransmitter()
 	 */
+        @Override
 	public Transmitter getTransmitter() throws MidiUnavailableException {
 		return null;
 	}
@@ -428,6 +443,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	 * @see javax.sound.midi.MidiDevice#getTransmitters()
 	 */
 	@SuppressWarnings("unchecked")
+        @Override
 	public List getTransmitters() {
 		return null;
 	}
@@ -435,6 +451,7 @@ public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
 	/**
 	 * over to provide easier GUI manufactoring
 	 */
+        @Override
 	public String toString() {
 		return getDeviceInfo().toString();
 	}

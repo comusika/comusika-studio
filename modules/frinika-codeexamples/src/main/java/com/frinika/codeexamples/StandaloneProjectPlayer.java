@@ -46,6 +46,7 @@ public class StandaloneProjectPlayer {
                         System.out.println("Loading project "+f.getName());
                         Runnable projectPlayRunnable = new Runnable() {
 
+                            @Override
                             public void run() {
                                 ProjectContainer projectContainer = null;
                                 try

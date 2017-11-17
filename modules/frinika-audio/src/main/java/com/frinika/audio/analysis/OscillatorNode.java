@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis;
 
 import com.frinika.global.FrinikaConfig;
@@ -29,117 +28,123 @@ import uk.org.toot.audio.core.AudioBuffer;
 
 public class OscillatorNode implements Oscillator {
 
-	double freq1;
+    double freq1;
 
-	double freq2;
+    double freq2;
 
-	double amp1;
+    double amp1;
 
-	double amp2;
+    double amp2;
 
-	double phaseRef;
+    double phaseRef;
 
-	double phase;
+    double phase;
 
-	double dphase1;
+    double dphase1;
 
-	double dphase2;
+    double dphase2;
 
-	public boolean active = false;
+    public boolean active = false;
 
-	boolean steady = false;
+    boolean steady = false;
 
-	static final double twoPI = Math.PI * 2.0;
+    static final double twoPI = Math.PI * 2.0;
 
-	void start(double freq, double amp, double phaseRef) {
-		this.amp1 = 0.0;
-		this.amp2 = amp;
-		this.freq1 = this.freq2 = freq;
-		this.dphase1 = this.dphase2 = 2.0 * Math.PI * freq
-				/ FrinikaConfig.sampleRate;
-		phase = phaseRef;
-		if (phase < 0)
-			phase += twoPI;
-		active = true;
-	}
+    void start(double freq, double amp, double phaseRef) {
+        this.amp1 = 0.0;
+        this.amp2 = amp;
+        this.freq1 = this.freq2 = freq;
+        this.dphase1 = this.dphase2 = 2.0 * Math.PI * freq
+                / FrinikaConfig.sampleRate;
+        phase = phaseRef;
+        if (phase < 0) {
+            phase += twoPI;
+        }
+        active = true;
+    }
 
-	public OscillatorNode() {
-		active = false;
-		steady = false;
-	}
+    public OscillatorNode() {
+        active = false;
+        steady = false;
+    }
 
-	public void close() {
-		// TODO Auto-generated method stub
+    @Override
+    public void close() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public double getAmp() {
-		return amp2;
-	}
+    @Override
+    public double getAmp() {
+        return amp2;
+    }
 
-	public double getFreq() {
-		return freq2;
-	}
+    @Override
+    public double getFreq() {
+        return freq2;
+    }
 
-	public void open() {
-		// TODO Auto-generated method stub
+    @Override
+    public void open() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public int processAudio(AudioBuffer buffer) {
+    @Override
+    public int processAudio(AudioBuffer buffer) {
 
-		float buff[] = buffer.getChannel(0);
-		int n = buffer.getSampleCount();
+        float buff[] = buffer.getChannel(0);
+        int n = buffer.getSampleCount();
 
-		if (steady) {
-			for (int i = 0; i < n; i++) {
-				phase += dphase2;
-				if (phase >= twoPI) {
-					phase -= twoPI;
-				}
-				// buff[i] += amp * Math.sin(); // TODO
-				buff[i] += amp2 * FloatSinTable.sinFast(phase); // TODO
-			}
-		} else {
-			double ddphase=(dphase2-dphase1)/n;
-			double ddamp = (amp2-amp1)/n;
-			for (int i = 0; i < n; i++) {
-				phase += dphase1;
-				dphase1 += ddphase;
-				
-				if (phase >= twoPI) {
-					phase -= twoPI;
-				}
-				buff[i] += amp1 * FloatSinTable.sinFast(phase); // TODO
-				amp1 += ddamp;
-			}	
-		}
-		steady=true;
-		active = amp2 != 0;
-		return AUDIO_OK;
-	}
+        if (steady) {
+            for (int i = 0; i < n; i++) {
+                phase += dphase2;
+                if (phase >= twoPI) {
+                    phase -= twoPI;
+                }
+                // buff[i] += amp * Math.sin(); // TODO
+                buff[i] += amp2 * FloatSinTable.sinFast(phase); // TODO
+            }
+        } else {
+            double ddphase = (dphase2 - dphase1) / n;
+            double ddamp = (amp2 - amp1) / n;
+            for (int i = 0; i < n; i++) {
+                phase += dphase1;
+                dphase1 += ddphase;
 
-	void setNext(double freq, double amp, double phaseRef) {
-		this.amp2 = amp;
-		this.freq2 = freq;
-		// this.phaseRef = phaseRef;
-		this.dphase2 = 2.0 * Math.PI * freq2 / FrinikaConfig.sampleRate;
-		steady=false;
-		active =true;
-	}
+                if (phase >= twoPI) {
+                    phase -= twoPI;
+                }
+                buff[i] += amp1 * FloatSinTable.sinFast(phase); // TODO
+                amp1 += ddamp;
+            }
+        }
+        steady = true;
+        active = amp2 != 0;
+        return AUDIO_OK;
+    }
 
-	@Override
-	public String toString() {
-		return "f:" + freq2 + "  a:" + amp2;
-	}
+    void setNext(double freq, double amp, double phaseRef) {
+        this.amp2 = amp;
+        this.freq2 = freq;
+        // this.phaseRef = phaseRef;
+        this.dphase2 = 2.0 * Math.PI * freq2 / FrinikaConfig.sampleRate;
+        steady = false;
+        active = true;
+    }
 
-	public boolean active() {
-		return active;
-	}
+    @Override
+    public String toString() {
+        return "f:" + freq2 + "  a:" + amp2;
+    }
 
-	public void silence() {
-		this.amp2 = 0;
-		steady=false;
-		active =true;
-	}
+    public boolean active() {
+        return active;
+    }
+
+    public void silence() {
+        this.amp2 = 0;
+        steady = false;
+        active = true;
+    }
 }

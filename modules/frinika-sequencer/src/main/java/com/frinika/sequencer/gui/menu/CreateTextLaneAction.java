@@ -48,6 +48,7 @@ public class CreateTextLaneAction extends AbstractAction {
 		super(getMessage("sequencer.project.add_text_lane"));
 		this.project=project;		
 	}
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.add_text_lane"));
 		TextLane lane = project.getProjectContainer().createTextLane();

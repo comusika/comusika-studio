@@ -60,6 +60,7 @@ public interface ProjectFrame extends ProjectFrameIntf {
 
 	public void resetViews();
 
+        @Override
 	public void repaintViews();
 
 	public void repaintPartView();
@@ -117,6 +118,7 @@ public interface ProjectFrame extends ProjectFrameIntf {
 	public void showRightButtonPartPopup(Component invoker, int x, int y);
 
         /** Get swing frame if available */
+        @Override
         public JFrame getFrame();
 
         public JPopupMenu getNewLaneMenu();

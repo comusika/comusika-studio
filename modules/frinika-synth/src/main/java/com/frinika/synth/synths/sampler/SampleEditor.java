@@ -57,6 +57,7 @@ public class SampleEditor extends JFrame{
 		JMenuItem renameMenuItem = new JMenuItem("Rename");
 		renameMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				SampleEditor.this.sampledSound.setSampleName(JOptionPane.showInputDialog("Enter new name",SampleEditor.this.sampledSound.getSampleName()));
 			}});
@@ -66,6 +67,7 @@ public class SampleEditor extends JFrame{
 		JMenu processMenu = new JMenu("Process");
 		JMenuItem normalizeMenuItem = new JMenuItem("Normalize");
 		normalizeMenuItem.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e)
 			{
 				short[] leftSamples = SampleEditor.this.sampledSound.getLeftSamples();
@@ -83,6 +85,7 @@ public class SampleEditor extends JFrame{
 
 		JMenuItem plus3dBMenuItem = new JMenuItem("Plus 3 dB");
 		plus3dBMenuItem.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e)
 			{
 				short[] leftSamples = SampleEditor.this.sampledSound.getLeftSamples();
@@ -103,6 +106,7 @@ public class SampleEditor extends JFrame{
 
 		JMenuItem minus3dBMenuItem = new JMenuItem("Minus 3 dB");
 		minus3dBMenuItem.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e)
 			{
 				short[] leftSamples = SampleEditor.this.sampledSound.getLeftSamples();

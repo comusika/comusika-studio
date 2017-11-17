@@ -114,6 +114,7 @@ public class MidiVoiceView extends LaneView {
         init();
     }
 
+    @Override
     protected void makeButtons() {
 
         JPanel devP = new JPanel();
@@ -147,6 +148,7 @@ public class MidiVoiceView extends LaneView {
             targetToggle.setMargin(new Insets(0, 0, 0, 0));
             targetToggle.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent arg0) {
                     toggleDrumMapperView();
                 }
@@ -202,6 +204,7 @@ public class MidiVoiceView extends LaneView {
         final JSpinner shifted = new JSpinnerDraggable(new SpinnerNumberModel((int) opt.shiftedTicks, -999, 999, 1));
         shifted.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 ((MidiLane) lane).getPlayOptions().shiftedTicks = (Integer) shifted.getValue();
             }
@@ -234,6 +237,7 @@ public class MidiVoiceView extends LaneView {
         a.actionPerformed(null); // update first time*/
         ChangeListener l = new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 ((MidiLane) lane).getPlayOptions().loopedTicks = loopedTimeSelector.getTicks();
                 try {
@@ -261,6 +265,7 @@ public class MidiVoiceView extends LaneView {
         final JSpinner vel = new JSpinnerDraggable(new SpinnerNumberModel(opt.velocityOffset, -127, 127, 1));
         vel.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 ((MidiLane) lane).getPlayOptions().velocityOffset = (Integer) vel.getValue();
             }
@@ -297,6 +302,7 @@ public class MidiVoiceView extends LaneView {
         compressor.setSelectedIndex(selectedIndex);
         compressor.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 int index = compressor.getSelectedIndex();
                 float compr = (((float) (100 - index * 10)) / 100f);
@@ -323,6 +329,7 @@ public class MidiVoiceView extends LaneView {
         final JSpinner transpose = new JSpinnerDraggable(new SpinnerNumberModel(opt.transpose, -127, 127, 1));
         transpose.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 MidiPlayOptions opt = ((MidiLane) lane).getPlayOptions();
                 int value = (Integer) transpose.getModel().getValue();
@@ -349,6 +356,7 @@ public class MidiVoiceView extends LaneView {
         quantizeIntervalTimeSelector.setTicks(opt.quantization.interval);
         quantizeIntervalTimeSelector.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 MidiPlayOptions opt = ((MidiLane) lane).getPlayOptions();
                 int t = (int) quantizeIntervalTimeSelector.getTicks();
@@ -360,6 +368,7 @@ public class MidiVoiceView extends LaneView {
         final JToggleButton quantizeCheckBox = new JToggleButton("Quantize", opt.quantizationActive);
         quantizeCheckBox.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 MidiPlayOptions opt = ((MidiLane) lane).getPlayOptions();
                 opt.quantizationActive = quantizeCheckBox.isSelected();
@@ -372,6 +381,7 @@ public class MidiVoiceView extends LaneView {
         final JSpinner quantizeIntensitySpinner = new JSpinnerDraggable(new SpinnerNumberModel((int) (opt.quantization.intensity * 100), 0, 100, 1));
         quantizeIntensitySpinner.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 MidiPlayOptions opt = ((MidiLane) lane).getPlayOptions();
                 int value = (Integer) quantizeIntensitySpinner.getModel().getValue();
@@ -392,6 +402,7 @@ public class MidiVoiceView extends LaneView {
         quantizePatternButton.setContentAreaFilled(false);
         quantizePatternButton.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 MidiQuantizeAction action = quantizeDialogCache.get(lane);
                 if (action == null) {
@@ -464,6 +475,7 @@ public class MidiVoiceView extends LaneView {
 
         but.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser;
 
@@ -520,6 +532,7 @@ public class MidiVoiceView extends LaneView {
         JComponent ret = new JScrollPane(vTree);
         vTree.addTreeSelectionListener(new TreeSelectionListener() {
 
+            @Override
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) vTree.getLastSelectedPathComponent();
                 if (node == null) {
@@ -598,6 +611,7 @@ public class MidiVoiceView extends LaneView {
 
         ListProvider resource = new ListProvider() {
 
+            @Override
             public Object[] getList() {
                 return midiResource.getOutChannelList(((MidiLane) lane).getMidiDevice());
             }
@@ -605,6 +619,7 @@ public class MidiVoiceView extends LaneView {
 
         PopupClient client = new PopupClient() {
 
+            @Override
             public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
                 ((MidiLane) lane).setMidiChannel(cnt);
                 init();
@@ -644,6 +659,7 @@ public class MidiVoiceView extends LaneView {
 
         ListProvider resource = new ListProvider() {
 
+            @Override
             public Object[] getList() {
                 return midiResource.getOutChannelList(mapper.getDefaultMidiDevice());
             }
@@ -651,6 +667,7 @@ public class MidiVoiceView extends LaneView {
 
         PopupClient client = new PopupClient() {
 
+            @Override
             public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
                 ((MidiLane) lane).setMidiChannel(cnt);
                 //mapper.setChannel(cnt);
@@ -671,6 +688,7 @@ public class MidiVoiceView extends LaneView {
 
         ListProvider resource = new ListProvider() {
 
+            @Override
             public Object[] getList() {
                 return MidiVoiceView.this.lane.getProject().getMidiDeviceDescriptors().toArray();// midiResource.getMidiOutList();
             }
@@ -678,6 +696,7 @@ public class MidiVoiceView extends LaneView {
 
         PopupClient client = new PopupClient() {
 
+            @Override
             public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
 
                 MidiDevice d = ((MidiDeviceDescriptorIntf) o).getMidiDevice();
@@ -738,6 +757,7 @@ public class MidiVoiceView extends LaneView {
 
         ListProvider resource = new ListProvider() {
 
+            @Override
             public Object[] getList() {
                 return MidiVoiceView.this.lane.getProject().getMidiDeviceDescriptors().toArray();// midiResource.getMidiOutList();
             }
@@ -745,6 +765,7 @@ public class MidiVoiceView extends LaneView {
 
         PopupClient client = new PopupClient() {
 
+            @Override
             public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
 
                 MidiDevice d = ((MidiDeviceDescriptorIntf) o).getMidiDevice();

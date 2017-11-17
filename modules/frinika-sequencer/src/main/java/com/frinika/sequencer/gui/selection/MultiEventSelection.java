@@ -11,6 +11,7 @@ public class MultiEventSelection extends SelectionContainer<MultiEvent>{
 	public MultiEventSelection(AbstractSequencerProjectContainer project){
 		super(project);
 	}
+        @Override
 	protected void setMetaFocus() {
 		MultiEvent ev=(MultiEvent)focus;
 		Part part=ev.getPart();

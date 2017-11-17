@@ -235,6 +235,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     /**
      * used by the GUI
      */
+    @Override
     public boolean isSelected() {
         return selected;
     }
@@ -242,6 +243,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     /**
      * used by the GUI
      */
+    @Override
     public void setSelected(boolean b) {
         selected = b;
     }
@@ -298,6 +300,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
      */
     abstract protected void moveItemsBy(long deltaTick);
 
+    @Override
     public abstract Object clone() throws CloneNotSupportedException;
 
     /*
@@ -322,6 +325,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
      */
     public abstract void moveContentsBy(double tick, Lane dstLane);
 
+    @Override
     public void removeFromModel() {
 
         lane.remove(this);
@@ -341,15 +345,18 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
         }
     }
 
+    @Override
     public void addToModel() {
 
         lane.add(this);
     }
 
+    @Override
     public long leftTickForMove() {
         return getStartTick();
     }
 
+    @Override
     public long rightTickForMove() {
         return getEndTick();
     }
@@ -437,6 +444,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
         JMenuItem item = new JMenuItem(getMessage("project.menu.properties") + "...");
         item.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 showPropertiesDialog(frame);
             }
@@ -478,6 +486,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             /**
              * Called when Ok is chosen.
              */
+            @Override
             public void ok() {
                 super.ok();
                 // commit as undoable action
@@ -485,11 +494,13 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
                 project.getEditHistoryContainer().mark(getMessage("project.menu.edit_properties"));
                 EditHistoryAction action = new EditHistoryAction() {
 
+                    @Override
                     public void redo() {
                         contentEditor.update();
                         ((ProjectFrame) frame).repaintPartView();
                     }
 
+                    @Override
                     public void undo() {
                         backup.update();
                         ((ProjectFrame) frame).repaintPartView();
@@ -503,6 +514,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
              * Special handling of cancel, because values changed in the dialog will directly be applied
              * and thus must explicitly be restored if cancel is chosen.
              */
+            @Override
             public void cancel() {
                 backup.update();
                 super.cancel();
@@ -571,6 +583,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             // special: directly apply change and make visible
             startTimeSelector.addChangeListener(new ChangeListener() {
 
+                @Override
                 public void stateChanged(ChangeEvent e) {
                     long d = getDurationInTicks();
                     startTick = startTimeSelector.getTicks();
@@ -582,6 +595,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             // special: directly apply change and make visible
             endTimeSelector.addChangeListener(new ChangeListener() {
 
+                @Override
                 public void stateChanged(ChangeEvent e) {
                     endTick = endTimeSelector.getTicks();
                     lengthTimeSelector.setTicks(getDurationInTicks());
@@ -591,6 +605,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             // special: directly apply change and make visible
             lengthTimeSelector.addChangeListener(new ChangeListener() {
 
+                @Override
                 public void stateChanged(ChangeEvent e) {
                     long t = lengthTimeSelector.getTicks();
                     endTick = startTick + t;
@@ -625,6 +640,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
          * 
          * TO BE EXTENDED BY SUBCLASS.
          */
+        @Override
         public void refresh() {
             startTimeSelector.setTicks(startTick);
             endTimeSelector.setTicks(endTick);
@@ -636,6 +652,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
          * 
          * TO BE EXTENDED BY SUBCLASS.
          */
+        @Override
         public void update() {
             startTick = startTimeSelector.getTicks();
             endTick = endTimeSelector.getTicks();

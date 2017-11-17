@@ -24,6 +24,7 @@ package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
@@ -67,7 +68,7 @@ public class MyCursors {
 						.getIconHeight() - 1), name);
 
 			}
-		} catch (Exception e) {
+		} catch (HeadlessException | IndexOutOfBoundsException e) {
 			System.out.println("name was " + name );
 			e.printStackTrace();
 		}

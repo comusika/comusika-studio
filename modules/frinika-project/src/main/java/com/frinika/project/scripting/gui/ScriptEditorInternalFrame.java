@@ -117,6 +117,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
         }
     }
     
+    @Override
     public void toFront() {
     	super.toFront();
     	editorPane.requestFocus();
@@ -202,6 +203,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
         }
     }
     
+    @Override
     public void scriptStarted(FrinikaScript script) {
 //System.out.println("script started "+script);
         if (script == this.script) {
@@ -211,6 +213,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
         }
     }
 
+    @Override
     public void scriptExited(FrinikaScript script, Object returnValue) {
 //System. out.println("script exited "+script);
         if (script == this.script) {
@@ -224,6 +227,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
     /**
      * Background thread for watching external changes.
      */
+    @Override
     public void run() {
         String filename = ((DefaultFrinikaScript)script).getFilename();
 //System. out.println("starting watchdog thread for " + filename);

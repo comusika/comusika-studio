@@ -46,12 +46,13 @@ public class SplitSelectedPartsAction extends AbstractAction {
 		this.project = project;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 
 		
 	//	JFrame frame=new JFrame();
 		
-		Vector<MidiPart> parts = new Vector<MidiPart>();
+		Vector<MidiPart> parts = new Vector<>();
 
 		for (Part part : project.getProjectContainer().getPartSelection()
 				.getSelected()) {

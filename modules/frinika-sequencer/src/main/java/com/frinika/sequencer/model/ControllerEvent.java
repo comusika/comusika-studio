@@ -73,6 +73,7 @@ public class ControllerEvent extends ChannelEvent {
     /**
      * @return Returns the value.
      */
+    @Override
     public int getValue() {
         return value;
     }
@@ -80,6 +81,7 @@ public class ControllerEvent extends ChannelEvent {
     /**
      * @param value The value to set.
      */
+    @Override
     public void setValue(int value) {
         this.value = value;
     }
@@ -114,6 +116,7 @@ public class ControllerEvent extends ChannelEvent {
         zombie=false;
     }
 
+    @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		ControllerEvent evt = (ControllerEvent)object;
 		this.part = evt.part;

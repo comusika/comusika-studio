@@ -8,6 +8,7 @@ package com.frinika.tootX;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import uk.org.toot.audio.mixer.MixerControls;
@@ -30,7 +31,7 @@ public class MixerControlsMidiStreamSnapshotAutomation
         	configureSequence(seq);
             recallSequence(seq);
                   	
-        } catch ( Exception imde ) {
+        } catch ( IOException | InvalidMidiDataException imde ) {
         	imde.printStackTrace();
         }
     }

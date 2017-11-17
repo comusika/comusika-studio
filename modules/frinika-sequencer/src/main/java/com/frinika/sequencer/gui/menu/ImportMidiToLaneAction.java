@@ -26,8 +26,11 @@ package com.frinika.sequencer.gui.menu;
 import static com.frinika.localization.CurrentLocale.getMessage;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.MidiFileFilter;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.swing.AbstractAction;
@@ -44,6 +47,7 @@ public class ImportMidiToLaneAction extends AbstractAction {
 		this.project = project;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		
 		File midiFile=null;
@@ -65,7 +69,7 @@ public class ImportMidiToLaneAction extends AbstractAction {
 				midiFile = newMidiFile;
 			}
 			;
-		} catch (Exception ex) {
+		} catch (HeadlessException | IOException | InvalidMidiDataException ex) {
 			ex.printStackTrace();
 		}
 	

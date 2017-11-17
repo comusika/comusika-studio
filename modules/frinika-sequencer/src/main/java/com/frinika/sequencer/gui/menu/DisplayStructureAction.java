@@ -42,6 +42,7 @@ public class DisplayStructureAction extends AbstractAction {
 		this.project = project;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		// project.
 		String prefix = "*";

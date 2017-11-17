@@ -49,6 +49,7 @@ public class FrinikaControllerList implements ControllerListProvider {
 
 	}
 
+    @Override
 	public Object[] getList() {
 		return cntrls;
 	}

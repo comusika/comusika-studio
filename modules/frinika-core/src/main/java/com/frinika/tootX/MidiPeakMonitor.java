@@ -46,6 +46,7 @@ public class MidiPeakMonitor implements MidiMessageListener {
 	}
 
 
+        @Override
 	public void midiMessage(MidiMessage message) {
 		if (!(message instanceof ShortMessage)) return;	
 		

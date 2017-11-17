@@ -33,6 +33,7 @@ import com.sun.media.sound.AudioSynthesizer;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -95,36 +96,44 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                 int channel = channelNo;
                 boolean mute = false;
 
+                @Override
                 public void noteOn(int noteNumber, int velocity) {
                     // TODO Auto-generated method stub
                 }
 
+                @Override
                 public void noteOff(int noteNumber, int velocity) {
                     // TODO Auto-generated method stub
                 }
 
+                @Override
                 public void noteOff(int noteNumber) {
                     // TODO Auto-generated method stub
                 }
 
+                @Override
                 public void setPolyPressure(int noteNumber, int pressure) {
                     // TODO Auto-generated method stub
                 }
 
+                @Override
                 public int getPolyPressure(int noteNumber) {
                     // TODO Auto-generated method stub
                     return 0;
                 }
 
+                @Override
                 public void setChannelPressure(int pressure) {
                     // TODO Auto-generated method stub
                 }
 
+                @Override
                 public int getChannelPressure() {
                     // TODO Auto-generated method stub
                     return 0;
                 }
 
+                @Override
                 public void controlChange(int controller, int value) {
                     ShortMessage shm = new ShortMessage();
                     try {
@@ -135,91 +144,109 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                     }
                 }
 
+                @Override
                 public int getController(int controller) {
                     // TODO Auto-generated method stub
                     return 0;
                 }
 
+                @Override
                 public void programChange(int program) {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public void programChange(int bank, int program) {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public int getProgram() {
                     // TODO Auto-generated method stub
                     return 0;
                 }
 
+                @Override
                 public void setPitchBend(int bend) {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public int getPitchBend() {
                     // TODO Auto-generated method stub
                     return 0;
                 }
 
+                @Override
                 public void resetAllControllers() {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public void allNotesOff() {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public void allSoundOff() {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public boolean localControl(boolean on) {
                     // TODO Auto-generated method stub
                     return false;
                 }
 
+                @Override
                 public void setMono(boolean on) {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public boolean getMono() {
                     // TODO Auto-generated method stub
                     return false;
                 }
 
+                @Override
                 public void setOmni(boolean on) {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public boolean getOmni() {
                     // TODO Auto-generated method stub
                     return false;
                 }
 
+                @Override
                 public void setMute(boolean mute) {
                     this.mute = mute;
 
                 }
 
+                @Override
                 public boolean getMute() {
 
                     return mute;
                 }
 
+                @Override
                 public void setSolo(boolean soloState) {
                     // TODO Auto-generated method stub
 
                 }
 
+                @Override
                 public boolean getSolo() {
                     // TODO Auto-generated method stub
                     return false;
@@ -234,6 +261,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage, long)
          */
+        @Override
         public void send(MidiMessage message, long timeStamp) {
             try
             {
@@ -279,6 +307,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#close()
          */
+        @Override
         public void close() {
             try {
                 midiDevice.getReceiver().close();
@@ -307,9 +336,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                     Logger.getLogger(getClass().getName()).log(Level.FINE, "Found resource annotation in class {0} with name {1}. Injecting this resource.", new Object[]{midiDevice.getClass().getName(), resourceAnnotation.name()});
                     try {
                         field.setInt(midiDevice, FrinikaConfig.sampleRate);
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
+                    } catch (IllegalArgumentException | IllegalAccessException ex) {
                         Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -319,9 +346,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                     Logger.getLogger(getClass().getName()).log(Level.FINE, "Found resource annotation in class {0} of type {1}. Injecting this resource.", new Object[]{midiDevice.getClass().getName(), field.getType().getName()});
                     try {
                         field.set(midiDevice, project.getAudioServer());
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
+                    } catch (IllegalArgumentException | IllegalAccessException ex) {
                         Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -331,9 +356,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                     Logger.getLogger(getClass().getName()).log(Level.FINE, "Found resource annotation in class {0} of type {1}. Injecting this resource.", new Object[]{midiDevice.getClass().getName(), field.getType().getName()});
                     try {
                         field.set(midiDevice, project.getSequencer());
-                    } catch (IllegalArgumentException ex) {
-                        Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
+                    } catch (IllegalArgumentException | IllegalAccessException ex) {
                         Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -378,16 +401,19 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 
 
 
+                    @Override
                     public void close() {
                             // TODO Auto-generated method stub
 
                     }
 
+                    @Override
                     public void open() {
                             // TODO Auto-generated method stub
 
                     }
 
+                    @Override
                     public int processAudio(AudioBuffer buffer) {
                         if(buffer==null)
                             return 0;
@@ -411,7 +437,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                         {
                             try {
                                 ais.read(streamBuffer, 0, buffer.getSampleCount()*8);
-                            } catch (Exception e) {
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
 
@@ -434,7 +460,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                     }
                 };
 
-            } catch(Exception e) {
+            } catch(MidiUnavailableException e) {
                 e.printStackTrace(); 
             }
 
@@ -474,16 +500,19 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 	                    FloatBuffer floatBuffer = null;
 
 
+                            @Override
 						public void close() {
 							// TODO Auto-generated method stub
 
 						}
 
+                            @Override
 						public void open() {
 							// TODO Auto-generated method stub
 
 						}
 
+                            @Override
 						public int processAudio(AudioBuffer buffer) {
                             if(buffer==null)
                             	return 0;
@@ -525,7 +554,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 						}
 	            };
 
-        	} catch(Exception e) {e.printStackTrace(); }
+        	} catch(MidiUnavailableException | LineUnavailableException e) {e.printStackTrace(); }
         }
 
     }
@@ -541,12 +570,14 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	return synthVoice;
     }
 
+    @Override
     public Receiver getReceiver() throws MidiUnavailableException {
         return receiver;
     }
 
+    @Override
     public List<Receiver> getReceivers() {
-        List<Receiver> receivers = new ArrayList<Receiver>();
+        List<Receiver> receivers = new ArrayList<>();
         receivers.add(receiver);
         for(Receiver recv : midiDevice.getReceivers())
         {
@@ -560,43 +591,53 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
         return receivers;
     }
 
+    @Override
     public Transmitter getTransmitter() throws MidiUnavailableException {
         return midiDevice.getTransmitter();
     }
 
+    @Override
     public List<Transmitter> getTransmitters() {
         return midiDevice.getTransmitters();
     }
 
+    @Override
     public MidiDevice.Info getDeviceInfo() {
         return midiDevice.getDeviceInfo();
     }
 
+    @Override
     public void open() throws MidiUnavailableException {
         midiDevice.open();
 
     }
 
+    @Override
     public void close() {
         midiDevice.close();
     }
 
+    @Override
     public boolean isOpen() {
         return midiDevice.isOpen();
     }
 
+    @Override
     public long getMicrosecondPosition() {
         return midiDevice.getMicrosecondPosition();
     }
 
+    @Override
     public int getMaxReceivers() {
         return midiDevice.getMaxReceivers();
     }
 
+    @Override
     public int getMaxTransmitters() {
         return midiDevice.getMaxTransmitters();
     }
 
+    @Override
     public int getMaxPolyphony() {
     	if(midiDevice instanceof Synthesizer)
     		return ((Synthesizer)midiDevice).getMaxPolyphony();
@@ -604,6 +645,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     		return 0;
     }
 
+    @Override
     public long getLatency() {
     	if(midiDevice instanceof Synthesizer)
     		return ((Synthesizer)midiDevice).getLatency();
@@ -611,10 +653,12 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     		return 0;
     }
 
+    @Override
     public MidiChannel[] getChannels() {
         return midiChannels;
     }
 
+    @Override
     public VoiceStatus[] getVoiceStatus() {
     	if(midiDevice instanceof Synthesizer)
     		return ((Synthesizer)midiDevice).getVoiceStatus();
@@ -622,6 +666,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     		return null;
     }
 
+    @Override
     public boolean isSoundbankSupported(Soundbank soundbank) {
     	if(midiDevice instanceof Synthesizer)
     		return ((Synthesizer)midiDevice).isSoundbankSupported(soundbank);
@@ -629,6 +674,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     		return false;
     }
 
+    @Override
     public boolean loadInstrument(Instrument instrument) {
     	if(midiDevice instanceof Synthesizer)
     		return ((Synthesizer)midiDevice).loadInstrument(instrument);
@@ -636,12 +682,14 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     		return false;
     }
 
+    @Override
     public void unloadInstrument(Instrument instrument) {
     	if(midiDevice instanceof Synthesizer)
     		((Synthesizer)midiDevice).unloadInstrument(instrument);
 
     }
 
+    @Override
     public boolean remapInstrument(Instrument from, Instrument to) {
     	if(midiDevice instanceof Synthesizer)
     	{
@@ -650,6 +698,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	else return false;
     }
 
+    @Override
     public Soundbank getDefaultSoundbank() {
     	if(midiDevice instanceof Synthesizer)
     	{
@@ -658,6 +707,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	else return null;
     }
 
+    @Override
     public Instrument[] getAvailableInstruments() {
     	if(midiDevice instanceof Synthesizer)
     	{
@@ -666,6 +716,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	else return null;
     }
 
+    @Override
     public Instrument[] getLoadedInstruments() {
     	if(midiDevice instanceof Synthesizer)
     	{
@@ -674,6 +725,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	else return null;
     }
 
+    @Override
     public boolean loadAllInstruments(Soundbank soundbank) {
     	if(midiDevice instanceof Synthesizer)
     	{
@@ -682,11 +734,13 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	else return false;
     }
 
+    @Override
     public void unloadAllInstruments(Soundbank soundbank) {
     	if(midiDevice instanceof Synthesizer)
     		((Synthesizer)midiDevice).unloadAllInstruments(soundbank);
     }
 
+    @Override
     public boolean loadInstruments(Soundbank soundbank, Patch[] patchList) {
     	if(midiDevice instanceof Synthesizer)
     	{
@@ -695,6 +749,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     	else return false;
     }
 
+    @Override
     public void unloadInstruments(Soundbank soundbank, Patch[] patchList) {
     	if(midiDevice instanceof Synthesizer)
     		((Synthesizer)midiDevice).unloadInstruments(soundbank,patchList);
@@ -702,6 +757,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
     /**
      * Override toString to provide easy construction of GUI selectors.
      */
+    @Override
     public String toString() {
     	return midiDevice.getDeviceInfo().toString();
     }
@@ -739,7 +795,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 		try {
 			Method setName = midiDevice.getClass().getMethod("setSaveReferencedData", Boolean.TYPE);
 			setName.invoke(midiDevice, saveReferencedData);
-		} catch (Exception e) {
+		} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
 		}
 	}
 
@@ -752,7 +808,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 		final Synthesizer midiDevice ;
 		try {
 			if(this.midiDevice.getClass().getMethod("clone") == null) return false;
-		} catch (Exception e) {
+		} catch (NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -772,6 +828,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 		this.supress_audio = supress_audio;
 	}
 
+    @Override
 	public MidiRender getRender(float samplerate, int channels) {
 
 		if(!(midiDevice instanceof Synthesizer)) return null;
@@ -781,7 +838,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 		final Synthesizer midiDevice ;
 		try {
 			midiDevice = (Synthesizer)this.midiDevice.getClass().getMethod("clone").invoke(this.midiDevice);
-		} catch (Exception e) {
+		} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -831,10 +888,12 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
             byte[] streamBuffer = null;
             FloatBuffer floatBuffer = null;
 			boolean first = true;
+            @Override
 			public void send(MidiMessage message) {
 
 				f_recv.send(message, -1);
 			}
+            @Override
 			public int read(float[] buffer, int from, int to) {
                 if(buffer==null)
                 	return 0;
@@ -850,6 +909,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                 floatBuffer.get(buffer, from, len);
 				return len;
 			}
+            @Override
 			public void close() {
 				f_line.close();
 				midiDevice.close();
@@ -860,6 +920,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
 	}
 
 	Icon icon;
+    @Override
 	public Icon getIcon()
 	{
 		if(icon != null) return icon;
@@ -898,9 +959,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory,MidiDeviceIc
                         field.setAccessible(true);
                         try {
                             field.set(soundbank,project.getSequencer());
-                        } catch (IllegalArgumentException ex) {
-                            Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalAccessException ex) {
+                        } catch (IllegalArgumentException | IllegalAccessException ex) {
                             Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }

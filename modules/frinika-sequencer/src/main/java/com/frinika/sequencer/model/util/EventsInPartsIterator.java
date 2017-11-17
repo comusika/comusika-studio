@@ -82,6 +82,7 @@ public class EventsInPartsIterator implements Iterator<MultiEvent> {
 		return false;
 	}
 
+        @Override
 	public boolean hasNext() {
 		if (eventIter == null)
 			return false;
@@ -92,6 +93,7 @@ public class EventsInPartsIterator implements Iterator<MultiEvent> {
 		return advanceToNextMidiPart();
 	}
 
+        @Override
 	public MultiEvent next() {
 		while (eventIter.hasNext()) {
 			MultiEvent ev = eventIter.next();
@@ -105,6 +107,7 @@ public class EventsInPartsIterator implements Iterator<MultiEvent> {
 		return null;
 	}
 
+        @Override
 	public void remove() {
 		assert (false);
 		// TODO Auto-generated method stub

@@ -21,20 +21,17 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.plugins.reverb;
-
-
 
 public interface ReverbProcessVariables {
 
-	float getMix();
+    float getMix();
 
-	float getRoomSize();
+    float getRoomSize();
 
-	float getWidth();
+    float getWidth();
 
-	float getDamp();
+    float getDamp();
 
-	float getLevel();
+    float getLevel();
 }

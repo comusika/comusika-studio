@@ -76,6 +76,7 @@ public class ScriptingAction extends AbstractAction {
 		scriptingDialog = new ScriptingDialog(new AbstractDialog(), (ProjectContainer) project, scriptingSubmenu);
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if ( script == null ) {
 			if(JOptionPane.showConfirmDialog(scriptingDialog, "WARNING: Scripts may damage your "

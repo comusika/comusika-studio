@@ -58,6 +58,7 @@ public class CPUMeter extends JPanel implements Runnable {
 	}
 		
     int statCount = 0;
+    @Override
 	public void run()
 	{
 		while(true)
@@ -65,7 +66,7 @@ public class CPUMeter extends JPanel implements Runnable {
 			try
 			{
 				Thread.sleep(400);
-			} catch(Exception e) {}
+			} catch(InterruptedException e) {}
 			
 			cpuTextLabel.setText(cpuPercent+" %");
             if(cpuPercent>90)

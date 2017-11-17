@@ -557,7 +557,7 @@ public class Convert {
     try {
       s = s.trim ();
       d = new Double (s);
-      result = d.doubleValue ();
+      result = d;
     } // try
     
     // Exception handler
@@ -617,7 +617,7 @@ public class Convert {
     try {
       s = s.trim ();
       d = new Float (s);
-      result = d.floatValue ();
+      result = d;
     } // try
     
     // Exception handler
@@ -677,7 +677,7 @@ public class Convert {
     try {
       s = s.trim ();
       d = new Long (s);
-      result = d.longValue ();
+      result = d;
     } // try
     
     // Exception handler
@@ -737,7 +737,7 @@ public class Convert {
     try {
       s = s.trim ();
       d = new Integer (s);
-      result = d.intValue ();
+      result = d;
     } // try
     
     // Exception handler
@@ -797,7 +797,7 @@ public class Convert {
     try {
       s = s.trim ();
       d = new Short (s);
-      result = d.shortValue ();
+      result = d;
     } // try
     
     // Exception handler

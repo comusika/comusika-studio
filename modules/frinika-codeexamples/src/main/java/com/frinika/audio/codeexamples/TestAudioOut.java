@@ -100,6 +100,7 @@ public class TestAudioOut {
 
         audioServer.setClient(new AudioClient() {
 
+            @Override
             public void work(int arg0) {
 
 
@@ -109,6 +110,7 @@ public class TestAudioOut {
 
             }
 
+            @Override
             public void setEnabled(boolean arg0) {
                 //  throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -124,10 +126,12 @@ public class TestAudioOut {
         long count = 0;
         private double freq = 440;
 
+        @Override
         public void open() throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public int processAudio(AudioBuffer buffer) {
             int n = buffer.getSampleCount();
             int nchan = buffer.getChannelCount();
@@ -142,6 +146,7 @@ public class TestAudioOut {
             return AUDIO_OK;
         }
 
+        @Override
         public void close() throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }

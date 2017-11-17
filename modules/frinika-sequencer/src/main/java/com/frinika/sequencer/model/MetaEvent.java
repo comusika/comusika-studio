@@ -70,6 +70,7 @@ public class MetaEvent extends MultiEvent {
 
 	}
 
+    @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		// TODO Auto-generated method stub
 		MetaEvent evt=(MetaEvent)object;
@@ -84,6 +85,7 @@ public class MetaEvent extends MultiEvent {
     		super(part, startTick);
     }
     
+    @Override
 	public long getEndTick() {
 		// TODO Auto-generated method stub
 		return 0;

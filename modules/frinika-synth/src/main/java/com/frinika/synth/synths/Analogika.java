@@ -31,9 +31,11 @@ import com.frinika.synth.synths.analogika.settings.AnalogikaSettings;
 import com.frinika.synth.synths.analogika.settings.analogikasettingsversions.AnalogikaSettings20050303;
 import com.frinika.voiceserver.VoiceServer;
 import java.io.Serializable;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 /**
@@ -127,6 +129,7 @@ public final class Analogika extends Synth {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#noteOn(int, int)
 	 */
+    @Override
 	public void noteOn(int noteNumber, int velocity) { 
 		Oscillator osc = new AnalogikaOscillator(this);
 		osc.setNoteNumber(noteNumber);
@@ -137,6 +140,7 @@ public final class Analogika extends Synth {
     /* (non-Javadoc)
      * @see com.petersalomonsen.mystudio.mysynth.Synth#showGUI()
      */
+    @Override
     public void showGUI() {
         new AnalogikaGUI(this);
     }
@@ -177,6 +181,7 @@ public final class Analogika extends Synth {
         }
                 
         
+        @Override
 		public final void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
 		    if(release)
                 volEnvelope.release();
@@ -336,6 +341,7 @@ public final class Analogika extends Synth {
         
         class Recv implements Receiver
         {
+            @Override
             public void send(MidiMessage message, long timeStamp) {
                 try
                 {
@@ -344,9 +350,10 @@ public final class Analogika extends Synth {
                     
                     synth.getReceiver().send(shm,-1);
                 }
-                catch(Exception e) {}
+                catch(InvalidMidiDataException | MidiUnavailableException e) {}
             }
 
+            @Override
             public void close() {                           
             }   
         }
@@ -361,6 +368,7 @@ public final class Analogika extends Synth {
 	/**
 	 * 
 	 */
+    @Override
 	public String toString() {
 		//TODO count  ETC
 		return "Analogika: "+getInstrumentName();

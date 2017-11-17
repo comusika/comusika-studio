@@ -28,6 +28,7 @@ import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.AudioPart;
 import com.frinika.sequencer.model.Lane;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.AbstractAction;
@@ -43,6 +44,7 @@ public class ImportAudioAction extends AbstractAction {
         this.project = project;
     }
 
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         // project.
         Lane lane = project.getProjectContainer().getLaneSelection().getFocus();
@@ -117,7 +119,7 @@ public class ImportAudioAction extends AbstractAction {
 //					t.start();
                 }
             }
-        } catch (Exception e1) {
+        } catch (HeadlessException e1) {
             e1.printStackTrace();
         }
 

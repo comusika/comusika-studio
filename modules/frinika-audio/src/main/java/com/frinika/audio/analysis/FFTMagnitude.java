@@ -21,27 +21,23 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis;
 
 /**
  *
  * @author pjl
  */
-public class FFTMagnitude  {
+public class FFTMagnitude {
 
+    public void getData(float data[][], double fftOut[]) {
 
+        float magnArray[] = data[0];
 
-    public void getData(float data[][],double fftOut[]) {
-
-       float magnArray[]=data[0];
-
-       for (int i = 0; i < data[0].length; i++) {
+        for (int i = 0; i < data[0].length; i++) {
             double real = fftOut[2 * i];
             double imag = fftOut[2 * i + 1];
 
             magnArray[i] = (float) Math.sqrt(real * real + imag * imag);
-			
         }
-    } 
+    }
 }

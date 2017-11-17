@@ -62,6 +62,7 @@ public class TickSpinner extends JSpinnerDraggable implements CaretListener {
 		this(format, 0, timeUtils);
 	}
 	
+        @Override
 	public Object getNextValue() {
 		return super.getNextValue();
 	}
@@ -93,6 +94,7 @@ public class TickSpinner extends JSpinnerDraggable implements CaretListener {
 		final int pos = textField.getCaretPosition();
 		super.commitEdit();
 		(new Thread() {
+                        @Override
 			public void run() {
 				try {
 					//Thread.sleep(50); // 50 ms ok?
@@ -104,6 +106,7 @@ public class TickSpinner extends JSpinnerDraggable implements CaretListener {
 		}).start();
 	}
 	
+        @Override
 	public void caretUpdate(CaretEvent e) {
 		// depending on the position in the formatted string, set different step sizes so that up/down arrows will modify the part in which the cursor is
 		TickSpinnerModel model = (TickSpinnerModel)getModel();

@@ -56,6 +56,7 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
 		super(project, actionId);
 	}
 	
+        @Override
 	public void performPrepare() {
 		MidiSelection m = ((AbstractSequencerProjectContainer) project).getMidiSelection();
 		events = m.getSelected();
@@ -75,10 +76,11 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
 		super.actionPerformed(e);
 	}
 
+        @Override
 	protected void performAction() {
 		
 		// to modify the model, events must first be removed, later be re-added to the sequencer track
-		Collection<MultiEvent> clones = new ArrayList<MultiEvent>();
+		Collection<MultiEvent> clones = new ArrayList<>();
 		
 		try {
 			startTick = 0;
@@ -119,7 +121,7 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
 	 * otherwise by default this calls midifyNoteEvents with all selected NoteEvents.
 	 */
 	public void modifyEvents(Collection<MultiEvent> events) {
-		Collection<NoteEvent> notes = new ArrayList<NoteEvent>();
+		Collection<NoteEvent> notes = new ArrayList<>();
 		for (MultiEvent me : events) {
 			if (me instanceof NoteEvent) {
 				notes.add((NoteEvent)me);

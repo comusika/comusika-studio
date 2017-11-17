@@ -318,6 +318,7 @@ public static final Color
     public this method should not be called by the user program, only by
     the Java's windowing system.
   */
+        @Override
   public synchronized void paint (Graphics g) {
     //$ System.out.println ("Calling paint");
     // Not to be printed
@@ -402,6 +403,7 @@ public static final Color
   */
   private void setupWindowListener () {
     addWindowListener (new WindowAdapter () {
+      @Override
       public void windowClosing (WindowEvent e) {
         dispose ();
         if (exitWhenClosed)

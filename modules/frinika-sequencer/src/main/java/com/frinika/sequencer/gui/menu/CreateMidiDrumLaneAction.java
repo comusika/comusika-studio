@@ -41,6 +41,7 @@ public class CreateMidiDrumLaneAction extends AbstractAction {
 		this.project=project;		
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.add_midi_drum_lane"));
 		MidiLane lane=project.getProjectContainer().createMidiLane();

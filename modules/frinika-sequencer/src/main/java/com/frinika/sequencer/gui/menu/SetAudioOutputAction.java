@@ -47,6 +47,7 @@ public class SetAudioOutputAction extends AbstractAction {
 		this.project=project;		
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 
 		AudioServer audioServer = FrinikaAudioSystem.getAudioServer();

@@ -73,6 +73,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
+        @Override
 	public int getRowCount() {
 		return 1;
 	}
@@ -82,6 +83,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
+        @Override
 	public Class<?> getColumnClass(int columnIndex) {
 
 		switch (columnIndex) {
@@ -99,6 +101,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
 	 */
+        @Override
 	public String getColumnName(int column) {
 		return (ColumnNames[column]);
 	}
@@ -108,10 +111,12 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.TableModel#getColumnCount()
 	 */
+        @Override
 	public int getColumnCount() {
 		return (COLUMNS);
 	}
 
+        @Override
 	public int getColumnWidth(int column) {
 		switch (column) {
 		case COLUMN_TIME:
@@ -132,6 +137,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
+        @Override
 	public Object getValueAt(int row, int columnIndex) {
 		if (note == null)
 			return null;
@@ -158,6 +164,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 		case COLUMN_TIME:
 			final long newTick = (long) ((Double) value * ticksPerBeat);
 			new MultiEventChangeRecorder("move event", me) {
+                                @Override
 				public void doChange(MultiEvent me) {
 					note.setStartTick(newTick);
 				}
@@ -165,8 +172,9 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 			break;
 		case COLUMN_VELORVAL:
 			new MultiEventChangeRecorder("change velocity", me) {
+                                @Override
 				public void doChange(MultiEvent me) {
-					((NoteEvent) me).setVelocity(((Integer) value).intValue());
+					((NoteEvent) me).setVelocity(((Integer) value));
 				}
 			};
 
@@ -174,6 +182,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 
 		case COLUMN_LEN:
 			new MultiEventChangeRecorder("change duration", me) {
+                                @Override
 				public void doChange(MultiEvent me) {
 					note.setDuration((long) ((Double) value * ticksPerBeat));
 				}
@@ -190,6 +199,7 @@ public class NoteEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
+        @Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return true;
 	}

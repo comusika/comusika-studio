@@ -28,6 +28,7 @@ public class MultiPartMenuPlugin implements MenuPlugin {
     }
 
     @SuppressWarnings("serial")
+    @Override
     public void initContextMenu(JPopupMenu popup, final MenuPlugable obj) {
         if ((obj instanceof MidiPart)) {
             final MidiPart mp = (MidiPart) obj;
@@ -62,6 +63,7 @@ public class MultiPartMenuPlugin implements MenuPlugin {
 
                         item.setAction(new AbstractAction(" take " + take) {
 
+                            @Override
                             public void actionPerformed(ActionEvent e) {
                                 proj.getEditHistoryContainer().mark("X");
                                 if (item.isSelected()) {
@@ -81,6 +83,7 @@ public class MultiPartMenuPlugin implements MenuPlugin {
                         System.out.println(part + " " + take);
                         item.setAction(new AbstractAction(" take " + take) {
 
+                            @Override
                             public void actionPerformed(ActionEvent e) {
                                 proj.getEditHistoryContainer().mark("X");
                                 System.out.println(part + " " + item.isSelected());

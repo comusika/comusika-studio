@@ -52,6 +52,7 @@ class RepeatActionEditor extends JPanel implements OptionsEditor {
         refresh();
     }
     
+    @Override
     public void refresh() {
         // update label displaying length of current selection
         repeatTicksSelectionRadioButton.setText("length of selection: " + timeSelector.formatString(action.selectionLength));
@@ -60,6 +61,7 @@ class RepeatActionEditor extends JPanel implements OptionsEditor {
         repeatSpinner.requestFocus();
     }
     
+    @Override
     public void update() {
         if (repeatTicksSelectionRadioButton.isSelected()) {
             action.repeatTicks = action.selectionLength;

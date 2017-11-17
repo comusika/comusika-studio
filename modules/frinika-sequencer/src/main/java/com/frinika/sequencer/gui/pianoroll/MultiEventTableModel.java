@@ -81,6 +81,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
+        @Override
 	public int getRowCount() {
 		return 1;
 	}
@@ -90,6 +91,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 	 */
+        @Override
 	public Class<?> getColumnClass(int columnIndex) {
 
 		switch (columnIndex) {
@@ -107,6 +109,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
 	 */
+        @Override
 	public String getColumnName(int column) {
 		if (event instanceof NoteEvent)
 		return (noteColumnNames[column]);
@@ -119,10 +122,12 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.TableModel#getColumnCount()
 	 */
+        @Override
 	public int getColumnCount() {
 		return (COLUMNS);
 	}
 
+        @Override
 	public int getColumnWidth(int column) {
 		switch (column) {
 		case COLUMN_TIME:
@@ -138,6 +143,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 		}
 	}
 
+        @Override
 	public Object getValueAt(int row, int columnIndex) {
 		if (event == null ) return "null";
 		switch(columnIndex) {
@@ -186,6 +192,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 		case COLUMN_TIME:
 			final long newTick = time.barBeatTickToTick(string); //(long) (Double.parseDouble(string) * ticksPerBeat);
 			new MultiEventChangeRecorder(getMessage("sequencer.eventview.move"), event) {
+                                @Override
 				public void doChange(MultiEvent me) {
 					event.setStartTick(newTick);
 				}
@@ -193,6 +200,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 			break;
 		case COLUMN_VELORVAL:
 			new MultiEventChangeRecorder(getMessage("sequencer.eventview.adjust_velocity"), event) {
+                                @Override
 				public void doChange(MultiEvent event) {
 					event.setValueUI(Integer.parseInt(string));
 				}
@@ -205,6 +213,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 			NoteEvent me = (NoteEvent)event;
 
 			new MultiEventChangeRecorder(getMessage("sequencer.change_duration"), me) {
+                                @Override
 				public void doChange(MultiEvent e) {
 	//				((NoteEvent)e).setDuration((long) (Double.parseDouble(string) * ticksPerBeat));
 					
@@ -219,6 +228,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 			me = (NoteEvent)event;
 
 			new MultiEventChangeRecorder(getMessage("sequencer.eventview.adjust_pitch"), me) {
+                                @Override
 				public void doChange(MultiEvent e) {
 					((NoteEvent)e).setNote(MidiStepRecordAction.parseNote(string));
 				}
@@ -236,6 +246,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 	 */
+        @Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return true;
 	}

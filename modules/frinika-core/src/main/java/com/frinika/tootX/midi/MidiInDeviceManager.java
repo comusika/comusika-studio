@@ -36,6 +36,7 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 
 public class MidiInDeviceManager {
@@ -57,6 +58,7 @@ public class MidiInDeviceManager {
             this.devInfo = dev.getDeviceInfo();
         }
 
+        @Override
         public void send(MidiMessage arg0, long arg1) {
             if (project == null) {
                 return;
@@ -64,6 +66,7 @@ public class MidiInDeviceManager {
             project.processMidiMessageFromDevice(devInfo, arg0, arg1);
         }
 
+        @Override
         public void close() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -84,7 +87,7 @@ public class MidiInDeviceManager {
             return;
         }
 
-        Vector<String> names = new Vector<String>();
+        Vector<String> names = new Vector<>();
 
         for (String name : openMidiIn) { //FrinikaConfig.getMidiInDeviceList()) {
             names.add(name);
@@ -108,7 +111,7 @@ public class MidiInDeviceManager {
                         // active_midiindevices.add(dev);
                         }
                     }
-                } catch (Throwable e1) {
+                } catch (MidiUnavailableException e1) {
                     e1.printStackTrace();
                 }
             }

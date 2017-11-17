@@ -23,49 +23,47 @@
  */
 package com.frinika.sequencer.gui.tracker;
 
-import static com.frinika.FrinikaMain.configureUI;
+import com.frinika.FrinikaMain;
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
 import java.awt.Dimension;
-import static java.lang.System.getProperty;
-import static java.lang.System.out;
 import javax.swing.JFrame;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 /**
- *
  * @author Peter Johan Salomonsen
  */
 public class TrackerPanelTest {
-    public static void main(String[] args) throws Exception {
-	out.println(getProperty("java.version"));
-	configureUI();
-	JFrame frame = new JFrame();
-	frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-	frame.setSize(new Dimension(800,600));
-	// Create the project container
-	ProjectContainer proj = new ProjectContainer();
-//	proj.getAudioServer().start();
-	// Create a lane
-	com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();
 
-	FrinikaFrame pf = new FrinikaFrame(proj);
-	pf.setVisible(false);
-	// Create a MidiPart
+    public static void main(String[] args) throws Exception {
+        System.out.println(System.getProperty("java.version"));
+        FrinikaMain.configureUI();
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(new Dimension(800, 600));
+        // Create the project container
+        ProjectContainer proj = new ProjectContainer();
+//	proj.getAudioServer().start();
+        // Create a lane
+        com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();
+
+        FrinikaFrame pf = new FrinikaFrame(proj);
+        pf.setVisible(false);
+        // Create a MidiPart
         MidiPart part = new MidiPart(lane);
-// Add some notes
-        part.add(new NoteEvent(part, 0,60, 100, 0, 128));
-        part.add(new NoteEvent(part, 128,61, 100, 0, 128));
-        part.add(new NoteEvent(part, 256,62, 100, 0, 128));
-        part.add(new NoteEvent(part, 512,63, 100, 0, 128));
-        part.add(new NoteEvent(part, 768,64, 100, 0, 128));
+
+        // Add some notes
+        part.add(new NoteEvent(part, 0, 60, 100, 0, 128));
+        part.add(new NoteEvent(part, 128, 61, 100, 0, 128));
+        part.add(new NoteEvent(part, 256, 62, 100, 0, 128));
+        part.add(new NoteEvent(part, 512, 63, 100, 0, 128));
+        part.add(new NoteEvent(part, 768, 64, 100, 0, 128));
         part.setBoundsFromEvents();
-	
-	TrackerPanel tp = new TrackerPanel(proj.getSequence(), pf.getProjectContainer());
-	tp.setPart(part);
-	frame.add(tp);
-	frame.setVisible(true);
+
+        TrackerPanel tp = new TrackerPanel(proj.getSequence(), pf.getProjectContainer());
+        tp.setPart(part);
+        frame.add(tp);
+        frame.setVisible(true);
     }
 }

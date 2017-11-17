@@ -65,6 +65,7 @@ public class GroovePatternFromSequence implements GroovePattern {
 		setSequence(sequence);
 	}
 	
+        @Override
 	public String getName() {
 		return name;
 	}
@@ -107,6 +108,7 @@ public class GroovePatternFromSequence implements GroovePattern {
 		}
 	}
 	
+        @Override
 	public long quantize(long tick, int quantizeResolution, float smudge, int[] velocityByRef) {
 		long t = tick % length; // tick inside pattern, to be (de-)quantized (length is rounded as whole beats)
 		long diff = tick - t; // add again later
@@ -270,9 +272,9 @@ public class GroovePatternFromSequence implements GroovePattern {
 			name = name.substring(0, dot);
 		}
 		
-		FileInputStream in = new FileInputStream(file);
-		importFromMidiFile(name, in);
-		in.close();
+            try (FileInputStream in = new FileInputStream(file)) {
+                importFromMidiFile(name, in);
+            }
 	}
 	
 	public void saveAsMidiFile(File file) throws IOException {
@@ -346,40 +348,39 @@ public class GroovePatternFromSequence implements GroovePattern {
 		boolean firstNote = true;
 		long shift = 4 * srcRes; // offset start: 4 beats
 		Track[] srcTracks = seq.getTracks();
-		for (int i = 0; i < srcTracks.length; i++) {
-			Track srcTrack = srcTracks[i];
-			int size = srcTrack.size();
-			for (int j = 0; j < size; j++) {
-				MidiEvent ev = srcTrack.get(j);
-				MidiMessage msg = ev.getMessage();
-				if (msg instanceof ShortMessage) {
-					ShortMessage sh = (ShortMessage)msg;
-					int cmd = sh.getCommand();
-					if (cmd == ShortMessage.NOTE_ON || cmd == ShortMessage.NOTE_OFF) {
-						int note = sh.getData1();
-						int vel = sh.getData2();
-						long start = ev.getTick();
-						if (firstNote) {
-							shift -= ((start + (srcRes / 4)) / srcRes) * srcRes ; // correct offset by leading number of empty beats (so pattern will always start in first beat (or a little earlier for negative groove-shifts, this is why resolution/2 is added))
-							firstNote = false;
-						}
-						start += shift;
-						if (srcRes != dstRes) {
-							start = translateResolution(start, srcRes, dstRes);
-						}
-						// insert new event into target sequence
-						try {
-							ShortMessage sm = new ShortMessage();
-							sm.setMessage(cmd, 0, note, vel);
-							MidiEvent event = new MidiEvent(sm, start);
-							track.add(event);
-						} catch (InvalidMidiDataException imde) {
-							imde.printStackTrace();
-						}
-					}
-				}
-			}
-		}
+            for (Track srcTrack : srcTracks) {
+                int size = srcTrack.size();
+                for (int j = 0; j < size; j++) {
+                    MidiEvent ev = srcTrack.get(j);
+                    MidiMessage msg = ev.getMessage();
+                    if (msg instanceof ShortMessage) {
+                        ShortMessage sh = (ShortMessage)msg;
+                        int cmd = sh.getCommand();
+                        if (cmd == ShortMessage.NOTE_ON || cmd == ShortMessage.NOTE_OFF) {
+                            int note = sh.getData1();
+                            int vel = sh.getData2();
+                            long start = ev.getTick();
+                            if (firstNote) {
+                                shift -= ((start + (srcRes / 4)) / srcRes) * srcRes ; // correct offset by leading number of empty beats (so pattern will always start in first beat (or a little earlier for negative groove-shifts, this is why resolution/2 is added))
+                                firstNote = false;
+                            }
+                            start += shift;
+                            if (srcRes != dstRes) {
+                                start = translateResolution(start, srcRes, dstRes);
+                            }
+                            // insert new event into target sequence
+                            try {
+                                ShortMessage sm = new ShortMessage();
+                                sm.setMessage(cmd, 0, note, vel);
+                                MidiEvent event = new MidiEvent(sm, start);
+                                track.add(event);
+                            } catch (InvalidMidiDataException imde) {
+                                imde.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
 	}
 
 	static long translateResolution(long tick, int srcRes, int destRes) {
@@ -389,6 +390,7 @@ public class GroovePatternFromSequence implements GroovePattern {
 	/**
 	 * For displaying in GroovePatternManagerDialog's list.
 	 */
+        @Override
 	public String toString() {
 		return getName() + " [" + lengthInBeats +" beats, " + notesCount + " notes]";
 	}

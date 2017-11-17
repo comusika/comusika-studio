@@ -181,7 +181,7 @@ public class MyClipboard { // implements SelectionListener<Part> {
 
 	private Vector<Selectable> deepCopy(
 			Collection<? extends Selectable> collection, Selectable newParent) {
-		Vector<Selectable> ret = new Vector<Selectable>();
+		Vector<Selectable> ret = new Vector<>();
 		for (Selectable it : collection) {
 			Selectable itClone = it.deepCopy(newParent);
 			ret.add(itClone);

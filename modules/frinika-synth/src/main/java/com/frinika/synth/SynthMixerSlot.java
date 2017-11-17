@@ -29,6 +29,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -61,6 +62,7 @@ public class SynthMixerSlot implements InstrumentNameListener {
                     this.synthName = synthName;
             }
 
+            @Override
             public String toString()
             {
                     return(synthName);
@@ -110,12 +112,13 @@ public class SynthMixerSlot implements InstrumentNameListener {
 
         synthCB.addItemListener(new ItemListener() {
 
+        @Override
         public void itemStateChanged(ItemEvent e) {
             if(e.getStateChange() == ItemEvent.SELECTED)
                         {
             try {
                                         SynthMixerSlot.this.ms.setSynth(SynthMixerSlot.this.synthNo,(Synth)(((SynthRegisterEntry)e.getItem()).synthClass.getConstructors()[0].newInstance(new Object[]{SynthMixerSlot.this.ms})));
-                                } catch (Exception ex) {
+                                } catch (IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException ex) {
                 SynthMixerSlot.this.ms.setSynth(SynthMixerSlot.this.synthNo,null);
                                 }
                         }
@@ -134,6 +137,7 @@ public class SynthMixerSlot implements InstrumentNameListener {
                             /* (non-Javadoc)
                              * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
                              */
+                            @Override
                             public void mouseClicked(MouseEvent e) {
                                     if( SynthMixerSlot.this.ms.synths[SynthMixerSlot.this.synthNo] != null )   // PJL
                                             SynthMixerSlot.this.ms.synths[SynthMixerSlot.this.synthNo].showGUI();
@@ -177,6 +181,7 @@ public class SynthMixerSlot implements InstrumentNameListener {
     /* (non-Javadoc)
      * @see com.petersalomonsen.mystudio.mysynth.InstrumentNameListener#instrumentNameChange(java.lang.String)
      */
+    @Override
     public void instrumentNameChange(Synth synth, String instrumentName) {
         this.instrumentName.setText(instrumentName+" ");
     }

@@ -73,40 +73,48 @@ public class SoftMidiMixerTest {
 					}};
 				AudioContext.getDefaultAudioContext().getVoiceServer().addTransmitter(voice);
 			}
+                        @Override
 			public void close() {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public Info getDeviceInfo() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                        @Override
 			public int getMaxReceivers() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                        @Override
 			public int getMaxTransmitters() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                        @Override
 			public long getMicrosecondPosition() {
 				// TODO Auto-generated method stub
 				return 0;
 			}
 
+                        @Override
 			public Receiver getReceiver() throws MidiUnavailableException {
 				// TODO Auto-generated method stub
 				return new Receiver() {
 
+                                @Override
 					public void close() {
 						// TODO Auto-generated method stub
 						
 					}
 
+                                @Override
 					public void send(MidiMessage message, long timeStamp) {
 						if(message instanceof ShortMessage)
 						{
@@ -126,26 +134,31 @@ public class SoftMidiMixerTest {
 					}};
 			}
 
+                        @Override
 			public List<Receiver> getReceivers() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                        @Override
 			public Transmitter getTransmitter() throws MidiUnavailableException {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                        @Override
 			public List<Transmitter> getTransmitters() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 
+                        @Override
 			public boolean isOpen() {
 				// TODO Auto-generated method stub
 				return false;
 			}
 
+                        @Override
 			public void open() throws MidiUnavailableException {
 				// TODO Auto-generated method stub
 				

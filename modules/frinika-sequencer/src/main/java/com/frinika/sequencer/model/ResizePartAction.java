@@ -42,6 +42,7 @@ public class ResizePartAction implements EditHistoryAction {
 		this.endOrig = part.getEndInSecs();
 	}
 
+        @Override
 	public void undo() {
 		part.commitEventsRemove();
 		part.setStartInSecs(startOrig);
@@ -49,6 +50,7 @@ public class ResizePartAction implements EditHistoryAction {
 		part.commitEventsAdd();
 	}
 
+        @Override
 	public void redo() {
 		part.commitEventsRemove();
 		part.setStartInSecs(startSec);

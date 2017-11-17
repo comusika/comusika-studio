@@ -53,14 +53,15 @@ public class PresentationPanel extends JPanel {
     protected final static Color LABEL_COLOR_SELECTED = new Color(220, 220, 235);
     protected final static Color LABEL_BORDER_COLOR_SELECTED = Color.DARK_GRAY;
 	
-    protected ArrayList<String> titles = new ArrayList<String>();
-    protected ArrayList<Icon> icons = new ArrayList<Icon>();
-    protected ArrayList<Component> components = new ArrayList<Component>();
+    protected ArrayList<String> titles = new ArrayList<>();
+    protected ArrayList<Icon> icons = new ArrayList<>();
+    protected ArrayList<Component> components = new ArrayList<>();
     
     /** Creates new form PresentationPanel */
     public PresentationPanel() {
         initComponents();
         naviList.setCellRenderer(new ListCellRenderer() {
+            @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 if ((index >= 0) && (index < titles.size())) {
                     String title = titles.get(index);
@@ -82,6 +83,7 @@ public class PresentationPanel extends JPanel {
             }
         });
         naviList.addListSelectionListener(new ListSelectionListener() {
+            @Override
             public void valueChanged(ListSelectionEvent e) {
             	int index = naviList.getSelectedIndex();//e.getFirstIndex();
                 setSelected(index);

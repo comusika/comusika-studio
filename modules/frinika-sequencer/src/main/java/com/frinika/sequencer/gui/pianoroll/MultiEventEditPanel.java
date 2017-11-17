@@ -69,6 +69,7 @@ public class MultiEventEditPanel extends JPanel implements FeedbackEventListener
 		// setBackground(Color.BLUE);
 	}
 
+        @Override
 	public void notifyFeedbackItemChanged(Item it) {
 		if (!(it instanceof MultiEvent)) return;
 		event = (MultiEvent)it;
@@ -78,12 +79,14 @@ public class MultiEventEditPanel extends JPanel implements FeedbackEventListener
 		}
 	}
 
+        @Override
 	public void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries) {
 		notifyFeedbackItemChanged(event);
 	}
 
 
 
+        @Override
 	public void selectionChanged(SelectionContainer<? extends MultiEvent> src) {
 		// TODO Auto-generated method stub
 		MultiEvent ev = project.getMultiEventSelection().getFocus();

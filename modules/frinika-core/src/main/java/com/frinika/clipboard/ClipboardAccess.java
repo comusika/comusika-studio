@@ -66,20 +66,24 @@ public class ClipboardAccess {
     {
         getClipboard().setContents(new Transferable() {
 
+            @Override
             public DataFlavor[] getTransferDataFlavors() {
                 
                 return new DataFlavor[] { DataFlavor.stringFlavor };
             }
 
+            @Override
             public boolean isDataFlavorSupported(DataFlavor flavor) {
                 return true;
             }
 
+            @Override
             public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
 
                 return "Hello world";
             }},new ClipboardOwner() {
 
+                @Override
                 public void lostOwnership(Clipboard clipboard, Transferable contents) {
                     System.out.println("Lost ownership");
                     

@@ -39,39 +39,46 @@ import javax.sound.midi.SoundbankResource;
  */
 public class SynthRackSoundbank implements Soundbank {
 
-	Map<Integer,Instrument> instruments = new HashMap<Integer,Instrument>();
+	Map<Integer,Instrument> instruments = new HashMap<>();
 	
 	public static int getInstrumentMapKey(Patch patch)
 	{
 		return patch.getBank()*128+patch.getProgram();
 	}
 	
+        @Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public Instrument getInstrument(Patch patch) {
 		return instruments.get(getInstrumentMapKey(patch));
 	}
 
+        @Override
 	public Instrument[] getInstruments() {
 		return instruments.values().toArray(new Instrument[instruments.size()]);
 	}
 
+        @Override
 	public String getName() {
 		return "Frinika Synthrack soundbank";
 	}
 
+        @Override
 	public SoundbankResource[] getResources() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public String getVendor() {
 		return "petersalomonsen.com";
 	}
 
+        @Override
 	public String getVersion() {
 		return "0.5";
 	}

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import com.frinika.audio.analysis.SpectrogramDataListener;
@@ -36,259 +35,256 @@ import java.util.Observable;
 import uk.org.toot.audio.core.AudioBuffer;
 
 //import com.frinika.global.FrinikaConfig;
-
 public class WaveImage extends Observable implements SpectrogramDataListener {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	int nChannel;
+    int nChannel;
 
-	private Image thumbNailImage = null;
+    private Image thumbNailImage = null;
 
-	private LimitedAudioReader gin = null; // reader for the thumb nail.
+    private LimitedAudioReader gin = null; // reader for the thumb nail.
 
-	private ThumbNailRunnable thumbNailRunnable;
+    private ThumbNailRunnable thumbNailRunnable;
 
-	private double frameToScreen;
+    private double frameToScreen;
 
-	// static AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
+    // static AudioFileFormat.Type targetType = AudioFileFormat.Type.WAVE;
+    // Rectangle lastRect;
+    // Rectangle rect;
+    int height = 100;
 
-	// Rectangle lastRect;
-	// Rectangle rect;
-	int height = 100;
+    Dimension rect;
+    private float fs;
 
-	Dimension rect;
-    private float Fs;
+    public WaveImage(LimitedAudioReader gin) {
+        this.gin = gin;
+        fs = (float) gin.getSampleRate();
+        // reconstructThumbNail(getBounds());
+    }
 
-	public WaveImage(LimitedAudioReader gin) {
-		this.gin = gin;
-        Fs=(float) gin.getSampleRate();
-		// reconstructThumbNail(getBounds());
-	}
+    // public void paintComponent(Graphics g) {
+    // super.paintComponent(g);
+    //
+    // if (thumbNailImage == null)
+    // return;
+    //
+    // g.setColor(Color.RED);
+    // g.fillRect(0, 0, thumbNailImage.getWidth(null), thumbNailImage
+    // .getHeight(null));
+    // g.setXORMode(Color.WHITE);
+    // // g.setColor(Color.RED);
+    // g.drawImage(thumbNailImage, 0, 0, this);// rect.x, rect.y, null);
+    // g.setPaintMode();
+    //
+    // }
+    public Dimension getPreferredSize() {
+        if (rect == null) {
+            return new Dimension(1000, height);
+        } else {
+            return rect;
+        }
+    }
 
-	// public void paintComponent(Graphics g) {
-	// super.paintComponent(g);
-	//
-	// if (thumbNailImage == null)
-	// return;
-	//
-	// g.setColor(Color.RED);
-	// g.fillRect(0, 0, thumbNailImage.getWidth(null), thumbNailImage
-	// .getHeight(null));
-	// g.setXORMode(Color.WHITE);
-	// // g.setColor(Color.RED);
-	// g.drawImage(thumbNailImage, 0, 0, this);// rect.x, rect.y, null);
-	// g.setPaintMode();
-	//
-	// }
+    private void reconstructThumbNail(Dimension rect) {
 
-	public Dimension getPreferredSize() {
-		if (rect == null)
-			return new Dimension(1000, height);
-		else
-			return rect;
-	}
+        if (thumbNailRunnable == null) {
+            thumbNailRunnable = new ThumbNailRunnable();
+            Thread t = new Thread(thumbNailRunnable);
+            t.setPriority(Thread.MIN_PRIORITY);
+            thumbNailRunnable.setThread(t);
+            t.start();
+        }
+        thumbNailRunnable.reconstruct(rect);
+    }
 
-	private void reconstructThumbNail(Dimension rect) {
+    class ThumbNailRunnable implements Runnable {
 
-		if (thumbNailRunnable == null) {
-			thumbNailRunnable = new ThumbNailRunnable();
-			Thread t = new Thread(thumbNailRunnable);
-			t.setPriority(Thread.MIN_PRIORITY);
-			thumbNailRunnable.setThread(t);
-			t.start();
-		}
-		thumbNailRunnable.reconstruct(rect);
+        Thread runThread;
 
-	}
+        Graphics2D gg;
 
-	class ThumbNailRunnable implements Runnable {
+        public void reconstruct(Dimension rect1) {
+            rect = (Dimension) rect1.clone();
 
-		Thread runThread;
+            if (runThread.isInterrupted()) {
+                System.out.println(" Thunmb nail thread already interupted");
+                return;
+            }
+            // System.out.println(" Reconstruct ");
+            runThread.interrupt();
+        }
 
-		Graphics2D gg;
+        public void setThread(Thread t) {
+            runThread = t;
+        }
 
-		public void reconstruct(Dimension rect1) {
-			rect = (Dimension) rect1.clone();
+        synchronized boolean buildThumbNail() {
+            // System.out.println(" buildThumbNail ");
+            // reconstruct code
+            if (rect.getWidth() == 0) {
+                return true;
+            }
+            thumbNailImage = new BufferedImage(rect.width, rect.height,
+                    BufferedImage.TYPE_BYTE_BINARY);
 
-			if (runThread.isInterrupted()) {
-				System.out.println(" Thunmb nail thread already interupted");
-				return;
-			}
-			// System.out.println(" Reconstruct ");
-			runThread.interrupt();
-		}
+            gg = (Graphics2D) thumbNailImage.getGraphics();
 
-		public void setThread(Thread t) {
-			runThread = t;
+            // int y = rect.height / 2;
+            // gg.drawString("...", 0, 5);
+            //
+            // panel.setDirty();
+            // panel.repaint();
+            //
+            // long x = getStartTick();
+            // long w = getDuration();
+            long nSamp = gin.getEnvelopedLengthInFrames();
+            frameToScreen = rect.width / (double) nSamp;
 
-		}
+            try {
+                gin.seekEnvelopeStart(false);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
-		synchronized boolean buildThumbNail() {
-			// System.out.println(" buildThumbNail ");
-			// reconstruct code
-			if (rect.getWidth() == 0)
-				return true;
-			thumbNailImage = new BufferedImage(rect.width, rect.height,
-					BufferedImage.TYPE_BYTE_BINARY);
+            int nChannel = gin.getFormat().getChannels();
+            long nFrame = gin.getEnvelopedLengthInFrames();
+            // ProjectContainer project = lane.getProject();
+            // double ticksPerSecond = project.getSequence().getResolution()
+            // * (project.getSequencer().getTempoInBPM() / 60.0);
+            // double framePerTick = FrinikaConfig.sampleRate / ticksPerSecond;
+            // double frameToScreen = panel.ticksToScreen / framePerTick;
 
-			gg = (Graphics2D) thumbNailImage.getGraphics();
+            // int n = nChannel * 2;
+            int chunkSize = 1024;
+            // long nBytes = n * nFrame;
 
-			// int y = rect.height / 2;
+            // byte byteBuffer[] = new byte[chunkSize]; // 1k chunks ?
+            int nRead = 0;
 
-			// gg.drawString("...", 0, 5);
-			//
-			// panel.setDirty();
-			// panel.repaint();
-			//
-			// long x = getStartTick();
-			// long w = getDuration();
+            float valMax = 0;
+            float valMin = 0;
+            double scale = rect.height / 2.0;
 
-			long nSamp = gin.getEnvelopedLengthInFrames();
-			frameToScreen = rect.width / (double) nSamp;
+            gg.setColor(Color.white);
+            int midY = rect.height / 2;
+            int pix = 0;
+            int ii = 0;
 
-			try {
-				gin.seekEnvelopeStart(false);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+            AudioBuffer buff = new AudioBuffer("WaveThumbnail", nChannel,
+                    chunkSize, fs);
 
-			int nChannel = gin.getFormat().getChannels();
-			long nFrame = gin.getEnvelopedLengthInFrames();
-			// ProjectContainer project = lane.getProject();
-			// double ticksPerSecond = project.getSequence().getResolution()
-			// * (project.getSequencer().getTempoInBPM() / 60.0);
-			// double framePerTick = FrinikaConfig.sampleRate / ticksPerSecond;
-			// double frameToScreen = panel.ticksToScreen / framePerTick;
+            System.out
+                    .println(" chunkSize,nFrame =" + chunkSize + " " + nFrame);
+            while (nRead < nFrame) {
+                if (runThread.isInterrupted()) {
+                    System.out.println("Interupted .....");
+                    return false;
+                }
 
-			// int n = nChannel * 2;
-			int chunkSize = 1024;
-			// long nBytes = n * nFrame;
+                int nn = chunkSize;
 
-			// byte byteBuffer[] = new byte[chunkSize]; // 1k chunks ?
+                buff.makeSilence();
+                gin.processAudio(buff);
+                nRead += chunkSize;
 
-			int nRead = 0;
+                float sampleLA[] = buff.getChannel(0);
+                float sampleRA[];
 
-			float valMax = 0;
-			float valMin = 0;
-			double scale = rect.height / 2.0;
+                if (nChannel == 2) {
+                    sampleRA = buff.getChannel(1);
+                } else {
+                    sampleRA = buff.getChannel(0);
+                }
 
-			gg.setColor(Color.white);
-			int midY = rect.height / 2;
-			int pix = 0;
-			int ii = 0;
+                assert (buff.getSampleCount() == chunkSize);
 
+                for (int i = 0; i < chunkSize; i++, ii++) {
+                    float sampleL = sampleLA[i];
+                    float sampleR = sampleRA[i];
 
-			AudioBuffer buff = new AudioBuffer("WaveThumbnail", nChannel,
-					chunkSize, Fs);
+                    valMin = Math.min(Math.min(valMin, sampleL), sampleR);
+                    valMax = Math.max(Math.max(valMax, sampleL), sampleR);
 
-			System.out
-					.println(" chunkSize,nFrame =" + chunkSize + " " + nFrame);
-			while (nRead < nFrame) {
-				if (runThread.isInterrupted()) {
-					System.out.println("Interupted .....");
-					return false;
-				}
+                    int pixNow = (int) (ii * frameToScreen);
 
-				int nn = chunkSize;
+                    if (pixNow > pix) {
+                        gg.drawLine(pix, (int) (midY + valMin * scale), pix,
+                                (int) (midY + valMax * scale));
+                        pix = pixNow;
+                        valMax = valMin = 0;
+                    }
+                }
+            }
 
-				buff.makeSilence();
-				gin.processAudio(buff);
-				nRead += chunkSize;
+            setChanged();
+            notifyObservers();
+            System.out.println(" BUILD DONE" + rect);
+            return true;
+        }
 
-				float sampleLA[] = buff.getChannel(0);
-				float sampleRA[];
+        public Image getImage() {
+            return thumbNailImage;
+        }
 
-				if (nChannel == 2)
-					sampleRA = buff.getChannel(1);
-				else
-					sampleRA = buff.getChannel(0);
+        @Override
+        synchronized public void run() {
+            assert (runThread == Thread.currentThread());
+            while (true) {
+                try {
+                    wait();
+                } catch (InterruptedException e1) {
+                    while (!buildThumbNail()) {
+                        Thread.interrupted(); // clear interrupt flag
+                    }
+                }
+            }
+        }
+    }
 
-				assert (buff.getSampleCount() == chunkSize);
+    @Override
+    public void notifySizeChange(Dimension d) {
+        d.height = height;
+        reconstructThumbNail(d);
+    }
 
-				for (int i = 0; i < chunkSize; i++,ii++) {
-					float sampleL = sampleLA[i];
-					float sampleR = sampleRA[i];
+    public void drawImage(Graphics2D g, int i, int j) {
 
-					valMin = Math.min(Math.min(valMin, sampleL), sampleR);
-					valMax = Math.max(Math.max(valMax, sampleL), sampleR);
+        if (thumbNailImage == null) {
+            return;
+        }
 
-					int pixNow = (int) (ii * frameToScreen);
+        g.setColor(Color.RED);
+        g.fillRect(i, j, thumbNailImage.getWidth(null), thumbNailImage
+                .getHeight(null));
+        g.setXORMode(Color.WHITE);
+        g.drawImage(thumbNailImage, i, j, null);
+        g.setPaintMode();
+    }
 
-					if (pixNow > pix) {
-						gg.drawLine(pix, (int) (midY + valMin * scale), pix,
-								(int) (midY + valMax * scale));
-						pix = pixNow;
-						valMax = valMin = 0;
-					}
-				}
-			}
+    public int getWidth() {
+        // TODO Auto-generated method stub
+        if (rect == null) {
+            return 100;
+        }
+        return rect.width;
+    }
 
-			setChanged();
-			notifyObservers();
-			System.out.println(" BUILD DONE" + rect);
-			return true;
-		}
+    public int getHeight() {
+        return height;
+    }
 
-		public Image getImage() {
-			return thumbNailImage;
-		}
+    public int frameToScreen(long frame) {
+        return (int) (frameToScreen * frame);
+    }
 
-		synchronized public void run() {
-			assert (runThread == Thread.currentThread());
-			while (true) {
-				try {
-					wait();
-				} catch (InterruptedException e1) {
-					while (!buildThumbNail())
-						Thread.interrupted(); // clear interrupt flag
-				}
-			}
-		}
+    public int screenToFrame(int p) {
+        return (int) (p / frameToScreen);
+    }
 
-	}
-
-	public void notifySizeChange(Dimension d) {
-		d.height = height;
-		reconstructThumbNail(d);
-	}
-
-	public void drawImage(Graphics2D g, int i, int j) {
-
-		if (thumbNailImage == null)
-			return;
-
-		g.setColor(Color.RED);
-		g.fillRect(i, j, thumbNailImage.getWidth(null), thumbNailImage
-				.getHeight(null));
-		g.setXORMode(Color.WHITE);
-		g.drawImage(thumbNailImage, i, j, null);
-		g.setPaintMode();
-
-	}
-
-	public int getWidth() {
-		// TODO Auto-generated method stub
-		if (rect == null)
-			return 100;
-		return rect.width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public int frameToScreen(long frame) {
-		return (int) (frameToScreen * frame);
-	}
-
-	public int screenToFrame(int p) {
-		return (int) (p / frameToScreen);
-	}
-
-	public void notifyMoreDataReady() {
-		// TODO Auto-generated method stub
-
-	}
+    @Override
+    public void notifyMoreDataReady() {
+        // TODO Auto-generated method stub
+    }
 }

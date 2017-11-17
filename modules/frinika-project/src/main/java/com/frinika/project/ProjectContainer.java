@@ -190,7 +190,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * Information about the midi devices used in this project
      */
-    List<MidiDeviceDescriptorIntf> midiDeviceDescriptors = new ArrayList<MidiDeviceDescriptorIntf>();
+    List<MidiDeviceDescriptorIntf> midiDeviceDescriptors = new ArrayList<>();
     /**
      * Used to map midiDevices when saving
      */
@@ -333,6 +333,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * @param arg0
      * @param arg1
      */
+    @Override
     public void processMidiMessageFromDevice(Info devInfo, MidiMessage arg0, long arg1) {
         if (midiDeviceRouter != null && midiDeviceRouter.consume(devInfo, arg0, arg1)) {
             return;
@@ -404,10 +405,12 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 //    }
     // can be used to remove channels and groups
 
+    @Override
     public void removeStrip(String name) {
         mixerControls.removeStripControls(name);
     }
 
+    @Override
     public MixControls addMixerInput(AudioProcess audioProcess, String string) {
 
         AudioMixerStrip strip = null;
@@ -489,6 +492,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @param process
      */
+    @Override
     public void injectIntoOutput(AudioProcess process) {
         if (outputProcess != null) {
             outputProcess.add(process);
@@ -547,6 +551,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         sequencer.setPlayerPriority(FrinikaConfig.SEQUENCER_PRIORITY);
         FrinikaConfig.addConfigListener(new ConfigListener() {
 
+            @Override
             public void configurationChanged(ChangeEvent event) {
                 if (event.getSource() == FrinikaConfig._SEQUENCER_PRIORITY) {
                     sequencer.setPlayerPriority(FrinikaConfig.SEQUENCER_PRIORITY);
@@ -597,7 +602,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         // create a copy
         Vector<FrinikaTrackWrapper> origTracks = sequence.getFrinikaTrackWrappers();
-        Vector<FrinikaTrackWrapper> tracks = new Vector<FrinikaTrackWrapper>(
+        Vector<FrinikaTrackWrapper> tracks = new Vector<>(
                 origTracks);
 
         projectLane = new ProjectLane(this);
@@ -717,7 +722,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         // create a copy
         Vector<FrinikaTrackWrapper> origTracks = sequence.getFrinikaTrackWrappers();
-        Vector<FrinikaTrackWrapper> tracks = new Vector<FrinikaTrackWrapper>(
+        Vector<FrinikaTrackWrapper> tracks = new Vector<>(
                 origTracks);
 
 
@@ -852,7 +857,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
                 addMidiOutDevice(midiDevice);
 
-            } catch (Exception e2) {
+            } catch (MidiUnavailableException e2) {
                 e2.printStackTrace();
                 midiDevice = null;
             }
@@ -965,11 +970,8 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         }
 
         if (project == null) {
-            FileInputStream fileinputStream = new FileInputStream(file);
-            try {
+            try (FileInputStream fileinputStream = new FileInputStream(file)) {
                 project = loadProject(fileinputStream);
-            } finally {
-                fileinputStream.close();
             }
 
         }
@@ -1049,26 +1051,25 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 magic[2] = (byte) 0x4d;
                 magic[3] = (byte) 0x61;
 
-                FileOutputStream outStream = new FileOutputStream(file);
-                outStream.write(magic);
-                InputStream inStream = fis;
-
-                boolean eos = false;
-                SevenZip.Compression.LZMA.Encoder encoder = new SevenZip.Compression.LZMA.Encoder();
-                encoder.SetAlgorithm(2);
-                encoder.SetDictionarySize(1 << 23);
-                encoder.SeNumFastBytes(128);
-                encoder.SetMatchFinder(1);
-                encoder.SetLcLpPb(3, 0, 2);
-                encoder.SetEndMarkerMode(eos);
-                encoder.WriteCoderProperties(outStream);
-                long fileSize = tempfile.length();
-                for (int i = 0; i < 8; i++) {
-                    outStream.write((int) (fileSize >>> (8 * i)) & 0xFF);
+                try (FileOutputStream outStream = new FileOutputStream(file)) {
+                    outStream.write(magic);
+                    InputStream inStream = fis;
+                    
+                    boolean eos = false;
+                    SevenZip.Compression.LZMA.Encoder encoder = new SevenZip.Compression.LZMA.Encoder();
+                    encoder.SetAlgorithm(2);
+                    encoder.SetDictionarySize(1 << 23);
+                    encoder.SeNumFastBytes(128);
+                    encoder.SetMatchFinder(1);
+                    encoder.SetLcLpPb(3, 0, 2);
+                    encoder.SetEndMarkerMode(eos);
+                    encoder.WriteCoderProperties(outStream);
+                    long fileSize = tempfile.length();
+                    for (int i = 0; i < 8; i++) {
+                        outStream.write((int) (fileSize >>> (8 * i)) & 0xFF);
+                    }
+                    encoder.Code(inStream, outStream, -1, -1, null);
                 }
-                encoder.Code(inStream, outStream, -1, -1, null);
-
-                outStream.close();
 
             } finally {
                 if (fis != null) {
@@ -1079,23 +1080,23 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         } else if (usecompression == 1) // Use ZIP Compression
         {
-            FileOutputStream fos = new FileOutputStream(file);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            zos.putNextEntry(new ZipEntry(file.getName()));
-            BufferedOutputStream bos = new BufferedOutputStream(zos);
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(this);
-            bos.flush();
-            zos.closeEntry();
-            zos.finish();
-            fos.close();
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                ZipOutputStream zos = new ZipOutputStream(fos);
+                zos.putNextEntry(new ZipEntry(file.getName()));
+                BufferedOutputStream bos = new BufferedOutputStream(zos);
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                oos.writeObject(this);
+                bos.flush();
+                zos.closeEntry();
+                zos.finish();
+            }
         } else // Use no compression
         {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(this);
-            oos.close();
-            fos.close();
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(this);
+                oos.close();
+            }
         }
         projectFile = file;
         editHistoryContainer.updateSavedPosition();
@@ -1126,6 +1127,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * @return Returns the lanes.
      */
+    @Override
     public List<Lane> getLanes() {
         return projectLane.getFamilyLanes();
     }
@@ -1145,6 +1147,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return
      */
+    @Override
     public AudioLane createAudioLane() {
         AudioLane lane = new AudioLane(this);
         add(lane);
@@ -1154,6 +1157,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * Creates a TextLane and adds it to the Lane collection
      */
+    @Override
     public TextLane createTextLane() { // Jens
         TextLane lane = new TextLane(this);
         add(lane);
@@ -1163,6 +1167,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * @return Returns the sequencer.
      */
+    @Override
     public FrinikaSequencer getSequencer() {
         return sequencer;
     }
@@ -1171,6 +1176,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * Creates a sequence based on the resolution defined in ticksPerQuarterNote
      * 
      */
+    @Override
     public void createSequence() {
         if (sequence == null) {
             try {
@@ -1190,6 +1196,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * @return Returns the sequence.
      */
+    @Override
     public FrinikaSequence getSequence() {
         return sequence;
     }
@@ -1214,6 +1221,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * @return Returns the multiEventSelection.
      */
+    @Override
     public MultiEventSelection getMultiEventSelection() {
         return multiEventSelection;
     }
@@ -1222,6 +1230,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return the Part selection container for this project.
      */
+    @Override
     public PartSelection getPartSelection() {
         return partSelection;
     }
@@ -1230,6 +1239,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return the Lane selection container for this project.
      */
+    @Override
     public LaneSelection getLaneSelection() {
         return laneSelection;
     }
@@ -1238,6 +1248,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return the Midi selection container for this project.
      */
+    @Override
     public MidiSelection getMidiSelection() { // Jens
         return midiSelection;
     }
@@ -1250,6 +1261,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return the Edit history container for this project.
      */
+    @Override
     public EditHistoryContainer getEditHistoryContainer() {
         return editHistoryContainer;
     }
@@ -1258,6 +1270,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * Close the project
      * 
      */
+    @Override
     public void close() {
         if (renderer != null) {
             renderer.close();
@@ -1269,6 +1282,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * adds a lane to the project and updates the history
      */
+    @Override
     public void add(Lane lane) {
         projectLane.addChildLane(lane);
         // System. out.println(" about to lane.onload");f
@@ -1277,6 +1291,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 EditHistoryRecordableAction.EDIT_HISTORY_TYPE_ADD, lane);
     }
 
+    @Override
     public void add(int index, Lane lane) {
         projectLane.addChildLane(index, lane);
         lane.onLoad();
@@ -1284,6 +1299,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 EditHistoryRecordableAction.EDIT_HISTORY_TYPE_ADD, lane);
     }
 
+    @Override
     public void remove(Lane lane) {
         projectLane.removeChildLane(lane);
         getEditHistoryContainer().push(this,
@@ -1297,6 +1313,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return top level Lane that containes all others.
      */
+    @Override
     public ProjectLane getProjectLane() {
         return projectLane;
     }
@@ -1305,10 +1322,12 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return audioSynthRack;
     }
 
+    @Override
     public MidiResource getMidiResource() {
         return midiResource;
     }
 
+    @Override
     public FrinikaTrackWrapper getTempoTrack() {
         return sequence.getFrinikaTrackWrappers().get(0);
     }
@@ -1326,7 +1345,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     public void buildMidiIndex() {
         int mdIndex = 0;
-        midiDeviceIndex = new HashMap<MidiDevice, Integer>();
+        midiDeviceIndex = new HashMap<>();
 
         for (MidiDevice midiDev : sequencer.listMidiOutDevices()) {
             if (midiDev instanceof SynthRack) {
@@ -1418,7 +1437,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
             midiResource = new MidiResource(sequencer);
 
-        } catch (Exception e) {
+        } catch (MidiUnavailableException e) {
             e.printStackTrace();
         }
         renderer = new FrinikaRenderer(this);
@@ -1447,9 +1466,9 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 this.midiDeviceDescriptors.clear();
             } else // Or convert this into a new project version
             {
-                this.midiDeviceDescriptors = new ArrayList<MidiDeviceDescriptorIntf>();
+                this.midiDeviceDescriptors = new ArrayList<>();
             }
-            this.midiDeviceDescriptorMap = new HashMap<MidiDevice, MidiDeviceDescriptor>();
+            this.midiDeviceDescriptorMap = new HashMap<>();
 
             // ------------ Initialize soft synths
 
@@ -1531,7 +1550,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * Go through the mididevice descriptor map and install mididevices
      */
     public void installMidiDevices() {
-        this.midiDeviceDescriptorMap = new HashMap<MidiDevice, MidiDeviceDescriptor>();
+        this.midiDeviceDescriptorMap = new HashMap<>();
         for (MidiDeviceDescriptorIntf midiDeviceDescriptor : midiDeviceDescriptors) {
             System.out.println("Installing Midi device: " + midiDeviceDescriptor.getMidiDeviceName() + " as " + midiDeviceDescriptor.getProjectName());
             ((MidiDeviceDescriptor) midiDeviceDescriptor).install(this);
@@ -1543,20 +1562,24 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     }
 
+    @Override
     public Integer getMidiDeviceIndex(MidiDevice midiDevice) {
         return midiDeviceIndex.get(midiDevice);
     }
 
+    @Override
     public SelectionFocusable getSelectionFocus() {
         return selectionFocus;
     }
 
+    @Override
     public void setSelectionFocus(SelectionFocusable focus) {
         // System.out.println(" Set project focus " + focus);
         selectionFocus = focus;
 
     }
 
+    @Override
     public MyClipboard clipBoard() {
         // TODO Auto-generated method stub
         return myClipboard;
@@ -1566,40 +1589,49 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return piano roll quantization in ticks
      */
+    @Override
     public double getPianoRollSnapQuantization() {
         return pianoRollSnapQuantization;
     }
 
+    @Override
     public double getPartViewSnapQuantization() {
         return partViewSnapQuantization;
 
     }
 
+    @Override
     public void setPianoRollSnapQuantization(double val) {
         pianoRollSnapQuantization = val;
     }
 
+    @Override
     public void setPartViewSnapQuantization(double val) {
         partViewSnapQuantization = val;
     }
 
+    @Override
     public boolean isPianoRollSnapQuantized() {
         return isPianoRollSnapQuantized;
     }
 
+    @Override
     public boolean isPartViewSnapQuantized() {
         return isPartViewSnapQuantized;
 
     }
 
+    @Override
     public void setPianoRollSnapQuantized(boolean val) {
         isPianoRollSnapQuantized = val;
     }
 
+    @Override
     public void setPartViewSnapQuantized(boolean val) {
         isPartViewSnapQuantized = val;
     }
 
+    @Override
     public long eventQuantize(long tick) {
         if (isPianoRollSnapQuantized) {
             tick = (long) (Math.rint(tick / pianoRollSnapQuantization) * pianoRollSnapQuantization);
@@ -1607,6 +1639,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return tick;
     }
 
+    @Override
     public long partQuantize(long tick) {
         double tt = tick;
         if (isPartViewSnapQuantized) {
@@ -1627,10 +1660,12 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return (long) tt;
     }
 
+    @Override
     public long getEndTick() {
         return endTick;
     }
 
+    @Override
     public void setEndTick(long tick) {
         if (tick == endTick) {
             return;
@@ -1697,7 +1732,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     public Vector<Lane> recordableLaneList() {
-        Vector<Lane> list = new Vector<Lane>();
+        Vector<Lane> list = new Vector<>();
 
         addRecordableLanes(list, projectLane);
 
@@ -1713,6 +1748,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         }
     }
 
+    @Override
     public File getFile() {
         return projectFile;
     }
@@ -1721,6 +1757,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return
      */
+    @Override
     public File getAudioDirectory() {
         if (audioDir != null) {
             return audioDir;
@@ -1768,6 +1805,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * @param midiDev
      * @throws MidiUnavailableException
      */
+    @Override
     public MidiDeviceDescriptor addMidiOutDevice(MidiDevice midiDev)
             throws MidiUnavailableException {
         // First create the MidiDeviceDescriptor
@@ -1785,10 +1823,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 try {
                     descriptor = (MidiDeviceDescriptor) synthWrapper.getRealDevice().getClass().getAnnotation(
                             MidiDeviceDescriptorClass.class).value().newInstance();
-                } catch (InstantiationException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -1882,6 +1917,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * @param midiDevice
      * @return
      */
+    @Override
     public MidiDeviceDescriptor getMidiDeviceDescriptor(MidiDevice midiDevice) {
         return midiDeviceDescriptorMap.get(midiDevice);
     }
@@ -1891,6 +1927,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @param midiDevice
      */
+    @Override
     public void removeMidiOutDevice(MidiDevice midiDevice) {
 
         midiDeviceDescriptors.remove(midiDeviceDescriptorMap.get(midiDevice));
@@ -1898,22 +1935,27 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         sequencer.removeMidiOutDevice(midiDevice);
     }
 
+    @Override
     public List<MidiDeviceDescriptorIntf> getMidiDeviceDescriptors() {
         return midiDeviceDescriptors;
     }
 
+    @Override
     public MixerControls getMixerControls() {
         return mixerControls;
     }
 
+    @Override
     public FrinikaAudioServer getAudioServer() {
         return audioServer;
     }
 
+    @Override
     public AudioMixer getMixer() {
         return mixer;
     }
 
+    @Override
     public AudioInjector getOutputProcess() {
         return outputProcess;
     }
@@ -1926,27 +1968,29 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                     final boolean save = saveMode;
                     // final String[][] suff = suffices;
                     if (suffices != null) {
-                            for (int i = 0; i < suffices.length; i++) {
-                                    final String suffix = suffices[i][0];
-                                    final String description = suffices[i][1];
-                                    // if (suffix == null) suffix = "*";
-                                    // if (description == null) description = "";
-                                    FileFilter ff = new FileFilter() {
-                                            public boolean accept(File file) {
-                                                    if (file.isDirectory())
-                                                            return true;
-                                                    String name = file.getName();
-                                                    return suffix.equals("*")
-                                                                    || name.endsWith("." + suffix)
-                                                                    || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
-                                            }
+                        for (String[] suffice : suffices) {
+                            final String suffix = suffice[0];
+                            final String description = suffice[1];
+                            // if (suffix == null) suffix = "*";
+                            // if (description == null) description = "";
+                            FileFilter ff = new FileFilter() {
+                                @Override
+                                public boolean accept(File file) {
+                                    if (file.isDirectory())
+                                        return true;
+                                    String name = file.getName();
+                                    return suffix.equals("*")
+                                            || name.endsWith("." + suffix)
+                                            || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
+                                }
 
-                                            public String getDescription() {
-                                                    return "." + suffix + " - " + description;
-                                            }
-                                    };
-                                    fc.addChoosableFileFilter(ff);
-                            }
+                                @Override
+                                public String getDescription() {
+                                    return "." + suffix + " - " + description;
+                                }
+                            };
+                            fc.addChoosableFileFilter(ff);
+                        }
                     }
             } else { // directory mode
                     fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -2012,12 +2056,14 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             return (result == JOptionPane.OK_OPTION);
     }
 
+    @Override
     public void message(String message) {
         JOptionPane.showMessageDialog(null, message, "Frinika Message", JOptionPane.INFORMATION_MESSAGE);
         // TODO ProjectFrame.staticMessage(this, string);
 
     }
 
+    @Override
     public void error(String message) {
         JOptionPane.showMessageDialog(null, message, "Frinika Error", JOptionPane.ERROR_MESSAGE);
         // TODO ProjectFrame.staticMessage(this, string);
@@ -2054,6 +2100,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return lane;
     }
 
+    @Override
     public BufferedRandomAccessFileManager getAudioFileManager() {
         // TODO Auto-generated method stub
         return audioFileManager;
@@ -2072,6 +2119,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         }
 
+        @Override
         public void work(int bufsize) {
             // if (sequencer != null && sequence != null) {
             // if (sequencer.isRunning()) {
@@ -2088,6 +2136,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             mixer.work(bufsize);
         }
 
+        @Override
         public void setEnabled(boolean b) {
             mixer.setEnabled(b);
         }
@@ -2119,6 +2168,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return
      */
+    @Override
     public MidiLane createMidiLane() {
         sequence.createTrack();
         FrinikaTrackWrapper ftw = sequence.getFrinikaTrackWrappers().lastElement();
@@ -2131,14 +2181,17 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return lane;
     }
 
+    @Override
     public DragList getDragList() {
         return dragList;
     }
 
+    @Override
     public int getPixelsPerRedraw() {
         return pixelsPerRedraw;
     }
 
+    @Override
     public void setPixelsPerRedraw(int i) {
         pixelsPerRedraw = i;
     }
@@ -2147,6 +2200,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * translate microsecond time to ticks
      */
+    @Override
     public double tickAtMicros(double micros) {
 
 
@@ -2160,6 +2214,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * translate ticks to microseconds
      */
+    @Override
     public double microsAtTick(double tick) {
 
         return 1000000.0 * tempoList.getTimeAtTick(tick);
@@ -2174,6 +2229,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return tempoList
      */
+    @Override
     public TempoList getTempoList() {
         if (tempoList == null) { // I don't think this ever happens
             System.out.println(" Creating a new tempo list ");
@@ -2184,6 +2240,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return tempoList;
     }
 
+    @Override
     public TimeSignatureList getTimeSignatureList() {
         if (timeSignitureList == null) {    // if we have a legacy project timesig will be null.
             timeSignitureList = new TimeSignatureList();
@@ -2192,6 +2249,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return timeSignitureList;
     }
 
+    @Override
     public int getTicksPerBeat() {
         return sequence.getResolution();
     }
@@ -2200,6 +2258,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * 
      * @return a TimeUtils for this project
      */
+    @Override
     public TimeUtils getTimeUtils() {
         if (timeUtils == null) {
             timeUtils = new TimeUtils(this);
@@ -2212,6 +2271,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return tt * audioServer.getSampleRate();
     }
 
+    @Override
     public SoloManager getSoloManager() {
         return soloManager;
     }
@@ -2224,6 +2284,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         Taps.setAudioServer(audioServer);
         sequencer.addTempoChangeListener(new TempoChangeListener() {
 
+            @Override
             public void notifyTempoChange(float bpm) {
                 Tempo.setTempo(bpm);
             }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import com.frinika.audio.analysis.SpectrogramDataListener;
@@ -36,116 +35,109 @@ import com.frinika.audio.analysis.dft.FFTSpectrumController;
 import com.frinika.audio.io.LimitedAudioReader;
 import rasmus.interpreter.sampled.util.FFT;
 
-public class FFTSpectrogramDataBuilderWrapper implements SpectrumDataBuilder,FFTSpectrogramControlable {
+public class FFTSpectrogramDataBuilderWrapper implements SpectrumDataBuilder, FFTSpectrogramControlable {
 
-	
-	ChunkFeeder feeder;
-	FFTSpectrogramDataBuilder builder;
-	FFTClient1 client;
-	FFTSpectrumController controller;
+    ChunkFeeder feeder;
+    FFTSpectrogramDataBuilder builder;
+    FFTClient1 client;
+    FFTSpectrumController controller;
 //	double tOn;
 //    double tOff;
-    float Fs;
+    float fs;
 
-	public FFTSpectrogramDataBuilderWrapper(LimitedAudioReader reader) {
-        feeder=new ChunkFeeder();
-		builder=new FFTSpectrogramDataBuilder();
-		client=new FFTClient1(builder);
-		controller=new FFTSpectrumController(this,reader);	
-        Fs=(float) reader.getSampleRate();
+    public FFTSpectrogramDataBuilderWrapper(LimitedAudioReader reader) {
+        feeder = new ChunkFeeder();
+        builder = new FFTSpectrogramDataBuilder();
+        client = new FFTClient1(builder);
+        controller = new FFTSpectrumController(this, reader);
+        fs = (float) reader.getSampleRate();
     }
-	
-	
 
-	public void addSizeObserver(SpectrogramDataListener synth) {
-		feeder.addSizeObserver(synth);
-	}
+    @Override
+    public void addSizeObserver(SpectrogramDataListener synth) {
+        feeder.addSizeObserver(synth);
+    }
 
-	public void dispose() {
-		// TODO 
+    @Override
+    public void dispose() {
+        // TODO 
+    }
 
-	}
+    @Override
+    public int getBinCount() {
+        return builder.getBinCount();
+    }
 
-	public int getBinCount() {
-		return builder.getBinCount();
-	}
+    @Override
+    public int getChunkRenderedCount() {
 
-	public int getChunkRenderedCount() {
-	
-		return client.getChunkRenderedCount();
-	}
+        return client.getChunkRenderedCount();
+    }
 
-	public float[] getFreqArray() {
-		return builder.getFreqArray();
-	}
+    @Override
+    public float[] getFreqArray() {
+        return builder.getFreqArray();
+    }
 
-	public float[][] getMagnitude() {
-		return client.getMagnitude();
-	}
+    @Override
+    public float[][] getMagnitude() {
+        return client.getMagnitude();
+    }
 
-	public float[] getMagnitudeAt(long chunkPtr) {
-		return client.getMagnitudeAt(chunkPtr);
-	}
+    @Override
+    public float[] getMagnitudeAt(long chunkPtr) {
+        return client.getMagnitudeAt(chunkPtr);
+    }
 
-	public float[] getPhaseFreqAt(long chunkPtr) {
-		return null;
-	}
+    @Override
+    public float[] getPhaseFreqAt(long chunkPtr) {
+        return null;
+    }
 
-	public int getSizeInChunks() {
-		return client.getSizeInChunks();
-	}
+    @Override
+    public int getSizeInChunks() {
+        return client.getSizeInChunks();
+    }
 
-	public boolean validAt(long chunkPtr) {
-		return client.validAt(chunkPtr);
-	}
+    @Override
+    public boolean validAt(long chunkPtr) {
+        return client.validAt(chunkPtr);
+    }
 
+    @Override
+    public double getSampleRate() {
+        // TODO Auto-generated method stub
+        return fs;
+    }
 
+    @Override
+    public void setParameters(int chunkSize, int fftsize, LimitedAudioReader reader) {
+        feeder.setParameters(chunkSize, fftsize, reader, builder, client);
 
-	public double getSampleRate() {
-		// TODO Auto-generated method stub
-		return Fs;
-	}
+    }
 
+    public SpectrumController getController() {
+        // TODO Auto-generated method stub
+        return controller;
+    }
 
+    @Override
+    public StaticSpectrogramSynth getSynth() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public void setParameters(int chunkSize, int fftsize, LimitedAudioReader reader) {
-		feeder.setParameters(chunkSize, fftsize, reader, builder, client);
-		
-	}
+    @Override
+    public FFT getFFT() {
+        // TODO Auto-generated method stub
+        return builder.getFFT();
+    }
 
+    public float[] getSMagnitudeAt(long chunkPtr) {
+        return client.getSmagnitudeAt(chunkPtr);
+    }
 
-
-	public SpectrumController getController() {
-		// TODO Auto-generated method stub
-		return controller;
-	}
-
-
-
-	public StaticSpectrogramSynth getSynth() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	public FFT getFFT() {
-		// TODO Auto-generated method stub
-		return builder.getFFT();
-	}
-
-
-
-	public float[] getSMagnitudeAt(long chunkPtr) {
-	
-		return client.getSmagnitudeAt(chunkPtr);
-	}
-
-
-
-	public float[][] getSMagnitude() {
-		
-		return client.getSMagnitude();
-	}
-
+    public float[][] getSMagnitude() {
+        return client.getSMagnitude();
+    }
 }

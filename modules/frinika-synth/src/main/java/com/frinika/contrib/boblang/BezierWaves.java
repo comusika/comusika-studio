@@ -1270,36 +1270,44 @@ ActionListener, WindowListener,
   //File Pass 3...(Window and Action Listeners)
 
   // Window listener interface methods
+        @Override
   public void windowActivated (WindowEvent e) {
     //$ System.out.println ("Window activated");
   } // windowActivated ()
 
+        @Override
   public void windowClosed (WindowEvent e) {
     //$ System.out.println ("Window closed");
   } // windowClosed ()
 
+        @Override
   public void windowClosing (WindowEvent e) {
     //$ System.out.println ("Window closing");
 //    System.exit (0);
   } // windowClosing ()
 
+        @Override
   public void windowDeactivated (WindowEvent e) {
     //$ System.out.println ("Window deactivated");
   } // windowDeactivated ()
 
+        @Override
   public void windowDeiconified (WindowEvent e) {
     //$ System.out.println ("Window deiconified");
   } // windowDeiconified ()
 
+        @Override
   public void windowIconified (WindowEvent e) {
     //$ System.out.println ("Window iconified");
   } // windowIconifed ()
 
+        @Override
   public void windowOpened (WindowEvent e) {
     //$ System.out.println ("Window opened");
   } // windowOpened ()
 
   // Action Listener interface method
+        @Override
   public void actionPerformed (ActionEvent event) {
     Object target = event.getSource ();
     if (target == x1time1) {
@@ -1404,6 +1412,7 @@ ActionListener, WindowListener,
   //File Pass 5...(Item Listener)
 
   // Item Listener interface method
+        @Override
   public void itemStateChanged (ItemEvent event) {
     Object target = event.getSource ();
     //$ System.out.println (target);
@@ -1458,6 +1467,7 @@ ActionListener, WindowListener,
 //File Pass 8...(Change Listener)
 
   // Change Listener interface method
+        @Override
   public void stateChanged  (ChangeEvent event) {
     Object target = event.getSource ();
     if (target == x1time0) {
@@ -1966,9 +1976,9 @@ ActionListener, WindowListener,
   private void changePreset (PresetItem [] list) {
     resetSliders ();
     startAdjustment ();
-    for (int i=0; i<list.length; i++) {
-      list [i].set ();
-    } // for
+            for (PresetItem list1 : list) {
+                list1.set();
+            } // for
     endAdjustment ();
     repatch ();
   } // changePreset ()
@@ -1991,11 +2001,11 @@ ActionListener, WindowListener,
       y2time0, y2centre0, y2amp0, y2frhz0, y2frin0, y2frfr0, y2phase0,
       attack0, decay0, sustain0, release0};
 
-    // Set all the sliders to zero
-    for (int i = 0; i < sliders.length; i++) {
-      sliders [i].setValue (1);
-      sliders [i].setValue (0);
-    } // for
+            // Set all the sliders to zero
+            for (JSlider slider : sliders) {
+                slider.setValue(1);
+                slider.setValue(0);
+            } // for
 
     // Special cases
     x1centre0.setValue (50);
@@ -2024,7 +2034,7 @@ ActionListener, WindowListener,
   private void endAdjustment () {
     // Allow time for other threads to update the gui
     try {Thread.sleep (500);}
-    catch (Exception e) {}
+    catch (InterruptedException e) {}
     adjustingGui = false;
   } // endAdjustment ()
 

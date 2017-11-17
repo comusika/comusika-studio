@@ -29,10 +29,11 @@ public class VoiceServerSoundfontSynthTest {
 
 	   MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 	   MidiDevice.Info info = null;
-	   for (int i = 0; i < infos.length; i++) {
-		   if(infos[i].getName().equals("RasmusDSP Synthesizer"))
-			   info = infos[i];
-	   }
+            for (MidiDevice.Info info1 : infos) {
+                if (info1.getName().equals("RasmusDSP Synthesizer")) {
+                    info = info1;
+                }
+            }
 	   
 	   return MidiSystem.getMidiDevice(info);
 	}

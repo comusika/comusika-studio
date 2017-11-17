@@ -28,18 +28,18 @@ import javax.sound.sampled.TargetDataLine;
 @Deprecated
 public interface AudioDeviceHandle {
 
-	int getChannels();
+    int getChannels();
 
-	TargetDataLine getOpenLine();
+    TargetDataLine getOpenLine();
 
-	TargetDataLine getLine();
+    TargetDataLine getLine();
 
-	AudioFormat getFormat();
-	
-	boolean isOpen();
-	
-	void open();
-	
-	void close();
+    AudioFormat getFormat();
+
+    boolean isOpen();
+
+    void open();
+
+    void close();
 
 }

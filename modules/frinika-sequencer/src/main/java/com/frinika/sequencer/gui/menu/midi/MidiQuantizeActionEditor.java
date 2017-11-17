@@ -96,6 +96,7 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
         return slider;
     }
     
+    @Override
     public void update() { // gui to model
         action.q.interval = this.ticks[ resolutionList.getSelectedIndex() ];
         action.q.intensity = (float)intensitySlider.getValue() / intensitySlider.getMaximum();
@@ -113,6 +114,7 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
         action.q.velocity = (float)velocitySlider.getValue() / 100;
     }
     
+    @Override
     public void refresh() { // model to gui
     	if (moreLessButtonListener == null) { // need to initialize after dialog is there
     		moreLessButtonListener = action.getDialog().registerMoreLessButtonPanel(moreLessButton, morePanel);

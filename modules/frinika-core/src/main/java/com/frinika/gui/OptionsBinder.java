@@ -32,9 +32,11 @@ package com.frinika.gui;
 public interface OptionsBinder extends OptionsEditor {
 	
 
+        @Override
 	public void refresh();
 	
 
+        @Override
 	public void update();
 
 	public void backup();

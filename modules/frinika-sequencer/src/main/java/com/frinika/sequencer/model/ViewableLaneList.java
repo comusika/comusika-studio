@@ -51,7 +51,7 @@ public class ViewableLaneList implements Iterable<Lane>  {
 	}
 
 	public void rebuild() {
-		lanes=new Vector<Lane>();
+		lanes=new Vector<>();
 		y=0;
 		id=0;
 		Lane root= project.getProjectLane();
@@ -79,6 +79,7 @@ public class ViewableLaneList implements Iterable<Lane>  {
 		return lanes;
 	}
 
+        @Override
 	public Iterator<Lane> iterator() {
 		return lanes.iterator();
 	}

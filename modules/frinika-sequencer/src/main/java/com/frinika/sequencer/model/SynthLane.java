@@ -94,12 +94,15 @@ public class SynthLane extends Lane implements RecordableLane {
 		peakMonitor = new AudioPeakMonitor();
 
 		audioProcess = new AudioProcess() {
+                        @Override
 			public void close() {
 			}
 
+                        @Override
 			public void open() {
 			}
 
+                        @Override
 			public int processAudio(AudioBuffer buffer) {
 				if (!isInstalled)
 					return AUDIO_OK;
@@ -135,11 +138,13 @@ public class SynthLane extends Lane implements RecordableLane {
 	 * 
 	 * @see com.frinika.sequencer.model.Lane#getName() @
 	 */
+        @Override
 	public String getName() {
 		return midiDeviceDescriptor.getProjectName();
 		// return "SYnthLane"; // TODO synthWrapper.getName();
 	}
 
+        @Override
 	public void setName(String name) {
 		if (name != null && midiDeviceDescriptor != null) // evasive null
 			// pointer if
@@ -152,6 +157,7 @@ public class SynthLane extends Lane implements RecordableLane {
 		channelLabel = new MetaInfo(name);
 	}
 
+        @Override
 	public void removeFromModel() {
             // TODO Frinthesia
             /*
@@ -165,16 +171,19 @@ public class SynthLane extends Lane implements RecordableLane {
 		super.removeFromModel();
 	}
 
+        @Override
 	public Selectable deepCopy(Selectable parent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public void deepMove(long tick) {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		// TODO Auto-generated method stub
 
@@ -282,12 +291,14 @@ public class SynthLane extends Lane implements RecordableLane {
 		project.getEditHistoryContainer().notifyEditHistoryListeners();
 	}
 
+        @Override
 	public double getMonitorValue() {
 		if (peakMonitor == null)
 			return 0;
 		return peakMonitor.getPeak();
 	}
 
+        @Override
 	public void setMute(boolean b) {
 		if (mixerControls == null)
 			return;
@@ -300,6 +311,7 @@ public class SynthLane extends Lane implements RecordableLane {
 		mixerControls.getSoloControl().setValue(b);
 	}
 
+        @Override
 	public boolean isRecording() {
 		if (mixerControls == null)
 			return false;
@@ -313,6 +325,7 @@ public class SynthLane extends Lane implements RecordableLane {
 	/**
 	 * Steal the recording logic (recording == rendered)
 	 */
+        @Override
 	public void setRecording(boolean b) {
 		if (mixerControls == null)
 			return;
@@ -337,6 +350,7 @@ public class SynthLane extends Lane implements RecordableLane {
 		return mixerControls;
 	}
 
+        @Override
 	public boolean isMute() {
 		if (mixerControls == null)
 			return false;
@@ -373,6 +387,7 @@ public class SynthLane extends Lane implements RecordableLane {
 
 		long stopTick;
 
+                @Override
 		public void run() {
 
 			sequencer = project.getSequencer();

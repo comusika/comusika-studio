@@ -44,6 +44,7 @@ public class GroovePatternCreateFromMidiPartAction extends AbstractAction {
 		this.frame = frame;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		GroovePatternManagerDialog.interactionImportGroovePatternFromMidiPartSelection(frame);
 	}

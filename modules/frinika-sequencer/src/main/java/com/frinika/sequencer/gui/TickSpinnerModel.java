@@ -81,7 +81,7 @@ public class TickSpinnerModel extends SpinnerNumberModel {
 				}
 				return timeUtils.barBeatTickToTick(s);
 		}
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			throw new ParseException(e.getMessage(),0);
 		}

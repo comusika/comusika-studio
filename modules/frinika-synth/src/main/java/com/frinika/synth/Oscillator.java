@@ -80,6 +80,7 @@ public abstract class Oscillator extends Voice{
             synth.getAudioOutput().interruptTransmitter(this,new VoiceInterrupt()
 
 				{
+                                        @Override
 					public void doInterrupt() {
 						release = true;				
 					}

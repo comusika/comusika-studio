@@ -63,6 +63,7 @@ class StrechyRectangle extends Rectangle {
 
 	}
 
+        @Override
 	public void translate(int dx, int dy) {
 		super.translate(dx, dy);
 		x1 += dx;

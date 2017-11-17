@@ -48,9 +48,9 @@ public abstract  class SelectionContainer<T extends Selectable> implements Selec
     
 	protected T focus = null;
 
-	Vector<T> selectedList = new Vector<T>();
+	Vector<T> selectedList = new Vector<>();
 
-	Vector<SelectionListener<T>> selectionListeners = new Vector<SelectionListener<T>>();
+	Vector<SelectionListener<T>> selectionListeners = new Vector<>();
 	AbstractSequencerProjectContainer project;
 	boolean dirty=false;
 	
@@ -68,7 +68,7 @@ public abstract  class SelectionContainer<T extends Selectable> implements Selec
 		selectedList.add(item);
 		item.setSelected(true);
 		// Notify selection listeners
-		Vector<T> list = new Vector<T>();
+		Vector<T> list = new Vector<>();
 		list.add(item);
 		setFocus(item);
 		
@@ -103,7 +103,7 @@ public abstract  class SelectionContainer<T extends Selectable> implements Selec
 	}
 
 	public void setSelected(T item) {
-		Vector<T> list = new Vector<T>();
+		Vector<T> list = new Vector<>();
 		list.add(item);
 		setSelected(list);
 	}
@@ -162,7 +162,7 @@ public abstract  class SelectionContainer<T extends Selectable> implements Selec
 		selectedList.remove(item);
 		item.setSelected(false);
 		// Notify selection listeners
-		Vector<T> list = new Vector<T>();
+		Vector<T> list = new Vector<>();
 		list.add(item);
 		
 	//	notifyListeners();
@@ -199,6 +199,7 @@ public abstract  class SelectionContainer<T extends Selectable> implements Selec
 	/**
 	 * Clear the selection
 	 */
+        @Override
 	public void clearSelection() {
 		focus=null;
         selectionStartTick = -1;
@@ -251,6 +252,7 @@ public abstract  class SelectionContainer<T extends Selectable> implements Selec
 		return selectedList;
 	}
 
+        @Override
 	public Collection<Selectable> getObjects() {
 		return (Collection<Selectable>) selectedList;
 	}

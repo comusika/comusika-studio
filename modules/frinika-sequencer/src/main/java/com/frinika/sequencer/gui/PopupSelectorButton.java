@@ -99,6 +99,7 @@ public class PopupSelectorButton extends JPanel {
 		
 		label.setMargin(insets);
 		label.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				createMenu(resource.getList(),e);
 			}
@@ -131,6 +132,7 @@ public class PopupSelectorButton extends JPanel {
 				 * first index were sent..
 				 */
 				it.addActionListener(new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {                    	
     					if (displaySelected)
     						label.setText(e.getActionCommand());

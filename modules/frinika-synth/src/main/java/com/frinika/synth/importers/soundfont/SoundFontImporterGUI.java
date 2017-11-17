@@ -57,6 +57,7 @@ public class SoundFontImporterGUI extends JFrame {
 	private void initialize() {
 		final JButton but = new JButton("Open soundfont");
 		but.addMouseListener(new MouseAdapter() {
+                                @Override
 				public void mouseClicked(MouseEvent e) {
 					try
 					{
@@ -114,6 +115,7 @@ public class SoundFontImporterGUI extends JFrame {
 				cb.addItem(name);
 			cb.addItemListener(new ItemListener() {
 	
+                                @Override
 				public void itemStateChanged(ItemEvent e) {
 					try
 					{

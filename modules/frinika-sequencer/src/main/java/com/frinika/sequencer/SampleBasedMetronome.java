@@ -7,8 +7,10 @@ package com.frinika.sequencer;
 
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import com.frinika.synth.envelope.MidiVolume;
+import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.server.AudioServer;
@@ -54,7 +56,7 @@ public class SampleBasedMetronome implements AudioProcess, SequencerListener {
 				sampleData[index++] = (((frame[1] * 256) + (frame[0] & 0xff)) / 32768f);
 				b = stream.read(frame);
 			}
-		} catch (Exception e) {
+		} catch (IOException | UnsupportedAudioFileException e) {
 			e.printStackTrace();
 
 		}
@@ -94,6 +96,7 @@ public class SampleBasedMetronome implements AudioProcess, SequencerListener {
  		return (long)(nClick*samplesPerClick);
   	}
 	
+        @Override
 	public int processAudio(AudioBuffer buffer) {
 
 		if (!active) {
@@ -135,11 +138,13 @@ public class SampleBasedMetronome implements AudioProcess, SequencerListener {
 		return AUDIO_OK; // super.processAudio(buffer);
 	}
 
+        @Override
 	public void open() {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public void close() {
 		// TODO Auto-generated method stub
 
@@ -155,14 +160,17 @@ public class SampleBasedMetronome implements AudioProcess, SequencerListener {
 	}
 
 
+        @Override
 	public void beforeStart() {		
 		framePtr = getFramePos();		
 	}
 
+        @Override
 	public void start() {
 	//	active=true;
 	}
 
+        @Override
 	public void stop() {
 	//	active=false;
 	}

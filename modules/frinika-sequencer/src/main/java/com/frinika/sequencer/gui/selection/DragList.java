@@ -73,8 +73,8 @@ public class DragList extends Vector<Item> {
 	
 	public DragList(AbstractSequencerProjectContainer project) {
 		this.project=project;
-		dragEventListeners = new Vector<DragEventListener>();
-		feedbackEventListeners = new Vector<FeedbackEventListener>();
+		dragEventListeners = new Vector<>();
+		feedbackEventListeners = new Vector<>();
 	}
 
 	
@@ -90,7 +90,7 @@ public class DragList extends Vector<Item> {
 		if (!copy) {
 			project.getEditHistoryContainer().mark(getMessage("sequencer.pianoroll.drag_move_notes"));
 			Iterator<Item> iter = project.getDragList().iterator();
-			Vector<MultiEvent> list = new Vector<MultiEvent>(project
+			Vector<MultiEvent> list = new Vector<>(project
 					.getMultiEventSelection().getSelected());
 			for (MultiEvent ev : list) {
 				ev.getPart().remove(ev);
@@ -138,7 +138,7 @@ public class DragList extends Vector<Item> {
 		// TODO may not want to delete these ? CNTRL DRAG
 
 		Iterator<Item> iter = iterator();
-		Vector<MultiEvent> list =new Vector<MultiEvent>(project.getMultiEventSelection().getSelected());
+		Vector<MultiEvent> list =new Vector<>(project.getMultiEventSelection().getSelected());
 		for (MultiEvent ev : list) {
 			// if (!validEvent(ev)) continue;
 			ev.getPart().remove(ev);

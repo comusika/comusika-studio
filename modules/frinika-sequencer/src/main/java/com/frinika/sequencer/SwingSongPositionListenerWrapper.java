@@ -31,6 +31,7 @@ public class SwingSongPositionListenerWrapper implements SongPositionListener {
 	private class SongPositionListenerRunnable implements Runnable
 	{
 		long tick;
+                @Override
 		public void run()
 		{
 			listener.notifyTickPosition(tick);
@@ -44,12 +45,14 @@ public class SwingSongPositionListenerWrapper implements SongPositionListener {
 		this.listener = listener;
 	}
 	
+        @Override
 	public void notifyTickPosition(long tick) {
 		SongPositionListenerRunnable r = new SongPositionListenerRunnable();
 		r.tick = tick;
 		SwingUtilities.invokeLater(r);
 	}
 
+        @Override
 	public boolean requiresNotificationOnEachTick() {
 		return listener.requiresNotificationOnEachTick();
 	}

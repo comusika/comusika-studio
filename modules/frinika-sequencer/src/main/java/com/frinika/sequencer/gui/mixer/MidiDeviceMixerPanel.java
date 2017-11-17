@@ -29,12 +29,16 @@ import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.synth.importers.soundfont.SoundFontFileFilter;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
@@ -63,6 +67,7 @@ public class MidiDeviceMixerPanel extends JPanel {
                 /* (non-Javadoc)
                  * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
                  */
+                @Override
                 public void mouseClicked(MouseEvent e) {
 					try
 					{
@@ -77,7 +82,7 @@ public class MidiDeviceMixerPanel extends JPanel {
 							System.out.println("Soundbank loaded");
 							((SynthesizerDescriptorIntf)panel.getProject().getMidiDeviceDescriptor(synthWrapper)).setSoundBankFileName(soundFontFile.getAbsolutePath());
 						};
-					} catch(Exception ex) { ex.printStackTrace(); }
+					} catch(HeadlessException | IOException | InvalidMidiDataException ex) { ex.printStackTrace(); }
                 }
             } );
             add(loadSoundbankButton,gc);
@@ -88,6 +93,7 @@ public class MidiDeviceMixerPanel extends JPanel {
 				
 	        	JButton showSettingsButton = new JButton(getMessage("mididevices.show"));
 	        	showSettingsButton.addMouseListener(new MouseAdapter() {
+                    @Override
 	                public void mouseClicked(MouseEvent e) {
 	                	
 	                	MidiDevice dev = synthWrapper.getRealDevice();
@@ -95,14 +101,13 @@ public class MidiDeviceMixerPanel extends JPanel {
 						try {
 							method = dev.getClass().getMethod("show");
 		                	method.invoke(dev);
-						} catch (Exception e1) {
+						} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e1) {
 							e1.printStackTrace();
 						}
 	                }
 	            } );
 	            add(showSettingsButton,gc);				
-			} catch (SecurityException e1) {
-			} catch (NoSuchMethodException e1) {
+			} catch (SecurityException | NoSuchMethodException e1) {
 			}
         }
 
@@ -110,6 +115,7 @@ public class MidiDeviceMixerPanel extends JPanel {
         JButton renameDeviceButton = new JButton(getMessage("mididevices.rename"));
         renameDeviceButton.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				String value = JOptionPane.showInputDialog(getMessage("mididevices.entername"));
 				if(value == null) return;
@@ -124,6 +130,7 @@ public class MidiDeviceMixerPanel extends JPanel {
         JButton removeDeviceButton = new JButton(getMessage("mididevices.removedevice"));
         removeDeviceButton.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				panel.remove(synthWrapper);
 

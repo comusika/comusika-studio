@@ -62,7 +62,7 @@ public class EditHistoryRecordableAction implements EditHistoryAction {
         {
             recordableClone = (EditHistoryRecordable)recordable.clone();
         }
-        catch(Exception e)
+        catch(CloneNotSupportedException e)
         {
             
         }
@@ -87,6 +87,7 @@ public class EditHistoryRecordableAction implements EditHistoryAction {
      *
      */
     @SuppressWarnings("unchecked")
+    @Override
     public void undo()
     {
         editHistoryContainer.disableRecording();
@@ -126,6 +127,7 @@ public class EditHistoryRecordableAction implements EditHistoryAction {
      *
      */
     @SuppressWarnings({"unchecked"})
+    @Override
     public void redo()
     {
         editHistoryContainer.disableRecording();

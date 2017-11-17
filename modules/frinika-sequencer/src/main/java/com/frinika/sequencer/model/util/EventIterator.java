@@ -38,6 +38,7 @@ public class EventIterator implements Iterator<MultiEvent> {
 		seekNext();
 	}
 	
+        @Override
 	public boolean hasNext() {
 		return next != null ;
 	}
@@ -48,12 +49,14 @@ public class EventIterator implements Iterator<MultiEvent> {
 		next=null;
 	}
 
+        @Override
 	public MultiEvent next() {
 		MultiEvent tmp=next;
 		seekNext();
 		return tmp;
 	}
 
+        @Override
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

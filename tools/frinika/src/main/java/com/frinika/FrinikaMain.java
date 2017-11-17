@@ -44,6 +44,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * The main entry class for Frinika
@@ -54,9 +55,6 @@ public class FrinikaMain {
 
     static FrinikaExitHandler exitHook = null;
 
-    /**
-     * @param args
-     */
     public static void main(String[] args) throws Exception {
 
         parseArguments(args);
@@ -66,11 +64,14 @@ public class FrinikaMain {
         configureUI();
 
         try {
-            int n = 1;
+            int n;
 
-            Object[] options = {CurrentLocale.getMessage("welcome.new_project"),
+            Object[] options = {
+                CurrentLocale.getMessage("welcome.new_project"),
                 CurrentLocale.getMessage("welcome.open_existing"),
-                CurrentLocale.getMessage("welcome.settings"), CurrentLocale.getMessage("welcome.quit")};
+                CurrentLocale.getMessage("welcome.settings"),
+                CurrentLocale.getMessage("welcome.quit")
+            };
 
             //String setup = FrinikaConfig.getProperty("multiplexed_audio");
             WelcomeDialog welcome = new WelcomeDialog(options);
@@ -87,6 +88,7 @@ public class FrinikaMain {
             welcome.setModal(true);
 
             welcome.addButtonActionListener(2, new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     SetupDialog.showSettingsModal();
                 }
@@ -130,11 +132,10 @@ public class FrinikaMain {
         Runtime.getRuntime().addShutdownHook(exitHook);
 
         FrinikaFrame.addProjectFocusListener(new ProjectFocusListener() {
-
+            @Override
             public void projectFocusNotify(ProjectContainer project) {
                 FrinikaAudioSystem.installClient(project.getAudioClient());
             }
-
         });
 
         SplashDialog.closeSplash();
@@ -148,7 +149,7 @@ public class FrinikaMain {
 
         try {
             UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-        } catch (Exception e) {
+        } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
 
@@ -156,6 +157,7 @@ public class FrinikaMain {
 
     static class FrinikaExitHandler extends Thread {
 
+        @Override
         public void run() {
             MidiInDeviceManager.close();
             FrinikaAudioSystem.close();
@@ -178,13 +180,13 @@ public class FrinikaMain {
      */
     public static void prepareRunningFromSingleJar() {
         String classpath = System.getProperty("java.class.path");
-        if (classpath.indexOf(File.pathSeparator) == -1) { // no pathSeparator: single entry classpath
+        if (!classpath.contains(File.pathSeparator)) { // no pathSeparator: single entry classpath
             if (classpath.endsWith(".jar")) {
                 File file = new File(classpath);
                 if (file.exists() && file.isFile()) { // yes, running from 1 jar
                     String osarch = System.getProperty("os.arch");
                     String osname = System.getProperty("os.name");
-                    String libPrefix = "lib/" + osarch + "/" + osname + "/";
+                    String libPrefix = "lib/native/" + osarch + "/" + osname + "/";
                     String tmp = System.getProperty("java.io.tmpdir");
                     File tmpdir = new File(tmp);
                     try {

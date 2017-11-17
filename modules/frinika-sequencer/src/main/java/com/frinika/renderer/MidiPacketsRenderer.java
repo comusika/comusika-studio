@@ -93,29 +93,28 @@ public class MidiPacketsRenderer {
 		MidiEvent[] events = packet.events;
 		if(events != null)
 		{			
-			for (int i = 0; i < events.length; i++) {
-				MidiEvent event = events[i];
-				int samplepos = ((int)(event.getTick()*ms_factor))*channels;
-				if(samplepos != writepos && samplepos <= len)
-				{
-					// Render 500 points at max !!!
-					while(writepos != samplepos)
-					{
-						if((samplepos - writepos) > 500)
-						{
-							render.read(buffer, writepos+start, writepos+500+start);
-							writepos += 500;							
-						}
-						else
-						{
-							render.read(buffer, writepos+start, samplepos+start);
-							writepos = samplepos;
-						}
-					}
-					
-				}
-				render.send(event.getMessage());
-			}
+                    for (MidiEvent event : events) {
+                        int samplepos = ((int)(event.getTick()*ms_factor))*channels;
+                        if(samplepos != writepos && samplepos <= len)
+                        {
+                            // Render 500 points at max !!!
+                            while(writepos != samplepos)
+                            {
+                                if((samplepos - writepos) > 500)
+                                {
+                                    render.read(buffer, writepos+start, writepos+500+start);
+                                    writepos += 500;
+                                }
+                                else
+                                {
+                                    render.read(buffer, writepos+start, samplepos+start);
+                                    writepos = samplepos;
+                                }
+                            }
+                            
+                        }
+                        render.send(event.getMessage());
+                    }
 		}		
 		}
 		

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 import com.frinika.audio.analysis.Mapper;
@@ -30,69 +29,69 @@ import com.frinika.audio.io.LimitedAudioReader;
 import com.frinika.util.tweaks.Tweakable;
 import com.frinika.util.tweaks.TweakableInt;
 import com.frinika.util.tweaks.gui.TweakerPanel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 import javax.swing.JPanel;
-
 
 public class FFTSpectrumController implements SpectrumController {
 
-	Vector<Tweakable> tweaks = new Vector<Tweakable>();
+    List<Tweakable> tweaks = new ArrayList<>();
 
-	
-	TweakableInt fftsizeT = new TweakableInt(tweaks, 16 , 2048, 512,
-			"FFT size");
+    TweakableInt fftsizeT = new TweakableInt(tweaks, 16, 2048, 512,
+            "FFT size");
 
-	TweakableInt chunksizeT = new TweakableInt(tweaks, 8, 2048, 256," chunksize");
+    TweakableInt chunksizeT = new TweakableInt(tweaks, 8, 2048, 256, " chunksize");
 
+    private Mapper freqMapper;
 
-	private Mapper freqMapper;
-	
-	double maxFreq;
-	
-	Observer reco;
-	public FFTSpectrumController(final FFTSpectrogramControlable spectroData,final LimitedAudioReader reader) {
-		maxFreq=spectroData.getSampleRate()/2;
-		
-		freqMapper = new Mapper() {
-			
-			public final float eval(float val) {
-				return (float) (val/maxFreq);
-			}
-			
-		};
-		
-		
-		
-		reco = new Observer() {
-			public void update(Observable o, Object arg) {
-				maxFreq=spectroData.getSampleRate()/2;
-				spectroData.setParameters(chunksizeT.intValue(),
-						fftsizeT.intValue(),reader);
-			}
-		};
+    double maxFreq;
 
-		fftsizeT.addObserver(reco);
-		chunksizeT.addObserver(reco);
-	}
+    Observer reco;
 
-	public Mapper getFrequencyMapper() {
-		return freqMapper;
-	}
+    public FFTSpectrumController(final FFTSpectrogramControlable spectroData, final LimitedAudioReader reader) {
+        maxFreq = spectroData.getSampleRate() / 2;
 
-	
-	public void update() {
-		reco.update(null, null);		
-	}
+        freqMapper = new Mapper() {
 
-	public JPanel getTweakPanel() {
-		
-		TweakerPanel tpanel = new TweakerPanel(2, 4);
-		for (Tweakable t : tweaks) {
-			tpanel.addSpinTweaker(t);
-		}	
-		return tpanel;
-	}
+            @Override
+            public final float eval(float val) {
+                return (float) (val / maxFreq);
+            }
 
+        };
+
+        reco = new Observer() {
+            @Override
+            public void update(Observable o, Object arg) {
+                maxFreq = spectroData.getSampleRate() / 2;
+                spectroData.setParameters(chunksizeT.intValue(),
+                        fftsizeT.intValue(), reader);
+            }
+        };
+
+        fftsizeT.addObserver(reco);
+        chunksizeT.addObserver(reco);
+    }
+
+    @Override
+    public Mapper getFrequencyMapper() {
+        return freqMapper;
+    }
+
+    @Override
+    public void update() {
+        reco.update(null, null);
+    }
+
+    @Override
+    public JPanel getTweakPanel() {
+
+        TweakerPanel tpanel = new TweakerPanel(2, 4);
+        for (Tweakable t : tweaks) {
+            tpanel.addSpinTweaker(t);
+        }
+        return tpanel;
+    }
 }

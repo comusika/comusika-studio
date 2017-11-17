@@ -50,6 +50,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import net.roydesign.app.Application;
 
 /*
@@ -122,6 +123,7 @@ public class Simphoney2Main {
 			welcome.setModal(true);
 
 			welcome.addButtonActionListener(2, new ActionListener() {
+                                @Override
 				public void actionPerformed(ActionEvent e) {
 					SetupDialog.showSettingsModal();
 				}
@@ -171,6 +173,7 @@ public class Simphoney2Main {
 
 		FrinikaFrame.addProjectFocusListener(new ProjectFocusListener() {
 
+                        @Override
 			public void projectFocusNotify(ProjectContainer project) {
 				FrinikaAudioSystem.installClient(project.getAudioClient());
 			}
@@ -267,21 +270,21 @@ public class Simphoney2Main {
 			UIManager.put("PopupMenuUI", cPopupMenuUI);
 			UIManager.put("ProgressBarUI", cProgressBarUI);
 
-			Application.getInstance().getAboutJMenuItem().addActionListener(
-					new ActionListener() {
+			Application.getInstance().getAboutJMenuItem().addActionListener(new ActionListener() {
+                    @Override
 						public void actionPerformed(ActionEvent arg0) {
 							About.about(null);
 						}
 					});
 
-			Application.getInstance().getQuitJMenuItem().addActionListener(
-					new ActionListener() {
+			Application.getInstance().getQuitJMenuItem().addActionListener(new ActionListener() {
+                    @Override
 						public void actionPerformed(ActionEvent arg0) {
 							FrinikaFrame.getFocusFrame().tryQuit();
 						}
 					});
 
-		} catch (Exception e) {
+		} catch (UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
 	}
@@ -297,13 +300,14 @@ public class Simphoney2Main {
 
 		try {
 			UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-		} catch (Exception e) {
+		} catch (UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	static class FrinikaExitHandler extends Thread {
+                @Override
 		public void run() {
 			MidiInDeviceManager.close();
 			FrinikaAudioSystem.close();
@@ -326,7 +330,7 @@ public class Simphoney2Main {
 	 */
 	public static void prepareRunningFromSingleJar() {
 		String classpath = System.getProperty("java.class.path");
-		if (classpath.indexOf(File.pathSeparator) == -1) { // no pathSeparator:
+		if (!classpath.contains(File.pathSeparator)) { // no pathSeparator:
 															// single entry
 															// classpath
 			if (classpath.endsWith(".jar")) {

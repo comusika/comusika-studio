@@ -21,67 +21,65 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.toot;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 
 /**
  *
- * AudioProcess that allows the preprocessing of the audio buffer by a set of clients.
- * Finally processed by the output.
+ * AudioProcess that allows the preprocessing of the audio buffer by a set of
+ * clients. Finally processed by the output.
  *
  * @author pjl
  */
 public class AudioInjector implements AudioProcess {
 
-	Vector<AudioProcess> clients = new Vector<AudioProcess>();
-	AudioProcess output;
+    List<AudioProcess> clients = new LinkedList<>();
+    AudioProcess output;
 
-	public AudioInjector(AudioProcess process) {
-		output=process;		
-	}
-	
-	synchronized public AudioProcess getOutputProcess() {
-		return output;
-	}
+    public AudioInjector(AudioProcess process) {
+        output = process;
+    }
 
-	
-	
-	synchronized public void  setOutputProcess(AudioProcess output) {
-		this.output=output;
-	}
+    synchronized public AudioProcess getOutputProcess() {
+        return output;
+    }
 
-	public void open() {
-		// TODO Auto-generated method stub
+    synchronized public void setOutputProcess(AudioProcess output) {
+        this.output = output;
+    }
 
-	}
+    @Override
+    public void open() {
+        // TODO Auto-generated method stub
+    }
 
-	/**
-	 * add a process to mix with the buffer
-	 * @param process
-	 */
-	synchronized public void add(AudioProcess process) {
-		clients.add(process);
-	}
+    /**
+     * add a process to mix with the buffer
+     *
+     * @param process
+     */
+    synchronized public void add(AudioProcess process) {
+        clients.add(process);
+    }
 
+    synchronized public void remove(AudioProcess process) {
+        clients.remove(process);
+    }
 
-	synchronized public void remove(AudioProcess process) {
-		clients.remove(process);
-	}
+    @Override
+    synchronized public int processAudio(AudioBuffer buffer) {
+        for (AudioProcess client : clients) {
+            client.processAudio(buffer);
+        }
+        return output.processAudio(buffer);
+    }
 
-	synchronized public int processAudio(AudioBuffer buffer) {
-		for (AudioProcess client:clients) {
-			client.processAudio(buffer);
-		}
-		return output.processAudio(buffer);
-	}
-
-	public void close() {
-		// TODO Auto-generated method stub
-
-	}
-
+    @Override
+    public void close() {
+        // TODO Auto-generated method stub
+    }
 }

@@ -76,6 +76,7 @@ public class InitialAudioServerPanel extends JPanel {
 
 		next.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				multiIO.done();
 				remove(multiIO);
@@ -102,6 +103,7 @@ public class InitialAudioServerPanel extends JPanel {
 		repaint();
 
 		next.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				ioPanel.done();
 				remove(ioPanel);
@@ -122,6 +124,7 @@ public class InitialAudioServerPanel extends JPanel {
 	
 		next.addActionListener(new ActionListener(){
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				Container top=getTopLevelAncestor();
 				if (getTopLevelAncestor() instanceof SetupDialog ) {
@@ -142,6 +145,7 @@ public class InitialAudioServerPanel extends JPanel {
 		repaint();
 
 		next.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				next.removeActionListener(this);
 				ioPanel.done();

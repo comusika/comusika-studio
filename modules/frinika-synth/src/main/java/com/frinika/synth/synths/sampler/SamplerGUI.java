@@ -93,11 +93,12 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
         final JComboBox layerComboBox = new JComboBox();
         for(int n=1;n<=6;n++)
         {
-            layerComboBox.addItem(new Integer(n));
+            layerComboBox.addItem(n);
         }
         layerComboBox.setSelectedIndex(sampler.getSamplerSettings().getLayers()-1);
         layerComboBox.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 sampler.getSamplerSettings().setLayers(layerComboBox.getSelectedIndex()+1);
             }});
@@ -109,6 +110,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
         
         freqSpreadSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 sampler.getSamplerSettings().setFreqSpread((freqSpreadSlider.getValue() / 80f));
             }});
@@ -123,6 +125,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 		sampleMapTable = new JTable(sampleMapTableModel) {
 				private static final long serialVersionUID = 1L;
 
+                                @Override
 				public Component prepareRenderer(TableCellRenderer renderer,
 						int row, int column) {
 					Component c = super.prepareRenderer(renderer, row, column);
@@ -234,6 +237,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 			/* (non-Javadoc)
 			 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
 			 */
+                        @Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount()==2)
 					new SampleEditor((SampledSoundSettings)sampleMapTableModel.getValueAt(sampleMapTable.getSelectedRow(),sampleMapTable.getSelectedColumn()));
@@ -247,6 +251,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
                 
         final JMenuItem renameMenuItem = new JMenuItem("Rename");
         renameMenuItem.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 sampler.setInstrumentName(
                         JOptionPane.showInputDialog("Enter new name",
@@ -256,6 +261,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
         
 		final JMenuItem importSFMenuItem = new JMenuItem("Import SoundFont V2");
 		importSFMenuItem.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				sampler.sfi.showGUI();
 			}});
@@ -263,6 +269,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 		
         final JMenuItem importWavMenuItem = new JMenuItem("Import Wav");
         importWavMenuItem.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 try
                 {
@@ -329,6 +336,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 			audioInputMenu.add(item);
 			item.addActionListener(new ActionListener() {
 
+                                @Override
 				public void actionPerformed(ActionEvent evt) {
 					stereo = false;
 				}});
@@ -338,6 +346,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 			audioInputMenu.add(item);
 			item.addActionListener(new ActionListener() {
 
+                                @Override
 				public void actionPerformed(ActionEvent evt) {
 					stereo = true;
 				}});
@@ -346,6 +355,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 		final JMenuItem recordMenuItem = new JMenuItem("Record to key");
 		recordMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				sampler.recordMode = MySampler.RECORDMODE_SINGLE_KEY;
 				startSampler();
@@ -355,6 +365,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 		final JMenuItem recordAllKeysMenuItem = new JMenuItem("Record to all keys");
 		recordAllKeysMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				sampler.recordMode = MySampler.RECORDMODE_ALL_KEYS;
 				startSampler();
@@ -365,6 +376,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
 		final JMenuItem recordToSelectionMenuItem = new JMenuItem("Record to selection");
 		recordToSelectionMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				sampler.recordMode = MySampler.RECORDMODE_SELECTION;
 				startSampler();
@@ -382,6 +394,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
             /* (non-Javadoc)
              * @see java.awt.event.WindowAdapter#windowClosed(java.awt.event.WindowEvent)
              */
+            @Override
             public void windowClosed(WindowEvent e) {
                 sampler.removeInstrumentNameListener(SamplerGUI.this);
             }
@@ -444,6 +457,7 @@ public class SamplerGUI extends JFrame implements InstrumentNameListener {
     /* (non-Javadoc)
      * @see com.petersalomonsen.mystudio.mysynth.InstrumentNameListener#instrumentNameChange(java.lang.String)
      */
+        @Override
     public void instrumentNameChange(Synth synth, String instrumentName) {
         setTitle(instrumentName);
     }

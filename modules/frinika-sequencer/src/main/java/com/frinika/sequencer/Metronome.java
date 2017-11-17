@@ -3,8 +3,10 @@ package com.frinika.sequencer;
 
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import com.frinika.synth.envelope.MidiVolume;
+import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 
@@ -35,7 +37,7 @@ public class Metronome implements AudioProcess, SongPositionListener {
                 sampleData[index++] = (((frame[1] * 256)+(frame[0] & 0xff)) / 32768f);
                 b = stream.read(frame);
             }            
-        } catch (Exception e) {
+        } catch (IOException | UnsupportedAudioFileException e) {
         	e.printStackTrace();
         	
         }
@@ -62,18 +64,21 @@ public class Metronome implements AudioProcess, SongPositionListener {
         }
     }
     
+    @Override
     public void notifyTickPosition(long tick) {
     	// Reset metronome sample pos on each metronome beat
     	if(tick%project.getSequence().getResolution()==0)
         	metSamplePos = 0;
     }
 
+    @Override
     public boolean requiresNotificationOnEachTick() {
         return true;
     }
 
     
   
+    @Override
     public int processAudio(AudioBuffer buffer) {
     	float left[] = buffer.getChannel(0);
     	float right[] = buffer.getChannel(1);
@@ -86,11 +91,13 @@ public class Metronome implements AudioProcess, SongPositionListener {
     	return AUDIO_OK; // super.processAudio(buffer);
     }
 
+    @Override
 	public void open() {
 		// TODO Auto-generated method stub
 		
 	}
 
+    @Override
 	public void close() {
 		// TODO Auto-generated method stub
 		

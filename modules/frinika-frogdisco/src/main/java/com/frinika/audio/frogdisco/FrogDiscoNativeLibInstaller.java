@@ -6,6 +6,7 @@ package com.frinika.audio.frogdisco;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -32,19 +33,19 @@ public class FrogDiscoNativeLibInstaller {
             File tmpDir = new File("/Library/Java/Extensions/");
             File tmpLibFile = new File(tmpDir,nativeLibName);
             System.out.println("Extracting native library to "+tmpLibFile.getAbsolutePath());
-            FileOutputStream fos = new FileOutputStream(tmpLibFile);
-            byte[] buf = new byte[1024];
-            int len = is.read(buf);
-            while(len>-1)
-            {
-                fos.write(buf,0,len);
-                len = is.read(buf);
+            try (FileOutputStream fos = new FileOutputStream(tmpLibFile)) {
+                byte[] buf = new byte[1024];
+                int len = is.read(buf);
+                while(len>-1)
+                {
+                    fos.write(buf,0,len);
+                    len = is.read(buf);
+                }
             }
-            fos.close();
             System.load(tmpLibFile.getAbsolutePath());
             System.out.println("Loaded native library: "+tmpLibFile.getAbsolutePath());
             loadedNativeLib = true;
-        } catch(Throwable t) {
+        } catch(IOException t) {
             throw(new Exception(t));
         }
     }

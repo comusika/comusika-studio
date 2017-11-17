@@ -176,7 +176,7 @@ public class FrinikaConfig {
      * @return
      */
     public static Map<Meta, Object> bindMap(ConfigDialogPanel d) {
-        Map<Meta, Object> m = new HashMap<Meta, Object>();
+        Map<Meta, Object> m = new HashMap<>();
         m.put(_AUDIO_BUFFER_LENGTH, d.spinnerBufferSize);
         m.put(_DIRECT_MONITORING, d.checkboxUseDirectMonitoring);
         m.put(_MULTIPLEXED_AUDIO, d.checkboxUseMultiplexedJavasoundServer);
@@ -245,10 +245,10 @@ public class FrinikaConfig {
 
     static { // class initializer
         properties = new Properties();
-        fieldsByName = new HashMap<String, Field>();
-        metafieldsByName = new HashMap<String, Field>();
-        metasByField = new HashMap<Field, Meta>();
-        listeners = new ArrayList<ConfigListener>();
+        fieldsByName = new HashMap<>();
+        metafieldsByName = new HashMap<>();
+        metasByField = new HashMap<>();
+        listeners = new ArrayList<>();
         Field[] fields = FrinikaConfig.class.getFields();
         for (Field f : fields) {
             if ((f.getModifiers() & Modifier.STATIC) != 0) { // only look at static fields
@@ -287,7 +287,7 @@ public class FrinikaConfig {
             load();
         } catch (FileNotFoundException fnfe) {
             System.out.println("Can't find find config at " + configFile.getAbsolutePath() + ". If you have not specified a custom config, it will be created when you quit the program or change configuration options.");
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("error loading configuration. defaults will be used where possible.");
             e.printStackTrace();
         }
@@ -295,7 +295,7 @@ public class FrinikaConfig {
         // verify static bindMap
         // make sure all available options are at least named in the map 
         Map<Meta, Object> m = bindMap(new ConfigDialogPanel(null)); // dummy for verifying
-        Collection<Field> boundFields = new ArrayList<Field>();
+        Collection<Field> boundFields = new ArrayList<>();
         /*for (int i = 0; i < m.length; i++) {
 			Object[] pair = m[i];
 			boundFields.add(findField((String)pair[0]));
@@ -308,7 +308,7 @@ public class FrinikaConfig {
             }
             boundFields.add(meta.getField());
         }
-        Collection<Field> allfields = new ArrayList<Field>(fieldsByName.values());
+        Collection<Field> allfields = new ArrayList<>(fieldsByName.values());
         allfields.removeAll(boundFields);
         int a = boundFields.size();
         int b = fieldsByName.size();
@@ -490,9 +490,8 @@ public class FrinikaConfig {
     }
 
     private static Map<Field, Object> convertMap(Object[][] bindMap) {
-        Map<Field, Object> m = new HashMap<Field, Object>();
-        for (int i = 0; i < bindMap.length; i++) {
-            Object[] pair = bindMap[i];
+        Map<Field, Object> m = new HashMap<>();
+        for (Object[] pair : bindMap) {
             Field field = findField((String) pair[0]);
             Object component = pair[1];
             m.put(field, component);
@@ -501,7 +500,7 @@ public class FrinikaConfig {
     }
 
     public static Map<Field, Object> convertMap(Map<Meta, Object> map) {
-        Map<Field, Object> m = new HashMap<Field, Object>();
+        Map<Field, Object> m = new HashMap<>();
         for (Map.Entry<Meta, Object> e : map.entrySet()) {
             Field field = e.getKey().getField();
             Object component = e.getValue();
@@ -584,7 +583,7 @@ public class FrinikaConfig {
 
     public static boolean isTrue(Object o) {
         if (o instanceof Boolean) {
-            return ((Boolean) o).booleanValue();
+            return ((Boolean) o);
         } else if (o instanceof Number) {
             return !(Math.abs(((Number) o).doubleValue()) < 0.000000001d);
         } else {
@@ -616,10 +615,10 @@ public class FrinikaConfig {
         }
         int fontStyle = 0;
         fontStyleStr = fontStyleStr.toLowerCase();
-        if (fontStyleStr.indexOf("bold") != -1) {
+        if (fontStyleStr.contains("bold")) {
             fontStyle |= Font.BOLD;
         }
-        if (fontStyleStr.indexOf("italic") != -1) {
+        if (fontStyleStr.contains("italic")) {
             fontStyle |= Font.ITALIC;
         }
         return new Font(fontName, fontStyle, fontSize);
@@ -730,7 +729,7 @@ public class FrinikaConfig {
             load();
         } catch (FileNotFoundException fnfe) {
             System.out.println("Can't find find config at " + configFile.getAbsolutePath() + ". It will be created when you quit the program or change configuration options.");
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.err.println("error loading configuration. defaults will be used where possible.");
             e.printStackTrace();
         }
@@ -765,7 +764,7 @@ public class FrinikaConfig {
             buf = "";
         }
         String[] list = buf.split(";");
-        List<String> vec = new ArrayList<String>();
+        List<String> vec = new ArrayList<>();
         for (String str : list) {
             if (!str.equals("")) {
                 vec.add(str);
@@ -775,7 +774,7 @@ public class FrinikaConfig {
     }
 
     public static Collection<String> getAvailableMidiInDevices() {
-        ArrayList<String> a = new ArrayList<String>();
+        ArrayList<String> a = new ArrayList<>();
         Info infos[] = MidiSystem.getMidiDeviceInfo();
         for (Info info : infos) {
             try {

@@ -45,6 +45,7 @@ public class MidiVelocityAction extends AbstractMidiAction {
 		super(project, "sequencer.midi.velocity");
 	}
 
+        @Override
 	public void modifyNoteEvents(Collection<NoteEvent> events) {
 		startTick = Long.MAX_VALUE;
 		endTick = Long.MIN_VALUE;
@@ -60,10 +61,12 @@ public class MidiVelocityAction extends AbstractMidiAction {
 	}
 			
 	
+        @Override
 	protected JComponent createGUI() {
 		return new MidiVelocityActionEditor(this);
 	}
 	
+        @Override
 	public void modifyNoteEvent(NoteEvent note) {
 		int diff = endVelocity - startVelocity;
 		long dist = endTick - startTick;

@@ -44,6 +44,7 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
     PipedOutputStream pos = null;
     int bufferSize;
 
+    @Override
     public void open(AudioFormat format, int bufferSize) throws LineUnavailableException {
         queue = new PipedInputStream();
         this.bufferSize = bufferSize;
@@ -54,10 +55,12 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
         }
     }
 
+    @Override
     public void open(AudioFormat format) throws LineUnavailableException {
         open(format, 1024*1024*8);
     }
 
+    @Override
     public int read(byte[] b, int off, int len) {
         try {
             return queue.read(b, off, len);
@@ -66,38 +69,47 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
         }
     }
 
+    @Override
     public void drain() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void flush() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void start() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void stop() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean isRunning() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean isActive() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public AudioFormat getFormat() {
         return new AudioFormat((float) FrinikaConfig.sampleRate,16,2,true,false);
     }
 
+    @Override
     public int getBufferSize() {
         return bufferSize;
     }
 
+    @Override
     public int available() {
         try {
             return queue.available();
@@ -107,30 +119,37 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
         }
     }
 
+    @Override
     public int getFramePosition() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public long getLongFramePosition() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public long getMicrosecondPosition() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public float getLevel() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public Info getLineInfo() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void open() throws LineUnavailableException {
         open(getFormat());
     }
 
+    @Override
     public void close() {
         try {
             queue.close();
@@ -146,26 +165,32 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
         pos = null;
     }
 
+    @Override
     public boolean isOpen() {
         return queue !=null;
     }
 
+    @Override
     public Control[] getControls() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public boolean isControlSupported(Type control) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public Control getControl(Type control) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void addLineListener(LineListener listener) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public void removeLineListener(LineListener listener) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

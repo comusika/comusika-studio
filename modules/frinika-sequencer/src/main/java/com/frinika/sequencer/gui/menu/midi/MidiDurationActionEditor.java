@@ -50,6 +50,7 @@ public class MidiDurationActionEditor extends JPanel {
         initComponents();
         final TimeSelector setTimeSelector = new TimeSelector(action.setTicks, project, TimeFormat.BEAT_TICK);
         setTimeSelector.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 MidiDurationActionEditor.this.action.setTicks = setTimeSelector.getTicks();
             }
@@ -57,6 +58,7 @@ public class MidiDurationActionEditor extends JPanel {
         setTimeSelectorPanel.add(setTimeSelector);
         final TimeSelector changeTimeSelector = new TimeSelector(action.changeTicks, true, project, TimeFormat.BEAT_TICK);
         changeTimeSelector.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 MidiDurationActionEditor.this.action.changeTicks = changeTimeSelector.getTicks();
             }

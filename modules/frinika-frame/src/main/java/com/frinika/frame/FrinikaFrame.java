@@ -82,6 +82,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
@@ -102,6 +103,7 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -114,6 +116,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
@@ -270,12 +273,14 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             
 		addWindowListener(new WindowListener() {
 
+                        @Override
 			public void windowOpened(WindowEvent arg0) {
 				// System.out.println();
 				// TODO Auto-generated method stub
 
 			}
 
+                        @Override
 			public void windowClosing(WindowEvent evt) {
 				// System.out.println();
 				if (openProjectFrames.size() == 1 && ! doNotQuit)
@@ -287,18 +292,22 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			}
 
+                        @Override
 			public void windowClosed(WindowEvent arg0) {
 
 			}
 
+                        @Override
 			public void windowIconified(WindowEvent arg0) {
 
 			}
 
+                        @Override
 			public void windowDeiconified(WindowEvent arg0) {
 
 			}
 
+                        @Override
 			public void windowActivated(WindowEvent arg0) {
 				// System.out.println(" activated ");
 				FrinikaFrame.setFocusFrame(FrinikaFrame.this);
@@ -317,6 +326,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			}
 
+                        @Override
 			public void windowDeactivated(WindowEvent arg0) {
 
 			}
@@ -326,19 +336,23 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		if (false)
 			addComponentListener(new ComponentListener() {
 
+                                @Override
 				public void componentHidden(ComponentEvent e) {
 
 				}
 
+                                @Override
 				public void componentMoved(ComponentEvent e) {
 					info();
 
 				}
 
+                                @Override
 				public void componentResized(ComponentEvent e) {
 					info();
 				}
 
+                                @Override
 				public void componentShown(ComponentEvent e) {
 					// TODO Auto-generated method stub
 
@@ -531,6 +545,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 					 */
 					boolean showAsterix = false;
 
+                                        @Override
 					public void fireSequenceDataChanged(
 							EditHistoryAction[] edithistoryEntries) {
 						if (project.getEditHistoryContainer().hasChanges() != showAsterix) {
@@ -635,12 +650,14 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		addWindowListener(new WindowListener() {
 
+                        @Override
 			public void windowOpened(WindowEvent arg0) {
 				// System.out.println();
 				// TODO Auto-generated method stub
 
 			}
 
+                        @Override
 			public void windowClosing(WindowEvent evt) {
 				// System.out.println();
 				if (openProjectFrames.size() == 1 && ! doNotQuit)
@@ -652,18 +669,22 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			}
 
+                        @Override
 			public void windowClosed(WindowEvent arg0) {
 
 			}
 
+                        @Override
 			public void windowIconified(WindowEvent arg0) {
 
 			}
 
+                        @Override
 			public void windowDeiconified(WindowEvent arg0) {
 
 			}
 
+                        @Override
 			public void windowActivated(WindowEvent arg0) {
 				// System.out.println(" activated ");
 				FrinikaFrame.setFocusFrame(FrinikaFrame.this);
@@ -682,6 +703,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			}
 
+                        @Override
 			public void windowDeactivated(WindowEvent arg0) {
 
 			}
@@ -691,19 +713,23 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		if (false)
 			addComponentListener(new ComponentListener() {
 
+                                @Override
 				public void componentHidden(ComponentEvent e) {
 
 				}
 
+                                @Override
 				public void componentMoved(ComponentEvent e) {
 					info();
 
 				}
 
+                                @Override
 				public void componentResized(ComponentEvent e) {
 					info();
 				}
 
+                                @Override
 				public void componentShown(ComponentEvent e) {
 					// TODO Auto-generated method stub
 
@@ -803,6 +829,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 					 */
 					boolean showAsterix = false;
 
+                                        @Override
 					public void fireSequenceDataChanged(
 							EditHistoryAction[] edithistoryEntries) {
 						if (project.getEditHistoryContainer().hasChanges() != showAsterix) {
@@ -879,10 +906,12 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 	private static Icon minimize_icon = new javax.swing.ImageIcon(
 			FrinikaFrame.class.getResource("/icons/minimize.gif"));
 
+        @Override
     public MidiLearnIF getMidiLearnIF() {
         return midiLearnFrame;
     }
 
+        @Override
 	public void resetViews() {
 		Iterator iter = views.values().iterator();
 		while (iter.hasNext()) {
@@ -894,12 +923,14 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		viewport.grabFocus();
 	}
 
+        @Override
 	public void repaintViews() {
 		partViewEditor.repaint();
 		repaintPartView();
 		// TODO repaint others if needed
 	}
 
+        @Override
 	public void repaintPartView() {
 		partViewEditor.getPartview().repaint();
 		partViewEditor.getPartview().repaintItems();
@@ -917,6 +948,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		JMenuItem item = new JMenuItem(
 				getMessage("project.menu.perspectives.Default_Perspective"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				perspectivePreset1();
 			}
@@ -929,6 +961,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		item = new JMenuItem(
 				getMessage("project.menu.perspectives.Mastering_Perspective"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				perspectivePreset2();
 			}
@@ -941,6 +974,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		item = new JMenuItem(
 				getMessage("project.menu.perspectives.Minimal_Perspective"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				perspectivePreset3();
 			}
@@ -983,6 +1017,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         return notationPanel;
     }
 
+        @Override
     public VoicePartViewSplitPane getPartViewEditor() {
         return partViewEditor;
     }
@@ -994,6 +1029,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 			this.runnable = runnable;
 		}
 
+                @Override
 		public void run() {
 			try {
 				SwingUtilities.invokeAndWait(runnable);
@@ -1001,7 +1037,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				SwingUtilities.invokeAndWait(runnable);
 				Thread.sleep(200);
 				SwingUtilities.invokeAndWait(runnable);
-			} catch (Exception e) {
+			} catch (InterruptedException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		}
@@ -1036,6 +1072,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		repaint();
 
 		Runnable runnable = new Runnable() {
+                        @Override
 			public void run() {
 				((JTabbedPane) getView("tracks").getParent())
 						.setSelectedIndex(0);
@@ -1073,6 +1110,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		repaint();
 
 		Runnable runnable = new Runnable() {
+                        @Override
 			public void run() {
 				((JTabbedPane) getView("tracks").getParent())
 						.setSelectedIndex(0);
@@ -1107,6 +1145,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		repaint();
 
 		Runnable runnable = new Runnable() {
+                        @Override
 			public void run() {
 				((JTabbedPane) getView("tracks").getParent())
 						.setSelectedIndex(0);
@@ -1116,6 +1155,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		runReallyLater(runnable);
 	}
 
+        @Override
 	public void initViews() {
 		partViewEditor = new VoicePartViewSplitPane(this, true);
 
@@ -1228,7 +1268,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		try {
 			Method icon_method = dev.getClass().getMethod("getIcon");
 			icon = (Icon) icon_method.invoke(dev);
-		} catch (Exception e) {
+		} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
 		}
 		return icon;
 	}
@@ -1253,6 +1293,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		JMenuItem menuitem = new JMenuItem(text);
 		menuitem.setIcon(icon);
 		menuitem.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				DockingManager.undock((Dockable) view);
 				Set dockables = viewport.getDockables();
@@ -1271,6 +1312,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		Action max_action = new AbstractAction() {
 			private static final long serialVersionUID = 1L;
 
+                        @Override
 			public Object getValue(String key) {
 				if (key.equals("Name"))
 					return "maximize";
@@ -1281,6 +1323,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				return super.getValue(key);
 			}
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				DockingManager.toggleMaximized((Dockable) view);
 				focusFrame.repaint();
@@ -1315,6 +1358,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		// view.getTitlebar().addAction(min_action);
 		view.addAction(View.PIN_ACTION);
 		view.getTitlebar().addMouseListener(new MouseAdapter() {
+                        @Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					DockingManager.toggleMaximized((Dockable) view);
@@ -1360,6 +1404,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		kbm.addKeyEventDispatcher(new KeyEventDispatcher() {
 
+                        @Override
 			public boolean dispatchKeyEvent(KeyEvent e) {
 
 				if (!FrinikaFrame.this.isActive())
@@ -1436,6 +1481,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		openProjectMenuItem.setIcon(getIconResource("open.gif"));
 		openProjectMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JFileChooser chooser = new JFileChooser();
@@ -1467,6 +1513,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		closeMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				if (openProjectFrames.size() == 1)
 					tryQuit();
@@ -1487,6 +1534,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 						.getMenuShortcutKeyMask()));
 		saveProjectMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if (project.getProjectFile() != null) {
@@ -1497,7 +1545,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         withRef=false;
 						openSaveProjectDialog();
                     }
-				} catch (Exception ex) {
+				} catch (IOException ex) {
 					error("Error while saving", ex); // show error message,
 					// user should know that
 					// saving went wrong
@@ -1512,6 +1560,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				getMessage("project.menu.file.save_project_as"));
 		saveProjectAsMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
                 withRef=false;
 				openSaveProjectDialog();
@@ -1529,6 +1578,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 			//			.getMenuShortcutKeyMask()));
 		saveProjectMenuItemWithRef.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if (project.getProjectFile() != null) {
@@ -1539,7 +1589,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         withRef=true;
                         openSaveProjectDialog();
                     }
-				} catch (Exception ex) {
+				} catch (IOException ex) {
 					error("Error while saving", ex); // show error message,
 					// user should know that
 					// saving went wrong
@@ -1554,6 +1604,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				getMessage("project.menu.file.save_project_as_with_ref"));
 		saveProjectAsMenuItemWithRef.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
                 withRef=true;
 				openSaveProjectDialog();
@@ -1573,6 +1624,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		importMidiMenuItem.setIcon(getIconResource("import.gif"));
 		importMidiMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JFileChooser chooser = new JFileChooser();
@@ -1606,6 +1658,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		JMenuItem item = new JMenuItem("Import Module...");
 		item.setIcon(getIconResource("import.gif"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				MODImporter.load(FrinikaFrame.this);
 			}
@@ -1617,6 +1670,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		exportMidiMenuItem.setIcon(getIconResource("export.gif"));
 		exportMidiMenuItem.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JFileChooser chooser = new JFileChooser();
@@ -1637,7 +1691,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 						midiFile = newMidiFile;
 					}
 					;
-				} catch (Exception ex) {
+				} catch (HeadlessException | IOException | InvalidMidiDataException ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -1659,6 +1713,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 					this.type = type;
 				}
 
+                                @Override
 				public boolean accept(File f) {
 					if (f.isDirectory())
 						return true;
@@ -1666,6 +1721,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 							"." + type.getExtension().toLowerCase());
 				}
 
+                                @Override
 				public String getDescription() {
 					return type.toString() + " (*." + type.getExtension() + ")";
 				}
@@ -1675,6 +1731,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				}
 			}
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					JFileChooser chooser = new JFileChooser();
@@ -1691,13 +1748,14 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 					for (int i = 0; i < types.length; i++)
 						filters[i] = new AudioFileFilter(types[i]);
 
-					for (int i = 0; i < filters.length; i++)
-						chooser.setFileFilter(filters[i]);
-
-					for (int i = 0; i < filters.length; i++)
-						if (filters[i].getType().getExtension().toUpperCase()
-								.equals("WAV"))
-							chooser.setFileFilter(filters[i]);
+                                for (AudioFileFilter filter : filters) {
+                                    chooser.setFileFilter(filter);
+                                }
+                                for (AudioFileFilter filter : filters) {
+                                    if (filter.getType().getExtension().toUpperCase().equals("WAV")) {
+                                        chooser.setFileFilter(filter);
+                                    }
+                                }
 
 					/*
 					 * chooser .setFileFilter(new MyFileFilter(".wav", "Wav
@@ -1724,7 +1782,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 						project.getSequencer().stop();
 					}
 					;
-				} catch (Exception ex) {
+				} catch (HeadlessException ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -1774,6 +1832,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			quitMenuItem.addActionListener(new ActionListener() {
 
+                                @Override
 				public void actionPerformed(ActionEvent e) {
 					tryQuit();
 				}
@@ -1796,6 +1855,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		item = new JMenuItem("Buffered Playback");
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				BufferedPlayback bp = new BufferedPlayback(FrinikaFrame.this,
 						getProjectContainer());
@@ -1831,34 +1891,21 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 						.println(" info: Unable to load Simphoney Menus. Your probably using java < 1.6 ?");
 				// TODO Auto-generated catch block
 				// e1.printStackTrace();
-			} catch (SecurityException e) {
+			} catch (SecurityException | NoSuchMethodException | IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+                        }
 		}
 		
 		
 		item = new JMenuItem("ConfigListener");
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 
 				ConfigListener l = new ConfigListener() {
 
+                                @Override
 					public void configurationChanged(ChangeEvent event) {
 						FrinikaConfig.Meta meta = (FrinikaConfig.Meta) event
 								.getSource();
@@ -1891,6 +1938,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		JMenuItem item = new JMenuItem("Render Selected Timeline");
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				if (project.getSequencer().isRunning()) {
 					project.getSequencer().stop();
@@ -1919,6 +1967,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		item = new JMenuItem("Rerender Selected Timeline");
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				if (project.getSequencer().isRunning()) {
 					project.getSequencer().stop();
@@ -1949,6 +1998,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		item = new JMenuItem("Clear Render Cache");
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				if (project.getSequencer().isRunning()) {
 					project.getSequencer().stop();
@@ -1968,6 +2018,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				"Suppress RealTime Devices while playing");
 		item_supress_realtime.setSelected(true);
 		item_supress_realtime.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 
 				project.getRenderer().setSupressRealTime(
@@ -1985,6 +2036,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 	private Icon addMidiDevices_selected_icon = null;
 
+        @Override
 	public void addMidiDevices(JComponent menu, List<MidiDevice.Info> infos,
 			List<Icon> icons) {
 		Iterator<Icon> icon_iterator = icons.iterator();
@@ -1996,6 +2048,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 			item.addActionListener(new ActionListener() {
 				MidiDevice.Info m_info = f_info;
 
+                    @Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 
@@ -2012,7 +2065,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 						midiDevice = new SynthWrapper(project, midiDevice);
 
-					} catch (Exception e2) {
+					} catch (MidiUnavailableException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
@@ -2034,15 +2087,16 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		}
 	}
 
+        @Override
 	public void addMidiDevices(JComponent menu) {
-		List<MidiDevice.Info> infos = new ArrayList<MidiDevice.Info>();
-		List<Icon> icons = new ArrayList<Icon>();
+		List<MidiDevice.Info> infos = new ArrayList<>();
+		List<Icon> icons = new ArrayList<>();
 
-		List<MidiDevice.Info> infos1 = new ArrayList<MidiDevice.Info>();
-		List<Icon> icons1 = new ArrayList<Icon>();
+		List<MidiDevice.Info> infos1 = new ArrayList<>();
+		List<Icon> icons1 = new ArrayList<>();
 
-		List<MidiDevice.Info> infos2 = new ArrayList<MidiDevice.Info>();
-		List<Icon> icons2 = new ArrayList<Icon>();
+		List<MidiDevice.Info> infos2 = new ArrayList<>();
+		List<Icon> icons2 = new ArrayList<>();
 
 		for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
 			try {
@@ -2061,7 +2115,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 					}
 				}
 
-			} catch (Exception e) {
+			} catch (MidiUnavailableException e) {
 			}
 		}
 
@@ -2073,6 +2127,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 	}
 
+        @Override
 	public MidiDevice selectMidiDevice() {
 		try {
 
@@ -2081,6 +2136,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 			panel.add(new JLabel("MIDI Out Device:"));
 			final JButton but = new JButton("No Device Selected");
 			but.addActionListener(new ActionListener() {
+                    @Override
 				public void actionPerformed(ActionEvent e) {
 
 					JPopupMenu popup = new JPopupMenu();
@@ -2092,6 +2148,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			addMidiDevices_selected = null;
 			addMidiDevices_listener = new ActionListener() {
+                    @Override
 				public void actionPerformed(ActionEvent e) {
 					but.setText(addMidiDevices_selected.getDeviceInfo()
 							.getName());
@@ -2119,15 +2176,18 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 	JMenu newDeviceMenu() {
 		final JMenu newDeviceMenu = new JMenu(getMessage("newdevice.menu"));
 		newDeviceMenu.addMenuListener(new MenuListener() {
+                        @Override
 			public void menuSelected(MenuEvent e) {
 				// System. out.println("mem_sel");
 				newDeviceMenu.removeAll();
 				addMidiDevices(newDeviceMenu);
 			}
 
+                        @Override
 			public void menuDeselected(MenuEvent e) {
 			}
 
+                        @Override
 			public void menuCanceled(MenuEvent e) {
 			}
 		});
@@ -2215,6 +2275,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		bounceToLane.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				Lane lane = project.getLaneSelection().getFocus();
 				project.getEditHistoryContainer().mark(
@@ -2352,6 +2413,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		item = new JMenuItem(getMessage("project.menu.settings.audio_latency"));
 		item.setIcon(getIconResource("output.gif"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				FrinikaAudioSystem.latencyMeasureSet();
 			}
@@ -2364,6 +2426,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 				getMessage("project.menu.settings.configure_audio_server"));
 		item.setIcon(getIconResource("output.gif"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				FrinikaAudioSystem.configure();
 			}
@@ -2395,6 +2458,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 		item = new JMenuItem(getMessage("project.menu.settings.show"));
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				showDialog(FrinikaFrame.this);
 			}
@@ -2532,6 +2596,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		JMenuItem aboutMenuItem = new JMenuItem(
 				getMessage("project.menu.help.about"));
 		aboutMenuItem.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				About.about(FrinikaFrame.this);
 			}
@@ -2559,6 +2624,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             final JCheckBoxMenuItem item = new JCheckBoxMenuItem(getMessage("project.menu.connected.radio"));
             item.addItemListener(new ItemListener() {
 
+                @Override
                 public void itemStateChanged(ItemEvent e) {
                     if(item.getState())
                     {
@@ -2647,6 +2713,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		return split;
 	}
 
+        @Override
 	public void tryQuit() {
 		/**
 		 * Close all open frames
@@ -2700,6 +2767,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		super.dispose();
 	}
 
+        @Override
 	public ProjectContainer getProjectContainer() {
 		return project;
 	}
@@ -2709,16 +2777,19 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 	 * @param string
 	 * @deprecated
 	 */
+        @Override
 	public void infoMessage(String string) {
 		message(string);
 	}
 
 	MidiDevicesPanel midiDevicesPanel;
 
+        @Override
 	public MidiDevicesPanel getMidiDevicesPanel() {
 		return midiDevicesPanel;
 	}
 
+        @Override
 	public VoicePartViewSplitPane getVoicePartViewSplitPane() {
 		// TODO Auto-generated method stub
 		return partViewEditor;
@@ -2731,32 +2802,39 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 	}
 
+        @Override
         public void setStatusBarMessage(String msg) {
             statusBar.setMessage(msg);
             
         }
         
+        @Override
 	public void message(String msg, int type) { // Jens
 		JOptionPane.showMessageDialog(this, msg, "Frinika Message", type);
 	}
 
+        @Override
 	public void message(String msg) { // Jens
 		message(msg, JOptionPane.INFORMATION_MESSAGE);
 	}
 
+        @Override
 	public void error(String msg) { // Jens
 		message(msg, JOptionPane.ERROR_MESSAGE);
 	}
 
+        @Override
 	public void error(String msg, Throwable t) { // Jens
 		t.printStackTrace();
 		error(msg + " - " + t.getMessage());
 	}
 
+        @Override
 	public void error(Throwable t) { // Jens
 		error(t.getClass().getName(), t);
 	}
 
+        @Override
 	public boolean confirm(String msg) { // Jens
 		int result = JOptionPane.showConfirmDialog(this, msg,
 				"Frinika Question", JOptionPane.OK_CANCEL_OPTION,
@@ -2764,6 +2842,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		return (result == JOptionPane.OK_OPTION);
 	}
 
+        @Override
 	public String prompt(String msg, String initialValue) { // Jens
 		if (initialValue == null)
 			initialValue = "";
@@ -2771,10 +2850,12 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		return result;
 	}
 
+        @Override
 	public String prompt(String msg) { // Jens
 		return prompt(msg, null);
 	}
 
+        @Override
 	public String promptFile(String defaultFilename, String[][] suffices,
 			boolean saveMode, boolean directoryMode) { // Jens
 		JFileChooser fc = new JFileChooser();
@@ -2782,27 +2863,29 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 			final boolean save = saveMode;
 			// final String[][] suff = suffices;
 			if (suffices != null) {
-				for (int i = 0; i < suffices.length; i++) {
-					final String suffix = suffices[i][0];
-					final String description = suffices[i][1];
-					// if (suffix == null) suffix = "*";
-					// if (description == null) description = "";
-					FileFilter ff = new FileFilter() {
-						public boolean accept(File file) {
-							if (file.isDirectory())
-								return true;
-							String name = file.getName();
-							return suffix.equals("*")
-									|| name.endsWith("." + suffix)
-									|| (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
-						}
+                    for (String[] suffice : suffices) {
+                        final String suffix = suffice[0];
+                        final String description = suffice[1];
+                        // if (suffix == null) suffix = "*";
+                        // if (description == null) description = "";
+                        FileFilter ff = new FileFilter() {
+                            @Override
+                            public boolean accept(File file) {
+                                if (file.isDirectory())
+                                    return true;
+                                String name = file.getName();
+                                return suffix.equals("*")
+                                        || name.endsWith("." + suffix)
+                                        || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
+                            }
 
-						public String getDescription() {
-							return "." + suffix + " - " + description;
-						}
-					};
-					fc.addChoosableFileFilter(ff);
-				}
+                            @Override
+                            public String getDescription() {
+                                return "." + suffix + " - " + description;
+                            }
+                        };
+                        fc.addChoosableFileFilter(ff);
+                    }
 			}
 		} else { // directory mode
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -2845,11 +2928,13 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		}
 	}
 
+        @Override
 	public String promptFile(String defaultFilename, String[][] suffices,
 			boolean saveMode) {
 		return promptFile(defaultFilename, suffices, saveMode, false);
 	}
 
+        @Override
 	public String promptFile(String defaultFilename, String[][] suffices) {
 		return promptFile(defaultFilename, suffices, false);
 	}
@@ -2870,11 +2955,13 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
 			ProjectFileFilter no_compression = new ProjectFileFilter();
 			ProjectFileFilter zip_compressed = new ProjectFileFilter() {
+                                @Override
 				public String getDescription() {
 					return "Frinika project (ZIP Compressed)";
 				}
 			};
 			ProjectFileFilter lzma_compressed = new ProjectFileFilter() {
+                                @Override
 				public String getDescription() {
 					return "Frinika project (LZMA Compressed)";
 				}
@@ -2920,7 +3007,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 						.getAbsolutePath());
                                 setTitle(newProject.getName());
 			}
-		} catch (Exception ex) {
+		} catch (HeadlessException | IOException ex) {
 			error("Error while saving", ex); // show error message, user
 			// should know that saving went
 			// wrong
@@ -2928,6 +3015,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		}
 	}
 
+        @Override
 	public void showRightButtonPartPopup(Component invoker, int x, int y) {
 
 		// System.out.println(" RIGHT BUTTON PRESS ");
@@ -3004,11 +3092,13 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		}
 
 		// @Override
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			update();
 		}
 
 		// @Override
+                @Override
 		public void configurationChanged(ChangeEvent e) {
 			if (e.getSource() == configOption) {
 				refresh();

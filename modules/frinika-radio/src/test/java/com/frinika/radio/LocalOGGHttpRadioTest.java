@@ -29,6 +29,7 @@ import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.SynthLane;
+import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,7 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -109,13 +111,13 @@ public class LocalOGGHttpRadioTest {
                 try {
                     System.out.println("Get audio input stream");
                     
-                    AudioInputStream ais = AudioSystem.getAudioInputStream(new URL("http://localhost:15000").openStream());
-                    System.out.println("Got stream:" +ais.getFormat().getEncoding());
-                    returnedEncoding[0] = ais.getFormat().getEncoding().toString();
-
-                    ais.read(returnedData);
-                    ais.close();
-                } catch (Exception ex) {
+                    try (AudioInputStream ais = AudioSystem.getAudioInputStream(new URL("http://localhost:15000").openStream())) {
+                        System.out.println("Got stream:" +ais.getFormat().getEncoding());
+                        returnedEncoding[0] = ais.getFormat().getEncoding().toString();
+                        
+                        ais.read(returnedData);
+                    }
+                } catch (IOException | UnsupportedAudioFileException ex) {
                     Logger.getLogger(LocalOGGHttpRadioTest.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     readerDone[0] = true;

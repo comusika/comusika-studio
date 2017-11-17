@@ -60,6 +60,7 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage, long)
          */
+        @Override
         public void send(MidiMessage message, long timeStamp) {
             
             try
@@ -90,7 +91,7 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
                     }
                 }
             }
-            catch(Exception e) {
+            catch(MidiUnavailableException e) {
                 // For debugging
                 //e.printStackTrace();
             }
@@ -99,6 +100,7 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#close()
          */
+        @Override
         public void close() {
             try {
                 midiDevice.getReceiver().close();
@@ -118,12 +120,14 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
 //        name=midiDevice.getDeviceInfo();
     }
 
+        @Override
     public Receiver getReceiver() throws MidiUnavailableException {
         return receiver;
     }
 
+        @Override
     public List<Receiver> getReceivers() {
-        List<Receiver> receivers = new ArrayList<Receiver>();
+        List<Receiver> receivers = new ArrayList<>();
         receivers.add(receiver);
         for(Receiver recv : midiDevice.getReceivers())
         {
@@ -137,43 +141,53 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
         return receivers;
     }
 
+        @Override
     public Transmitter getTransmitter() throws MidiUnavailableException {
         return midiDevice.getTransmitter();
     }
 
+        @Override
     public List<Transmitter> getTransmitters() {
         return midiDevice.getTransmitters();
     }
 
+        @Override
     public Info getDeviceInfo() {
         return midiDevice.getDeviceInfo();
     }
 
+        @Override
     public void open() throws MidiUnavailableException {
         midiDevice.open();
         
     }
 
+        @Override
     public void close() {
         midiDevice.close();
     }
 
+        @Override
     public boolean isOpen() {
         return midiDevice.isOpen();
     }
 
+        @Override
     public long getMicrosecondPosition() {
         return midiDevice.getMicrosecondPosition();
     }
 
+        @Override
     public int getMaxReceivers() {
         return midiDevice.getMaxReceivers();
     }
 
+        @Override
     public int getMaxTransmitters() {
         return midiDevice.getMaxTransmitters();
     }
 
+        @Override
 	public ControllerListProvider getControllerList() {
 		// TODO Auto-generated method stub
 		return controllerList;

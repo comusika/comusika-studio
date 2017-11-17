@@ -51,6 +51,7 @@ public class PartSelectedAction extends AbstractAction {
 		this.project = project;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 
 		// System.out.println("Warp to part left");

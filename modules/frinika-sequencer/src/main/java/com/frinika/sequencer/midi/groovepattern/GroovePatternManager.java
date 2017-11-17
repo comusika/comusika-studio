@@ -67,37 +67,35 @@ public class GroovePatternManager {
 	}
 	
 	private static void initPresets() {
-		presetPatterns = new HashMap<String, GroovePattern>();
-		for (int i = 0; i < PRESETS.length; i++) {
-			String name = PRESETS[i];
-			InputStream res = ClassLoader.getSystemResourceAsStream(PRESETS_PACKAGE + "/" + name + ".mid");
-			try {
-				loadPresetPattern(presetPatterns, name, res);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
+		presetPatterns = new HashMap<>();
+            for (String name : PRESETS) {
+                InputStream res = ClassLoader.getSystemResourceAsStream(PRESETS_PACKAGE + "/" + name + ".mid");
+                try {
+                    loadPresetPattern(presetPatterns, name, res);
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+            }
 	}
 	
 	private static void loadUserPatterns() {
-		userPatterns = new HashMap<String, GroovePatternFromSequence>();
+		userPatterns = new HashMap<>();
 		File dir = FrinikaConfig.GROOVE_PATTERN_DIRECTORY; //new File( FrinikaConfig.GROOVE_PATTERN_DIRECTORY );
 		if ( dir.exists() ) {
 			File[] files = dir.listFiles();
-			for (int i = 0; i < files.length; i++) {
-				File file = files[i];
-				String name = file.getName();
-				if (name.endsWith(".mid")) {
-					name = name.substring(0, name.length() - 4);
-					try {
-						FileInputStream in = new FileInputStream(file);
-						loadPresetPattern(userPatterns, name, in);
-						in.close();
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
-				}
-			}
+                    for (File file : files) {
+                        String name = file.getName();
+                        if (name.endsWith(".mid")) {
+                            name = name.substring(0, name.length() - 4);
+                            try {
+                                try (FileInputStream in = new FileInputStream(file)) {
+                                    loadPresetPattern(userPatterns, name, in);
+                                }
+                            }catch (IOException ioe) {
+                                ioe.printStackTrace();
+                            }
+                        }
+                    }
 		}
 	}
 	
@@ -140,7 +138,7 @@ public class GroovePatternManager {
 	}
 	
 	public Collection<GroovePattern> getGroovePatterns() {
-		ArrayList<GroovePattern> l = new ArrayList<GroovePattern>();
+		ArrayList<GroovePattern> l = new ArrayList<>();
 		l.addAll( getPresetGroovePatterns() );
 		l.addAll( getUserGroovePatterns() );
 		return l;

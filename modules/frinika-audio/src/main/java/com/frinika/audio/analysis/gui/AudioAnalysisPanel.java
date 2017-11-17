@@ -21,9 +21,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
-
 
 import com.frinika.audio.DynamicMixer;
 import com.frinika.audio.analysis.Mapper;
@@ -42,9 +40,10 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -53,251 +52,227 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 
-
 /**
- * 
+ *
  * TOp level panel for the audioanalysis GUI
- * 
+ *
  * @author pjl
  *
  */
-
-
 public class AudioAnalysisPanel extends JPanel {
 
-	Vector<Tweakable> tweaks = new Vector<Tweakable>();
+    List<Tweakable> tweaks = new ArrayList<>();
 
-	TweakableDouble mindB = new TweakableDouble(tweaks, -400.0, 100.0, -70.0,
-			1.0, "minDb");
+    TweakableDouble mindB = new TweakableDouble(tweaks, -400.0, 100.0, -70.0,
+            1.0, "minDb");
 
-	TweakableDouble maxdB = new TweakableDouble(tweaks, -400.0, 100.0, -30.0,
-			1.0, "maxDb");
+    TweakableDouble maxdB = new TweakableDouble(tweaks, -400.0, 100.0, -30.0,
+            1.0, "maxDb");
 
-	JToggleButton linearBut;
+    JToggleButton linearBut;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	AudioAnalysisTimePanel timePanel;
+    AudioAnalysisTimePanel timePanel;
 
-	SingleImagePanel spectroSlicePanel;
+    SingleImagePanel spectroSlicePanel;
 
-	LimitedAudioReader reader;
-	private ValMapper valMapper;
-	private Mapper freqMapper;
-	
-	
-	SpectrumDataBuilder spectroData;
-	SpectrumController spectroController;
-	JPanel spectroPanel;
+    LimitedAudioReader reader;
+    private ValMapper valMapper;
+    private Mapper freqMapper;
 
-	private KeyboardFocusManager kbd;
-	
-	DynamicMixer mixer;
-	
+    SpectrumDataBuilder spectroData;
+    SpectrumController spectroController;
+    JPanel spectroPanel;
 
-	
-	public AudioAnalysisPanel(final AudioReaderFactory part,DynamicMixer mixer,JFrame frame,KeyboardFocusManager kbd) {
+    private KeyboardFocusManager kbd;
 
-        this.mixer=mixer;
-		this.kbd=kbd;
-		setFocusable(true);
-		setLayout(new BorderLayout());
-    	try {
-			reader = part.createAudioReader();
+    DynamicMixer mixer;
+
+    public AudioAnalysisPanel(final AudioReaderFactory part, DynamicMixer mixer, JFrame frame, KeyboardFocusManager kbd) {
+        this.mixer = mixer;
+        this.kbd = kbd;
+        setFocusable(true);
+        setLayout(new BorderLayout());
+        try {
+            reader = part.createAudioReader();
         } catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		valMapper = new ValMapper();
-		maxdB.addObserver(valMapper);
-		mindB.addObserver(valMapper);
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        valMapper = new ValMapper();
+        maxdB.addObserver(valMapper);
+        mindB.addObserver(valMapper);
 
-		JMenu menu= new JMenu("Spectral");
-			
-		JMenuItem item=new JMenuItem("FFT");
-		item.addActionListener(new ActionListener() {
+        JMenu menu = new JMenu("Spectral");
 
-			public void actionPerformed(ActionEvent arg0) {
-				clear();
-				spectroData = new FFTSpectrogramDataBuilderWrapper(reader);
-				spectroController=  ((FFTSpectrogramDataBuilderWrapper)spectroData).getController();
-			//	new FFTSpectrumController((FFTSpectrogramControlable) spectroData,reader);
-				setSpectralView(part);
-			}
-		});
-		
-		menu.add(item);
-		
-		item=new JMenuItem("constant Q");
-		item.addActionListener(new ActionListener() {
+        JMenuItem item = new JMenuItem("FFT");
+        item.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				clear();
-				spectroData = new ConstantQSpectrogramDataBuilder();
-				spectroController=new ConstantQSpectrumController((ConstantQSpectrogramDataBuilder)spectroData,reader);
-				setSpectralView(part);
-			}
-		});
-		menu.add(item);
-		
-		frame.getJMenuBar().add(menu);
-	
-	}
-		
-		
-	
-	void clear() {
-		if (spectroData != null) spectroData.dispose();
-		if (timePanel != null) timePanel.dispose();
-		removeAll();
-	}		
-		
-	void setSpectralView(AudioReaderFactory part) {
-		
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                clear();
+                spectroData = new FFTSpectrogramDataBuilderWrapper(reader);
+                spectroController = ((FFTSpectrogramDataBuilderWrapper) spectroData).getController();
+                //	new FFTSpectrumController((FFTSpectrogramControlable) spectroData,reader);
+                setSpectralView(part);
+            }
+        });
 
-		freqMapper=spectroController.getFrequencyMapper();
-		
+        menu.add(item);
 
-			
-		
-		timePanel = new AudioAnalysisTimePanel(part,mixer, valMapper, spectroData,kbd);
+        item = new JMenuItem("constant Q");
+        item.addActionListener(new ActionListener() {
 
-		SpectralSliceImage spectralSliceImage = new SpectralSliceImage(
-				spectroData, valMapper, freqMapper , timePanel.getSynth());
-		
-		
-		// Make sure this is the last thing notified 
-		spectroData.addSizeObserver(spectralSliceImage);
-		timePanel.addCursorObserver(spectralSliceImage);
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                clear();
+                spectroData = new ConstantQSpectrogramDataBuilder();
+                spectroController = new ConstantQSpectrumController((ConstantQSpectrogramDataBuilder) spectroData, reader);
+                setSpectralView(part);
+            }
+        });
+        menu.add(item);
 
-	
+        frame.getJMenuBar().add(menu);
+    }
 
-		spectroSlicePanel = new SingleImagePanel(spectralSliceImage);		
-		
-		add(spectroSlicePanel, BorderLayout.NORTH);
+    void clear() {
+        if (spectroData != null) {
+            spectroData.dispose();
+        }
+        if (timePanel != null) {
+            timePanel.dispose();
+        }
+        removeAll();
+    }
 
-		JScrollPane scroll = new JScrollPane(timePanel);
-		add(scroll, BorderLayout.CENTER);
-		setPreferredSize(new Dimension(1000, 400));
+    void setSpectralView(AudioReaderFactory part) {
 
-		JPanel buts  = new JPanel();
-		buts.setLayout(new BoxLayout(buts, BoxLayout.Y_AXIS));
-		
-		// Log linear switch 
-		linearBut = new JToggleButton("Log10");
+        freqMapper = spectroController.getFrequencyMapper();
+
+        timePanel = new AudioAnalysisTimePanel(part, mixer, valMapper, spectroData, kbd);
+
+        SpectralSliceImage spectralSliceImage = new SpectralSliceImage(
+                spectroData, valMapper, freqMapper, timePanel.getSynth());
+
+        // Make sure this is the last thing notified 
+        spectroData.addSizeObserver(spectralSliceImage);
+        timePanel.addCursorObserver(spectralSliceImage);
+
+        spectroSlicePanel = new SingleImagePanel(spectralSliceImage);
+
+        add(spectroSlicePanel, BorderLayout.NORTH);
+
+        JScrollPane scroll = new JScrollPane(timePanel);
+        add(scroll, BorderLayout.CENTER);
+        setPreferredSize(new Dimension(1000, 400));
+
+        JPanel buts = new JPanel();
+        buts.setLayout(new BoxLayout(buts, BoxLayout.Y_AXIS));
+
+        // Log linear switch 
+        linearBut = new JToggleButton("Log10");
         // linearBut.setSelected(valMapper.linear);
-		linearBut.addActionListener(new ActionListener() {
+        linearBut.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				if (!linearBut.isSelected()) {
-					linearBut.setText("Log10");
-				} else {
-					linearBut.setText("Linear");
-				}
-				valMapper.update(null, null);
-			}
-		});
-		buts.add(linearBut);
-		
-		// Switch to static synth
-		final JToggleButton synthBut = new JToggleButton("Synth Mode");
-		synthBut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (!linearBut.isSelected()) {
+                    linearBut.setText("Log10");
+                } else {
+                    linearBut.setText("Linear");
+                }
+                valMapper.update(null, null);
+            }
+        });
+        buts.add(linearBut);
 
-			public void actionPerformed(ActionEvent arg0) {
-				timePanel.setSynthMode(synthBut.isSelected());
-			}
-		});
-		buts.add(synthBut);
-		
+        // Switch to static synth
+        final JToggleButton synthBut = new JToggleButton("Synth Mode");
+        synthBut.addActionListener(new ActionListener() {
 
-		
-		TweakerPanel tpanel = new TweakerPanel(2, 4);
-	
-		
-		for (Tweakable t : tweaks) {
-			tpanel.addSpinTweaker(t);
-		}
-		
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                timePanel.setSynthMode(synthBut.isSelected());
+            }
+        });
+        buts.add(synthBut);
 
+        TweakerPanel tpanel = new TweakerPanel(2, 4);
 
-		JPanel control= new JPanel();
+        for (Tweakable t : tweaks) {
+            tpanel.addSpinTweaker(t);
+        }
 
-		control.add(buts);
-		control.add(tpanel);
-		control.add(spectroController.getTweakPanel());
-		
-		
-		add(control, BorderLayout.SOUTH);
-	
+        JPanel control = new JPanel();
 
-		valMapper.update(null, null);	
-		
-		
-		spectroController.update();
-		revalidate();
-		repaint();
-	}
+        control.add(buts);
+        control.add(tpanel);
+        control.add(spectroController.getTweakPanel());
 
+        add(control, BorderLayout.SOUTH);
 
-	
- 	
-	public void dispose() {
-		timePanel.dispose();
-	}
+        valMapper.update(null, null);
 
+        spectroController.update();
+        revalidate();
+        repaint();
+    }
 
+    public void dispose() {
+        timePanel.dispose();
+    }
 
-	final class ValMapper implements Observer, Mapper {
+    final class ValMapper implements Observer, Mapper {
 
-		double maxdb;
+        double maxdb;
 
-		double mindb;
+        double mindb;
 
-		double max;
+        double max;
 
-		double min;
+        double min;
 
-		boolean linear=true;
+        boolean linear = true;
 
-		private Thread thread;
+        private Thread thread;
 
-		public final float eval(float val) {
-			if (linear) {
-				float vv = (float) ((val - min) / (max - min));
-				return (float)Math.max(0.0,vv);
-			} else {
-				double dB = 20 * Math.log10(val + 1e-15);
-				float vv = (float) ((dB - mindb) / (maxdb - mindb));
-				return (float) Math.max(0.0, vv);
-			}
-		}
+        @Override
+        public final float eval(float val) {
+            if (linear) {
+                float vv = (float) ((val - min) / (max - min));
+                return (float) Math.max(0.0, vv);
+            } else {
+                double dB = 20 * Math.log10(val + 1e-15);
+                float vv = (float) ((dB - mindb) / (maxdb - mindb));
+                return (float) Math.max(0.0, vv);
+            }
+        }
 
-		public void update(Observable o, Object arg) {
+        @Override
+        public void update(Observable o, Object arg) {
 
-			linear = ! linearBut.isSelected();
+            linear = !linearBut.isSelected();
 
-			maxdb = maxdB.doubleValue();
-			max = Math.pow(10, maxdb / 20.0);
+            maxdb = maxdB.doubleValue();
+            max = Math.pow(10, maxdb / 20.0);
 
-			mindb = mindB.doubleValue();
-			min = Math.pow(10, mindb / 20.0);
+            mindb = mindB.doubleValue();
+            min = Math.pow(10, mindb / 20.0);
 
-			if (thread != null)
-				thread.interrupt();
-			thread = new Thread(new Runnable() {
-				public void run() {
-					spectroSlicePanel.repaint();
-					timePanel.spectroImage.update(null, null);
-					thread = null;
-				}
-			});
-			thread.start();
-		}
-	}
-
-	
-	
+            if (thread != null) {
+                thread.interrupt();
+            }
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    spectroSlicePanel.repaint();
+                    timePanel.spectroImage.update(null, null);
+                    thread = null;
+                }
+            });
+            thread.start();
+        }
+    }
 }

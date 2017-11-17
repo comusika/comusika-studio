@@ -53,8 +53,8 @@ public class MidiReverseAction extends AbstractMidiAction {
 	
 	@Override
 	public void modifyEvents(Collection<MultiEvent> events) {
-		List<NoteEvent> notes = new ArrayList<NoteEvent>();
-		List<ControllerEvent> controllers = new ArrayList<ControllerEvent>();
+		List<NoteEvent> notes = new ArrayList<>();
+		List<ControllerEvent> controllers = new ArrayList<>();
 		for (MultiEvent event : events) {
 			if (event instanceof NoteEvent) {
 				notes.add((NoteEvent)event);
@@ -71,7 +71,9 @@ public class MidiReverseAction extends AbstractMidiAction {
 		
 		if ( this.notes ) {
 			new Reverser<NoteEvent, Integer>(notes) {
+                                @Override
 				Integer get(NoteEvent e) { return e.getNote(); }
+                                @Override
 				void set(NoteEvent e, Integer note) { e.setNote(note); }				
 			};
 		}
@@ -81,28 +83,36 @@ public class MidiReverseAction extends AbstractMidiAction {
 		
 		if ( this.starts ) {
 			new Reverser<NoteEvent, Long>(notes) {
+                                @Override
 				Long get(NoteEvent e) { return (last - e.getStartTick()) + first; }
+                                @Override
 				void set(NoteEvent e, Long start) { e.setStartTick(start); }				
 			};
 		}
 		
 		if ( this.durations ) {
 			new Reverser<NoteEvent, Long>(notes) {
+                                @Override
 				Long get(NoteEvent e) { return e.getDuration(); }
+                                @Override
 				void set(NoteEvent e, Long d) { e.setDuration(d); }				
 			};
 		}
 
 		if ( this.velocities ) {
 			new Reverser<NoteEvent, Integer>(notes) {
+                                @Override
 				Integer get(NoteEvent e) { return e.getVelocity(); }
+                                @Override
 				void set(NoteEvent e, Integer v) { e.setVelocity(v); }				
 			};
 		}
 		
 		if ( this.controllers ) {
 			new Reverser<ControllerEvent, Integer>(controllers) {
+                                @Override
 				Integer get(ControllerEvent e) { return e.getValue(); }
+                                @Override
 				void set(ControllerEvent e, Integer value) { e.setValue(value); }				
 			};
 		}

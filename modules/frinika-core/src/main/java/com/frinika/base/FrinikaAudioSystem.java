@@ -104,6 +104,7 @@ public class FrinikaAudioSystem {
 			serverConfig = AudioServerServices
 			.createServerConfiguration(realAudioServer);
 			serverConfig.addObserver(new Observer() {
+                                @Override
 				public void update(Observable obs, Object obj) {
 					saveServerConfig();
 				}
@@ -155,6 +156,7 @@ public class FrinikaAudioSystem {
 			serverConfig = AudioServerServices
 					.createServerConfiguration(realAudioServer);
 			serverConfig.addObserver(new Observer() {
+                                @Override
 				public void update(Observable obs, Object obj) {
 					saveServerConfig();
 				}

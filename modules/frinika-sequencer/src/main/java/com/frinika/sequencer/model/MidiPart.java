@@ -59,7 +59,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
     private static final long serialVersionUID = 1L;
 
     String name;
-	TreeSet<MultiEvent> multiEvents = new TreeSet<MultiEvent>();
+	TreeSet<MultiEvent> multiEvents = new TreeSet<>();
 	Collection<CommitListener> commitListeners = null; // Jens
 	transient TreeSet<MultiEventEndTickComparable> multiEventEndTickComparables = new TreeSet<MultiEventEndTickComparable>();
 	
@@ -110,7 +110,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	public void importFromMidiTrack(long startTickArg,long endTickArg) {
         
     	
-    	HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<Integer,NoteEvent>();
+    	HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<>();
         
         FrinikaTrackWrapper track=((MidiLane) lane).getTrack();
         
@@ -203,7 +203,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	public void importFromMidiTrack(Track track,long startTickArg,long endTickArg) {
         
     	
-    	HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<Integer,NoteEvent>();
+    	HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<>();
         
       //  FrinikaTrackWrapper track=((MidiLane) lane).getTrack();
         
@@ -293,6 +293,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	 * @return
 	 */
 	
+    @Override
     public void add(MultiEvent ev)
     { 
     		ev.part = this;
@@ -322,6 +323,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	 * @param multiEvent
 	 * @return
 	 */
+    @Override
     public void remove(MultiEvent multiEvent)
     {
         multiEvent.commitRemove();
@@ -342,6 +344,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
     	}
     }*/
 
+    @Override
     public void commitEventsRemove() {
       	if (multiEvents == null ) return;
         
@@ -413,7 +416,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
      */
 	@Override
 	protected void moveItemsBy(long deltaTick) {
-		Vector<MultiEvent> list=new Vector<MultiEvent>();
+		Vector<MultiEvent> list=new Vector<>();
 		
 	
 		
@@ -431,6 +434,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	
 	}
 
+    @Override
 	public void moveContentsBy(double dTick,Lane dstLane) {
 		
 		setStartTick (getStartTick() + dTick);
@@ -454,6 +458,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 		
 	}
 	
+    @Override
     public void restoreFromClone(EditHistoryRecordable o) {
     	MidiPart clone=(MidiPart)o;
        	lane=clone.lane;
@@ -527,6 +532,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	}
 
 	
+    @Override
 	public Selectable deepCopy(Selectable parent) {
 	
 		MidiPart clone;
@@ -555,6 +561,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 		return clone;
 	}
 
+    @Override
 	public void deepMove(long tick) {
 		
 		Collection<MultiEvent> events=getMultiEvents();
@@ -568,7 +575,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
     
 	public void rebuildMultiEventEndTickComparables()
     {
-        multiEventEndTickComparables = new TreeSet<MultiEventEndTickComparable>();
+        multiEventEndTickComparables = new TreeSet<>();
         for(MultiEvent multiEvent : multiEvents)
         {
             multiEventEndTickComparables.add(multiEvent.getMultiEventEndTickComparable());
@@ -620,6 +627,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 	/**
 	 * Commit the MultiEvents as MidiEvents to a Sequencers Track event list.
 	 */
+    @Override
 	public void onLoad() {
 	//	System.out.println(" On load 1");
 		commitEventsAdd();
@@ -642,6 +650,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 //		
 //	}
 		
+    @Override
 	public void drawThumbNail(Graphics2D g, Rectangle rect,PartView panel) {
 		TempoList tl=lane.getProject().getTempoList();
 		
@@ -664,7 +673,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 
 	public void addCommitListener(CommitListener l) {
 		if (commitListeners == null) { // auto-init
-			commitListeners = new HashSet<CommitListener>();
+			commitListeners = new HashSet<>();
 		}
 		commitListeners.add(l);
 	}

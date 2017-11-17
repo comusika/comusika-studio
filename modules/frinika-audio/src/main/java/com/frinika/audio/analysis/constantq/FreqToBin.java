@@ -21,42 +21,34 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.constantq;
 
-/*
- *    Helper to convert frequency to bin number for constant Q stuff
- * 
- * 
+/**
+ * Helper to convert frequency to bin number for constant Q stuff.
  */
 public class FreqToBin {
-	
-	private double minF;
-	private double binsPerOctave;
-	
-	
-	public FreqToBin(double minF,double binsPerOctave){
-		this.minF=minF;
-		this.binsPerOctave=binsPerOctave;
-		
-	}
-	
-	public double getBin(double f) {
-		
-		// f = minF *2^(bin/bPo)
-		//   bin/bPo * ln(2) = ln(f/minF);
-		
-		return binsPerOctave*Math.log(f/minF)/Math.log(2);
-	}
 
-	public static void main(String args[]) {
-		double minF=55.0;
-		double binsPerOctave=12;
-		FreqToBin f2b=new FreqToBin(minF, binsPerOctave);
-		
-		for (double f=40;f < 400;f +=5) {
-		System.out.println(f+ " " +f2b.getBin(f));
-		}
-	}
-	
+    private double minF;
+    private double binsPerOctave;
+
+    public FreqToBin(double minF, double binsPerOctave) {
+        this.minF = minF;
+        this.binsPerOctave = binsPerOctave;
+    }
+
+    public double getBin(double f) {
+        // f = minF *2^(bin/bPo)
+        //   bin/bPo * ln(2) = ln(f/minF);
+        return binsPerOctave * Math.log(f / minF) / Math.log(2);
+    }
+
+    public static void main(String args[]) {
+        double minF = 55.0;
+        double binsPerOctave = 12;
+        FreqToBin f2b = new FreqToBin(minF, binsPerOctave);
+
+        for (double f = 40; f < 400; f += 5) {
+            System.out.println(f + " " + f2b.getBin(f));
+        }
+    }
 }

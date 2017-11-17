@@ -58,6 +58,7 @@ public abstract class AbstractDialogAction extends AbstractAction {
 		this.actionId = actionId;
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		canceled = false;
 		perform(); // /might use clone().perform() to make thread-safe, but not necessary)

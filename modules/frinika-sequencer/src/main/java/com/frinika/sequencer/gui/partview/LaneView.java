@@ -84,6 +84,7 @@ public class LaneView extends JPanel {
 		
 	}
 	
+        @Override
 	public Dimension getMinimumSize() {
 		return new Dimension(250, 0);
 	}

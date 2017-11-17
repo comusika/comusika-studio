@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.plugins.analysis;
 
 import com.frinika.audio.analysis.CycliclyBufferedAudio;
@@ -36,32 +35,30 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioProcess;
 
-
-
 public class AnalysisProcess implements AudioProcess {
-	private AnalysisProcessVariables vars;
+
+    private AnalysisProcessVariables vars;
 
 //	Freeverb freeverb = null;
-
 //	double reverbBufferIn[] = null;
-
 //	double reverbBufferOut[] = null;
     private JFrame frame;
     private CycliclyBufferedAudio buferedAudioProcess;
 
-	public AnalysisProcess(AnalysisProcessVariables variables) {
-		vars = variables;
-		((AudioControls)vars).addObserver(new Observer() {
+    public AnalysisProcess(AnalysisProcessVariables variables) {
+        vars = variables;
+        ((AudioControls) vars).addObserver(new Observer() {
 
-			public void update(Observable arg0, Object arg1) {
-				AnalysisProcess.this.update();
-			}
+            @Override
+            public void update(Observable arg0, Object arg1) {
+                AnalysisProcess.this.update();
+            }
 
-		});
-		
-	}
+        });
 
-	public void update() {
+    }
+
+    public void update() {
 //
 //		float wet=vars.getMix();
 //		float dry=1.0f-wet;
@@ -71,34 +68,38 @@ public class AnalysisProcess implements AudioProcess {
 //		freeverb.setroomsize(vars.getRoomSize());
 //		freeverb.setwidth(vars.getWidth());
 //		freeverb.setdamp(vars.getDamp());
-		
-	}
 
-	public void open() {
-        frame= new JFrame();
+    }
 
-        buferedAudioProcess=new CycliclyBufferedAudio(100000,FrinikaConfig.sampleRate);
-        JPanel panel=new CyclicBufferFFTAnalysisPanel(buferedAudioProcess);
+    @Override
+    public void open() {
+        frame = new JFrame();
+
+        buferedAudioProcess = new CycliclyBufferedAudio(100000, FrinikaConfig.sampleRate);
+        JPanel panel = new CyclicBufferFFTAnalysisPanel(buferedAudioProcess);
         frame.setContentPane(panel);
-        frame.setSize(new Dimension(500,400));
+        frame.setSize(new Dimension(500, 400));
         frame.pack();
         frame.setVisible(true);
-	//	freeverb = new Freeverb(FrinikaConfig.sampleRate, 1.0);
-	//	update();
+        //	freeverb = new Freeverb(FrinikaConfig.sampleRate, 1.0);
+        //	update();
 
-	}
+    }
 
-	float mix1 = -1;
+    float mix1 = -1;
 
-	public int processAudio(AudioBuffer buffer) {
+    @Override
+    public int processAudio(AudioBuffer buffer) {
 
-		if (((AudioControls)vars).isBypassed() ) return AUDIO_OK;
+        if (((AudioControls) vars).isBypassed()) {
+            return AUDIO_OK;
+        }
         buferedAudioProcess.in.processAudio(buffer);
-		return AUDIO_OK;
-	}
+        return AUDIO_OK;
+    }
 
-	public void close() {
+    @Override
+    public void close() {
 
     }
 }
-

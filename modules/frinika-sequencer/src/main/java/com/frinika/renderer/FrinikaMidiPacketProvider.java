@@ -96,7 +96,7 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 		
 		tempo = seqr.getTempoInBPM();
 
-		ArrayList<FrinikaTrackWrapper> seqtracklist = new ArrayList<FrinikaTrackWrapper>();
+		ArrayList<FrinikaTrackWrapper> seqtracklist = new ArrayList<>();
 		Collection<FrinikaTrackWrapper> seqtracks;
         if(seqr.getSoloFrinikaTrackWrappers().size()>0)
         	seqtracks = seqr.getSoloFrinikaTrackWrappers(); 
@@ -218,10 +218,10 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 		}
 	}
 	
-	public LinkedList<Integer> activenotes = new LinkedList<Integer>();
-	public LinkedList<Integer> activenotes_velocity = new LinkedList<Integer>();
-	public LinkedList<Integer> controls = new LinkedList<Integer>();
-	public LinkedList<Integer> controls_values = new LinkedList<Integer>();
+	public LinkedList<Integer> activenotes = new LinkedList<>();
+	public LinkedList<Integer> activenotes_velocity = new LinkedList<>();
+	public LinkedList<Integer> controls = new LinkedList<>();
+	public LinkedList<Integer> controls_values = new LinkedList<>();
 	public int program = -1;
 	public int pitchbend_data1 = -1;
 	public int pitchbend_data2 = -1;	
@@ -292,7 +292,7 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 			switch (sms.getCommand()) {
 			case ShortMessage.NOTE_ON:
 				
-				int ix = activenotes.indexOf(new Integer(sms.getData1()));				
+				int ix = activenotes.indexOf(sms.getData1());				
 				if(ix != -1)
 				{
 					activenotes.remove(ix);
@@ -300,12 +300,12 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 				}
 				if(sms.getData2()>0)
 				{
-					activenotes.add(new Integer(sms.getData1()));
-					activenotes_velocity.add(new Integer(sms.getData2()));
+					activenotes.add(sms.getData1());
+					activenotes_velocity.add(sms.getData2());
 				}
 				break;
 			case ShortMessage.NOTE_OFF:
-				ix = activenotes.indexOf(new Integer(sms.getData1()));				
+				ix = activenotes.indexOf(sms.getData1());				
 				if(ix != -1)
 				{
 					activenotes.remove(ix);
@@ -321,7 +321,7 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 				break;
 			case ShortMessage.CONTROL_CHANGE:
 				
-				ix = controls.indexOf(new Integer(sms.getData1()));
+				ix = controls.indexOf(sms.getData1());
 				if(ix != -1)
 				{
 					controls.remove(ix);
@@ -378,7 +378,7 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 		
 		MidiPacket packet = createPacket();
 		
-		ArrayList<MidiEvent> events = new ArrayList<MidiEvent>();
+		ArrayList<MidiEvent> events = new ArrayList<>();
 		ShortMessage msg1 = new ShortMessage();
 		ShortMessage msg2 = new ShortMessage();
 		
@@ -413,6 +413,7 @@ public class FrinikaMidiPacketProvider implements MidiPacketProvider {
 	}
 	
 	int current_index = -1;
+        @Override
 	public MidiPacket get(int index)
 	{
 		if((current_index+1 != index))

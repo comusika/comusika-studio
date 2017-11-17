@@ -77,6 +77,7 @@ public class MidiPartGhost extends MidiPart implements Ghost, CommitListener {
 		super();
 	}
 	
+        @Override
 	public MidiPart getReferredPart() {
 		return referredPart;
 	}
@@ -131,6 +132,7 @@ public class MidiPartGhost extends MidiPart implements Ghost, CommitListener {
 	/**
 	 * Called when the original MidiPart has undergone changes.
 	 */
+        @Override
 	public void commitAddPerformed(MultiEvent event) {
 		commitAddClone(event); // mimic the same in ghost
 	}
@@ -138,6 +140,7 @@ public class MidiPartGhost extends MidiPart implements Ghost, CommitListener {
 	/**
 	 * Called when the original MidiPart has undergone changes.
 	 */
+        @Override
 	public synchronized void commitRemovePerformed(MultiEvent event) {
 		commitRemoveClone(event); // mimic the same in ghost
 	}
@@ -149,7 +152,7 @@ public class MidiPartGhost extends MidiPart implements Ghost, CommitListener {
 	    	newEvent.startTick += getDistance();
         	newEvent.commitAdd();
         	if (committedEvents == null) {
-        		committedEvents = new HashMap<MultiEvent, MultiEvent>();
+        		committedEvents = new HashMap<>();
         	}
         	committedEvents.put(multiEvent, newEvent);
 	    	return newEvent;
@@ -316,6 +319,7 @@ public class MidiPartGhost extends MidiPart implements Ghost, CommitListener {
 //		return getReferredPart().getColorID(); // delegate
 //	}
 
+        @Override
 	public Color getColor() {
 		return getReferredPart().getColor(); // delegate
 	}

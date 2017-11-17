@@ -21,41 +21,51 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis;
 
 import com.frinika.audio.model.DoubleDataSource;
 
 public class SInDoubleSource implements DoubleDataSource {
 
-	long pos;
-	private double fact;
-	
-	public SInDoubleSource(double freq,double fs){
-		this.fact=2*Math.PI*freq/fs;
-		
-	}
-	public int getChannels() {		
-		return 1;
-	}
+    long pos;
+    private double fact;
 
-	public void readNextDouble(double[] buffer, int offSet, int nFrame) {
-		for(int i=0,j=offSet;i<nFrame;j++,i++) {
-			buffer[j]=Math.sin(fact*pos++);
-		}
-	}
+    public SInDoubleSource(double freq, double fs) {
+        this.fact = 2 * Math.PI * freq / fs;
 
-	public void seekFrame(long pos) {
-		this.pos=pos;		
-	}
+    }
 
-	public boolean endOfFile() { return false; }
-	public long getCurrentFrame() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	public long getLengthInFrames() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getChannels() {
+        return 1;
+    }
+
+    @Override
+    public void readNextDouble(double[] buffer, int offSet, int nFrame) {
+        for (int i = 0, j = offSet; i < nFrame; j++, i++) {
+            buffer[j] = Math.sin(fact * pos++);
+        }
+    }
+
+    @Override
+    public void seekFrame(long pos) {
+        this.pos = pos;
+    }
+
+    @Override
+    public boolean endOfFile() {
+        return false;
+    }
+
+    @Override
+    public long getCurrentFrame() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public long getLengthInFrames() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

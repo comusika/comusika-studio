@@ -91,7 +91,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 		pianoRoll = new PianoRoll(project, this);
 
 		// Create a toll bar and set the clients
-		Vector<ItemPanel> clients = new Vector<ItemPanel>();
+		Vector<ItemPanel> clients = new Vector<>();
 		clients.add(pianoRoll);
 		clients.add(cntrlView);
 		
@@ -119,6 +119,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 				
 		bb.addActionListener(new ActionListener(){
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				pianoRoll.setDrumWriteMode(bb.isSelected());					
 			}
@@ -147,6 +148,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
 			}
 
+                        @Override
 			public void selectionChanged(SelectionContainer src) {
 				// System.out.println(" PRSP select changed" );
 				Part newFocus = project.getPartSelection().getFocus();
@@ -183,6 +185,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
 		ListProvider resource = new ListProvider() {
 
+                        @Override
 			public Object[] getList() {
 				Lane lane = project.getLaneSelection().getFocus();
 				if (lane instanceof MidiLane) {
@@ -195,6 +198,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
 		PopupClient client = new PopupClient() {
 
+                        @Override
 			public void fireSelected(PopupSelectorButton but, Object o, int pos) {
 				Lane lane = project.getLaneSelection().getFocus();
 				if (lane instanceof MidiLane) {
@@ -234,6 +238,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 		rebuild();
 	}
 
+        @Override
 	protected void rebuild() {
 		int maxY = 128 * Layout.getNoteItemHeight();
 		pianoRoll.getYRangeModel().setMaximum(maxY);
@@ -271,6 +276,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
 	}
 
+        @Override
 	public void componentResized(ComponentEvent e) {
 		Rectangle rect = pianoRoll.getBounds();
 
@@ -281,16 +287,19 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 		bot.repaint();
 	}
 
+        @Override
 	public void componentMoved(ComponentEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
 
@@ -304,6 +313,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 		return pianoRoll;
 	}
 
+        @Override
 	public void selectionChanged(SelectionContainer<? extends Lane> src) {
 		Lane lane = src.getFocus();
 		if (lane instanceof MidiLane) {

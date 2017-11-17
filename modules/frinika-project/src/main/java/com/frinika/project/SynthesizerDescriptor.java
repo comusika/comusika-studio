@@ -4,6 +4,8 @@ import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.project.SoundBankNameHolder;
 import com.frinika.sequencer.project.SynthesizerDescriptorIntf;
 import java.io.File;
+import java.io.IOException;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
@@ -28,6 +30,7 @@ public class SynthesizerDescriptor extends MidiDeviceDescriptor implements Synth
 	 * Get the filename for the loaded soundbank
 	 * @return
 	 */
+        @Override
 	public String getSoundBankFileName() {
 		return soundBankFileName;
 	}
@@ -36,6 +39,7 @@ public class SynthesizerDescriptor extends MidiDeviceDescriptor implements Synth
 	 * Set the filename for the loaded soundbank
 	 * @param soundBankFileName
 	 */
+        @Override
 	public void setSoundBankFileName(String soundBankFileName) {
 		this.soundBankFileName = soundBankFileName;
 	}
@@ -53,7 +57,7 @@ public class SynthesizerDescriptor extends MidiDeviceDescriptor implements Synth
 				soundbank = MidiSystem.getSoundbank(new File(soundBankFileName));			
 			((Synthesizer)midiDevice).loadAllInstruments(soundbank);
 			System.out.println("Soundbank loaded");
-		} catch(Exception e){
+		} catch(IOException | InvalidMidiDataException e){
 			e.printStackTrace();
 		}
 	}

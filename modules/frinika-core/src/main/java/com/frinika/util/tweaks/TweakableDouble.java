@@ -59,12 +59,13 @@ public class TweakableDouble extends Tweakable {
 	/**
 	 * 
 	 */
+        @Override
 	public void set(String s) {
 		try {
 			n = new Double(s);
 			setChanged();
 			notifyObservers();
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 		} // TODO
 
 	}

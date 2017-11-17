@@ -23,7 +23,8 @@
  */
 package com.frinika.tootX.gui;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
@@ -32,66 +33,65 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 
 public class MidiOutDeviceSelectPanel extends JComboBox {
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
 //	Vector<JCheckBox> boxes = new Vector<JCheckBox>();
+    JComboBox combo;
 
-	JComboBox combo;
-	
-	public MidiOutDeviceSelectPanel() {
-		super(getList());
-		// MidiDeviceHandle [] list= MidiHub.getMidiInHandles();
+    public MidiOutDeviceSelectPanel() {
+        super(getList().toArray());
+        // MidiDeviceHandle [] list= MidiHub.getMidiInHandles();
 
-	}
-	
-	static Vector<MidiDevice.Info> getList() {
-		Info infos[] = MidiSystem.getMidiDeviceInfo();
+    }
 
-		Vector<MidiDevice.Info> list=new Vector<MidiDevice.Info>();
-		for (Info info : infos) {
-			MidiDevice dev;
-			try {
-				dev = MidiSystem.getMidiDevice(info);
+    static List<MidiDevice.Info> getList() {
+        Info infos[] = MidiSystem.getMidiDeviceInfo();
 
-				if (dev.getMaxReceivers() != 0) {
-					list.add(dev.getDeviceInfo());
-				}
-			} catch (MidiUnavailableException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		
-		return list;
-		//			
-		//			
-		// for(final MidiDeviceHandle d:list){
-		// if (d.getMidiDevice() == null) continue;
-		// JCheckBox box=new
-		// JCheckBox(d.toString(),names.contains(d.toString()));
-		// boxes.add(box);
-		// box.addActionListener(act);
-		// add(box);
-		// }
+        List<MidiDevice.Info> list = new ArrayList<>();
+        for (Info info : infos) {
+            MidiDevice dev;
+            try {
+                dev = MidiSystem.getMidiDevice(info);
 
-	}
-	
-	public MidiDevice getSelected() {
-		Info str = (Info) getSelectedItem();
-		MidiDevice dev1 = null;
-		try {
-			dev1 = MidiSystem.getMidiDevice(str);
-		} catch (MidiUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return dev1;
-	}
-	public static void main(String args[]) {
+                if (dev.getMaxReceivers() != 0) {
+                    list.add(dev.getDeviceInfo());
+                }
+            } catch (MidiUnavailableException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
 
-		JFrame f = new JFrame();
-		f.setContentPane(new MidiOutDeviceSelectPanel());
-		f.pack();
-		f.setVisible(true);
-	}
+        return list;
+        //			
+        //			
+        // for(final MidiDeviceHandle d:list){
+        // if (d.getMidiDevice() == null) continue;
+        // JCheckBox box=new
+        // JCheckBox(d.toString(),names.contains(d.toString()));
+        // boxes.add(box);
+        // box.addActionListener(act);
+        // add(box);
+        // }
+    }
+
+    public MidiDevice getSelected() {
+        Info str = (Info) getSelectedItem();
+        MidiDevice dev1 = null;
+        try {
+            dev1 = MidiSystem.getMidiDevice(str);
+        } catch (MidiUnavailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return dev1;
+    }
+
+    public static void main(String args[]) {
+        JFrame f = new JFrame();
+        f.setContentPane(new MidiOutDeviceSelectPanel());
+        f.pack();
+        f.setVisible(true);
+    }
 }

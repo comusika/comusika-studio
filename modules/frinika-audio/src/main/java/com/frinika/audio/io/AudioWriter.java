@@ -20,7 +20,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/*
+ /*
  * Created on Jul 18, 2006
  *
  *
@@ -46,9 +46,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.io;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -61,55 +59,57 @@ import uk.org.toot.audio.core.AudioProcess;
  * write the length of data into the correct field.
  * 
  */
-public class AudioWriter extends BasicAudioWriter implements AudioProcess  {
+public class AudioWriter extends BasicAudioWriter implements AudioProcess {
 
- public AudioWriter(File file, AudioFormat format) throws IOException {
-     super(file,format);
- }
-	public int processAudio(AudioBuffer buffer) {
+    public AudioWriter(File file, AudioFormat format) throws IOException {
+        super(file, format);
+    }
 
-		float[] left;
-		float[] right;
+    @Override
+    public int processAudio(AudioBuffer buffer) {
 
-		// Correct byte buffer size
-		if (byteBuffer == null
-				|| byteBuffer.length != buffer.getSampleCount() * 2 * nChannel)
-			byteBuffer = new byte[buffer.getSampleCount() * 2 * nChannel];
+        float[] left;
+        float[] right;
 
-		int nSamp = buffer.getSampleCount();
-		// Decode byte data and insert into voiceserver buffer
-		int count = 0;
+        // Correct byte buffer size
+        if (byteBuffer == null
+                || byteBuffer.length != buffer.getSampleCount() * 2 * nChannel) {
+            byteBuffer = new byte[buffer.getSampleCount() * 2 * nChannel];
+        }
 
-		if (nChannel == 2) {
-			left = buffer.getChannel(0);
-			right = buffer.getChannel(1);
+        int nSamp = buffer.getSampleCount();
+        // Decode byte data and insert into voiceserver buffer
+        int count = 0;
 
-			for (int n = 0; n < nSamp; n++) {
-				short leftI = (short) (left[n] * 32768f);
-				short rightI = (short) (right[n] * 32768f);
-				byteBuffer[count++] = (byte) (0xff & leftI);
-				byteBuffer[count++] = (byte) (0xff & (leftI >> 8));
-				byteBuffer[count++] = (byte) (0xff & rightI);
-				byteBuffer[count++] = (byte) (0xff & (rightI >> 8));
-			}
-		} else {
+        if (nChannel == 2) {
+            left = buffer.getChannel(0);
+            right = buffer.getChannel(1);
 
-			left = buffer.getChannel(0);
-			for (int n = 0; n < nSamp; n++) {
-				short leftI = (short) (left[n] * 32768f);
-				byteBuffer[count++] = (byte) (0xff & leftI);
-				byteBuffer[count++] = (byte) (0xff & (leftI >> 8));
-			}
-		}
-		try {
-			write(byteBuffer, 0, count);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return AudioProcess.AUDIO_DISCONNECT;
-		}
+            for (int n = 0; n < nSamp; n++) {
+                short leftI = (short) (left[n] * 32768f);
+                short rightI = (short) (right[n] * 32768f);
+                byteBuffer[count++] = (byte) (0xff & leftI);
+                byteBuffer[count++] = (byte) (0xff & (leftI >> 8));
+                byteBuffer[count++] = (byte) (0xff & rightI);
+                byteBuffer[count++] = (byte) (0xff & (rightI >> 8));
+            }
+        } else {
 
-		return AUDIO_OK;
-	}
+            left = buffer.getChannel(0);
+            for (int n = 0; n < nSamp; n++) {
+                short leftI = (short) (left[n] * 32768f);
+                byteBuffer[count++] = (byte) (0xff & leftI);
+                byteBuffer[count++] = (byte) (0xff & (leftI >> 8));
+            }
+        }
+        try {
+            write(byteBuffer, 0, count);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return AudioProcess.AUDIO_DISCONNECT;
+        }
 
+        return AUDIO_OK;
+    }
 }

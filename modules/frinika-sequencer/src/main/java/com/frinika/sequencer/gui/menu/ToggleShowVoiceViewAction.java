@@ -41,6 +41,7 @@ public class ToggleShowVoiceViewAction extends AbstractAction {
 		this.project=project;		
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		VoicePartViewSplitPane x=project.getVoicePartViewSplitPane();
 		x.toggleVoiceView();

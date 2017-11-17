@@ -120,6 +120,7 @@ public class NoteEvent extends ChannelEvent {
     }
 
     
+        @Override
     public long getEndTick() {
     	return startTick+duration;
     }
@@ -169,7 +170,8 @@ public class NoteEvent extends ChannelEvent {
         this.duration = duration;
     }
  
-    @SuppressWarnings("deprecation") void commitRemoveImpl() // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+    @SuppressWarnings("deprecation")@Override
+ void commitRemoveImpl() // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
     {
       	if (zombie) {
     		try {
@@ -206,6 +208,7 @@ public class NoteEvent extends ChannelEvent {
     }
     
     @SuppressWarnings("deprecation")
+        @Override
     public void commitAddImpl() // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
     {
     
@@ -229,6 +232,7 @@ public class NoteEvent extends ChannelEvent {
         zombie=false;
     }
     
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		NoteEvent note = (NoteEvent)object;
 		this.part = note.part;
@@ -243,14 +247,17 @@ public class NoteEvent extends ChannelEvent {
 	 * (non-Javadoc)
 	 * @see com.frinika.sequencer.model.MultiEvent#setValue(int)
 	 */
+        @Override
 	public void setValue(int val) {
 		this.velocity=val;
 	}
 	
+        @Override
 	public int getValue() {
 		return velocity;
 	}
 
+        @Override
 	public long rightTickForMove() {
 		return startTick+duration;
 	}
@@ -289,6 +296,7 @@ public class NoteEvent extends ChannelEvent {
 	 */
 	static public class StartComparator implements Comparator<NoteEvent> {
 
+                @Override
 		public int compare(NoteEvent o1, NoteEvent o2) {
 			if (o1.startTick > o2.startTick) return 1;
 			if (o1.startTick < o2.startTick) return -1;
@@ -305,6 +313,7 @@ public class NoteEvent extends ChannelEvent {
 	
 	static public class EndComparator implements Comparator<NoteEvent> {
 
+                @Override
 		public int compare(NoteEvent o1, NoteEvent o2) {
 			if (o1.startTick + o1.duration> o2.startTick+ o2.duration) return 1;
 			if (o1.startTick + o1.duration< o2.startTick+ o2.duration) return -1;
@@ -321,6 +330,7 @@ public class NoteEvent extends ChannelEvent {
 	
 	static public class NoteComparator implements Comparator<NoteEvent> {
 
+                @Override
 		public int compare(NoteEvent o1, NoteEvent o2) {
 			if (o1.note > o2.note) return 1;
 			if (o1.note < o2.note) return -1;

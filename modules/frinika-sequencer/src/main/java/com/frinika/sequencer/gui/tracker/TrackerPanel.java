@@ -64,6 +64,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
@@ -136,6 +137,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
         octaveCombobox.setSelectedItem(VirtualKeyboard.Octave);
         octaveCombobox.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 VirtualKeyboard.Octave = (Integer)octaveCombobox.getSelectedItem();
             }
@@ -153,6 +155,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 	{
 		
 		MidiMessage message;
+                @Override
 		public void run()
 		{
 			midiMessage(message);
@@ -202,14 +205,13 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 	
 	MidiMessageListener listener = new MidiMessageListener()	
 	{
+                @Override
 		public void midiMessage(MidiMessage message) {
 			MidiMessageRunnable r = new MidiMessageRunnable();
 			r.message = message;
 			try {
 				SwingUtilities.invokeAndWait(r);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
+			} catch (InterruptedException | InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		}
@@ -252,6 +254,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 			
 			
 			
+                        @Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);			
 								
@@ -307,6 +310,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 
 
 
+                        @Override
 			public boolean isColumnSelected(int column) {		    	
 		    	if(column == 0) return false;
 		    	
@@ -335,6 +339,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 				Font def_font = null;
 				Font note_font = null;
 
+                                @Override
 				public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 					
 					boolean hasFocusOrg = hasFocus;
@@ -433,10 +438,12 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 			
 			TrackerTableCellRender renderer = new TrackerTableCellRender();
 
+                        @Override
 			public TableCellRenderer getCellRenderer(int row, int column) {
 				return renderer;
 			}
 
+                        @Override
 		public Component prepareRenderer(TableCellRenderer renderer,
                     int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -492,6 +499,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 			 * @see javax.swing.JTable#processKeyBinding(javax.swing.KeyStroke,
 			 *      java.awt.event.KeyEvent, int, boolean)
 			 */
+                        @Override
 			protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
 					int condition, boolean pressed) {
                                 // Virtual keyboard octave selection
@@ -511,7 +519,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 						if(getSelectedRow() != 0)
 							setRowSelectionInterval(getSelectedRow()-1, getSelectedRow()-1);
 						
-						ArrayList<Integer> cols = new ArrayList<Integer>();
+						ArrayList<Integer> cols = new ArrayList<>();
 						for(int c : getSelectedColumns())
 						{
 							int col = tableModel.tableColumnToTrackerColumn(c);
@@ -548,7 +556,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 					{
 						if(!pressed) return false;
 						
-						ArrayList<Integer> cols = new ArrayList<Integer>();
+						ArrayList<Integer> cols = new ArrayList<>();
 						for(int c : getSelectedColumns())
 						{
 							int col = tableModel.tableColumnToTrackerColumn(c);
@@ -658,10 +666,12 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 						
 		table.addFocusListener(new FocusListener()
 				{
+                                        @Override
 					public void focusGained(FocusEvent e) {
 						connectMidiListener();
 					}
 
+                                        @Override
 					public void focusLost(FocusEvent e) {
 						disconnectMidiListener();
 					}
@@ -673,6 +683,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		table.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 
+                                        @Override
 					public void valueChanged(ListSelectionEvent e) {
 						if (!e.getValueIsAdjusting()) {
 							updateSelection();
@@ -682,6 +693,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		table.getColumnModel().getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 
+                                        @Override
 					public void valueChanged(ListSelectionEvent e) {
 						if (!e.getValueIsAdjusting()) {
 							updateSelection();
@@ -708,12 +720,13 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		
 		automaticRowJumpTextField.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						try {
 							automaticRowJump = Integer
 									.parseInt(automaticRowJumpTextField.getSelectedItem().toString());
 
-						} catch (Exception ex) {
+						} catch (NumberFormatException ex) {
 							automaticRowJumpTextField.setSelectedItem(automaticRowJump
 									+ "");
 						}
@@ -742,12 +755,13 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		editVelocityTextField.setSelectedItem(""
 				+ tableModel.getEditVelocity());
 		editVelocityTextField.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					tableModel.setEditVelocity(Integer
 							.parseInt(editVelocityTextField.getSelectedItem().toString()));
 
-				} catch (Exception ex) {
+				} catch (NumberFormatException ex) {
 					editVelocityTextField.setSelectedItem(tableModel.getEditVelocity()
 							+ "");
 				}
@@ -771,12 +785,13 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		editLenTextField.setEditable(true);
 		editLenTextField.setSelectedItem(dec_format.format(tableModel.getEditDuration()));
 		editLenTextField.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					tableModel.setEditDuration(dec_format
 							.parse(editLenTextField.getSelectedItem().toString()).doubleValue()); 
 
-				} catch (Exception ex) {
+				} catch (ParseException ex) {
 					editLenTextField.setSelectedItem(dec_format.format(tableModel.getEditDuration())); 
 				}
 			}
@@ -790,12 +805,13 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		rowsPerBeatTextField.setSelectedItem("" + tableModel.getTicksPerRow());		
 		rowsPerBeatTextField.setEditable(true);
 		rowsPerBeatTextField.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					tableModel.setRowsPerBeat(Integer.parseInt(rowsPerBeatTextField
 							.getSelectedItem().toString()));
 					NoteLengthPopup.updateButton(quantizeSet, snapables, project.getSequence());
-				} catch (Exception ex) {
+				} catch (NumberFormatException ex) {
 					rowsPerBeatTextField.setSelectedItem(tableModel.getTicksPerRow() + "");
 				}
 			}
@@ -808,6 +824,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
         //settings.setBorder(BorderFactory.createEtchedBorder());
         final JToggleButton follow = ItemRollToolBar.makeFollowSongButton(null,settings);
         follow.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 followSong = follow.isSelected();
                 
@@ -816,14 +833,16 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
         Insets insets = new Insets(0, 0, 0, 0);
         follow.setMargin(insets);       
 
-        snapables = new Vector<Snapable>();
+        snapables = new Vector<>();
         snapables.add(new Snapable() {
 
+            @Override
             public double getSnapQuantization() {
        //     	System.out.println("TrackerPanel ticks per row=" + tableModel.getTicksPerRow());
                 return (double)project.getSequence().getResolution() / (double)tableModel.getTicksPerRow();
             }
 
+            @Override
             public void setSnapQuantization(double quant) {
                 int rowsPerBeat = (int)(project.getSequence().getResolution() / quant);
                 if(rowsPerBeat <= 0) rowsPerBeat = 1;
@@ -917,12 +936,14 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 	
 	
 
+        @Override
 	public void selectionChanged(SelectionContainer<? extends Part> src) {
 				
 		setPartToFocus();
 
 	}
     
+        @Override
     public void notifyTickPosition(long tick) {
         int lastPlayingRow = playingRow;
         
@@ -947,6 +968,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
         }        
     }
 
+        @Override
     public boolean requiresNotificationOnEachTick() {
         return false;
     }

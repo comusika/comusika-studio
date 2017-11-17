@@ -23,11 +23,6 @@
  */
 package com.frinika.audio.analysis.gui;
 
-/* 
- * Draws a frequency plot with a keyboard (vertical slice of spectrogram)
- * 
- * 
- */
 import com.frinika.audio.analysis.Mapper;
 import com.frinika.audio.analysis.OscillatorNode;
 import com.frinika.audio.analysis.SpectrogramDataListener;
@@ -39,12 +34,12 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Observable;
 
+/**
+ * Draws a frequency plot with a keyboard (vertical slice of spectrogram).
+ */
 public class SpectralSliceImage extends Observable implements CursorObserver,
         SpectrogramDataListener {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     SpectrumDataBuilder spectroData;
     Mapper valMapper;
@@ -55,8 +50,8 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
     private Rectangle renderRect;
     boolean isBlack[] = {false, true, false, false, true, false, true, false, false, true, false, true};
     float pixToFreq[];
-	private float curBin;
-    
+    private float curBin;
+
     public SpectralSliceImage(SpectrumDataBuilder provider, Mapper valMapper,
             Mapper freqMapper, StaticSpectrogramSynth synth) {
         assert (freqMapper != null);
@@ -65,12 +60,12 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
         this.valMapper = valMapper;
         this.synth = synth;
 
-    // setBackground(Color.BLACK);
+        // setBackground(Color.BLACK);
     }
 
     void setRect(Rectangle rect) {
         this.renderRect = rect;
-        pixToFreq=new float[rect.height];
+        pixToFreq = new float[rect.height];
     }
 
     public void drawImage(Graphics2D g, int x, int y) {
@@ -80,13 +75,11 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
         int h = renderRect.height;
 
         // top left;
-
         int xx = renderRect.x;
         int yy = renderRect.y;
 
         g.setColor(Color.BLACK);
         g.fillRect(xx, yy, w, h);
-
 
         // allow space for drawing piano keys.
         int hKey = h / 4;
@@ -96,16 +89,14 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
 
         float[] freq = spectroData.getFreqArray();
         float[] magn = spectroData.getMagnitudeAt(pixPtr);
-     //   float[] magnX = spectroData.getSMagnitudeAt(pixPtr);
+        //   float[] magnX = spectroData.getSMagnitudeAt(pixPtr);
 
         if (magn == null) {
             g.drawString(" No data ... yet ", 10, 10);
             return;
         }
 
-   //     System.out.println("bot freq "+freq[0]);
-
-
+        //     System.out.println("bot freq "+freq[0]);
         assert (magn != null);
         if (pixPtr < 0) {
             return;
@@ -134,7 +125,7 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
 
             if (f2 > fbot) {
 //            	boolean hiLite = f1 < freq[curBin] && f2 >= freq[curBin];
-            	
+
                 int xx1 = (int) (xx + scaleX * freqMapper.eval((float) f1));
                 int xx2 = (int) (xx + scaleX * freqMapper.eval((float) f2));
                 int hx = (int) ((xx2 - xx1) / 2.0);
@@ -190,7 +181,6 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
         }
 
         // for (int j = 0; j < 2; j++) {
-
         int x1 = xx + (int) (freqMapper.eval(freq[0]) * scaleX);
         int y1 = yy + h - (int) (valMapper.eval(magn[0]) * scaleY);
         for (int i = 1; i < n; i++) {
@@ -198,7 +188,6 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
             int y2 = yy + h - (int) (valMapper.eval(magn[i]) * scaleY);
 
             // System.out.println(x1 + " " + y2);
-
             g.setColor(Color.GREEN);
 
             g.drawLine(x1, y1, x2, y2);
@@ -213,8 +202,7 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
         }
 
         // now the smooth version
-
-        if (magn!= null) {
+        if (magn != null) {
             x1 = xx + (int) (freqMapper.eval(freq[0]) * scaleX);
             y1 = yy + h - (int) (valMapper.eval(magn[0]) * scaleY);
             for (int i = 1; i < n; i++) {
@@ -222,7 +210,6 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
                 int y2 = yy + h - (int) (valMapper.eval(magn[i]) * scaleY);
 
                 // System.out.println(x1 + " " + y2);
-
                 g.setColor(Color.RED);
 
                 g.drawLine(x1, y1, x2, y2);
@@ -231,7 +218,7 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
                     g.setColor(Color.RED);
 
                     g.drawLine(x2, yy + h, x3, y2);
-                            }
+                }
                 x1 = x2;
                 y1 = y2;
             }
@@ -249,20 +236,20 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
 //                pixlast = x2;
 //            }
 //        }
+        int i1 = (int) curBin;
+        if (i1 >= freq.length) {
+            i1 = freq.length - 1;
+        }
+        int i2 = i1 + 1;
+        double fact2 = curBin - i1;
+        double fact1 = 1.0 - fact2;
 
-        int i1=(int)curBin;
-        if (i1 >= freq.length) i1=freq.length-1;
-        int i2=i1+1;
-        double fact2=curBin-i1;
-        double fact1=1.0-fact2;
-        
-        int curX=xx + (int) (freqMapper.eval((float) (freq[i1]*fact1+freq[i2]*fact2) ) * scaleX);
-          
+        int curX = xx + (int) (freqMapper.eval((float) (freq[i1] * fact1 + freq[i2] * fact2)) * scaleX);
+
         g.setColor(Color.WHITE);
-      
+
         g.drawLine(curX, yy + h, curX, yy);
-        
-        
+
         if (synth != null) {
 
             for (OscillatorNode osc : synth.getOscillatorBank()) {
@@ -279,27 +266,30 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
 
     }
 
-    public void notifyCursorChange(int pix,float curBin) {
-    	if (curBin == this.curBin  && pixPtr == pix) {
+    @Override
+    public void notifyCursorChange(int pix, float curBin) {
+        if (curBin == this.curBin && pixPtr == pix) {
             return;
         }
         pixPtr = pix;
-        this.curBin=curBin;
+        this.curBin = curBin;
         setChanged();
         notifyObservers();
-    // repaint();
+        // repaint();
     }
 
     public Dimension getPreferredSize() {
         return new Dimension(1000, 120);
     }
 
+    @Override
     public void notifySizeChange(Dimension d) {
         lastPix = -1;
         setChanged();
         notifyObservers();
     }
 
+    @Override
     public void notifyMoreDataReady() {
         int nextPix = spectroData.getChunkRenderedCount();
         if ((nextPix < lastPix || lastPix < pixPtr) && nextPix >= pixPtr) {
@@ -308,6 +298,5 @@ public class SpectralSliceImage extends Observable implements CursorObserver,
         }
 
         lastPix = nextPix;
-
     }
 }

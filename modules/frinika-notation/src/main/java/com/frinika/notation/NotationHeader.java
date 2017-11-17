@@ -114,6 +114,7 @@ AdjustmentListener {
 		JMenuItem menuitem = new JMenuItem("Treble Clef (G)");
 		menuitem.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						setClef(NotationGraphics.CLEF_G, 2);
 					}
@@ -122,6 +123,7 @@ AdjustmentListener {
 		menuitem = new JMenuItem("Bass Clef (F)");
 		menuitem.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						setClef(NotationGraphics.CLEF_F, 6);
 					}
@@ -130,6 +132,7 @@ AdjustmentListener {
 		menuitem = new JMenuItem("Alto Clef (C)");
 		menuitem.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						setClef(NotationGraphics.CLEF_C, 4);
 					}
@@ -138,6 +141,7 @@ AdjustmentListener {
 		menuitem = new JMenuItem("Tenor Clef (C)");
 		menuitem.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						setClef(NotationGraphics.CLEF_C, 6);
 					}
@@ -146,6 +150,7 @@ AdjustmentListener {
 		popupmenu.show(event.getComponent(), event.getX(), event.getY() );		
 	}
 	
+        @Override
 	public void processMouseEvent( MouseEvent event )
 	{
 		if( event.isPopupTrigger() )
@@ -153,23 +158,30 @@ AdjustmentListener {
 		super.processMouseEvent( event );
 	}	
 	
+        @Override
 	public void mouseClicked(MouseEvent event) {
 		showPopup(event);
 	}
+        @Override
 	public void mousePressed(MouseEvent e) {
 	}
+        @Override
 	public void mouseReleased(MouseEvent e) {
 	}
+        @Override
 	public void mouseEntered(MouseEvent e) {
 	}
+        @Override
 	public void mouseExited(MouseEvent e) {
 	}
+        @Override
 	public void paintComponent(Graphics g) {
 		//Thread.yield();
 		super.paintComponent(g);
 		notationEditor.paintHeader(g, yScroll);
 		
 	}	
+        @Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		yScroll = e.getValue();
 		repaint();

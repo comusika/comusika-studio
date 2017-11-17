@@ -180,6 +180,7 @@ public class ItemRollToolBar extends JToolBar implements ActionListener {
         final JButton snapToButton = makePressButton("music_quarternote", "snaptoSET",
             getMessage("sequencer.toolbar.snaptolength_tip"), null, panel);
         snapToButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     new NoteLengthPopup(snapToButton, clients, sequence).show(snapToButton, 0, 0);
                     }
@@ -194,36 +195,39 @@ public class ItemRollToolBar extends JToolBar implements ActionListener {
 		zoomBut.setSelected(false);
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 
 		String cmd = e.getActionCommand();
 		// System.out.println(" PRollToolPanel " + cmd);
-
-		if (cmd.equals("zoomin")) { // TODO keep it still
-			for (ItemPanel client : clients)
-				client.zoomIn();
-			return;
-		} else if (cmd.equals("zoomout")) {
-			for (ItemPanel client : clients)
-				client.zoomOut();
-			return;
-		} else if (cmd.equals("follow")) {
-			for (ItemPanel client : clients)
-				client.followSong(follow.isSelected());
-			return;
-		} else if (cmd.equals("extend")) {
-			project.setEndTick(project.getEndTick()+project.getSequence().getResolution()*8);
-			return;	
-		} else if (cmd.equals("snaptoON")) {
-			for (ItemPanel client : clients)
-				client.setSnapQuantized(quantize.isSelected());
-			return;
-		} else {
-			for (ItemPanel client : clients) {
-				client.setTool(cmd);
-			}
-			// setTool(tool);
-		}
+            switch (cmd) {
+                case "zoomin":
+                    // TODO keep it still
+                    for (ItemPanel client : clients)
+                        client.zoomIn();
+                    return;
+                case "zoomout":
+                    for (ItemPanel client : clients)
+                        client.zoomOut();
+                    return;
+                case "follow":
+                    for (ItemPanel client : clients)
+                        client.followSong(follow.isSelected());
+                    return;
+                case "extend":
+                    project.setEndTick(project.getEndTick()+project.getSequence().getResolution()*8);
+                    return;
+                case "snaptoON":
+                    for (ItemPanel client : clients)
+                        client.setSnapQuantized(quantize.isSelected());
+                    return;
+                default:
+                    for (ItemPanel client : clients) {
+                        client.setTool(cmd);
+                    }
+                    // setTool(tool);
+                    break;
+            }
 	}
 
 	public JPanel getZoomPanel() {

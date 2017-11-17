@@ -28,105 +28,111 @@ import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.server.AudioServer;
 
 /**
- * An audioprocess that can be synchronized from an outside timing source. Useful for e.g. audio playback to be synchronized
- * with a sequencer.
- * 
+ * An audioprocess that can be synchronized from an outside timing source.
+ * Useful for e.g. audio playback to be synchronized with a sequencer.
+ *
  * @author Peter Johan Salomonsen
  */
 public abstract class SynchronizedAudioProcess implements AudioProcess {
-	
-	long framePos = 0;
-	
-	/**
-	 * In case of a glitch - how many frames did we miss?
-	 */
-	int missedFrames = 0;
-	
-	/**
-	 * Number of milliseconds of glitch before synchronization if enforced
-	 * Windows recommendation: 50 ms, Linux 10-20 ms
-	 * TODO: Make this configurable from audio devices GUI
-	 */
-	int missedFramesToleranceMillis = 50; // Default 50 msecs
 
-	AudioServer audioServer;
-	
-	/**
-	 * Construct a new Synchronized audioProcess. Note that in order for the initialFramePos to be valid, this voice
-	 * should be added to the voiceServer not too long after it's constructed
-	 * 
-	 * Since glitches may "come and go" due to the missing accuracy in Java timing functions, synchronization is not
-	 * applied until a tolerance threshold is exceeded.
-	 * 
-	 * @param voiceServer
-	 * @param initialFramePos - the initial position of playback start - relative to audio clip start
-	 */
-	public SynchronizedAudioProcess(AudioServer audioServer,long initialFramePos)
-	{
-		this.audioServer = audioServer;
-		this.framePos = initialFramePos;
-	}
+    long framePos = 0;
 
-	/**
-	 * Number of milliseconds of glitch before synchronization if enforced
-	 */
-	public int getMissedFramesToleranceMillis() {
-		return missedFramesToleranceMillis;
-	}
+    /**
+     * In case of a glitch - how many frames did we miss?
+     */
+    int missedFrames = 0;
 
-	/**
-	 * Set number of milliseconds of glitch before synchronization if enforced
-	 * @param missedFramesToleranceMillis
-	 */
-	public void setMissedFramesToleranceMillis(int missedFramesToleranceMillis) {
-		this.missedFramesToleranceMillis = missedFramesToleranceMillis;
-	}
+    /**
+     * Number of milliseconds of glitch before synchronization if enforced
+     * Windows recommendation: 50 ms, Linux 10-20 ms TODO: Make this
+     * configurable from audio devices GUI
+     */
+    int missedFramesToleranceMillis = 50; // Default 50 msecs
 
-	/**
-	 * The external timing source should regularly notify with the current frame position here
-	 * @param framePos
-	 */
-	public void setFramePos(final long framePos)
-	{
-		// For a samplerate of 44100 the glitch must be at least 45 frames for a 1 msec glitch
-		int glitchMS = (int) (((framePos - SynchronizedAudioProcess.this.framePos) * 1000) / audioServer.getSampleRate());
-	
-		// Only enfore synchronization if the glitch is beyond the tolerance
-		if(Math.abs(glitchMS)>missedFramesToleranceMillis)
-		{
-			missedFrames = (int) (framePos - SynchronizedAudioProcess.this.framePos);
-			SynchronizedAudioProcess.this.framePos = framePos;
-		}
-	}
-	
-	/**
-	 * Call this method from fillBufferSynchronized to get the framePos according to the external timing source
-	 * @return the current frame postion.
-	 */
-	protected final long getFramePos()
-	{
-		return framePos; 
-	}
-	
-	/**
-	 * Call this method from fillBufferSynchronized to get the number of missing frames (glitch) after an external sync notification
-	 * NOTE: Your tolerance on missed frames should not be too low - since timing functions like System.currentTimeMillis might slide
-	 * up to 50 ms on some systems. Your number of missed frames tolerance should be thereafter before correcting your 
-	 * framepos.
-	 * 
-	 * @return
-	 */
-	protected final int getMissedFrames()
-	{
-		return missedFrames; 
-	}
-	
-	public int processAudio(AudioBuffer buffer) {
-		processAudioSynchronized(buffer);
-		framePos += buffer.getSampleCount(); // Update framePos according to number of requested samples to fillBuffer
-		missedFrames = 0; // Reset missedframes until next notification
-		return AUDIO_OK;	
-	}
-	 
-	public abstract void processAudioSynchronized(AudioBuffer buffer);
+    AudioServer audioServer;
+
+    /**
+     * Construct a new Synchronized audioProcess. Note that in order for the
+     * initialFramePos to be valid, this voice should be added to the
+     * voiceServer not too long after it's constructed
+     *
+     * Since glitches may "come and go" due to the missing accuracy in Java
+     * timing functions, synchronization is not applied until a tolerance
+     * threshold is exceeded.
+     *
+     * @param voiceServer
+     * @param initialFramePos - the initial position of playback start -
+     * relative to audio clip start
+     */
+    public SynchronizedAudioProcess(AudioServer audioServer, long initialFramePos) {
+        this.audioServer = audioServer;
+        this.framePos = initialFramePos;
+    }
+
+    /**
+     * Number of milliseconds of glitch before synchronization if enforced
+     */
+    public int getMissedFramesToleranceMillis() {
+        return missedFramesToleranceMillis;
+    }
+
+    /**
+     * Set number of milliseconds of glitch before synchronization if enforced
+     *
+     * @param missedFramesToleranceMillis
+     */
+    public void setMissedFramesToleranceMillis(int missedFramesToleranceMillis) {
+        this.missedFramesToleranceMillis = missedFramesToleranceMillis;
+    }
+
+    /**
+     * The external timing source should regularly notify with the current frame
+     * position here
+     *
+     * @param framePos
+     */
+    public void setFramePos(final long framePos) {
+        // For a samplerate of 44100 the glitch must be at least 45 frames for a 1 msec glitch
+        int glitchMS = (int) (((framePos - SynchronizedAudioProcess.this.framePos) * 1000) / audioServer.getSampleRate());
+
+        // Only enfore synchronization if the glitch is beyond the tolerance
+        if (Math.abs(glitchMS) > missedFramesToleranceMillis) {
+            missedFrames = (int) (framePos - SynchronizedAudioProcess.this.framePos);
+            SynchronizedAudioProcess.this.framePos = framePos;
+        }
+    }
+
+    /**
+     * Call this method from fillBufferSynchronized to get the framePos
+     * according to the external timing source
+     *
+     * @return the current frame postion.
+     */
+    protected final long getFramePos() {
+        return framePos;
+    }
+
+    /**
+     * Call this method from fillBufferSynchronized to get the number of missing
+     * frames (glitch) after an external sync notification NOTE: Your tolerance
+     * on missed frames should not be too low - since timing functions like
+     * System.currentTimeMillis might slide up to 50 ms on some systems. Your
+     * number of missed frames tolerance should be thereafter before correcting
+     * your framepos.
+     *
+     * @return
+     */
+    protected final int getMissedFrames() {
+        return missedFrames;
+    }
+
+    @Override
+    public int processAudio(AudioBuffer buffer) {
+        processAudioSynchronized(buffer);
+        framePos += buffer.getSampleCount(); // Update framePos according to number of requested samples to fillBuffer
+        missedFrames = 0; // Reset missedframes until next notification
+        return AUDIO_OK;
+    }
+
+    public abstract void processAudioSynchronized(AudioBuffer buffer);
 }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import com.frinika.audio.analysis.CycliclyBufferedAudio;
@@ -34,9 +33,10 @@ import com.frinika.util.tweaks.gui.TweakerPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -47,221 +47,224 @@ import javax.swing.Timer;
 import uk.org.toot.audio.core.AudioProcess;
 
 /**
- * 
+ *
  * Top level panel for the audioanalysis GUI.
- * 
+ *
  * @author pjl
- * 
+ *
  */
 public class CyclicBufferFFTAnalysisPanel extends JPanel {
 
-	Vector<Tweakable> tweaks = new Vector<Tweakable>();
+    List<Tweakable> tweaks = new ArrayList<>();
 
-	TweakableDouble mindB = new TweakableDouble(tweaks, -400.0, 100.0, -40.0,
-			5.0, "minDb");
+    TweakableDouble mindB = new TweakableDouble(tweaks, -400.0, 100.0, -40.0,
+            5.0, "minDb");
 
-	TweakableDouble maxdB = new TweakableDouble(tweaks, -400.0, 100.0, -50.0,
-			5.0, "maxDb");
+    TweakableDouble maxdB = new TweakableDouble(tweaks, -400.0, 100.0, -50.0,
+            5.0, "maxDb");
 
-	JToggleButton linearBut;
+    JToggleButton linearBut;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	// AudioAnalysisTimePanel timePanel;
+    // AudioAnalysisTimePanel timePanel;
+    // SingleImagePanel spectroSlicePanel;
+    AudioProcess reader;
 
-	// SingleImagePanel spectroSlicePanel;
+    private ValMapper valMapper;
 
-	AudioProcess reader;
+    // private Mapper freqMapper;
+    CyclicSpectrogramImage image;
 
-	private ValMapper valMapper;
+    CyclicBufferFFTSpectrogramDataBuilder spectroData;
 
-	// private Mapper freqMapper;
+    // SpectrumController spectroController;
+    JPanel spectroPanel;
 
-	CyclicSpectrogramImage image;
+    // ' private KeyboardFocusManager kbd;
+    FFTOption fftOpts[] = {new FFTOption(512, 256), new FFTOption(512, 128),
+        new FFTOption(1024, 512), new FFTOption(1024, 256),
+        new FFTOption(1024, 128), new FFTOption(2048, 1024),
+        new FFTOption(2048, 512), new FFTOption(2048, 256)};
 
-	CyclicBufferFFTSpectrogramDataBuilder spectroData;
+    private float maxFreq;
 
-	// SpectrumController spectroController;
-	JPanel spectroPanel;
+    public CyclicBufferFFTAnalysisPanel(final CycliclyBufferedAudio bp) {
 
-	// ' private KeyboardFocusManager kbd;
-
-	FFTOption fftOpts[] = { new FFTOption(512, 256), new FFTOption(512, 128),
-			new FFTOption(1024, 512), new FFTOption(1024, 256),
-			new FFTOption(1024, 128), new FFTOption(2048, 1024),
-			new FFTOption(2048, 512), new FFTOption(2048, 256) };
-
-	private float maxFreq;
-
-	public CyclicBufferFFTAnalysisPanel(final CycliclyBufferedAudio bp) {
-
-		setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
         valMapper = new ValMapper();
-		maxdB.addObserver(valMapper);
-		mindB.addObserver(valMapper);
+        maxdB.addObserver(valMapper);
+        mindB.addObserver(valMapper);
 
+        spectroData = new CyclicBufferFFTSpectrogramDataBuilder(bp.out, 1000, FrinikaConfig.sampleRate);
+        // spectroController=new
+        // FFTSpectrumController((FFTSpectrogramControlable) spectroData);
+        spectroData.setParameters(fftOpts[0].chunkSize, fftOpts[0].fftSize, bp.getSampleRate());
 
-		spectroData = new CyclicBufferFFTSpectrogramDataBuilder(bp.out, 1000,FrinikaConfig.sampleRate);
-		// spectroController=new
-		// FFTSpectrumController((FFTSpectrogramControlable) spectroData);
-		spectroData.setParameters(fftOpts[0].chunkSize, fftOpts[0].fftSize,bp.getSampleRate());
-		
-		final JComboBox combo = new JComboBox(fftOpts);
+        final JComboBox combo = new JComboBox(fftOpts);
 
-		combo.addActionListener(new ActionListener() {
+        combo.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				final FFTOption opt = (FFTOption) combo.getSelectedItem();
-				System.err.println(" xxxxxxxxxxxxxx ");
-				new Thread(new Runnable() {
-					public void run() {
-						spectroData.setParameters(opt.chunkSize, opt.fftSize,bp.getSampleRate());
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                final FFTOption opt = (FFTOption) combo.getSelectedItem();
+                System.err.println(" xxxxxxxxxxxxxx ");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        spectroData.setParameters(opt.chunkSize, opt.fftSize, bp.getSampleRate());
                         revalidate();
-					}
-				}).start();
+                    }
+                }).start();
 
-			}
+            }
 
-		});
+        });
 
-    	image = new CyclicSpectrogramImage(valMapper,800);
+        image = new CyclicSpectrogramImage(valMapper, 800);
 
-       // JLabel p=new JLabel(" HELKP ME WORK ");
-        JScrollPane sp=new JScrollPane(image);
+        // JLabel p=new JLabel(" HELKP ME WORK ");
+        JScrollPane sp = new JScrollPane(image);
 
-		spectroData.addSizeObserver(image);
+        spectroData.addSizeObserver(image);
 
-		add(sp, BorderLayout.CENTER);
+        add(sp, BorderLayout.CENTER);
 
-		JPanel buts = new JPanel();
-		buts.setLayout(new BoxLayout(buts, BoxLayout.Y_AXIS));
+        JPanel buts = new JPanel();
+        buts.setLayout(new BoxLayout(buts, BoxLayout.Y_AXIS));
 
-		// Log linear switch
-		linearBut = new JToggleButton("linear");
-		linearBut.addActionListener(new ActionListener() {
+        // Log linear switch
+        linearBut = new JToggleButton("linear");
+        linearBut.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				if (!linearBut.isSelected()) {
-					linearBut.setText("Linear");
-				} else {
-					linearBut.setText("Log10");
-				}
-				valMapper.update(null, null);
-			}
-		});
-		buts.add(linearBut);
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (!linearBut.isSelected()) {
+                    linearBut.setText("Linear");
+                } else {
+                    linearBut.setText("Log10");
+                }
+                valMapper.update(null, null);
+            }
+        });
+        buts.add(linearBut);
 
-		// Switch to static synth
-		final JToggleButton synthBut = new JToggleButton("Synth Mode");
-		synthBut.addActionListener(new ActionListener() {
+        // Switch to static synth
+        final JToggleButton synthBut = new JToggleButton("Synth Mode");
+        synthBut.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent arg0) {
-				// timePanel.setSynthMode(synthBut.isSelected());
-			}
-		});
-		buts.add(synthBut);
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                // timePanel.setSynthMode(synthBut.isSelected());
+            }
+        });
+        buts.add(synthBut);
 
-		TweakerPanel tpanel = new TweakerPanel(2, 4);
+        TweakerPanel tpanel = new TweakerPanel(2, 4);
 
-		for (Tweakable t : tweaks) {
-			tpanel.addSpinTweaker(t);
-		}
+        for (Tweakable t : tweaks) {
+            tpanel.addSpinTweaker(t);
+        }
 
-		JPanel control = new JPanel();
+        JPanel control = new JPanel();
 
-		control.add(buts);
-		control.add(tpanel);
-		control.add(combo); // spectroController.getTweakPanel());
+        control.add(buts);
+        control.add(tpanel);
+        control.add(combo); // spectroController.getTweakPanel());
 
-		add(control, BorderLayout.SOUTH);
+        add(control, BorderLayout.SOUTH);
 
-		valMapper.update(null, null);
+        valMapper.update(null, null);
 
-		// spectroController.update();
-		revalidate();
-		repaint();
+        // spectroController.update();
+        revalidate();
+        repaint();
 
-		final JLabel label=new JLabel("            ");;
-		control.add(label);
-		new Timer(200, new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				label.setText(String.valueOf(bp.getLag()));
-			}
+        final JLabel label = new JLabel("            ");;
+        control.add(label);
+        new Timer(200, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                label.setText(String.valueOf(bp.getLag()));
+            }
 
-		}).start();
-	}
+        }).start();
+    }
 
-	// public void dispose() {
-	// timePanel.dispose();
-	// }
+    // public void dispose() {
+    // timePanel.dispose();
+    // }
+    final class ValMapper implements Observer, Mapper {
 
-	final class ValMapper implements Observer, Mapper {
+        double maxdb;
 
-		double maxdb;
+        double mindb;
 
-		double mindb;
+        double max;
 
-		double max;
+        double min;
 
-		double min;
+        boolean linear;
 
-		boolean linear;
+        private Thread thread;
 
-		private Thread thread;
+        @Override
+        public final float eval(float val) {
+            if (linear) {
+                float vv = (float) ((val - min) / (max - min));
+                return vv;
+            } else {
+                double dB = 20 * Math.log10(val + 1e-15);
+                float vv = (float) ((dB - mindb) / (maxdb - mindb));
+                return vv;
+            }
+        }
 
-		public final float eval(float val) {
-			if (linear) {
-				float vv = (float) ((val - min) / (max - min));
-				return vv;
-			} else {
-				double dB = 20 * Math.log10(val + 1e-15);
-				float vv = (float) ((dB - mindb) / (maxdb - mindb));
-				return vv;
-			}
-		}
+        @Override
+        public void update(Observable o, Object arg) {
 
-		public void update(Observable o, Object arg) {
+            linear = linearBut.isSelected();
 
-			linear = linearBut.isSelected();
+            maxdb = maxdB.doubleValue();
+            max = Math.pow(10, maxdb / 20.0);
 
-			maxdb = maxdB.doubleValue();
-			max = Math.pow(10, maxdb / 20.0);
+            mindb = mindB.doubleValue();
+            min = Math.pow(10, mindb / 20.0);
 
-			mindb = mindB.doubleValue();
-			min = Math.pow(10, mindb / 20.0);
+            repaint();
+            // if (thread != null)
+            // thread.interrupt();
 
-			repaint();
-			// if (thread != null)
-			// thread.interrupt();
-
-			// thread = new Thread(new Runnable() {
-			// public void run() {
-			// spectroSlicePanel.repaint();
-			// timePanel.spectroImage.update(null, null);
-			// thread = null;
-			// }
-			// });
-			// thread.start();
-		}
-	}
+            // thread = new Thread(new Runnable() {
+            // public void run() {
+            // spectroSlicePanel.repaint();
+            // timePanel.spectroImage.update(null, null);
+            // thread = null;
+            // }
+            // });
+            // thread.start();
+        }
+    }
 
 }
 
 class FFTOption {
-	int fftSize;
 
-	int chunkSize;
+    int fftSize;
 
-	public FFTOption(int i, int j) {
-		fftSize = i;
-		chunkSize = j;
-	}
+    int chunkSize;
 
-	public String toString() {
-		return fftSize + "/" + chunkSize;
-	}
+    public FFTOption(int i, int j) {
+        fftSize = i;
+        chunkSize = j;
+    }
+
+    @Override
+    public String toString() {
+        return fftSize + "/" + chunkSize;
+    }
 }

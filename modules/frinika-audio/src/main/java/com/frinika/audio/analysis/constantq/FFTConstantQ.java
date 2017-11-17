@@ -31,9 +31,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.frinika.audio.analysis.constantq;
-
 
 import rasmus.interpreter.sampled.util.FFT;
 
@@ -61,228 +59,223 @@ import rasmus.interpreter.sampled.util.FFT;
 // 1 -
 // 3 - j centered samples
 // 4 - original
-
 public class FFTConstantQ {
 
-	double q; // Constant Q
+    double q; // Constant Q
 
-	int k; // Number of output bands
+    int k; // Number of output bands
 
-	int fftlen; // FFT size
+    int fftlen; // FFT size
 
-	double[] freqs;
+    double[] freqs;
 
-	double[][] qKernel;
+    double[][] qKernel;
 
-	int[][] qKernel_indexes;
+    int[][] qKernel_indexes;
 
-	FFT fft;
+    FFT fft;
 
+    public FFT getFFT() {
+        return fft;
+    }
 
-	public FFT getFFT() {
-		return fft;
-	}
+    public double[] getFreqs() {
+        return freqs;
+    }
 
-	public double[] getFreqs() {
-		return freqs;
-	}
-	public int getFFTSize() {
-		return fftlen;
-	}
+    public int getFFTSize() {
+        return fftlen;
+    }
 
-	public int getNumberOfOutputBands() {
-		return k;
-	}
+    public int getNumberOfOutputBands() {
+        return k;
+    }
 
-	double sampleRate = 44100;
+    double sampleRate = 44100;
 
-	double minFreq = 100;
+    double minFreq = 100;
 
-	double maxFreq = 3000;
+    double maxFreq = 3000;
 
-	double binsPerOctave = 12;
+    double binsPerOctave = 12;
 
-	double threshold = 0.001; // Lower number, better quality !!! 0 = best
+    double threshold = 0.001; // Lower number, better quality !!! 0 = best
 
-	double spread = 1.0;
+    double spread = 1.0;
 
-	String kernelsident;
+    String kernelsident;
 
+    public FFTConstantQ(double sampleRate, double minFreq, double maxFreq,
+            double binsPerOctave) {
+        this.sampleRate = sampleRate;
+        this.minFreq = minFreq;
+        this.maxFreq = maxFreq;
+        this.binsPerOctave = binsPerOctave;
 
-	public FFTConstantQ(double sampleRate, double minFreq, double maxFreq,
-			double binsPerOctave) {
-		this.sampleRate = sampleRate;
-		this.minFreq = minFreq;
-		this.maxFreq = maxFreq;
-		this.binsPerOctave = binsPerOctave;
+        init();
+    }
 
-		init();
-	}
+    public FFTConstantQ(double sampleRate, double minFreq, double maxFreq,
+            double binsPerOctave, double threshold, double spread) {
+        this.sampleRate = sampleRate;
+        this.minFreq = minFreq;
+        this.maxFreq = maxFreq;
+        this.binsPerOctave = binsPerOctave;
+        this.threshold = threshold;
+        this.spread = spread;
+        init();
+    }
 
-	public FFTConstantQ(double sampleRate, double minFreq, double maxFreq,
-			double binsPerOctave, double threshold,double spread) {
-		this.sampleRate = sampleRate;
-		this.minFreq = minFreq;
-		this.maxFreq = maxFreq;
-		this.binsPerOctave = binsPerOctave;
-		this.threshold = threshold;
-		this.spread = spread;
-		init();
-	}
+    private void init() {
 
-	
+        // Calculate Constant Q
+        //	System.out.println("Spread = " + spread + " Key:" + key);
+        q = 1.0 / (Math.pow(2, 1.0 / binsPerOctave) - 1.0) / spread;
 
-	private void init() {
+        // Calculate number of output bins
+        k = (int) Math.ceil(binsPerOctave * Math.log(maxFreq / minFreq)
+                / Math.log(2));
 
-		// Calculate Constant Q
-	//	System.out.println("Spread = " + spread + " Key:" + key);
-		
-		q = 1.0 / (Math.pow(2, 1.0 / binsPerOctave) - 1.0) / spread;
+        // Calculate length of FFT
+        double calc_fftlen = Math.ceil(q * sampleRate / minFreq);
+        fftlen = (int) Math.pow(2, Math.ceil(Math.log(calc_fftlen)
+                / Math.log(2)));
 
-		// Calculate number of output bins
-		k = (int) Math.ceil(binsPerOctave * Math.log(maxFreq / minFreq)
-				/ Math.log(2));
+        // Create FFT object
+        fft = new FFT(fftlen);
+        qKernel = new double[k][];
+        qKernel_indexes = new int[k][];
+        freqs = new double[k];
 
-		// Calculate length of FFT
-		double calc_fftlen = Math.ceil(q * sampleRate / minFreq);
-		fftlen = (int) Math.pow(2, Math.ceil(Math.log(calc_fftlen)
-				/ Math.log(2)));
+        // Calculate Constant Q kernels
+        double[] temp = new double[fftlen * 2];
+        double[] ctemp = new double[fftlen * 2];
+        int[] cindexes = new int[fftlen];
 
-		// Create FFT object
-		fft = new FFT(fftlen);
-		qKernel = new double[k][];
-		qKernel_indexes = new int[k][];
-		freqs = new double[k];
+        for (int i = 0; i < k; i++) {
+            double[] sKernel = temp;
+            // Calculate the frequency of current bin
+            freqs[i] = minFreq * Math.pow(2, i / binsPerOctave);
 
-		// Calculate Constant Q kernels
+            double len = q * sampleRate / freqs[i];
 
-		double[] temp = new double[fftlen * 2];
-		double[] ctemp = new double[fftlen * 2];
-		int[] cindexes = new int[fftlen];
+            // double halflen= len*0.5;
+            // window is symmetric around center point of frame
+            // calculate second half of the kernel
+            for (int j = 0; j < fftlen / 2; j++) {
 
-		for (int i = 0; i < k; i++) {
-			double[] sKernel = temp;
-			// Calculate the frequency of current bin
-			freqs[i] = minFreq * Math.pow(2, i / binsPerOctave);
+                double aa;
 
-			double len = q * sampleRate / freqs[i];
+                aa = (double) (j + 0.5) / len;
 
-			// double halflen= len*0.5;
-			// window is symmetric around center point of frame
-			// calculate second half of the kernel
+                if (aa < .5) {
+                    double a = 2.0 * Math.PI * aa;
+                    double window = 0.5 * (1.0 + Math.cos(a)); // Hanning
 
-			for (int j = 0; j < fftlen / 2; j++) {
+                    window /= len;
 
-				double aa;
+                    // Calculate kernel
+                    double x = 2.0 * Math.PI * freqs[i] * (j + 0.5D) / sampleRate;
 
-				aa = (double) (j + 0.5) / len;
+                    sKernel[fftlen + j * 2] = window * Math.cos(x);
+                    sKernel[fftlen + j * 2 + 1] = window * Math.sin(x);
+                } else {
+                    sKernel[fftlen + j * 2] = 0.0;
+                    sKernel[fftlen + j * 2 + 1] = 0.0;
+                }
 
-				if (aa < .5) {
-					double a = 2.0 * Math.PI * aa;
-					double window = 0.5 * (1.0 + Math.cos(a)); // Hanning
+            }
 
-					window /= len;
+            // reflect to genereate first half
+            int halfway = fftlen / 2;
 
-					// Calculate kernel
-					double x = 2.0 * Math.PI * freqs[i] * (j + 0.5D) / sampleRate;
+            for (int j = 0; j < halfway; j++) {
+                int i1 = halfway - j - 1;
+                int i2 = halfway + j;
 
-					sKernel[fftlen + j * 2] = window * Math.cos(x);
-					sKernel[fftlen + j * 2 + 1] = window * Math.sin(x);
-				} else {
-					sKernel[fftlen + j * 2] = 0.0;
-					sKernel[fftlen + j * 2 + 1] = 0.0;
-				}
+                sKernel[i1 * 2] = sKernel[2 * i2];
+                sKernel[i1 * 2 + 1] = -sKernel[2 * i2 + 1];
+            }
 
-			}
+            // Perform FFT on kernel
+            fft.calc(sKernel, -1);
 
-			// reflect to genereate first half
+            // Remove all zeros from kernel to improve performance
+            double[] cKernel = ctemp;
 
-			int halfway = fftlen / 2;
+            int k = 0;
+            for (int j = 0, j2 = sKernel.length - 2; j < sKernel.length / 2; j += 2, j2 -= 2) {
+                double absval = Math.sqrt(sKernel[j] * sKernel[j]
+                        + sKernel[j + 1] * sKernel[j + 1]);
+                absval += Math.sqrt(sKernel[j2] * sKernel[j2] + sKernel[j2 + 1]
+                        * sKernel[j2 + 1]);
+                if (absval > threshold) {
+                    cindexes[k] = j;
+                    cKernel[2 * k] = sKernel[j] + sKernel[j2];
+                    cKernel[2 * k + 1] = sKernel[j + 1] + sKernel[j2 + 1];
+                    k++;
+                }
+            }
 
-			for (int j = 0; j < halfway; j++) {
-				int i1 = halfway - j - 1;
-				int i2 = halfway + j;
+            sKernel = new double[k * 2];
+            int[] indexes = new int[k];
 
-				sKernel[i1 * 2] = sKernel[2 * i2];
-				sKernel[i1 * 2 + 1] = -sKernel[2 * i2 + 1];
-			}
+            for (int j = 0; j < k * 2; j++) {
+                sKernel[j] = cKernel[j];
+            }
+            for (int j = 0; j < k; j++) {
+                indexes[j] = cindexes[j];
+            }
 
-			// Perform FFT on kernel
-			fft.calc(sKernel, -1);
+            // Normalize fft output
+            for (int j = 0; j < sKernel.length; j++) {
+                sKernel[j] /= fftlen;
+            }
 
-			// Remove all zeros from kernel to improve performance
-			double[] cKernel = ctemp;
+            // Perform complex conjugate on sKernel
+            for (int j = 1; j < sKernel.length; j += 2) {
+                sKernel[j] = -sKernel[j];
+            }
 
-			int k = 0;
-			for (int j = 0, j2 = sKernel.length - 2; j < sKernel.length / 2; j += 2, j2 -= 2) {
-				double absval = Math.sqrt(sKernel[j] * sKernel[j]
-						+ sKernel[j + 1] * sKernel[j + 1]);
-				absval += Math.sqrt(sKernel[j2] * sKernel[j2] + sKernel[j2 + 1]
-						* sKernel[j2 + 1]);
-				if (absval > threshold) {
-					cindexes[k] = j;
-					cKernel[2 * k] = sKernel[j] + sKernel[j2];
-					cKernel[2 * k + 1] = sKernel[j + 1] + sKernel[j2 + 1];
-					k++;
-				}
-			}
+            qKernel_indexes[i] = indexes;
+            qKernel[i] = sKernel;
 
-			sKernel = new double[k * 2];
-			int[] indexes = new int[k];
+        }
 
-			for (int j = 0; j < k * 2; j++)
-				sKernel[j] = cKernel[j];
-			for (int j = 0; j < k; j++)
-				indexes[j] = cindexes[j];
+        // writeKernels(file); //new File(kernelsident));
+    }
 
-			// Normalize fft output
-			for (int j = 0; j < sKernel.length; j++)
-				sKernel[j] /= fftlen;
-
-			// Perform complex conjugate on sKernel
-			for (int j = 1; j < sKernel.length; j += 2)
-				sKernel[j] = -sKernel[j];
-
-			qKernel_indexes[i] = indexes;
-			qKernel[i] = sKernel;
-
-		}
-
-		// writeKernels(file); //new File(kernelsident));
-	}
-
-	/**
+    /**
      *
-     *  take a buff_in of samples and calculate the constant Q coeffs.
+     * take a buff_in of samples and calculate the constant Q coeffs.
      *
      *
      * @param buff_in
      * @param buff_out
      */
-	public void calc(double[] buff_in, double[] buff_out) {
-		fft.calcReal(buff_in, -1);
-		for (int i = 0; i < qKernel.length; i++) {
-			double[] kernel = qKernel[i];
-			int[] indexes = qKernel_indexes[i];
-			double t_r = 0;
-			double t_i = 0;
-			for (int j = 0, l = 0; j < kernel.length; j += 2, l++) {
-				int jj = indexes[l];
-				double b_r = buff_in[jj];
-				double b_i = buff_in[jj + 1];
-				double k_r = kernel[j];
-				double k_i = kernel[j + 1];
-				// COMPLEX: T += B * K
-				t_r += b_r * k_r - b_i * k_i;
-				t_i += b_r * k_i + b_i * k_r;
-			}
-			buff_out[i * 2] = t_r;
-			buff_out[i * 2 + 1] = t_i;
-		}
-	}
+    public void calc(double[] buff_in, double[] buff_out) {
+        fft.calcReal(buff_in, -1);
+        for (int i = 0; i < qKernel.length; i++) {
+            double[] kernel = qKernel[i];
+            int[] indexes = qKernel_indexes[i];
+            double t_r = 0;
+            double t_i = 0;
+            for (int j = 0, l = 0; j < kernel.length; j += 2, l++) {
+                int jj = indexes[l];
+                double b_r = buff_in[jj];
+                double b_i = buff_in[jj + 1];
+                double k_r = kernel[j];
+                double k_i = kernel[j + 1];
+                // COMPLEX: T += B * K
+                t_r += b_r * k_r - b_i * k_i;
+                t_i += b_r * k_i + b_i * k_r;
+            }
+            buff_out[i * 2] = t_r;
+            buff_out[i * 2 + 1] = t_i;
+        }
+    }
 
-	public int getFFTlength() {
-		return fftlen;
-	}
-
+    public int getFFTlength() {
+        return fftlen;
+    }
 }

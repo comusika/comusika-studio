@@ -58,18 +58,22 @@ public class ChartPanel extends JPanel implements Observer {
 			 */
 			private static final long serialVersionUID = 1L;
 
+                        @Override
 			public int getColumnCount() {
 				return barsPerLine;
 			}
 
+                        @Override
 			public boolean isCellEditable(int row, int col) {
 				return true;
 			}
 
+                        @Override
 			public int getRowCount() {
 				return 1 + chart.getBars().size() / barsPerLine;
 			}
 			
+                        @Override
 			public void setValueAt(Object value, int row, int col) {
 				int index=row *barsPerLine + col;
 				int n=chart.getBars().size();
@@ -79,6 +83,7 @@ public class ChartPanel extends JPanel implements Observer {
 				chart.setbarAt(index,(String)value);				
 			}
 			
+                        @Override
 			public Object getValueAt(int row, int col) {
 				int index=row *barsPerLine + col;
 				if (index < chart.getBars().size()) {
@@ -141,6 +146,7 @@ public class ChartPanel extends JPanel implements Observer {
 //		g.drawString(chord.name, x + pad, height - pad);
 //	}
 
+        @Override
 	public void update(Observable arg0, Object arg1) {
 		repaint();
 	}

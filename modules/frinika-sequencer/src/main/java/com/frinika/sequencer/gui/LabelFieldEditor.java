@@ -92,6 +92,7 @@ public class LabelFieldEditor extends JPanel {
 			case 3: // length
 				final TimeSelector ts = new TimeSelector(project, (column==0) ? TimeFormat.BAR_BEAT_TICK : TimeFormat.BEAT_TICK);
 				ts.addChangeListener(new ChangeListener() {
+                                        @Override
 					public void stateChanged(ChangeEvent e) {
 						if(isUpdateing) return;
 						Long ticks = ts.getTicks();
@@ -104,6 +105,7 @@ public class LabelFieldEditor extends JPanel {
 			case 2: // velocity/ctrl-value
 				final JSpinner spinner = new JSpinnerDraggable(new SpinnerNumberModel(0, 0, 127, 1));		
 				spinner.addChangeListener(new ChangeListener() {
+                                        @Override
 					public void stateChanged(ChangeEvent e) {
 						if(isUpdateing) return;
 						model.setValueAt(spinner.getValue().toString(), 0, column);			
@@ -117,6 +119,7 @@ public class LabelFieldEditor extends JPanel {
 				ns.setSelectedIndex(128);
 				ns.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						if(isUpdateing) return;
 						int sel = ns.getSelectedIndex();

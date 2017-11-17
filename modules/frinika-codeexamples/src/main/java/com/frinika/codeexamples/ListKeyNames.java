@@ -5,12 +5,16 @@
 package com.frinika.codeexamples;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.Instrument;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
 
@@ -72,7 +76,7 @@ public class ListKeyNames {
             }
             System.out.println(" HIT cntrl-C ");
             Thread.sleep(100000);
-        } catch (Exception ex) {
+        } catch (IOException | IllegalAccessException | IllegalArgumentException | InterruptedException | NoSuchMethodException | SecurityException | InvocationTargetException | InvalidMidiDataException | MidiUnavailableException ex) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex1) {

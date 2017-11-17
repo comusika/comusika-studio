@@ -63,6 +63,7 @@ public class PropertiesEditor extends JPanel implements TableModelListener {
         return properties;
     }
     
+    @Override
     public void tableChanged(TableModelEvent e) {
         int index = e.getFirstRow();
         String key = propertiesTable.getModel().getValueAt(index, 0).toString();
@@ -84,10 +85,12 @@ public class PropertiesEditor extends JPanel implements TableModelListener {
                 false, true
             };
 
+            @Override
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }

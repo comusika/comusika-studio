@@ -38,7 +38,7 @@ public abstract class ListenerSupport<L, E> {
     
     /** Creates a new instance */
     public ListenerSupport() {
-        l = new HashSet<L>();
+        l = new HashSet<>();
     }
     
     public void addListener(L listener) {

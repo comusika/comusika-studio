@@ -101,6 +101,7 @@ public class BufferedPlayback implements Runnable {
 		thread = null;
 	}
 	
+        @Override
 	public void run()
 	{
 
@@ -205,6 +206,7 @@ public class BufferedPlayback implements Runnable {
 			
 		}
 
+                @Override
 		public void work(int bufSize) {
 			read(bytebuffer);
 			
@@ -224,6 +226,7 @@ public class BufferedPlayback implements Runnable {
 			outputprocess.processAudio(buffer);
 		}
 
+                @Override
 		public void setEnabled(boolean b) {
 			// TODO Auto-generated method stub
 			

@@ -34,7 +34,7 @@ public class Tools {
 	public static Vector<MidiPart> splitParts(Vector<MidiPart> selected,
 			long ticksPerBeat) {
 		
-		Vector<MidiPart> newParts = new Vector<MidiPart>();
+		Vector<MidiPart> newParts = new Vector<>();
 
 		for (MidiPart part : selected) {
 

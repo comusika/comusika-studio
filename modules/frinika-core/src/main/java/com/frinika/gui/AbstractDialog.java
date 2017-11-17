@@ -112,6 +112,7 @@ public class AbstractDialog extends JDialog {
         final String ESC_CANCEL = "esc-cancel";
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL);
         getRootPane().getActionMap().put(ESC_CANCEL, new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent event) {
                 cancel();
             }
@@ -175,6 +176,7 @@ public class AbstractDialog extends JDialog {
     		this(button, panel, false);
     	}
     	
+            @Override
 		public void actionPerformed(ActionEvent e) {
 			setOpen( ! isOpen() );
 		}

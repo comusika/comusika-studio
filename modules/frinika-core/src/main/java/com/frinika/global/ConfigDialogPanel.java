@@ -109,7 +109,9 @@ public class ConfigDialogPanel extends JPanel {
     private void refreshMidiInDevicesList() {
         final List<String> v = FrinikaConfig.getMidiInDeviceList();
         listInputDevices.setModel(new javax.swing.AbstractListModel() {
+            @Override
             public int getSize() { return v.size(); }
+            @Override
             public Object getElementAt(int i) { return v.get(i); }
         });
     }
@@ -233,6 +235,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonStopOutputDevice.setText("Stop");
         buttonStopOutputDevice.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonStopOutputDeviceActionPerformed(evt);
             }
@@ -358,6 +361,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonMeasureLatency.setText("Measure latency...");
         buttonMeasureLatency.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonMeasureLatencyActionPerformed(evt);
             }
@@ -446,6 +450,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonAddInputDevice.setText("Add");
         buttonAddInputDevice.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAddInputDeviceActionPerformed(evt);
             }
@@ -458,6 +463,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonRemoveInputDevice.setText("Remove");
         buttonRemoveInputDevice.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonRemoveInputDeviceActionPerformed(evt);
             }
@@ -544,6 +550,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonPickFontTextLane.setText("Pick Font...");
         buttonPickFontTextLane.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickFontTextLaneActionPerformed(evt);
             }
@@ -589,6 +596,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonPickGroovePatternsDirectory.setText("Pick Directory...");
         buttonPickGroovePatternsDirectory.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickGroovePatternsDirectoryActionPerformed(evt);
             }
@@ -620,6 +628,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonPickScriptsDirectory.setText("Pick Directory...");
         buttonPickScriptsDirectory.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickScriptsDirectoryActionPerformed(evt);
             }
@@ -654,6 +663,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonPickAudioDirectory.setText("Pick Directory...");
         buttonPickAudioDirectory.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickAudioDirectoryActionPerformed(evt);
             }
@@ -689,6 +699,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonPickSoundFontDirectory.setText("Pick Directory...");
         buttonPickSoundFontDirectory.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickSoundFontDirectoryActionPerformed(evt);
             }
@@ -724,6 +735,7 @@ public class ConfigDialogPanel extends JPanel {
 
         buttonPickPatchNameDirectory.setText("Pick Directory...");
         buttonPickPatchNameDirectory.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickDefaultPatchNameActionDirectoryPerformed(evt);
             }
@@ -762,6 +774,7 @@ public class ConfigDialogPanel extends JPanel {
        
         buttonPickDefaultSoundFont.setText("Pick default Soundfont...");
         buttonPickDefaultSoundFont.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPickDefaultSoundFontActionPerformed(evt);
             }

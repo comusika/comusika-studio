@@ -53,9 +53,9 @@ public abstract class VoiceServer
     private long frameBufferPos = 0;
     private boolean isRealtime = true;
     
-    protected Vector<Voice> audioOutputGenerators = new Vector<Voice>();
-    Vector<Voice> removedTransmitters = new Vector<Voice>();
-    Vector<Voice> addedTransmitters = new Vector<Voice>();
+    protected Vector<Voice> audioOutputGenerators = new Vector<>();
+    Vector<Voice> removedTransmitters = new Vector<>();
+    Vector<Voice> addedTransmitters = new Vector<>();
 
     /**
      * Returns the current sample rate

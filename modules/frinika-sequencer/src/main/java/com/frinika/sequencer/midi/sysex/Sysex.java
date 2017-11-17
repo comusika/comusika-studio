@@ -47,6 +47,7 @@ import javax.sound.midi.InvalidMidiDataException;
  */
 public class Sysex extends AbstractSysexMacro {
 
+        @Override
 	public byte[] parse(String s) throws InvalidMidiDataException {
 		String[] w = Toolbox.splitWords(s);
 		// allow name of macro "sysex" to miss, as this is ray data
@@ -58,6 +59,7 @@ public class Sysex extends AbstractSysexMacro {
 		return parse(w);
 	}
 	
+        @Override
 	public byte[] parse(String[] args) throws InvalidMidiDataException {
 		byte[] data = new byte[args.length];
 		for (int i = 0; i < args.length; i++) {

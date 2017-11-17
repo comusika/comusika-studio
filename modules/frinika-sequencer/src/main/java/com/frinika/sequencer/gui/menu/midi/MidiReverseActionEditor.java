@@ -53,6 +53,7 @@ class MidiReverseActionEditor extends JPanel implements OptionsEditor {
     // in dialogs - this is deprecated
     // Instead: refresh / update via interface OptionsEditor
     
+    @Override
     public void refresh() {
         notesCheckBox.setSelected(action.notes);
         startsCheckBox.setSelected(action.starts);
@@ -64,6 +65,7 @@ class MidiReverseActionEditor extends JPanel implements OptionsEditor {
         mirrorQuarterCheckBox.setSelected(action.mirrorQuarter);
     }
     
+    @Override
     public void update() {
         action.notes = notesCheckBox.isSelected();
         action.starts = startsCheckBox.isSelected();

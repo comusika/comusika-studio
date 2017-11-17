@@ -21,11 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 public class AudioFlags {
-	final static int OVERFLOW=-1;
-	final static int EOF=2;
-	public static final int INTERRUPTED = 20;
+
+    final static int OVERFLOW = -1;
+    final static int EOF = 2;
+    public static final int INTERRUPTED = 20;
 }

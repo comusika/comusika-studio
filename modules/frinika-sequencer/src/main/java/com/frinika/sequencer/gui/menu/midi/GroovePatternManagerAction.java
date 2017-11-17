@@ -44,6 +44,7 @@ public class GroovePatternManagerAction extends AbstractAction {
 		this.frame = frame;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		GroovePatternManagerDialog.showDialog(frame);
 	}

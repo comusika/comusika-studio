@@ -42,6 +42,7 @@ public class SampleMapTableModel extends AbstractTableModel {
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
+        @Override
 	public int getRowCount() {
 		return 96;
 	}
@@ -49,6 +50,7 @@ public class SampleMapTableModel extends AbstractTableModel {
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableModel#getColumnCount()
 	 */
+        @Override
 	public int getColumnCount() {
 		return 128;
 	}
@@ -56,6 +58,7 @@ public class SampleMapTableModel extends AbstractTableModel {
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
+        @Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		if(columnIndex == 0)
 		{
@@ -75,6 +78,7 @@ public class SampleMapTableModel extends AbstractTableModel {
 	/* (non-Javadoc)
 	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
 	 */
+        @Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		sampler.insertSample((SampledSoundSettings)aValue,96-rowIndex,128-columnIndex);
 		super.setValueAt(aValue, rowIndex, columnIndex);

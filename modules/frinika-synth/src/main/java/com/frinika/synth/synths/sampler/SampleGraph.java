@@ -42,6 +42,7 @@ public class SampleGraph extends JPanel {
 		this.samples = samples;
 	}
 
+        @Override
 	public void paint(Graphics g)
 	{
 		Graphics2D g2d = (Graphics2D)g;

@@ -56,6 +56,7 @@ public class PitchBendEvent extends ChannelEvent {
     /**
      * @return Returns the value.
      */
+    @Override
     public int getValue() {
         return value;
     }
@@ -63,6 +64,7 @@ public class PitchBendEvent extends ChannelEvent {
     /**
      * @param value The value to set.
      */
+    @Override
     public void setValue(int value) {
         this.value = value;
     }
@@ -70,6 +72,7 @@ public class PitchBendEvent extends ChannelEvent {
     /**
      * @return Returns the value for UI.
      */
+    @Override
     public int getValueUI() {
         return value-8192;
     }
@@ -77,6 +80,7 @@ public class PitchBendEvent extends ChannelEvent {
     /**
      * @param value The value to set UI version
      */
+    @Override
     public void setValueUI(int value) {
         this.value = value+8192;
     }
@@ -112,6 +116,7 @@ public class PitchBendEvent extends ChannelEvent {
         zombie=false;
     }
 
+    @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		PitchBendEvent evt = (PitchBendEvent)object;
 		this.part = evt.part;

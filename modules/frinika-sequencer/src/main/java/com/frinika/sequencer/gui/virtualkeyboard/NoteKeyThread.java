@@ -44,7 +44,7 @@ public class NoteKeyThread extends Thread {
     
     NoteKeyThread[] noteKeyThreads;
     
-    Vector<KeyEvent> keyEvents = new Vector<KeyEvent>();
+    Vector<KeyEvent> keyEvents = new Vector<>();
     
     public NoteKeyThread(NoteKeyThread[] noteKeyThreads,Receiver receiver, int noteNumber, int channel, int velocity)
     {
@@ -64,6 +64,7 @@ public class NoteKeyThread extends Thread {
         notify();
     }
     
+    @Override
     public synchronized void run()
     {
         boolean keepPlay = true;
@@ -84,7 +85,8 @@ public class NoteKeyThread extends Thread {
                 else
                     keepPlay = true;
                 keyEvents.remove(0);
-                try{ wait(10); } catch(Exception ex) {};
+                try{ wait(10); } catch(InterruptedException ex) {}
+;
             }
             while(keyEvents.size()>0);
         }

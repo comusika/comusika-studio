@@ -65,20 +65,23 @@ public class TextLane extends Lane {
 		return part;
 	}
 	
+        @Override
 	public Selectable deepCopy(Selectable parent) {
 		return null;
 	}
 
+        @Override
 	public void deepMove(long tick) {
 		// TODO Auto-generated method stub
 	}
 
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 
 	}
 
 	public String getAllText(String delim) {
-		ArrayList<String> l = new ArrayList<String>();
+		ArrayList<String> l = new ArrayList<>();
 		for (Part p : getParts()) {
 			String s = ((TextPart)p).getText().trim();
 			l.add(s);
@@ -131,7 +134,7 @@ public class TextLane extends Lane {
 
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		in.defaultReadObject();
-		changeListeners = new ArrayList<ChangeListener>();
+		changeListeners = new ArrayList<>();
 	}
 
 	@Override

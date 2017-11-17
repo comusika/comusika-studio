@@ -115,6 +115,7 @@ public class PadPanel extends JPanel implements MouseListener,
 		return new Key(x, y, width, height, num);
 	}
 
+        @Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -199,6 +200,7 @@ public class PadPanel extends JPanel implements MouseListener,
 		}
 	}// End class Key
 
+        @Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 
 		yScroll = e.getValue();
@@ -218,6 +220,7 @@ public class PadPanel extends JPanel implements MouseListener,
 		return padIF.getKey(p);
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
             if (padIF == null) return;
 		prevKey = getKey(e.getPoint());
@@ -257,13 +260,14 @@ public class PadPanel extends JPanel implements MouseListener,
 				name = string;
 			}
 
+                        @Override
 			public String toString() {
 				return name;
 			}
 		}
 		;
 
-		Vector<XXX> vec = new Vector<XXX>();
+		Vector<XXX> vec = new Vector<>();
 		XXX xx = null;
 		XXX zz = null;
 		for (int i = 0; i < keyNames.length; i++) {
@@ -280,6 +284,7 @@ public class PadPanel extends JPanel implements MouseListener,
 		list.addListSelectionListener(new ListSelectionListener() {
 			int zzz = -1;
 
+                        @Override
 			public void valueChanged(ListSelectionEvent e) {
 				int jj = ((XXX) list.getSelectedValue()).key;
 				midiLane.setDrumMapping(key.kNum, jj);
@@ -301,6 +306,7 @@ public class PadPanel extends JPanel implements MouseListener,
 
 	}
 
+        @Override
 	public void mouseReleased(MouseEvent e) {
 		if (prevKey != null) {
 			prevKey.off();
@@ -308,6 +314,7 @@ public class PadPanel extends JPanel implements MouseListener,
 		}
 	}
 
+        @Override
 	public void mouseExited(MouseEvent e) {
 		if (prevKey != null) {
 			prevKey.off();
@@ -316,9 +323,11 @@ public class PadPanel extends JPanel implements MouseListener,
 		}
 	}
 
+        @Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
+        @Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
@@ -338,6 +347,7 @@ public class PadPanel extends JPanel implements MouseListener,
 
 		int noteItemHeight;
 
+                @Override
 		public void resizeKeys() {
 
 			noteItemHeight = Layout.getNoteItemHeight();
@@ -350,6 +360,7 @@ public class PadPanel extends JPanel implements MouseListener,
 			validate();
 		}
 
+                @Override
 		public void paintComponent(Graphics g) {
 
 			if (noteItemHeight != Layout.getNoteItemHeight())
@@ -394,6 +405,7 @@ public class PadPanel extends JPanel implements MouseListener,
 
 		}
 
+                @Override
 		public Key getKey(Point point) {
 			point.translate(0, -timePanelHeight + yScroll);
 			for (Key key : keys) {
@@ -417,9 +429,9 @@ public class PadPanel extends JPanel implements MouseListener,
 //
 //		final Color pink = new Color(255, 175, 175);
 
-		Vector<Key> blackKeys = new Vector<Key>();
+		Vector<Key> blackKeys = new Vector<>();
 
-		Vector<Key> whiteKeys = new Vector<Key>();
+		Vector<Key> whiteKeys = new Vector<>();
 
 		final int nWhiteNote = (nNote / 12) * 7 + 5;
 
@@ -431,6 +443,7 @@ public class PadPanel extends JPanel implements MouseListener,
 
 		int noteItemHeight;
 
+                @Override
 		public void resizeKeys() {
 
 			blackKeys.clear();
@@ -507,6 +520,7 @@ public class PadPanel extends JPanel implements MouseListener,
 		}
 	
 		
+                @Override
 		public void paintComponent(Graphics g) {
 
 			if (noteItemHeight != Layout.getNoteItemHeight())
@@ -564,6 +578,7 @@ public class PadPanel extends JPanel implements MouseListener,
 
 		}
 
+                @Override
 		public Key getKey(Point point) {
 			point.translate(0, -timePanelHeight + yScroll);
 			for (Key key : blackKeys) {
@@ -588,6 +603,7 @@ public class PadPanel extends JPanel implements MouseListener,
 
 	
 	
+        @Override
 	public void selectionChanged(SelectionContainer<? extends Part> src) {
 		
 		Part focus = pianoRoll.getProjectContainer().getPartSelection().getFocus();

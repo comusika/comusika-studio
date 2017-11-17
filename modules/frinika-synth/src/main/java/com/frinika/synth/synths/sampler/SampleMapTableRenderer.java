@@ -52,6 +52,7 @@ public class SampleMapTableRenderer extends Component implements TableCellRender
 	/* (non-Javadoc)
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 	 */
+        @Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		if(isSelected)
@@ -99,11 +100,13 @@ public class SampleMapTableRenderer extends Component implements TableCellRender
 		}
 	}
 	
+        @Override
 	public void update(Graphics g)
 	{
 		paint(g);
 	}
 	
+        @Override
 	public void paint(Graphics g)
 	{
 		int width = getWidth();

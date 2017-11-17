@@ -58,8 +58,8 @@ public class MidiEventRouter implements MidiFilter {
      */
     MidiEventRouter() {
 //        this.dev = dev;
-        map = new HashMap<Long, ControlMapper>();
-        controlToHash = new HashMap<Control, Long>();
+        map = new HashMap<>();
+        controlToHash = new HashMap<>();
         learning = false;
     }
 
@@ -86,6 +86,7 @@ public class MidiEventRouter implements MidiFilter {
      * @param stamp  time stamp
      * @return  true if the event was found in the map and used
      */
+    @Override
     public boolean consume(MidiMessage mess, long stamp) {
 
         if (mess.getStatus() >= ShortMessage.MIDI_TIME_CODE) {

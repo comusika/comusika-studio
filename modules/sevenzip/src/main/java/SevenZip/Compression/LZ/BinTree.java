@@ -51,6 +51,7 @@ public class BinTree extends InWindow
 
 	
 
+        @Override
 	public void Init() throws IOException
 	{
 		super.Init();
@@ -60,6 +61,7 @@ public class BinTree extends InWindow
 		ReduceOffsets(-1);
 	}
 	
+        @Override
 	public void MovePos() throws IOException
 	{
 		if (++_cyclicBufferPos >= _cyclicBufferSize)

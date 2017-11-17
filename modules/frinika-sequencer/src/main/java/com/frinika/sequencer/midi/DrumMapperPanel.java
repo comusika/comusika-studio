@@ -53,6 +53,7 @@ public class DrumMapperPanel extends JPanel {
 	//	addComponentListener(this);
 	}
 
+        @Override
 	public Dimension getPreferredSize() {
 		return new Dimension(inPiano.getPreferredSize());
 		
@@ -65,6 +66,7 @@ public class DrumMapperPanel extends JPanel {
 
 		}
 
+                @Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Point inO = inPiano.getLocation();

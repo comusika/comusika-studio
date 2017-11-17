@@ -21,12 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 public interface FFTSpectrumClient {
 
-	public void process(double[] spectrum,int nBin);
-	public void setSize(int sizeInChunks, int nBin, float freq[], double dt); 
+    public void process(double[] spectrum, int nBin);
 
+    public void setSize(int sizeInChunks, int nBin, float freq[], double dt);
 }

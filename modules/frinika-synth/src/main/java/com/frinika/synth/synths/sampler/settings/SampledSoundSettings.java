@@ -54,6 +54,7 @@ public interface SampledSoundSettings {
         public void setSampleRate(int sampleRate);
         public int getScaleTune();
         public void setScaleTune(int scaleTune);
+        @Override
         public String toString();
         public void setExclusiveClass(int exclusiveClass);
         public int getExclusiveClass();       

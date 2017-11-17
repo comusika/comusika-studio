@@ -60,17 +60,21 @@ public class TextLaneView extends LaneView implements ChangeListener {
 		lane.addChangeListener(this);
 	}
 	
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		refreshFromTrack();
 	}
 
+        @Override
 	protected void makeButtons() {
 		this.setLayout(new BorderLayout());
 		editor = new JEditorPane();
 		editor.addFocusListener(new FocusAdapter(){
+                @Override
 			public void focusGained(FocusEvent e) {
 				textBackup = getTextNormalized();
 			}
+                @Override
 			public void focusLost(FocusEvent e) {
 				final String text = getTextNormalized();
 				assert (textBackup != null); // rely on swing to always fire focusGained before focusLost
@@ -79,11 +83,13 @@ public class TextLaneView extends LaneView implements ChangeListener {
 					textBackup = text;
 					project.getEditHistoryContainer().mark(getMessage("sequencer.project.edit_text_lane"));
 					EditHistoryAction action = new EditHistoryAction() { // undo editing the whole text in textlaneview
+                            @Override
 						public void redo() {
 							editor.setText(text);
 							updateToTrack();
 						}
 						
+                            @Override
 						public void undo() {
 							editor.setText(localTextBackup);
 							updateToTrack();
@@ -111,11 +117,13 @@ public class TextLaneView extends LaneView implements ChangeListener {
 			if (!oldtext.equals(text.trim())) {
 				project.getEditHistoryContainer().mark(getMessage("sequencer.project.edit_text_lane"));
 				EditHistoryAction action = new EditHistoryAction() { // undo editing an individual TextPart
+                                        @Override
 					public void redo() {
 						editor.setText(text);
 						updateToTrack();
 					}
 					
+                                        @Override
 					public void undo() {
 						editor.setText(oldtext);
 						updateToTrack();

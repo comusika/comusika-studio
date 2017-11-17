@@ -136,7 +136,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
 
             lineOut.start();
             System.out.println("Buffersize: "+bufferSize+" / "+lineOut.getBufferSize());
-        } catch (Exception e) {
+        } catch (LineUnavailableException e) {
             lineOut = null;
             System.out.println("No audio output available. Use Audio Devices dialog to reconfigure.");
         }
@@ -161,6 +161,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
         }
 	}
 	
+        @Override
 	public void run()
 	{	
 		try
@@ -230,13 +231,14 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
                 cpuMeter.setCpuPercent((int)(((float)(endTimeNanos - startTimeNanos) / (float)totalTimeNanos) * 100));
             }
 		}
-		catch(Exception e)
+		catch(InterruptedException e)
 		{
 			e.printStackTrace();
 		}
 		hasStopped = true;
 	}
 
+        @Override
     public void configureAudioOutput(JFrame frame)
     {
         JDialog dialog = new JDialog(frame,"Audio devices");
@@ -244,7 +246,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
 
         
         Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
-        Vector<Mixer.Info> validMixerInfos = new Vector<Mixer.Info>();
+        Vector<Mixer.Info> validMixerInfos = new Vector<>();
         
         for(Mixer.Info mixerInfo : mixerInfos)
         {
@@ -266,6 +268,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
     
         class LatencyListener implements ChangeListener {
             int bufferSize = 0;
+                @Override
             public void stateChanged(ChangeEvent e) {
                 bufferSize = ((int)(sl.getValue() / 64))*64;
              
@@ -283,6 +286,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
         ultraLowLatencyCheckBox.setToolTipText("If you set a low latency (typical below 1024) above, you might need to turn this on as well. ");
         ultraLowLatencyCheckBox.addItemListener(new ItemListener() {
 
+                @Override
             public void itemStateChanged(ItemEvent evt) {
                 ultraLowLatency = ultraLowLatencyCheckBox.isSelected();
                 useEstimatedFramePosCheckBox.setEnabled(!standardLatency & ultraLowLatency);                
@@ -293,6 +297,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
         useEstimatedFramePosCheckBox.setToolTipText("On some systems Frinika does a better estimation of the audio position, on others not... ");
         useEstimatedFramePosCheckBox.addItemListener(new ItemListener() {
 
+                @Override
             public void itemStateChanged(ItemEvent evt) {
             		useEstimatedFramePos = useEstimatedFramePosCheckBox.isSelected();
             		
@@ -305,6 +310,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
         standardLatencyCheckBox.setToolTipText("This is the standard javasound method for latency control, may be good on some systems - but not on others.. ");
         standardLatencyCheckBox.addItemListener(new ItemListener() {
 
+                @Override
             public void itemStateChanged(ItemEvent evt) {
                 standardLatency = standardLatencyCheckBox.isSelected();
                 // Cannot use ultra low latency if using standard latency
@@ -317,6 +323,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
         maxPriorityCheckBox.setToolTipText(getMessage("voiceserver.javasound.max_priority.tooltip"));        
         maxPriorityCheckBox.addItemListener(new ItemListener() {
 
+                @Override
             public void itemStateChanged(ItemEvent evt) {
             		maxPriority = maxPriorityCheckBox.isSelected();
             		
@@ -326,6 +333,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
         final JButton applyButton = new JButton("Apply");
         applyButton.addActionListener(new ActionListener() {
 
+                @Override
             public void actionPerformed(ActionEvent e) {
                 try
                 {

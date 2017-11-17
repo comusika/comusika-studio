@@ -37,10 +37,12 @@ public class Organ extends Synth {
         {
             public static final long SerialVersionUID = 1L;
             
+            @Override
             public String getInstrumentName() {
                 return "Organ";
             }
 
+            @Override
             public void setInstrumentName(String instrumentName) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }                    
@@ -59,6 +61,7 @@ public class Organ extends Synth {
 	 * 
 	 * @see javax.sound.midi.MidiChannel#noteOn(int, int)
 	 */
+        @Override
 	public void noteOn(int noteNumber, int velocity) {
 		Oscillator osc = new OrganOscillator(this);
 		osc.setNoteNumber(noteNumber);
@@ -75,6 +78,7 @@ public class Organ extends Synth {
 			super(synth);
 		}
 
+                @Override
 		public void fillBuffer(int startBufferPos, int endBufferPos,
 				float[] buffer) {
 			for (int n = startBufferPos; n < endBufferPos;) {
@@ -109,6 +113,7 @@ public class Organ extends Synth {
 	/**
 	 * 
 	 */
+        @Override
 	public String toString() {
 		//TODO count "ORGAN 1" ETC
 		return "Organ";

@@ -21,14 +21,19 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.model;
 
 public interface DoubleDataSource {
-	public void readNextDouble(double buffer[], int offSet, int nFrame);
-	public int getChannels();
-	public void seekFrame(long pos);
-	public boolean endOfFile();
-	public long getCurrentFrame();
-	public long getLengthInFrames();
+
+    public void readNextDouble(double buffer[], int offSet, int nFrame);
+
+    public int getChannels();
+
+    public void seekFrame(long pos);
+
+    public boolean endOfFile();
+
+    public long getCurrentFrame();
+
+    public long getLengthInFrames();
 }

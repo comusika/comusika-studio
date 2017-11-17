@@ -50,6 +50,7 @@ public class ConfigDialog extends javax.swing.JDialog {
         setLocation(300, 300);
     }
     
+    @Override
     public void show() {
         optionsBinder.refresh();
     	super.show();

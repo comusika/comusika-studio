@@ -35,6 +35,7 @@ public class RectZoomTool extends ToolAdapter {
 		super( cursor);
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		client=(ItemPanel)e.getSource();
 		((JComponent) client).setCursor(null);
@@ -42,6 +43,7 @@ public class RectZoomTool extends ToolAdapter {
 		client.repaint();
 	}
 
+        @Override
 	public void mouseDragged(MouseEvent e) {
 
 		Point p = new Point(e.getX(), e.getY());
@@ -53,6 +55,7 @@ public class RectZoomTool extends ToolAdapter {
 		client.repaint(); 
 	}
 
+        @Override
 	public void mouseReleased(MouseEvent e) {
 		client.zoomRect.mouseRelease(e);
 		client.zoomToRect(client.mapRect(client.zoomRect));

@@ -21,30 +21,24 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.io;
-
 
 import uk.org.toot.audio.core.AudioBuffer;
 
 /**
- * 
  * Interface for audio processes that might block (if data is not ready)
- * 
- * @author Paul John Leonard
  *
+ * @author Paul John Leonard
  */
-public interface BlockableAudioProcess  {
+public interface BlockableAudioProcess {
 
-	/**
-	 * 
-	 * 
-	 * @return length in frames OR zero if the process is still creting data
-	 */
-	int getLengthInFrames();
+    /**
+     * @return length in frames OR zero if the process is still creting data
+     */
+    int getLengthInFrames();
 
-	int getChannels();
+    int getChannels();
 
-	void processAudioBlock(AudioBuffer buffer) throws Exception;
+    void processAudioBlock(AudioBuffer buffer) throws Exception;
 
 }

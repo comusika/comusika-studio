@@ -165,6 +165,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
 	/* (non-Javadoc)
      * @see javax.swing.table.TableModel#getRowCount()
      */
+    @Override
     public int getRowCount() {
     		return (int)((beatCount * sequence.getResolution()) / ticksPerRow);
     }
@@ -172,6 +173,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
     /* (non-Javadoc)
      * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
      */
+    @Override
     public Class< ? > getColumnClass(int columnIndex) {
         if(columnIndex == 0)
             return(Integer.class);
@@ -191,6 +193,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
     /* (non-Javadoc)
      * @see javax.swing.table.AbstractTableModel#getColumnName(int)
      */
+    @Override
     public String getColumnName(int column) {
         if(column!=0)
         {
@@ -205,6 +208,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getColumnCount()
      */
+    @Override
     public int getColumnCount() {
         //System.out.println(columnCount);
         return((columnCount*COLUMNS)+1);
@@ -262,7 +266,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
     	        
                 
                 // Some multievents might have fixed columns, thus we'll reorder the rowEvent set here
-                Vector<MultiEvent> rowEvents = new Vector<MultiEvent>();
+                Vector<MultiEvent> rowEvents = new Vector<>();
                 for(MultiEvent multiEvent : tmpRowEvents)
                 {
                 
@@ -356,6 +360,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
+    @Override
     public Object getValueAt(int row, int columnIndex) {
         if(columnIndex == 0)
         {       
@@ -387,7 +392,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
                             //    long rowTick =(long)(row * ticksPerRow);
                             //    return((relativeTick - rowTick) / ticksPerRow);
                             case COLUMN_CHANNEL:
-                                return(new Integer(event.getChannel()));
+                                return(event.getChannel());
                             case COLUMN_NOTEORCC:
                                 if(event instanceof NoteEvent)
                                     return ((NoteEvent)event).getNoteName();
@@ -490,7 +495,8 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
 	                case COLUMN_TIME:
 	                    final long newTick = (long)(getTickForRow(row) + ((Double)value * ticksPerRow));
 	
-	                    new MultiEventChangeRecorder("move event",me) { public void doChange(MultiEvent me) { me.setStartTick(newTick); } };
+	                    new MultiEventChangeRecorder("move event",me) {@Override
+ public void doChange(MultiEvent me) { me.setStartTick(newTick); } };
 	
 	                    int newRow = getRowForTick(newTick);
 	
@@ -519,6 +525,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
 	                        midiPart.getEditHistoryContainer().notifyEditHistoryListeners();
 	                    } else if (me instanceof NoteEvent) {
 	                        new MultiEventChangeRecorder("change note",me) { 
+                                    @Override
 	                            public void doChange(MultiEvent me) { ((NoteEvent)me).setNote((Integer)value); }};
 	                    } else if (me instanceof SysexEvent) {
 							((SysexEvent)me).showEditorGUI(project);
@@ -528,22 +535,26 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
 	                    if(me instanceof NoteEvent)
 	                    {
 	                        new MultiEventChangeRecorder("change velocity",me) {
-	                            public void doChange(MultiEvent me) {((NoteEvent)me).setVelocity(((Integer)value).intValue());}};
+                                    @Override
+	                            public void doChange(MultiEvent me) {((NoteEvent)me).setVelocity(((Integer)value));}};
 	                    }   
 	                    else if(me instanceof ControllerEvent)
 	                    {
 	                        new MultiEventChangeRecorder("change controller value",me) {
-	                            public void doChange(MultiEvent me) {((ControllerEvent)me).setValue(((Integer)value).intValue());}};
+                                    @Override
+	                            public void doChange(MultiEvent me) {((ControllerEvent)me).setValue(((Integer)value));}};
 	                    }
 	                    else if(me instanceof PitchBendEvent)
 	                    {
 	                        new MultiEventChangeRecorder("change pitchbend value",me) { 
-	                            public void doChange(MultiEvent me) {((PitchBendEvent)me).setValue(((Integer)value).intValue() << 7);}};
+                                    @Override
+	                            public void doChange(MultiEvent me) {((PitchBendEvent)me).setValue(((Integer)value) << 7);}};
 	                    }
 	                    break;
 	                case COLUMN_LEN:                    
 	                    if(me instanceof NoteEvent)
 	                        new MultiEventChangeRecorder("change duration",me) { 
+                                    @Override
 	                            public void doChange(MultiEvent me) {((NoteEvent)me).setDuration((long)((Double)value * ticksPerRow));}};
 	                    break;
 	            }
@@ -559,6 +570,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
     /* (non-Javadoc)
      * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
      */
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         
         if(columnIndex != 0)
@@ -567,6 +579,7 @@ public class TrackerTableModel extends AbstractTableModel implements EditHistory
             return(false);
     }
 
+    @Override
     public void fireSequenceDataChanged(EditHistoryAction[] edithistoryActions) {
     		
         if(edithistoryActions.length>0 && edithistoryActions[0] instanceof MovePartEditAction && ((MovePartEditAction)edithistoryActions[0]).getPart()==midiPart)

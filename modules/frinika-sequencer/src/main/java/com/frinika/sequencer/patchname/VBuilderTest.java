@@ -43,11 +43,11 @@ public class VBuilderTest {
 		PatchNameMap b = null;
 		try {
 			b = new PatchNameMap(new FileInputStream(file));
-			FileOutputStream fos = new FileOutputStream(oFile);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(b);
-			oos.close();
-			fos.close();
+                    try (FileOutputStream fos = new FileOutputStream(oFile)) {
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(b);
+                        oos.close();
+                    }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,20 +59,17 @@ public class VBuilderTest {
 		try {
 			fis = new FileInputStream(oFile);
 
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			c = (PatchNameMap) ois.readObject();
-			ois.close();
+                try (ObjectInputStream ois = new ObjectInputStream(fis)) {
+                    c = (PatchNameMap) ois.readObject();
+                }
 			fis.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+                }
 		printDB(c.getList(), 0);
 		
 		// Vector<Vector<NameObject>> lists=b.getListOfLists("Tweet");

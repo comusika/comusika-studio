@@ -91,6 +91,7 @@ public class JSpinnerDraggable extends JSpinner implements MouseMotionListener {
 	
 	
 
+        @Override
 	public void mouseDragged(MouseEvent e) {
 		System.out.println(e.getY());
 		int y = e.getY();
@@ -114,6 +115,7 @@ public class JSpinnerDraggable extends JSpinner implements MouseMotionListener {
 		}
 	}
 
+        @Override
 	public void mouseMoved(MouseEvent e) {
 		// nop
 	}

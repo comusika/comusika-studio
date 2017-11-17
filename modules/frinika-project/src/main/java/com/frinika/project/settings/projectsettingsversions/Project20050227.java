@@ -40,24 +40,28 @@ public class Project20050227 implements ProjectSettings,Serializable {
     /**
      * @return Returns the sequence.
      */
+    @Override
     public byte[] getSequence() {
         return sequence;
     }
     /**
      * @param sequence The sequence to set.
      */
+    @Override
     public void setSequence(byte[] sequence) {
         this.sequence = sequence;
     }
     /**
      * @return Returns the synthSettings.
      */
+    @Override
     public SynthSettings getSynthSettings() {
         return synthSettings;
     }
     /**
      * @param synthSettings The synthSettings to set.
      */
+    @Override
     public void setSynthSettings(SynthSettings synthSettings) {
         this.synthSettings = synthSettings;
     }

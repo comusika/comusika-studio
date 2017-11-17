@@ -31,6 +31,7 @@ import javax.swing.filechooser.FileFilter;
  *
  */
 public class MidiFileFilter extends FileFilter {
+                @Override
 		public boolean accept(File f) {
 			
 			if(f.getName().toLowerCase().indexOf(".mid")>0 || f.isDirectory())
@@ -39,6 +40,7 @@ public class MidiFileFilter extends FileFilter {
 				return false;
 		}
 
+                @Override
 		public String getDescription() {
 			return "Standard Midi File";
 		}

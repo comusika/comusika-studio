@@ -72,7 +72,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     //private boolean autoRecord = false;
     private boolean bufferDirty = false;
     private MidiLane monitoredLane = null; // reference for attaching this as MidiMessageListener
-    private Collection<Integer> currentlyPressedNotes = new HashSet<Integer>();
+    private Collection<Integer> currentlyPressedNotes = new HashSet<>();
     private AutoRecordThread autoRecordThread = null;
     
     /** Creates new form MidiStepRecordActionDialog */
@@ -85,6 +85,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         positionTimeSelector = new TimeSelector(project, TimeFormat.BAR_BEAT_TICK);
         stepTimeSelector = new TimeSelector(project, TimeFormat.NOTE_LENGTH, true);
         stepTimeSelector.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
             	MidiStepRecordActionDialog.this.action.step = stepTimeSelector.getTicks();
             }
@@ -119,6 +120,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         refresh();
     }
 
+    @Override
     public void refresh() {
         action.position = project.getSequencer().getTickPosition();
         stepTimeSelector.setTicks(action.step);
@@ -146,6 +148,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         }
     }
     
+    @Override
     public void update() {
         action.step = stepTimeSelector.getTicks();
         action.position = positionTimeSelector.getTicks();
@@ -191,6 +194,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     /**
      * Implementation of MidiMessageListener.midiMessage()
      */
+    @Override
     public void midiMessage(MidiMessage message) {
     	if (message instanceof ShortMessage) {
             ShortMessage shm = (ShortMessage)message;
@@ -222,15 +226,18 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     	}
     }
     
+    @Override
     public void selectionChanged(SelectionContainer selection) {
     	refreshPart(); // to replug input device if necessary
     }
     
+    @Override
     public void notifyTickPosition(long tick) {
         action.position = tick;
         positionTimeSelector.setTicks(tick);
     }
     
+    @Override
     public boolean requiresNotificationOnEachTick() {
         return false;
     }
@@ -246,7 +253,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     
     public void addToBuffer(String s) {
         String buffer = getBuffer();
-        if ( buffer.toLowerCase().indexOf( s.toLowerCase() ) == -1 ) { // not yet there
+        if ( !buffer.toLowerCase().contains(s.toLowerCase()) ) { // not yet there
             if (buffer.length() > 0) {
                 buffer += " ";
             }

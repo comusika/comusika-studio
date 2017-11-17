@@ -101,6 +101,7 @@ public class AudioInOut {
 
         audioServer.setClient(new AudioClient() {
 
+            @Override
             public void work(int arg0) {
                 chunk.makeSilence();
                 input.processAudio(chunk);
@@ -109,6 +110,7 @@ public class AudioInOut {
                 buffer.in.processAudio(chunk);
             }
 
+            @Override
             public void setEnabled(boolean arg0) {
                 //  throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -118,6 +120,7 @@ public class AudioInOut {
 
         Timer timer = new Timer(50, new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent ae) {
 
                 updateMeters();

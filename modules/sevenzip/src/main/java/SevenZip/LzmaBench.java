@@ -122,14 +122,17 @@ public class LzmaBench
 		{ 
 			return CRC.GetDigest(); 
 		}
+                @Override
 		public void write(byte[] b)
 		{
 			CRC.Update(b);
 		}
+                @Override
 		public void write(byte[] b, int off, int len)
 		{
 			CRC.Update(b, off, len);
 		}
+                @Override
 		public void write(int b)
 		{
 			CRC.UpdateByte(b);
@@ -153,6 +156,7 @@ public class LzmaBench
 			_pos = 0; 
 		}
 		
+                @Override
 		public void write(int b) throws IOException
 		{
 			if (_pos >= _size)
@@ -178,11 +182,13 @@ public class LzmaBench
 			_size = size;
 		}
 		
+                @Override
 		public void reset()
 		{ 
 			_pos = 0; 
 		}
 		
+                @Override
 		public int read()
 		{
 			if (_pos >= _size)
@@ -198,6 +204,7 @@ public class LzmaBench
 		public long Time;
 		public void Init()
 		{ InSize = 0; }
+                @Override
 		public void SetProgress(long inSize, long outSize)
 		{
 			if (inSize >= ApprovedStart && InSize == 0)

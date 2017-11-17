@@ -65,6 +65,7 @@ public class DrumMapperGUI extends JPanel  {
 		setMap = new JButton(" -- assign key --> ");
 		setMap.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent arg0) {
 				int in=inPiano.getLastKeytPress();
 				int out=outPiano.getLastKeytPress();
@@ -114,12 +115,14 @@ public class DrumMapperGUI extends JPanel  {
 		// ------------------------------------------------------------------------------------
 
 		ListProvider resource = new ListProvider() {
+                        @Override
 			public Object[] getList() {
 				return proj.getMidiDeviceDescriptors().toArray();// midiResource.getMidiOutList();
 			}
 		};
 
 		PopupClient client = new PopupClient() {
+                        @Override
 			public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
 				dm.setDefaultMidiDevice(
 						((MidiDeviceDescriptorIntf) o).getMidiDevice());

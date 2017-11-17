@@ -45,6 +45,7 @@ public class E70req extends E70SysexMacroAbstract {
 	 * arg[0]: address
 	 * arg[1]: size
 	 */
+        @Override
 	public byte[] parse(int[] args) {
 		int address = args[0];
 		int size = args[1];

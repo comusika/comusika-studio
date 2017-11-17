@@ -15,6 +15,7 @@ public class EditHistoryContainerTest extends TestCase {
     MidiPart part;
     AbstractSequencerProjectContainer proj;
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         

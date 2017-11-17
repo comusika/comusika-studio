@@ -46,7 +46,7 @@ public class FrinikaRenderer implements SequencerListener {
 	AbstractSequencerProjectContainer project;
 	FrinikaSequencer seqr;
 	
-	ArrayList<FrinikaDeviceRenderer> deviceRenderers = new ArrayList<FrinikaDeviceRenderer>();
+	ArrayList<FrinikaDeviceRenderer> deviceRenderers = new ArrayList<>();
 	
 	public FrinikaDeviceRenderer getDeviceRenderer(MidiDevice mididevice)
 	{
@@ -100,6 +100,7 @@ public class FrinikaRenderer implements SequencerListener {
 		
 	}
 	
+        @Override
 	public void beforeStart() {
 		
 		if(started) return;
@@ -126,7 +127,7 @@ public class FrinikaRenderer implements SequencerListener {
         else
         	tracks = seq.getFrinikaTrackWrappers();
         
-        HashSet<MidiDevice> supress_candidates = new HashSet<MidiDevice>();
+        HashSet<MidiDevice> supress_candidates = new HashSet<>();
 		
 		for(FrinikaTrackWrapper track : tracks)
 		if(track.getMidiDevice() != null)
@@ -189,11 +190,13 @@ public class FrinikaRenderer implements SequencerListener {
 						
 	}
 
+        @Override
 	public void start() {		
 		for(FrinikaDeviceRenderer render : deviceRenderers)
 			render.start();
 	}
 
+        @Override
 	public void stop() {		
 		if(!started) return;
 		started = false;

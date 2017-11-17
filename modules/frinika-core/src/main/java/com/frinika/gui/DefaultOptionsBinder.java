@@ -236,6 +236,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 	 * Refreshes the GUI so that it reflects the model's current state.
 	 */
 	
+        @Override
 	public void refresh() {
 		for (Map.Entry<Field, Object> e : bindMap.entrySet()) {
 			Field field = e.getKey();
@@ -260,6 +261,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 	/**
 	 * Updates the model so that it contains the values set by the user
 	 */
+        @Override
 	public void update() {
 		for (Map.Entry<Field, Object> e : bindMap.entrySet()) {
 			Field field = e.getKey();
@@ -288,8 +290,9 @@ public class DefaultOptionsBinder implements OptionsBinder {
 	}
 	
 	
+        @Override
 	public void backup() {
-		back  = new HashMap<Field, Object>();;
+		back  = new HashMap<>();;
 		for (Field f : bindMap.keySet()) {
 			try {
 				back.put(f, f.get(bindInstance));
@@ -299,6 +302,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 		}
 	}
 
+        @Override
 	public void restore() {
 		for (Field f : bindMap.keySet()) {
 			Object o = back.get(f);
@@ -339,10 +343,12 @@ public class DefaultOptionsBinder implements OptionsBinder {
 			
 		}
 		
+                @Override
 		Object getValue() {
 			return textfield.getText();
 		}
 		
+                @Override
 		void setValue(Object o) {
 			textfield.setText(o.toString());
 		}
@@ -365,6 +371,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 			}
 		}
 		
+                @Override
 		Object getValue() {
 			if (spinner != null) {
 				return spinner.getValue();
@@ -373,6 +380,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 			}
 		}
 		
+                @Override
 		void setValue(Object o) {
 			if (spinner != null) {
 				spinner.setValue(o);
@@ -409,6 +417,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 			
 		}
 		
+                @Override
 		Object getValue() {
 			if (combobox != null) {
 				return combobox.getSelectedItem();
@@ -419,6 +428,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 			}
 		}
 		
+                @Override
 		void setValue(Object value) {
 			if (combobox != null) {
 				combobox.setSelectedItem(value);
@@ -477,6 +487,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 		}
 		
 			
+                @Override
 		Object getValue() {
 			if (checkbox != null) {
 				return checkbox.isSelected();
@@ -485,6 +496,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 			}
 		}
 		
+                @Override
 		void setValue(Object o) {
 			boolean b = FrinikaConfig.isTrue(o);
 			if (checkbox != null) {

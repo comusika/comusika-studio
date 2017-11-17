@@ -42,6 +42,7 @@ public class PasteAction extends AbstractAction {
 	}
 
 	@SuppressWarnings("unchecked")
+    @Override
     public void actionPerformed(ActionEvent e) {
 
 		project.getEditHistoryContainer().mark(

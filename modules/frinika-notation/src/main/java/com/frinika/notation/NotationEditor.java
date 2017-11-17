@@ -203,12 +203,14 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		super(project, scroller, true, true,.5,false);   // PJL added ticksToScreen and sampledBased 
 
 		notesOnScreen = new Iterable<MultiEvent>() {
+                        @Override
 			public Iterator<MultiEvent> iterator() {
 				return new EventsInPartsIterator(project.getPartSelection()
 						.getSelected(), NotationEditor.this);
 			}
 		};
 		notesInFocus = new Iterable<MultiEvent>() {
+                        @Override
 			public Iterator<MultiEvent> iterator() {
 				Part focus = project.getPartSelection().getFocus();
 				if (focus == null)
@@ -219,6 +221,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		};
 
 		project.getDragList().addDragEventListener(new DragEventListener() {
+                        @Override
 			public void update() {
 				repaintItems();
 			}
@@ -260,6 +263,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		setFocusable(true);
 	}
 
+        @Override
 	protected void processMouseEvent(MouseEvent e) {
 		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
 			grabFocus();
@@ -315,7 +319,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 	public MidiLane getLaneAtY(int y) {
 
-		HashSet<Lane> selectedlanes = new HashSet<Lane>();
+		HashSet<Lane> selectedlanes = new HashSet<>();
 		Collection<Part> parts = project.getPartSelection().getSelected();
 		for (Part part : parts) {
 			if (!selectedlanes.contains(part.getLane()))
@@ -411,6 +415,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 		Note lastnote;
 
+                @Override
 		public int compareTo(Object o) {
 			long t = tick - ((NoteEventTick) o).tick;
 			if (t < 0)
@@ -421,9 +426,9 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		}
 	}
 
-	Map<MidiLane, Integer> laneY = new HashMap<MidiLane, Integer>();
+	Map<MidiLane, Integer> laneY = new HashMap<>();
 
-	Map<MidiLane, ClefChange> laneClef = new HashMap<MidiLane, ClefChange>();
+	Map<MidiLane, ClefChange> laneClef = new HashMap<>();
 
 	public void paintHeader(Graphics g, int scroll) {
 
@@ -441,7 +446,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		ng.absoluteY(20 - scroll);
 		// ng.absoluteY(0);
 
-		HashSet<Lane> selectedlanes = new HashSet<Lane>();
+		HashSet<Lane> selectedlanes = new HashSet<>();
 		Collection<Part> parts = project.getPartSelection().getSelected();
 		for (Part part : parts) {
 			if (!selectedlanes.contains(part.getLane()))
@@ -644,7 +649,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		g2.setColor(Color.BLACK);
 		ng.setGraphics(g2);
 
-		HashSet<Lane> selectedlanes = new HashSet<Lane>();
+		HashSet<Lane> selectedlanes = new HashSet<>();
 		Collection<Part> parts = project.getPartSelection().getSelected();
 		for (Part part : parts) {
 			if (!selectedlanes.contains(part.getLane()))
@@ -690,7 +695,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 					// TreeSet<MultiEvent>();
 
 					int id_count = 0;
-					TreeSet<NoteEventTick> multiEventsTicks = new TreeSet<NoteEventTick>();
+					TreeSet<NoteEventTick> multiEventsTicks = new TreeSet<>();
 
 					for (Part part : midilane.getParts())
 						if (part instanceof MidiPart)
@@ -828,11 +833,11 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 					long max_tick = 0;
 
-					TreeMap<Long, List<NoteEventTick>> tickslist = new TreeMap<Long, List<NoteEventTick>>();
+					TreeMap<Long, List<NoteEventTick>> tickslist = new TreeMap<>();
 					for (NoteEventTick event : multiEventsTicks) {
 						List<NoteEventTick> list = tickslist.get(event.tick);
 						if (list == null) {
-							list = new ArrayList<NoteEventTick>();
+							list = new ArrayList<>();
 							tickslist.put(event.tick, list);
 						}
 						if (event.tick > max_tick)
@@ -853,7 +858,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 											// event
 						List<NoteEventTick> list = tickslist.get(event.tick);
 						if (list == null) {
-							list = new ArrayList<NoteEventTick>();
+							list = new ArrayList<>();
 							tickslist.put(event.tick, list);
 						}
 						list.add(event);
@@ -863,7 +868,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 					ng.startNoteGroup();
 
-					TreeMap<Integer, NoteEventTick> act = new TreeMap<Integer, NoteEventTick>();
+					TreeMap<Integer, NoteEventTick> act = new TreeMap<>();
 
 					Iterator<List<NoteEventTick>> iter = tickslist.values()
 							.iterator();
@@ -1086,6 +1091,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 	int noteItemHeight = 3;
 
+        @Override
 	public void dragTo(Point p) {
 
 		int dxDragged = p.x - xAnchor;
@@ -1299,8 +1305,8 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 	@Override
 	public void selectInRect(Rectangle rect, boolean shift) {
-		Collection<MultiEvent> addTmp = new Vector<MultiEvent>();
-		Collection<MultiEvent> delTmp = new Vector<MultiEvent>();
+		Collection<MultiEvent> addTmp = new Vector<>();
+		Collection<MultiEvent> delTmp = new Vector<>();
 
 		Iterable<? extends MultiEvent> list;
 
@@ -1346,6 +1352,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 
 	}
 
+        @Override
 	public synchronized void writeDraggedAt(Point p) {
 		if (newNote == null)
 			return;
@@ -1380,6 +1387,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 	/**
 	 * Used by the write tool to insert a note.
 	 */
+        @Override
 	protected synchronized void writePressedAt(Point p) {
 		Part focusPart = project.getPartSelection().getFocus();
 		if (focusPart == null || !(focusPart instanceof MidiPart)) {
@@ -1449,6 +1457,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 	/**
 	 * play the note
 	 */
+        @Override
 	public void feedBack(Item item) {
 		audioFeedBack.select((NoteEvent) item);
 	}
@@ -1477,15 +1486,18 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener,
 		editHistory.notifyEditHistoryListeners();
 	}
 
+        @Override
 	public void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries) {
 		repaintItems();
 
 	}
 
+        @Override
 	public boolean isValidEvent(MultiEvent event) {
 		return event instanceof NoteEvent;
 	}
 
+        @Override
 	public void repaintItems() {
 		super.repaintItems();
 		header.repaint();

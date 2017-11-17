@@ -30,10 +30,12 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.org.toot.audio.core.AudioBuffer;
@@ -250,7 +252,7 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
                     });
                     try {
                         f.get((long)(1000000.0*(frogDisco.getBlockSize()/frogDisco.getSampleRate())), TimeUnit.MICROSECONDS);
-                    } catch (Exception ex) {
+                    } catch (InterruptedException | ExecutionException | TimeoutException ex) {
                         f.cancel(true);
                         handleUnderrun(-1);
                     }

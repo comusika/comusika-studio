@@ -51,6 +51,7 @@ public class MidiDurationAction extends AbstractMidiAction {
 		super(project, "sequencer.midi.duration");
 	}
 
+        @Override
 	protected JComponent createGUI() {
 		return new MidiDurationActionEditor(this, (AbstractSequencerProjectContainer) project);
 	}

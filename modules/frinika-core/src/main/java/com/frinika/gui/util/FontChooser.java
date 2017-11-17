@@ -83,6 +83,7 @@ public class FontChooser extends JDialog {
 		Sample.setForeground(Color.black);
 		getContentPane().add(Sample);
 		addWindowListener(new WindowAdapter() {
+                        @Override
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				setVisible(false);
 			}
@@ -115,12 +116,14 @@ public class FontChooser extends JDialog {
 		getContentPane().add(ca);
 		getRootPane().setDefaultButton(ok);
 		ok.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				ob = true;
 			}
 		});
 		ca.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				ob = false;
@@ -179,6 +182,7 @@ public class FontChooser extends JDialog {
 			jl.setBounds(0, 0, 100, 1000);
 			jl.setBackground(Color.white);
 			jl.addListSelectionListener(new ListSelectionListener() {
+                                @Override
 				public void valueChanged(ListSelectionEvent e) {
 					jt.setText((String) jl.getSelectedValue());
 					si = (String) jl.getSelectedValue();
@@ -197,6 +201,7 @@ public class FontChooser extends JDialog {
 			jl.setSelectedValue(s, true);
 		}
 
+                @Override
 		public void setBounds(int x, int y, int w, int h) {
 			super.setBounds(x, y, w, h);
 			sp.setBounds(0, y + 12, w, h - 23);

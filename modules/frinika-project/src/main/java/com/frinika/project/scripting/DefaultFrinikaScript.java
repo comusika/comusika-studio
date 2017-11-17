@@ -49,12 +49,14 @@ public class DefaultFrinikaScript implements FrinikaScript, Serializable, Compar
 	String source;
 	String filename; // additionally to interface FrinikaScript
 	
+        @Override
 	public int getLanguage() {
 		return language;
 	}
 	public void setLanguage(int language) {
 		this.language = language;
 	}
+        @Override
 	public String getName() {
 		//return name;
 		String filename = getFilename();
@@ -68,6 +70,7 @@ public class DefaultFrinikaScript implements FrinikaScript, Serializable, Compar
 	/*public void setName(String name) {
 		this.name = name;
 	}*/
+        @Override
 	public String getSource() {
 		return source;
 	}
@@ -97,6 +100,7 @@ public class DefaultFrinikaScript implements FrinikaScript, Serializable, Compar
 		}
 	}
 	
+        @Override
 	public int compareTo(Object o) {
 		if (! (o instanceof FrinikaScript)) {
 			return 1;

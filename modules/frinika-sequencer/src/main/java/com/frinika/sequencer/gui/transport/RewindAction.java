@@ -20,6 +20,7 @@ public class RewindAction extends AbstractAction {
 	//	putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(
 	//			KeyEvent.VK_SPACE,0));
 	}
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		sequencer.setTickPosition(0);
 	}

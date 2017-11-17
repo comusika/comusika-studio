@@ -38,11 +38,13 @@ class TextTweaker  implements ActionListener {
 	textField = new JTextField(String.valueOf(t.getNumber()),len);
 	textField.addMouseListener(new MouseListener(){
 
+                @Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
 
+                @Override
 		public void mouseEntered(MouseEvent e) {
 			textField.requestFocusInWindow();
 
@@ -50,16 +52,19 @@ class TextTweaker  implements ActionListener {
 			
 		}
 
+                @Override
 		public void mouseExited(MouseEvent e) {
 			textField.getRootPane().requestFocusInWindow();
 			
 		}
 
+                @Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
 
+                @Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
@@ -72,6 +77,7 @@ class TextTweaker  implements ActionListener {
     }
 
 
+    @Override
     public void actionPerformed(ActionEvent e) {
 
 	//	Object o=e.getSource();

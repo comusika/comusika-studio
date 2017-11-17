@@ -31,7 +31,7 @@ public class FrinikaAudioServer
      * @supplierCardinality 1 
      */
 
-    private List<AudioBuffer> buffers = new java.util.ArrayList<AudioBuffer>();
+    private List<AudioBuffer> buffers = new java.util.ArrayList<>();
 
   
     public FrinikaAudioServer(AudioServer server) {
@@ -80,25 +80,30 @@ public class FrinikaAudioServer
         return realTime;
     }
 
+    @Override
     public void start() {
         	server.start();
     }
 
+    @Override
     public void stop() {
 	        server.stop();
 	}
 
 
+    @Override
     public boolean isRunning() {
         return  server.isRunning();
     }
 
+    @Override
     public float getLoad() {
         return server.getLoad();
     }
 
 
 
+    @Override
     public AudioBuffer createAudioBuffer(String name) {
         AudioBuffer buffer = server.createAudioBuffer(name);
         // we maintain a list of created buffers so that we can switch
@@ -107,30 +112,37 @@ public class FrinikaAudioServer
 		return buffer;
     }
 
+    @Override
     public List<String> getAvailableOutputNames() {
         return server.getAvailableOutputNames();
     }
 
+    @Override
     public List<String> getAvailableInputNames() {
         return server.getAvailableInputNames();
     }
 
+    @Override
     public IOAudioProcess openAudioOutput(String name, String label) throws Exception {
         return server.openAudioOutput(name, label);
     }
 
+    @Override
     public IOAudioProcess openAudioInput(String name, String label) throws Exception {
         return server.openAudioInput(name, label);
     }
 
+    @Override
     public void closeAudioOutput(IOAudioProcess output) {
         server.closeAudioOutput(output);
     }
 
+    @Override
     public void closeAudioInput(IOAudioProcess input) {
         server.closeAudioInput(input);
     }
 
+    @Override
     public float getSampleRate() {
         return server.getSampleRate();
     }
@@ -140,18 +152,22 @@ public class FrinikaAudioServer
 //        server.setSampleRate(sampleRate);
     }
 
+    @Override
     public int getInputLatencyFrames() {
     	return server.getInputLatencyFrames();
     }
     
+    @Override
     public int getOutputLatencyFrames() {
     	return server.getOutputLatencyFrames();
     }
 
+    @Override
     public int getTotalLatencyFrames() {
     	return server.getTotalLatencyFrames();
     }
 
+    @Override
 	public void setClient(AudioClient client) {
 		server.setClient(client);
 	}
@@ -159,6 +175,7 @@ public class FrinikaAudioServer
         	return FrinikaAudioSystem.stealAudioServer(thief, client);
     }
 
+    @Override
     public void removeAudioBuffer(AudioBuffer ab) {
         buffers.remove(ab);
     }

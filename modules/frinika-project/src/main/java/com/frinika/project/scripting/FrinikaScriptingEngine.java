@@ -98,7 +98,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 		project.getEditHistoryContainer().mark("Script "+name);
 		
 		Collection<MultiEvent> events = project.getMidiSelection().getSelected();
-		SortedSet<MultiEvent> clones = new TreeSet<MultiEvent>();
+		SortedSet<MultiEvent> clones = new TreeSet<>();
 		
 		// work on clones
 		if (events != null) {
@@ -248,9 +248,9 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 		synchronized (global) {
 			global.put(variable, value);
 			try {
-				OutputStream out = new FileOutputStream(GLOBAL_PROPERTIES_FILE);
-				global. store(out, "Frinika Scripting - Global Properties");
-				out.close();
+                            try (OutputStream out = new FileOutputStream(GLOBAL_PROPERTIES_FILE)) {
+                                global. store(out, "Frinika Scripting - Global Properties");
+                            }
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
@@ -271,9 +271,9 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 	private static void loadGlobalProperties() {
 		try {
 			Properties p = new Properties();
-			InputStream in = new FileInputStream(GLOBAL_PROPERTIES_FILE);
-			p.load(in);
-			in.close();
+                    try (InputStream in = new FileInputStream(GLOBAL_PROPERTIES_FILE)) {
+                        p.load(in);
+                    }
 			global = p;
 		} catch (IOException ioe) {
 			// nop, remains null
@@ -296,19 +296,22 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 	 */
 	public FrinikaScriptingEngine(ProjectContainer project) {
 		this.project = project;
-		scripts = new ArrayList<FrinikaScript>();
+		scripts = new ArrayList<>();
 	}
 	
+        @Override
 	public Collection<FrinikaScript> getScripts() {
 		return scripts;
 	}
 	
+        @Override
 	public void addScript(FrinikaScript script) {
 		if ( ! scripts.contains(script) ) {
 			scripts.add(script);
 		}
 	}
 	
+        @Override
 	public void removeScript(FrinikaScript script) {
 		scripts.remove(script);
 	}
@@ -346,16 +349,16 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 	public static String loadString(File file) throws IOException { // TODO move to global utilities-class
 		long len = file.length();
 		char[] c = new char[(int)len];
-		FileReader f = new FileReader(file);
-		f.read(c);
-		f.close();
+            try (FileReader f = new FileReader(file)) {
+                f.read(c);
+            }
 		return new String(c);
 	}
 	
-	public static void saveString(String s, File file) throws IOException { // TODO move to global utilities-class
-		FileWriter f = new FileWriter(file);
-		f.write(s);
-		f.close();
+	public static void saveString(String s, File file) throws IOException { try ( // TODO move to global utilities-class
+                FileWriter f = new FileWriter(file)) {
+            f.write(s);
+            }
 	}
 	
 	/*private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
@@ -364,7 +367,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 	
 	private void writeObject(ObjectOutputStream out) throws ClassNotFoundException, IOException {
 		// remove all from open scripts which are not serializable (i.e. Preset-Scripts)
-		Collection<FrinikaScript> c = new ArrayList<FrinikaScript>( scripts ); 
+		Collection<FrinikaScript> c = new ArrayList<>( scripts ); 
 		for (FrinikaScript script : scripts) {
 			if ( ! (script instanceof Serializable) ) {
 				c.remove(script);

@@ -16,6 +16,7 @@ public class PartSelection extends SelectionContainer<Part >{
 		
 	}
 	
+        @Override
 	protected void setMetaFocus() {
 		Part part=(Part)focus;
 		Lane lane=part.getLane();

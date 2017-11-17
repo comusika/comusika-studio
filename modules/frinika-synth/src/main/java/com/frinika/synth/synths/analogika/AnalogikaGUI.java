@@ -70,6 +70,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
             /* (non-Javadoc)
              * @see java.awt.event.WindowAdapter#windowClosed(java.awt.event.WindowEvent)
              */
+            @Override
             public void windowClosed(WindowEvent e) {
                 AnalogikaGUI.this.analogika.removeInstrumentNameListener(AnalogikaGUI.this);
             }
@@ -93,6 +94,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 
         final JMenuItem renameMenuItem = new JMenuItem("Rename");
         renameMenuItem.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 analogika.setInstrumentName(
                         JOptionPane.showInputDialog("Enter new name",
@@ -110,6 +112,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
         waveformCombo.addItem("sine");
         waveformCombo.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 float[] waveform = new float[(int)(2 * Math.PI * 10000)];
                 
@@ -130,11 +133,12 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
         final JComboBox layerComboBox = new JComboBox();
         for(int n=1;n<=8;n++)
         {
-            layerComboBox.addItem(new Integer(n));
+            layerComboBox.addItem(n);
         }
         layerComboBox.setSelectedIndex(analogika.getAnalogikaSettings().getLayers()-1);
         layerComboBox.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 analogika.getAnalogikaSettings().setLayers(layerComboBox.getSelectedIndex()+1);
             }});
@@ -146,6 +150,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
         
         freqSpreadSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setFreqSpread((freqSpreadSlider.getValue() / 50000f));
             }});
@@ -156,6 +161,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getVolAttack());
         volAttackSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setVolAttack(volAttackSlider.getValue());
             }});
@@ -166,6 +172,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getVolDecay());
         volDecaySlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setVolDecay(volDecaySlider.getValue());
             }});
@@ -176,6 +183,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getVolSustain());
         volSustainSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setVolSustain(volSustainSlider.getValue());
             }});
@@ -186,6 +194,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getVolRelease());
         volReleaseSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setVolRelease(volReleaseSlider.getValue());
             }});
@@ -196,6 +205,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getLoPassMax());
         loPassMaxSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setLoPassMax(loPassMaxSlider.getValue());
             }});
@@ -206,6 +216,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getLoPassAttack());
         loPassAttackSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setLoPassAttack(loPassAttackSlider.getValue());
             }});
@@ -216,6 +227,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getLoPassDecay());
         loPassDecaySlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setLoPassDecay(loPassDecaySlider.getValue());
             }});
@@ -226,6 +238,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getLoPassSustain());
         loPassSustainSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setLoPassSustain(loPassSustainSlider.getValue());
             }});
@@ -236,6 +249,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
                 analogika.getAnalogikaSettings().getLoPassRelease());
         loPassReleaseSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 analogika.getAnalogikaSettings().setLoPassRelease(loPassReleaseSlider.getValue());
             }});
@@ -243,6 +257,7 @@ public class AnalogikaGUI extends JFrame implements InstrumentNameListener  {
         add(loPassReleaseSlider,gc);
     }
 
+        @Override
     public void instrumentNameChange(Synth synth, String instrumentName) {
         setTitle(instrumentName);
     }

@@ -34,20 +34,20 @@ public class SoloManager {
 	AbstractSequencerProjectContainer project;
 
 	// lanes that have had mute set.
-	Vector<RecordableLane> muted = new Vector<RecordableLane>();
+	Vector<RecordableLane> muted = new Vector<>();
 
 	// lanes that have had solo set.
-	Vector<RecordableLane> soloed = new Vector<RecordableLane>();
+	Vector<RecordableLane> soloed = new Vector<>();
 
 	// device lanes need not muted because soloed midi lane
-	Vector<RecordableLane> soloedParent = new Vector<RecordableLane>();
+	Vector<RecordableLane> soloedParent = new Vector<>();
 
 	public SoloManager(AbstractSequencerProjectContainer container) {
 		this.project = container;
 	}
 
 	private Vector<MidiLane> findMidiLanes(SynthLane sl) {
-		Vector<MidiLane> lanes = new Vector<MidiLane>();
+		Vector<MidiLane> lanes = new Vector<>();
 
 		MidiDevice midi = sl.getMidiDescriptor().getMidiDevice();
 		for (Lane l : project.getLanes()) {

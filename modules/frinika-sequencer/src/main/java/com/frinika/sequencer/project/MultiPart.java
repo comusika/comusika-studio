@@ -17,7 +17,7 @@ import java.util.Vector;
 public class MultiPart implements Serializable {
     
     private static final long serialVersionUID = 1L;
-    private Vector<Part> parts=new Vector<Part>();
+    private Vector<Part> parts=new Vector<>();
 
     void add(MidiPart lastPart) {
         getParts().add(lastPart);

@@ -61,6 +61,7 @@ public class SliderNumberEditable extends JPanel {
     protected int orientation = SwingConstants.HORIZONTAL;
     
     protected ListenerSupport<ChangeListener, ChangeEvent> changeListeners = new ListenerSupport<ChangeListener, ChangeEvent>() {
+        @Override
         public void notify(ChangeListener l, ChangeEvent e) {
             l.stateChanged(e);
         }
@@ -100,16 +101,18 @@ public class SliderNumberEditable extends JPanel {
     public void setModel(SpinnerNumberModel model) {
         slider.setModel(toBoundedRangeModel(model));
         spinner.setModel(model);
-        if (((Float)model.getMaximum()).floatValue() == 100f) { // special: if maximum value is 100, force fix column size (independent from minimu, so 0 or -100 are possible as minimum for this)
+        if (((Float)model.getMaximum()) == 100f) { // special: if maximum value is 100, force fix column size (independent from minimu, so 0 or -100 are possible as minimum for this)
         	JTextField tf = ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField();
         	tf.setColumns(3); // will result in actually more than 3 characters, so negative values are fine
         }
     }
 
+    @Override
     public boolean isEnabled() {
         return slider.isEnabled();
     }
     
+    @Override
     public void setEnabled(boolean enabled) {
         slider.setEnabled(enabled);
         spinner.setEnabled(enabled);
@@ -331,12 +334,14 @@ public class SliderNumberEditable extends JPanel {
         this.setLayout(new java.awt.GridBagLayout());
 
         slider.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 sliderStateChanged(evt);
             }
         });
 
         spinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinnerStateChanged(evt);
             }

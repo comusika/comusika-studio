@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Vector;
@@ -21,7 +22,7 @@ public class PatchNameMap implements Serializable {
      *
      */
     private static final long serialVersionUID = 1L;
-    private Vector<Node> topList = new Vector<Node>();
+    private Vector<Node> topList = new Vector<>();
     // these are used to build keynames whilst parsing a text file.
     transient private Node currentPatchNode;
     transient private String[] keyNames;
@@ -99,11 +100,11 @@ public class PatchNameMap implements Serializable {
         } else {
             availableInstruments = new Instrument[loadedins.length + availins.length];
             int ix = 0;
-            for (int i = 0; i < loadedins.length; i++) {
-                availableInstruments[ix++] = loadedins[i];
+            for (Instrument loadedin : loadedins) {
+                availableInstruments[ix++] = loadedin;
             }
-            for (int i = 0; i < availins.length; i++) {
-                availableInstruments[ix++] = availins[i];
+            for (Instrument availin : availins) {
+                availableInstruments[ix++] = availin;
             }
         }
 
@@ -113,12 +114,12 @@ public class PatchNameMap implements Serializable {
             try {
                 getChannels = availableInstruments[0].getClass().getMethod(
                         "getChannels");
-            } catch (Exception e) {
+            } catch (NoSuchMethodException | SecurityException e) {
             }
             try {
                 getKeys = availableInstruments[0].getClass().getMethod(
                         "getKeys");
-            } catch (Exception e) {
+            } catch (NoSuchMethodException | SecurityException e) {
             }
         }
 
@@ -129,14 +130,14 @@ public class PatchNameMap implements Serializable {
             if (getChannels != null) {
                 try {
                     channels = (boolean[]) getChannels.invoke(instr);
-                } catch (Exception e) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 }
             }
             String[] keynames = null;
             if (getKeys != null) {
                 try {
                     keynames = (String[]) getKeys.invoke(instr);
-                } catch (Exception e) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                 }
             }
             if (channels == null || channels[channel]) {
@@ -210,7 +211,7 @@ public class PatchNameMap implements Serializable {
      * @return
      */
     public List<MyPatch> getPatchesWithNamesLike(String name) {
-        Vector<MyPatch> list = new Vector<MyPatch>();
+        Vector<MyPatch> list = new Vector<>();
         getPatchesWithNameLike(name, topList, list);
         return list;
     }

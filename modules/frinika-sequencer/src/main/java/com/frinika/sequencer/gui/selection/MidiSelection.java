@@ -49,7 +49,7 @@ import javax.swing.JMenuItem;
  */
 public class MidiSelection extends MultiEventSelection implements SelectionListener {
 	
-	protected Collection<JMenuItem> menuItems = new ArrayList<JMenuItem>(); // list of MenuItems to automatically activate/deactivate depending on available MidiSelection
+	protected Collection<JMenuItem> menuItems = new ArrayList<>(); // list of MenuItems to automatically activate/deactivate depending on available MidiSelection
 	
 	public MidiSelection(AbstractSequencerProjectContainer project) {
 		super(project);
@@ -57,6 +57,7 @@ public class MidiSelection extends MultiEventSelection implements SelectionListe
 		project.getMultiEventSelection().addSelectionListener(this);
 	}
 	
+        @Override
 	public void selectionChanged(SelectionContainer sc) {
 		Vector<MultiEvent> r = null;
 		if (sc instanceof PartSelection) {
@@ -85,6 +86,7 @@ public class MidiSelection extends MultiEventSelection implements SelectionListe
 		notifyListeners();
 	}
 	
+        @Override
 	public void setMetaFocus() {
 		// nop
 	}
@@ -125,7 +127,7 @@ public class MidiSelection extends MultiEventSelection implements SelectionListe
 	}
 	
 	protected static Vector<MultiEvent> getMultiEventsFromSelection(Collection<Selectable> sel) {
-		Vector<MultiEvent> c = new Vector<MultiEvent>();
+		Vector<MultiEvent> c = new Vector<>();
 		for (Selectable o : sel) {
 			if (o instanceof MidiPart) {
 				for (MultiEvent me : ((MidiPart)o).getMultiEvents()) {

@@ -33,6 +33,7 @@ import com.frinika.sequencer.tools.MyMidiRenderer;
 import com.frinika.tools.ProgressBarInputStream;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.JDialog;
@@ -80,11 +81,12 @@ public class RenderDialog extends JDialog implements Runnable {
             
             this.setLocationRelativeTo(frame);
             this.setVisible(true);
-        } catch(Exception e) {}
+        } catch(IOException e) {}
     }
     
     byte[] buffer = new byte[1024];
     
+    @Override
     public void run() {
     	// Stop audio server
         FrinikaAudioServer audioServer=FrinikaAudioSystem.getAudioServer();
@@ -110,7 +112,7 @@ public class RenderDialog extends JDialog implements Runnable {
             sequencer.setRealtime(true);
          
             RenderDialog.this.dispose();
-        } catch(Exception e) {
+        } catch(IOException e) {
         	e.printStackTrace();
         }
         // Restore output process (mixer) from project and restart audio server

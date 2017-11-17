@@ -35,6 +35,7 @@ public class ProjectFileFilter extends FileFilter {
     /* (non-Javadoc)
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
      */
+    @Override
     public boolean accept(File f) {
         if(f.getName().toLowerCase().indexOf(".frinika")>0 || 
            f.getName().toLowerCase().indexOf(".mystudio")>0 ||
@@ -47,6 +48,7 @@ public class ProjectFileFilter extends FileFilter {
     /* (non-Javadoc)
      * @see javax.swing.filechooser.FileFilter#getDescription()
      */
+    @Override
     public String getDescription() {
         return "Frinika project";
     }

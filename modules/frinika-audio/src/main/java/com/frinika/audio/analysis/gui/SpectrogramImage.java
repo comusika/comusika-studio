@@ -29,7 +29,6 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.frinika.audio.analysis.gui;
 
 import com.frinika.audio.analysis.Mapper;
@@ -46,59 +45,59 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * 
+ *
  * notifies observers if it need to be redrawn (typically the panel(s))
- * 
+ *
  * update() redoes all the drawing.
- * 
- * SpectrogramListener
- *   - does image resize 
- *   - incrementally redraws as the data become ready.
- * 
+ *
+ * SpectrogramListener - does image resize - incrementally redraws as the data
+ * become ready.
+ *
  * @author pjl
  *
  */
-public class SpectrogramImage extends Observable  implements SpectrogramDataListener,
-		Observer {
+public class SpectrogramImage extends Observable implements SpectrogramDataListener,
+        Observer {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	BufferedImage img;
+    BufferedImage img;
 
-	Graphics2D graphic;
+    Graphics2D graphic;
 
-	private int[] rgbarray;
+    private int[] rgbarray;
 
-	Dimension imageSize;
+    Dimension imageSize;
 
-	Dimension size;
+    Dimension size;
 
-	int scaleX = 1;
+    int scaleX = 1;
 
-	int scaleY = 2;
+    int scaleY = 2;
 
-	private boolean dirty = true;
+    private boolean dirty = true;
 
-	private double thresh;
+    private double thresh;
 
-	private SpectrumDataBuilder data;
+    private SpectrumDataBuilder data;
 
-	static final int nLevel = 256;
+    static final int nLevel = 256;
 
-	static Color fcol[] = new Color[nLevel];
-	{
-		for (int i = 0; i < nLevel; i++) {
-			fcol[i] = new Color(255, 0, 0, i);
-		}
-	}
+    static Color fcol[] = new Color[nLevel];
 
-	int nChunks;
+    {
+        for (int i = 0; i < nLevel; i++) {
+            fcol[i] = new Color(255, 0, 0, i);
+        }
+    }
 
-	int nBins;
-	
-	private int renderedCount = 0;
+    int nChunks;
 
-	Mapper mapper;
+    int nBins;
+
+    private int renderedCount = 0;
+
+    Mapper mapper;
 
     /**
      *
@@ -106,121 +105,131 @@ public class SpectrogramImage extends Observable  implements SpectrogramDataList
      * @param data
      * @param mapper
      */
-	public SpectrogramImage(SpectrumDataBuilder data, Mapper mapper) {
-		// setDoubleBuffered(false);
-		this.mapper = mapper;
-		this.data = data;
-		// mapper.update(this, null);
-	}
+    public SpectrogramImage(SpectrumDataBuilder data, Mapper mapper) {
+        // setDoubleBuffered(false);
+        this.mapper = mapper;
+        this.data = data;
+        // mapper.update(this, null);
+    }
 
-	void createGraphics() {
+    void createGraphics() {
+        imageSize = new Dimension(nChunks, nBins);
+        size = new Dimension(nChunks * scaleX, nBins * scaleY);
 
-		imageSize = new Dimension(nChunks, nBins);
-		size = new Dimension(nChunks * scaleX, nBins * scaleY);
+        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment
+                .getLocalGraphicsEnvironment();
+        GraphicsConfiguration graphicsConfiguration = graphicsEnvironment
+                .getDefaultScreenDevice().getDefaultConfiguration();
+        img = graphicsConfiguration.createCompatibleImage(imageSize.width,
+                imageSize.height, Transparency.BITMASK);
+        graphic = img.createGraphics();
+    }
 
-		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
-		GraphicsConfiguration graphicsConfiguration = graphicsEnvironment
-				.getDefaultScreenDevice().getDefaultConfiguration();
-		img = graphicsConfiguration.createCompatibleImage(imageSize.width,
-				imageSize.height, Transparency.BITMASK);
-		graphic = img.createGraphics();
-	}
+    private void makeImage() {
+        synchronized (data) {
+            int chunksToRender = data.getChunkRenderedCount();
+            System.out.println(renderedCount + "  ->  " + chunksToRender);
+            nBins = data.getBinCount();
+            nChunks = data.getSizeInChunks();
+            if (nChunks == 0 || nBins == 0) {
+                return;
+            }
 
-	private void makeImage() {
+            if (imageSize == null || nBins != imageSize.height
+                    || nChunks != imageSize.width) {
+                createGraphics();
+            }
 
-		synchronized (data) {
-			int chunksToRender=data.getChunkRenderedCount();
-			System.out.println(renderedCount + "  ->  " + chunksToRender );
-			nBins = data.getBinCount();
-			nChunks=data.getSizeInChunks();
-			if (nChunks == 0 || nBins == 0)
-				return;
+            if (rgbarray == null || rgbarray.length < nBins) {
+                rgbarray = new int[nBins];
+            }
 
-			if (imageSize == null || nBins != imageSize.height
-					|| nChunks != imageSize.width)
-				createGraphics();
+            float buffer[][] = data.getMagnitude();
+            if (buffer == null) {
+                return;
+            }
+            for (; renderedCount < chunksToRender; renderedCount++) {
+                if (Thread.interrupted()) {
+                    return;
+                }
+                for (int i = 0; i < nBins; i++) {
+                    int bin = nBins - i - 1;
+                    float val = mapper.eval(buffer[renderedCount][bin]);
 
-			if (rgbarray == null || rgbarray.length < nBins) {
-				rgbarray = new int[nBins];
-			}
+                    if (val < 0) {
+                        val = 0.0f;
+                    }
+                    if (val > 1.0) {
+                        val = 1.0f;
+                    }
+                    int c_r = (int) (255 * val);
+                    int c_g = c_r;
+                    int c_b = 255 - c_r;
 
-			float buffer[][] = data.getMagnitude();
-			if (buffer == null)
-				return;
-			for (; renderedCount < chunksToRender; renderedCount++) {
-				if (Thread.interrupted())
-					return;
-				for (int i = 0; i < nBins; i++) {
-					int bin = nBins - i - 1;
-					float val = mapper.eval(buffer[renderedCount][bin]);
+                    int color = (c_b) + (c_g << 8) + (c_r << 16) + (0xFF << 24);
 
-					if (val < 0)
-						val = 0.0f;
-					if (val > 1.0)
-						val = 1.0f;
-					int c_r = (int) (255 * val);
-					int c_g = c_r;
-					int c_b = 255 - c_r;
+                    rgbarray[i] = color;
+                }
+                img.setRGB(renderedCount, 0, 1, imageSize.height, rgbarray, 0, 1);
 
-					int color = (c_b) + (c_g << 8) + (c_r << 16) + (0xFF << 24);
+            }
+            setChanged();
+            notifyObservers();
+        }
+    }
 
-					rgbarray[i] = color;
-				}
-				img.setRGB(renderedCount, 0, 1, imageSize.height, rgbarray, 0, 1);
+    @Override
+    public void notifySizeChange(Dimension d) {
+        // if (d.equals(size))
+        // return;
+        renderedCount = 0;
+        System.out.println(" Remaking spectrogram image ");
+        makeImage();
+    }
 
-			}
-			setChanged();
-			notifyObservers();
-		}
-	}
+    public void drawImage(Graphics2D g, int i, int j) {
+        //	System.out.println(" Spectro DRAWIMAGE");
+        if (img == null) {
+            return;
+        }
+        g.setColor(Color.WHITE);
+        g.drawImage(img, i, j, size.width, size.height, 0, 0, imageSize.width,
+                imageSize.height, null);
+        g.setColor(Color.GREEN);
+        g.drawString(" Spectrogram ", i + 10, j + 10);
+    }
 
-	public void notifySizeChange(Dimension d) {
-		// if (d.equals(size))
-		// return;
-		renderedCount=0;
-		System.out.println(" Remaking spectrogram image ");
-		makeImage();
-	}
+    public int getHeight() {
+        if (size == null) {
+            return 200;
+        }
+        return size.height;
+    }
 
-	public void drawImage(Graphics2D g, int i, int j) {
-	//	System.out.println(" Spectro DRAWIMAGE");
-		if (img == null)
-			return;
-		g.setColor(Color.WHITE);
-		g.drawImage(img, i, j, size.width, size.height, 0, 0, imageSize.width,
-				imageSize.height, null);
-		g.setColor(Color.GREEN);
-		g.drawString(" Spectrogram ", i + 10, j + 10);
-	}
+    /**
+     *
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println(" Spectrogram image update ");
+        //  null argument means I need to draw whole image 
+        renderedCount = 0;
+        makeImage();
+    }
 
-	public int getHeight() {
-		if (size == null)
-			return 200;
-		return size.height;
-	}
+    @Override
+    public void notifyMoreDataReady() {
+        makeImage();
+    }
 
-	/**
-	 * 
-	 */
-	public void update(Observable o, Object arg) {
-		System.out.println(" Spectrogram image update ");
-		//  null argument means I need to draw whole image 
-		renderedCount=0;   
-		makeImage();
-	}
+    public float pixToBin(int curY) {
 
-	public void notifyMoreDataReady() {
-		makeImage();
-	}
+        float bin = (int) (nBins - (curY + 1.5) / scaleY);
+        //System.out.println(bin);
+        if (bin < 0.0) {
+            bin = 0.0f;
+        }
 
-	public float pixToBin(int curY) {
-		
-		float bin=(int) (nBins-(curY+1.5)/scaleY);
-		//System.out.println(bin);
-		if (bin <0.0)bin=0.0f;
-		
-		return bin;
-	}
-
+        return bin;
+    }
 }

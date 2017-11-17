@@ -57,6 +57,7 @@ public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 	
 	}
 
+        @Override
 	public String toString() {
 		if (af.getChannels() == 1)
 			return mixer.getMixerInfo().getName() + " (MONO)"; // +
@@ -72,6 +73,7 @@ public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 	/**
 	 *@deprecated To be rpelaced with COnnections
 	 */
+        @Override
 	public TargetDataLine getLine() { // DataLine.Info infoIn) {
 		try {
 			System.out.println(this + " **** " + af);
@@ -153,6 +155,7 @@ public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 	/**
 	 * @deprecated   TO be replaced by Connections
 	 */
+        @Override
 	public TargetDataLine getOpenLine() {
 		if (isOpen())
 			return line;
@@ -176,14 +179,17 @@ public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 //		
 //	}
 	
+        @Override
 	public int getChannels() {
 		return af.getChannels();
 	}
 
+        @Override
 	public AudioFormat getFormat() {
 		return af;
 	}
 
+        @Override
 	public boolean isOpen() {
 		if (line == null)
 			return false;
@@ -193,6 +199,7 @@ public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 	/**
 	 * open and start the line.
 	 */
+        @Override
 	public void open() {
 
 		System.out.println(" Opening MixrerAudioDevice line");
@@ -217,6 +224,7 @@ public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 		
 	}
 
+        @Override
 	public void close() {
 		if (!isOpen())
 			return;

@@ -126,7 +126,7 @@ public class BezierSynthPlayer extends Thread {
       //ctrlList = mixer.getControls ();
       //System.out.println (ctrlList [0]);
     }
-    catch (Exception e) {
+    catch (LineUnavailableException e) {
       String m = "BezierSynthPlayer reports exception\n";
       m += e.toString ();
 
@@ -156,6 +156,7 @@ public class BezierSynthPlayer extends Thread {
     Run method for this thread performs all the necessary thread
     actions.
   */
+  @Override
   public void run () {
     // Polyphonic sound buffer and byte equivalent
     short [][] extract = new short [polyphony][SAMPLES_PER_CYCLE];

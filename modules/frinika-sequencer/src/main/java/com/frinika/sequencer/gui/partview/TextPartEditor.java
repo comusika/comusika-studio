@@ -62,6 +62,7 @@ public class TextPartEditor extends JPanel implements FocusListener {
 		textArea.setBackground(Color.WHITE);
 		textArea.addFocusListener(this);
 		textArea.addKeyListener(new KeyAdapter(){
+                        @Override
 			public void keyPressed(KeyEvent e) {
 				int k = e.getKeyCode();
 				if (k == KeyEvent.VK_ESCAPE) {
@@ -104,10 +105,12 @@ public class TextPartEditor extends JPanel implements FocusListener {
 		partView.repaintItems();
 	}
 	
+        @Override
 	public void focusGained(FocusEvent e) {
 		//nop
 	}	
 
+        @Override
 	public void focusLost(FocusEvent e) {
 		editOK();
 	}	

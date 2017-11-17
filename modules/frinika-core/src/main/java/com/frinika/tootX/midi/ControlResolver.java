@@ -41,7 +41,7 @@ public class ControlResolver {
     Hashtable<String,Control> map;
     
     public ControlResolver() {
-        map=new Hashtable<String,Control>();  
+        map=new Hashtable<>();  
     }
     
     public Control resolve(String key) {

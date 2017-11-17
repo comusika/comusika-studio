@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.constantq;
 
 import com.frinika.audio.analysis.DataBuilder;
@@ -34,62 +33,59 @@ import java.io.IOException;
 import rasmus.interpreter.sampled.util.FFT;
 import uk.org.toot.audio.core.AudioBuffer;
 
-
 /**
  * Creates a spectrogram from a DoubleDataSource
- * 
+ *
  * Observers are notified when data changes (during build)
- * 
+ *
  * SizeObserver are notify when the number of frequency bins is changed.
- * 
+ *
  * @author pjl
- * 
+ *
  */
-public class ConstantQSpectrogramDataBuilder  extends DataBuilder implements SpectrumDataBuilder  {
+public class ConstantQSpectrogramDataBuilder extends DataBuilder implements SpectrumDataBuilder {
 
+    private LimitedAudioReader reader;
 
+    private float[][] magnArray;
 
-	private LimitedAudioReader reader;
+    private float[][] phaseArray;
 
-	private float[][] magnArray;
+    private float[][] dPhaseFreqHz;
 
-	private float[][] phaseArray;
+    float freqArray[];
 
-	private float[][] dPhaseFreqHz;
+    int chunkPtr = 0;
 
-	float freqArray[];
+    private int sizeInChunks;
 
-	int chunkPtr = 0;
+    private int nBin;
 
-	private int sizeInChunks;
+    double dt = .01;
 
-	private int nBin;
+    double Fs;
 
-	double dt = .01;
+    int nFrame;
 
-	double Fs;
+    double minF;
 
-	int nFrame;
+    double maxF;
 
-	double minF;
+    int binsPerOctave = 48;
 
-	double maxF;
+    double thresh = 0.02;
 
-	int binsPerOctave = 48;
+    int chunksize;
 
-	double thresh = 0.02;
+    Dimension size;
 
-	int chunksize;
+    double spread;
 
-	Dimension size;
+    private int chunkStartInSamples;
+    FFTConstantQ fftCQ;
 
-	double spread;
-
-	private int chunkStartInSamples;
-	FFTConstantQ fftCQ;
-	
-	public ConstantQSpectrogramDataBuilder() {
-	}
+    public ConstantQSpectrogramDataBuilder() {
+    }
 
 //	/**
 //	 * 
@@ -103,297 +99,307 @@ public class ConstantQSpectrogramDataBuilder  extends DataBuilder implements Spe
 //
 //		setParameters(reader, minF, maxF, binsPerOctave, thresh, spread, dt);
 //	}
+    public void setParameters(LimitedAudioReader reader, double minF,
+            double maxF, int binsPerOctave, double thresh, double spread,
+            double dt) {
 
-	public void setParameters(LimitedAudioReader reader, double minF,
-			double maxF, int binsPerOctave, double thresh, double spread,
-			double dt) {
+        abortConstruction();
 
-		abortConstruction();
+        this.reader = reader;
 
-		this.reader = reader;
+        if (minF == this.minF && maxF == this.maxF
+                && binsPerOctave == this.binsPerOctave && thresh == this.thresh
+                && this.spread == spread && this.dt == dt) {
+            return;
+        }
 
-		if (minF == this.minF && maxF == this.maxF
-				&& binsPerOctave == this.binsPerOctave && thresh == this.thresh
-				&& this.spread == spread && this.dt == dt)
-			return;
+        this.dt = dt;// = .01;
+        Fs = reader.getSampleRate();
 
-		this.dt = dt;// = .01;
-		Fs = reader.getSampleRate(); 
+        nFrame = (int) reader.getEnvelopedLengthInFrames();
 
+        this.minF = minF;
+        // maxF = Math.pow(2, nOctave) * minF;
+        this.maxF = maxF;
+        this.binsPerOctave = binsPerOctave;
+        this.thresh = thresh;
+        this.spread = spread;
+        chunksize = (int) (Fs * dt);
+        sizeInChunks = nFrame / chunksize;
 
-		nFrame = (int) reader.getEnvelopedLengthInFrames();
+        startConstruction();
 
-		this.minF = minF;
-		// maxF = Math.pow(2, nOctave) * minF;
-		this.maxF = maxF;
-		this.binsPerOctave = binsPerOctave;
-		this.thresh = thresh;
-		this.spread = spread;
-		chunksize = (int) (Fs * dt);
-		sizeInChunks = nFrame / chunksize;
+    }
 
-		startConstruction();
+    @Override
+    public void addSizeObserver(SpectrogramDataListener o) {
+        sizeObservers.add(o);
+    }
 
-	}
+    void notifySizeObservers() {
+        for (SpectrogramDataListener o : sizeObservers) {
+            o.notifySizeChange(size);
+        }
+    }
 
+    void notifyMoreDataObservers() {
+        for (SpectrogramDataListener o : sizeObservers) {
+            o.notifyMoreDataReady();
+        }
+    }
 
-	public void addSizeObserver(SpectrogramDataListener o) {
-		sizeObservers.add(o);
-	}
+    @Override
+    public int getSizeInChunks() {
+        return sizeInChunks;
+    }
 
-	void notifySizeObservers() {
-		for (SpectrogramDataListener o : sizeObservers)
-			o.notifySizeChange(size);
+    @Override
+    public int getChunkRenderedCount() {
+        return chunkPtr;
+    }
 
-	}
-	
-	void notifyMoreDataObservers() {
-		for (SpectrogramDataListener o : sizeObservers)
-			o.notifyMoreDataReady();
+    @Override
+    public int getBinCount() {
+        return nBin;
+    }
 
-	}
+    @Override
+    public float[][] getMagnitude() {
+        return magnArray;
+    }
 
-	public int getSizeInChunks() {
-		return sizeInChunks;
+    @Override
+    protected void doWork() {
+        chunkPtr = -1;   // make invalid
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            System.out.println(" Interrupted before I even started !! ");
+            e.printStackTrace();
+            return;
+        }
 
-	}
+        dt = chunksize / Fs;
 
-	public int getChunkRenderedCount() {
-		return chunkPtr;
-	}
+        fftCQ = new FFTConstantQ(Fs, minF, maxF, binsPerOctave,
+                thresh, spread);
 
-	public int getBinCount() {
-		return nBin;
-	}
+        int fftsize = fftCQ.getFFTSize();
 
-	public float[][] getMagnitude() {
-		return magnArray;
-	}
+        double freq[] = fftCQ.freqs;
 
-	protected void doWork() {
-
-		chunkPtr=-1;   // make invalid
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			System.out.println(" Interrupted before I even started !! ");
-			e.printStackTrace();
-			return;
-		}
-
-		dt = chunksize / Fs;
-
-		fftCQ = new FFTConstantQ(Fs, minF, maxF, binsPerOctave,
-				thresh, spread);
-
-		int fftsize = fftCQ.getFFTSize();
-
-		double freq[] = fftCQ.freqs;
-
-		/*
+        /*
 		 * Here the size of arrays changes any user should synchronize with me
 		 * here
-		 */
-		synchronized (this) {
+         */
+        synchronized (this) {
 
-			freqArray = new float[freq.length];
-			for (int i = 0; i < freq.length; i++) {
-				freqArray[i] = (float) freq[i];
-			}
+            freqArray = new float[freq.length];
+            for (int i = 0; i < freq.length; i++) {
+                freqArray[i] = (float) freq[i];
+            }
 
-			System.out.println(" fftsize/chunkSIze = " + fftsize + "/"
-					+ chunksize);
+            System.out.println(" fftsize/chunkSIze = " + fftsize + "/"
+                    + chunksize);
 
-			nBin = fftCQ.getNumberOfOutputBands();
+            nBin = fftCQ.getNumberOfOutputBands();
 
-			size = new Dimension(sizeInChunks, nBin);
+            size = new Dimension(sizeInChunks, nBin);
 
-			dPhaseFreqHz = new float[sizeInChunks][nBin];
+            dPhaseFreqHz = new float[sizeInChunks][nBin];
 
-			magnArray = new float[sizeInChunks][nBin];
-			phaseArray = new float[sizeInChunks][nBin];
-		}
+            magnArray = new float[sizeInChunks][nBin];
+            phaseArray = new float[sizeInChunks][nBin];
+        }
 
-	
-		double twoPI = 2 * Math.PI;
+        double twoPI = 2 * Math.PI;
 
-		// Phase change (radians) of each bin due to chunksize translation
-		double dPhaRef[] = new double[nBin];
-		for (int i = 0; i < nBin; i++) {
-			dPhaRef[i] = (twoPI * freq[i] * dt); // >0
-		}
+        // Phase change (radians) of each bin due to chunksize translation
+        double dPhaRef[] = new double[nBin];
+        for (int i = 0; i < nBin; i++) {
+            dPhaRef[i] = (twoPI * freq[i] * dt); // >0
+        }
 
-		double fftOut[] = new double[nBin * 2];
-		double fftIn[] = new double[fftsize];
-		double input[] = new double[fftsize];
+        double fftOut[] = new double[nBin * 2];
+        double fftIn[] = new double[fftsize];
+        double input[] = new double[fftsize];
 
-		try {
-			reader.seekEnvelopeStart(false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            reader.seekEnvelopeStart(false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		double testF = minF * 2;
-		// reader = new SInDoubleSource(testF,Fs);
+        double testF = minF * 2;
+        // reader = new SInDoubleSource(testF,Fs);
 
-		int ch = reader.getChannels();
+        int ch = reader.getChannels();
 
-		int nRead=0;
-		
-		AudioBuffer buffer = new AudioBuffer("TEMP",ch,chunksize,44100);
+        int nRead = 0;
 
-		chunkPtr = -fftsize / chunksize / 2;
+        AudioBuffer buffer = new AudioBuffer("TEMP", ch, chunksize, 44100);
 
-		int extraChunks= -chunkPtr;
-		
-		notifySizeObservers();
+        chunkPtr = -fftsize / chunksize / 2;
 
-		chunkStartInSamples=0;
-		
-		do {
-			if (Thread.interrupted()) {
-				return;
-			}
-			if (fftsize != chunksize) {
-				for (int i = 0; i < fftsize - chunksize; i++)
-					input[i] = input[i + chunksize];
-			}
+        int extraChunks = -chunkPtr;
 
-			buffer.makeSilence();
-			reader.processAudio(buffer);
-			nRead += chunksize;
-			
-			// System.out.println(reader.getCurrentFrame());
+        notifySizeObservers();
 
-			float left[]=buffer.getChannel(0);
-			
-			for (int i = fftsize - chunksize, j = 0; i < fftsize; i++, j++) {
-			//	if (ch == 2)
-			//		input[i] = buffer[2 * j + 1];
-		//		else
-					input[i] = left[j];
-			}
+        chunkStartInSamples = 0;
 
-			if (chunkPtr < 0) {
-				chunkPtr++;
-				chunkStartInSamples += chunksize;
-				continue;
-			}
-			for (int i = 0; i < fftsize; i++) {
-				fftIn[i] = input[i];
-			}
+        do {
+            if (Thread.interrupted()) {
+                return;
+            }
+            if (fftsize != chunksize) {
+                for (int i = 0; i < fftsize - chunksize; i++) {
+                    input[i] = input[i + chunksize];
+                }
+            }
 
-			fftCQ.calc(fftIn, fftOut);
+            buffer.makeSilence();
+            reader.processAudio(buffer);
+            nRead += chunksize;
 
-			for (int i = 0; i < nBin; i++) {
-				double real = fftOut[2 * i];
-				double imag = fftOut[2 * i + 1];
+            // System.out.println(reader.getCurrentFrame());
+            float left[] = buffer.getChannel(0);
 
-				magnArray[chunkPtr][i] = (float) Math.sqrt(real * real + imag
-						* imag);
+            for (int i = fftsize - chunksize, j = 0; i < fftsize; i++, j++) {
+                //	if (ch == 2)
+                //		input[i] = buffer[2 * j + 1];
+                //		else
+                input[i] = left[j];
+            }
 
-				phaseArray[chunkPtr][i] = (float) Math.atan2(imag, real); // -PI
-																			// PI
+            if (chunkPtr < 0) {
+                chunkPtr++;
+                chunkStartInSamples += chunksize;
+                continue;
+            }
+            for (int i = 0; i < fftsize; i++) {
+                fftIn[i] = input[i];
+            }
 
-				double phaLast;
-				if (chunkPtr > 0) {
-					phaLast = phaseArray[chunkPtr - 1][i];
-				} else {
-					phaLast = 0.0;
-				}
+            fftCQ.calc(fftIn, fftOut);
 
-				double dpha = phaseArray[chunkPtr][i] - phaLast;
+            for (int i = 0; i < nBin; i++) {
+                double real = fftOut[2 * i];
+                double imag = fftOut[2 * i + 1];
 
-				// make it in the range [-PI PI]
-				dpha = -((dPhaRef[i] - dpha + Math.PI + twoPI) % twoPI - Math.PI);
-				dPhaseFreqHz[chunkPtr][i] = (float) (freq[i] + dpha / twoPI
-						/ dt);
-			}
+                magnArray[chunkPtr][i] = (float) Math.sqrt(real * real + imag
+                        * imag);
 
-			chunkPtr++;
-			// System.out.println(vertPtr[0]);
-			// bar.setValue(pix);
-			if (chunkPtr % 50 == 0) {
-				notifyMoreDataObservers();
-			}
-	//	} while (!reader.eof() && chunkPtr < sizeInChunks);
-		}while (chunkPtr < sizeInChunks);
-		System.out.println(" DATA BUILT ");
-		notifyMoreDataObservers();
-	}
+                phaseArray[chunkPtr][i] = (float) Math.atan2(imag, real); // -PI
+                // PI
 
-	public float[] getFreqArray() {
-		return freqArray;
-	}
+                double phaLast;
+                if (chunkPtr > 0) {
+                    phaLast = phaseArray[chunkPtr - 1][i];
+                } else {
+                    phaLast = 0.0;
+                }
 
-	public float[] getMagnitudeAt(long chunkPtr) {
-		if (magnArray == null)
-			return null;
+                double dpha = phaseArray[chunkPtr][i] - phaLast;
 
-		// int pix = (int) (framePtr / chunksize);
-		if (chunkPtr >= magnArray.length || chunkPtr < 0)
-			return null;
-		return magnArray[(int) chunkPtr];
-	}
-	
-	public float[] getPhaseAt(long chunkPtr) {
-		if (phaseArray == null)
-			return null;
+                // make it in the range [-PI PI]
+                dpha = -((dPhaRef[i] - dpha + Math.PI + twoPI) % twoPI - Math.PI);
+                dPhaseFreqHz[chunkPtr][i] = (float) (freq[i] + dpha / twoPI
+                        / dt);
+            }
 
-		// int pix = (int) (framePtr / chunksize);
-		if (chunkPtr >= phaseArray.length || chunkPtr < 0)
-			return null;
-		return phaseArray[(int) chunkPtr];
-	}
+            chunkPtr++;
+            // System.out.println(vertPtr[0]);
+            // bar.setValue(pix);
+            if (chunkPtr % 50 == 0) {
+                notifyMoreDataObservers();
+            }
+            //	} while (!reader.eof() && chunkPtr < sizeInChunks);
+        } while (chunkPtr < sizeInChunks);
+        System.out.println(" DATA BUILT ");
+        notifyMoreDataObservers();
+    }
 
-	public float[] getPhaseFreqAt(long chunkPtr) {
-		if (dPhaseFreqHz == null)
-			return null;
+    @Override
+    public float[] getFreqArray() {
+        return freqArray;
+    }
 
-		// int pix = (int) (framePtr / chunksize);
-		if (chunkPtr >= dPhaseFreqHz.length)
-			return null;
-		return dPhaseFreqHz[(int) chunkPtr];
-	}
+    @Override
+    public float[] getMagnitudeAt(long chunkPtr) {
+        if (magnArray == null) {
+            return null;
+        }
 
-	public long getLengthInFrames() {
-		return reader.getEnvelopedLengthInFrames();
-	}
+        // int pix = (int) (framePtr / chunksize);
+        if (chunkPtr >= magnArray.length || chunkPtr < 0) {
+            return null;
+        }
+        return magnArray[(int) chunkPtr];
+    }
 
-	public long chunkStartInSamples(long chunkPtr) {
-	
-		return chunkStartInSamples + chunkPtr*chunksize;
-	}
+    public float[] getPhaseAt(long chunkPtr) {
+        if (phaseArray == null) {
+            return null;
+        }
 
-	public int getChunkAtFrame(long framePtr) {
-		
-		int chunkPtr=(int) ((framePtr-chunkStartInSamples)/chunksize);
-		
-		return chunkPtr;
-	}
+        // int pix = (int) (framePtr / chunksize);
+        if (chunkPtr >= phaseArray.length || chunkPtr < 0) {
+            return null;
+        }
+        return phaseArray[(int) chunkPtr];
+    }
 
-	public boolean validAt(long chunkPtr2) {
-		return chunkPtr2>=0  && chunkPtr2 < this.chunkPtr;
-	}
+    @Override
+    public float[] getPhaseFreqAt(long chunkPtr) {
+        if (dPhaseFreqHz == null) {
+            return null;
+        }
 
-	public StaticSpectrogramSynth getSynth() {
-		return  new StaticSpectrogramSynth(this);
-	}
+        // int pix = (int) (framePtr / chunksize);
+        if (chunkPtr >= dPhaseFreqHz.length) {
+            return null;
+        }
+        return dPhaseFreqHz[(int) chunkPtr];
+    }
 
-	public FFT getFFT() {
-		return fftCQ.getFFT();
-	}
+    public long getLengthInFrames() {
+        return reader.getEnvelopedLengthInFrames();
+    }
+
+    public long chunkStartInSamples(long chunkPtr) {
+
+        return chunkStartInSamples + chunkPtr * chunksize;
+    }
+
+    public int getChunkAtFrame(long framePtr) {
+
+        int chunkPtr = (int) ((framePtr - chunkStartInSamples) / chunksize);
+
+        return chunkPtr;
+    }
+
+    @Override
+    public boolean validAt(long chunkPtr2) {
+        return chunkPtr2 >= 0 && chunkPtr2 < this.chunkPtr;
+    }
+
+    @Override
+    public StaticSpectrogramSynth getSynth() {
+        return new StaticSpectrogramSynth(this);
+    }
+
+    @Override
+    public FFT getFFT() {
+        return fftCQ.getFFT();
+    }
 
 //	public float[] getSMagnitudeAt(long chunkPtr) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-
 //	public float[][] getSMagnitude() {
 //		// TODO Auto-generated method stub
 //		return getMagnitude();
 //	}
-
-
 }

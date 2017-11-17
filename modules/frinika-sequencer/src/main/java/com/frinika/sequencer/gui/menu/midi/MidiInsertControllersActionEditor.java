@@ -82,14 +82,15 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         resolutionTimeSelectorPanel.add(resolutionTimeSelector);
         controllerSelector = new ControllerSelector();
         controllerSelector.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             	MidiInsertControllersActionEditor.this.action.controller = controllerSelector.getControllerType(); // must be passed directly on each change to allow Functions gui to react
             }
         });
         controllerSelectorPanel.add(controllerSelector);
         Collection<MidiInsertControllersAction.ControllerFunction> ff = action.getAvailableControllerFunctions();
-        functions = new HashMap<MidiInsertControllersAction.ControllerFunction, JComponent>();
-        functionButtons = new HashMap<AbstractButton, MidiInsertControllersAction.ControllerFunction>();
+        functions = new HashMap<>();
+        functionButtons = new HashMap<>();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets.left = 3;
@@ -101,6 +102,7 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
             functionsButtonGroup.add(rb);
             functionButtons.put(rb, function);
             rb.addChangeListener(new ChangeListener() {
+                @Override
                 public void stateChanged(ChangeEvent e) {
                     JRadioButton rb = (JRadioButton)e.getSource();
                     if (rb.isSelected()) {
@@ -138,6 +140,7 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         functionsButtonGroup.getElements().nextElement().setSelected(true); // first one by default
     }
     
+    @Override
     public void refresh() {
     	long start = project.getSequencer().getTickPosition();
         startTimeSelector.setTicks(start);
@@ -156,6 +159,7 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         controllerSelector.addPseudoController("(Note)", -1);
     }
     
+    @Override
     public void update() {
         action.start = startTimeSelector.getTicks();
         action.length = lengthTimeSelector.getTicks();

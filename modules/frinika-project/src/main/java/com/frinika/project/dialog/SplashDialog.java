@@ -24,6 +24,7 @@
 
 package com.frinika.project.dialog;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,6 +33,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -355,7 +357,7 @@ public class SplashDialog extends JDialog {
 	        return rbt.createScreenCapture(
 	        new Rectangle(0,0,(int)dim.getWidth( ),
 	                          (int)dim.getHeight( )));
-	    } catch (Exception ex) {	        
+	    } catch (AWTException | HeadlessException ex) {	        
 	        return null;
 	    }
 	}	
@@ -368,6 +370,7 @@ public class SplashDialog extends JDialog {
 		boolean active = true;
 		Runnable gui = new Runnable()
 		{
+                        @Override
 			public void run()
 			{
 				Point loc1 = light_cloud1.getLocation();
@@ -387,6 +390,7 @@ public class SplashDialog extends JDialog {
 				if(!isVisible()) active = false;
 			}
 		};
+                @Override
 		public void run()
 		{
 			while(active)

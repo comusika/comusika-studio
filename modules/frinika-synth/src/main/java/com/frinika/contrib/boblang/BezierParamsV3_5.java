@@ -131,6 +131,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
   /**
     Obtain the wavelength in samples from the frequency
   */
+    @Override
   public int wavelengthFromFrequency (double frequency) {
     return (int) (sampleRate/frequency);
   } // wavelengthFromFrequency ()
@@ -138,6 +139,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
   /**
     Obtain the corrected frequency, from the integer wavelength
   */
+    @Override
   public double frequencyFromWavelength (int wavelength) {
     return (double) sampleRate/(double) wavelength;
   } // frequencyFromWavelength ()
@@ -147,6 +149,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
      /**
      * @return Returns the envAttackTime.
      */
+    @Override
     public int getEnvAttackTime() {
         return envAttackTime;
     }
@@ -154,6 +157,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param envAttackTime The envAttackTime to set.
      */
+    @Override
     public void setEnvAttackTime(int envAttackTime) {
         this.envAttackTime = envAttackTime;
     }
@@ -161,6 +165,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the envDecayTime.
      */
+    @Override
     public int getEnvDecayTime() {
         return envDecayTime;
     }
@@ -168,6 +173,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param envDecayTime The envDecayTime to set.
      */
+    @Override
     public void setEnvDecayTime(int envDecayTime) {
         this.envDecayTime = envDecayTime;
     }
@@ -175,6 +181,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the envReleaseTime.
      */
+    @Override
     public int getEnvReleaseTime() {
         return envReleaseTime;
     }
@@ -182,6 +189,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param envReleaseTime The envReleaseTime to set.
      */
+    @Override
     public void setEnvReleaseTime(int envReleaseTime) {
         this.envReleaseTime = envReleaseTime;
     }
@@ -189,6 +197,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the envSusLevel.
      */
+    @Override
     public int getEnvSusLevel() {
         return envSusLevel;
     }
@@ -196,6 +205,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param envSusLevel The envSusLevel to set.
      */
+    @Override
     public void setEnvSusLevel(int envSusLevel) {
         this.envSusLevel = envSusLevel;
     }
@@ -203,6 +213,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerAbsFreqX.
      */
+    @Override
     public double getLowerAbsFreqX() {
         return lowerAbsFreqX;
     }
@@ -210,6 +221,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerAbsFreqX The lowerAbsFreqX to set.
      */
+    @Override
     public void setLowerAbsFreqX(double lowerAbsFreqX) {
         this.lowerAbsFreqX = lowerAbsFreqX;
     }
@@ -217,6 +229,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerAbsFreqY.
      */
+    @Override
     public double getLowerAbsFreqY() {
         return lowerAbsFreqY;
     }
@@ -224,6 +237,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerAbsFreqY The lowerAbsFreqY to set.
      */
+    @Override
     public void setLowerAbsFreqY(double lowerAbsFreqY) {
         this.lowerAbsFreqY = lowerAbsFreqY;
     }
@@ -231,6 +245,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerAmplX.
      */
+    @Override
     public int getLowerAmplX() {
         return lowerAmplX;
     }
@@ -238,6 +253,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerAmplX The lowerAmplX to set.
      */
+    @Override
     public void setLowerAmplX(int lowerAmplX) {
         this.lowerAmplX = lowerAmplX;
     }
@@ -245,6 +261,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerAmplY.
      */
+    @Override
     public int getLowerAmplY() {
         return lowerAmplY;
     }
@@ -252,6 +269,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerAmplY The lowerAmplY to set.
      */
+    @Override
     public void setLowerAmplY(int lowerAmplY) {
         this.lowerAmplY = lowerAmplY;
     }
@@ -259,6 +277,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerCentreX.
      */
+    @Override
     public int getLowerCentreX() {
         return lowerCentreX;
     }
@@ -266,6 +285,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerCentreX The lowerCentreX to set.
      */
+    @Override
     public void setLowerCentreX(int lowerCentreX) {
         this.lowerCentreX = lowerCentreX;
     }
@@ -273,6 +293,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerCentreY.
      */
+    @Override
     public int getLowerCentreY() {
         return lowerCentreY;
     }
@@ -280,6 +301,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerCentreY The lowerCentreY to set.
      */
+    @Override
     public void setLowerCentreY(int lowerCentreY) {
         this.lowerCentreY = lowerCentreY;
     }
@@ -287,6 +309,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerEnvX.
      */
+    @Override
     public int getLowerEnvX() {
         return lowerEnvX;
     }
@@ -294,6 +317,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerEnvX The lowerEnvX to set.
      */
+    @Override
     public void setLowerEnvX(int lowerEnvX) {
         this.lowerEnvX = lowerEnvX;
     }
@@ -301,6 +325,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerEnvY.
      */
+    @Override
     public int getLowerEnvY() {
         return lowerEnvY;
     }
@@ -308,6 +333,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerEnvY The lowerEnvY to set.
      */
+    @Override
     public void setLowerEnvY(int lowerEnvY) {
         this.lowerEnvY = lowerEnvY;
     }
@@ -315,6 +341,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerPhaseX.
      */
+    @Override
     public int getLowerPhaseX() {
         return lowerPhaseX;
     }
@@ -322,6 +349,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerPhaseX The lowerPhaseX to set.
      */
+    @Override
     public void setLowerPhaseX(int lowerPhaseX) {
         this.lowerPhaseX = lowerPhaseX;
     }
@@ -329,6 +357,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerPhaseY.
      */
+    @Override
     public int getLowerPhaseY() {
         return lowerPhaseY;
     }
@@ -336,6 +365,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerPhaseY The lowerPhaseY to set.
      */
+    @Override
     public void setLowerPhaseY(int lowerPhaseY) {
         this.lowerPhaseY = lowerPhaseY;
     }
@@ -343,6 +373,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerRelFreqX.
      */
+    @Override
     public double getLowerRelFreqX() {
         return lowerRelFreqX;
     }
@@ -350,6 +381,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerRelFreqX The lowerRelFreqX to set.
      */
+    @Override
     public void setLowerRelFreqX(double lowerRelFreqX) {
         this.lowerRelFreqX = lowerRelFreqX;
     }
@@ -357,6 +389,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerRelFreqY.
      */
+    @Override
     public double getLowerRelFreqY() {
         return lowerRelFreqY;
     }
@@ -364,6 +397,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerRelFreqY The lowerRelFreqY to set.
      */
+    @Override
     public void setLowerRelFreqY(double lowerRelFreqY) {
         this.lowerRelFreqY = lowerRelFreqY;
     }
@@ -371,6 +405,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerXEnvTime.
      */
+    @Override
     public int getLowerXEnvTime() {
         return lowerXEnvTime;
     }
@@ -378,6 +413,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerXEnvTime The lowerXEnvTime to set.
      */
+    @Override
     public void setLowerXEnvTime(int lowerXEnvTime) {
         this.lowerXEnvTime = lowerXEnvTime;
     }
@@ -385,6 +421,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the lowerYEnvTime.
      */
+    @Override
     public int getLowerYEnvTime() {
         return lowerYEnvTime;
     }
@@ -392,6 +429,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param lowerYEnvTime The lowerYEnvTime to set.
      */
+    @Override
     public void setLowerYEnvTime(int lowerYEnvTime) {
         this.lowerYEnvTime = lowerYEnvTime;
     }
@@ -399,6 +437,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperAbsFreqX.
      */
+    @Override
     public double getUpperAbsFreqX() {
         return upperAbsFreqX;
     }
@@ -406,6 +445,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperAbsFreqX The upperAbsFreqX to set.
      */
+    @Override
     public void setUpperAbsFreqX(double upperAbsFreqX) {
         this.upperAbsFreqX = upperAbsFreqX;
     }
@@ -413,6 +453,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperAbsFreqY.
      */
+    @Override
     public double getUpperAbsFreqY() {
         return upperAbsFreqY;
     }
@@ -420,6 +461,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperAbsFreqY The upperAbsFreqY to set.
      */
+    @Override
     public void setUpperAbsFreqY(double upperAbsFreqY) {
         this.upperAbsFreqY = upperAbsFreqY;
     }
@@ -427,6 +469,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperAmplX.
      */
+    @Override
     public int getUpperAmplX() {
         return upperAmplX;
     }
@@ -434,6 +477,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperAmplX The upperAmplX to set.
      */
+    @Override
     public void setUpperAmplX(int upperAmplX) {
         this.upperAmplX = upperAmplX;
     }
@@ -441,6 +485,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperAmplY.
      */
+    @Override
     public int getUpperAmplY() {
         return upperAmplY;
     }
@@ -448,6 +493,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperAmplY The upperAmplY to set.
      */
+    @Override
     public void setUpperAmplY(int upperAmplY) {
         this.upperAmplY = upperAmplY;
     }
@@ -455,6 +501,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperCentreX.
      */
+    @Override
     public int getUpperCentreX() {
         return upperCentreX;
     }
@@ -462,6 +509,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperCentreX The upperCentreX to set.
      */
+    @Override
     public void setUpperCentreX(int upperCentreX) {
         this.upperCentreX = upperCentreX;
     }
@@ -469,6 +517,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperCentreY.
      */
+    @Override
     public int getUpperCentreY() {
         return upperCentreY;
     }
@@ -476,6 +525,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperCentreY The upperCentreY to set.
      */
+    @Override
     public void setUpperCentreY(int upperCentreY) {
         this.upperCentreY = upperCentreY;
     }
@@ -483,6 +533,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperEnvX.
      */
+    @Override
     public int getUpperEnvX() {
         return upperEnvX;
     }
@@ -490,6 +541,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperEnvX The upperEnvX to set.
      */
+    @Override
     public void setUpperEnvX(int upperEnvX) {
         this.upperEnvX = upperEnvX;
     }
@@ -497,6 +549,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperEnvY.
      */
+    @Override
     public int getUpperEnvY() {
         return upperEnvY;
     }
@@ -504,6 +557,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperEnvY The upperEnvY to set.
      */
+    @Override
     public void setUpperEnvY(int upperEnvY) {
         this.upperEnvY = upperEnvY;
     }
@@ -511,6 +565,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperPhaseX.
      */
+    @Override
     public int getUpperPhaseX() {
         return upperPhaseX;
     }
@@ -518,6 +573,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperPhaseX The upperPhaseX to set.
      */
+    @Override
     public void setUpperPhaseX(int upperPhaseX) {
         this.upperPhaseX = upperPhaseX;
     }
@@ -525,6 +581,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperPhaseY.
      */
+    @Override
     public int getUpperPhaseY() {
         return upperPhaseY;
     }
@@ -532,6 +589,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperPhaseY The upperPhaseY to set.
      */
+    @Override
     public void setUpperPhaseY(int upperPhaseY) {
         this.upperPhaseY = upperPhaseY;
     }
@@ -539,6 +597,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperRelFreqX.
      */
+    @Override
     public double getUpperRelFreqX() {
         return upperRelFreqX;
     }
@@ -546,6 +605,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperRelFreqX The upperRelFreqX to set.
      */
+    @Override
     public void setUpperRelFreqX(double upperRelFreqX) {
         this.upperRelFreqX = upperRelFreqX;
     }
@@ -553,6 +613,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperRelFreqY.
      */
+    @Override
     public double getUpperRelFreqY() {
         return upperRelFreqY;
     }
@@ -560,6 +621,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperRelFreqY The upperRelFreqY to set.
      */
+    @Override
     public void setUpperRelFreqY(double upperRelFreqY) {
         this.upperRelFreqY = upperRelFreqY;
     }
@@ -567,6 +629,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperXEnvTime.
      */
+    @Override
     public int getUpperXEnvTime() {
         return upperXEnvTime;
     }
@@ -574,6 +637,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperXEnvTime The upperXEnvTime to set.
      */
+    @Override
     public void setUpperXEnvTime(int upperXEnvTime) {
         this.upperXEnvTime = upperXEnvTime;
     }
@@ -581,6 +645,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the upperYEnvTime.
      */
+    @Override
     public int getUpperYEnvTime() {
         return upperYEnvTime;
     }
@@ -588,20 +653,24 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param upperYEnvTime The upperYEnvTime to set.
      */
+    @Override
     public void setUpperYEnvTime(int upperYEnvTime) {
         this.upperYEnvTime = upperYEnvTime;
     }
 
+    @Override
     public int getSampleRate() {
         
         return sampleRate;
     }
 
+    @Override
     public void setSampleRate(int sampleRate) {
         this.sampleRate = sampleRate;
         
     }
 
+    @Override
     public int getOutputRate() {
         return outputRate;
     }
@@ -609,6 +678,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @return Returns the bufferLength.
      */
+    @Override
     public int getBufferLength() {
         return bufferLength;
     }
@@ -623,6 +693,7 @@ public class BezierParamsV3_5 implements BezierParams,java.io.Serializable {
     /**
      * @param outputRate The outputRate to set.
      */
+    @Override
     public void setOutputRate(int outputRate) {
         this.outputRate = outputRate;
     }

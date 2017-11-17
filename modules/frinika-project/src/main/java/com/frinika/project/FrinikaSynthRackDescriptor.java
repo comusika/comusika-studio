@@ -53,6 +53,7 @@ public class FrinikaSynthRackDescriptor extends MidiDeviceDescriptor implements 
 	 * Get the filename for the loaded soundbank
 	 * @return
 	 */
+        @Override
 	public String getSoundBankFileName() {
 		return soundBankFileName;
 	}
@@ -61,6 +62,7 @@ public class FrinikaSynthRackDescriptor extends MidiDeviceDescriptor implements 
 	 * Set the filename for the loaded soundbank
 	 * @param soundBankFileName
 	 */
+        @Override
 	public void setSoundBankFileName(String soundBankFileName) {
 		this.soundBankFileName = soundBankFileName;
 	}

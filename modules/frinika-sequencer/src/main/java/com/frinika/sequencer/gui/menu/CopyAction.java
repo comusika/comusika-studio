@@ -42,6 +42,7 @@ public class CopyAction extends AbstractAction {
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
     public void actionPerformed(ActionEvent e) {
 		
 		SelectionFocusable focus = project.getSelectionFocus();

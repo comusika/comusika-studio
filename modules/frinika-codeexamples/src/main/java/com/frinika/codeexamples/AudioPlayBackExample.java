@@ -149,11 +149,13 @@ public class AudioPlayBackExample {
 		// Sequencer synchronization goes here
 		proj.getSequencer().addSongPositionListener(new SongPositionListener() {
 
+                        @Override
 			public void notifyTickPosition(long tick) {
 				voice.setRunning(proj.getSequencer().isRunning());
 				voice.setFramePos( (proj.getSequencer().getMicrosecondPosition()  * voiceServer.getSampleRate()) / 1000000);
 			}
 
+                        @Override
 			public boolean requiresNotificationOnEachTick() {
 				return false;
 			}});

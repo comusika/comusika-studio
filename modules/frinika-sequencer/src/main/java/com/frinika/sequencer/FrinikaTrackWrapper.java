@@ -47,9 +47,9 @@ import javax.sound.midi.*;
  * @author Peter Johan Salomonsen
  */
 public class FrinikaTrackWrapper {
-	private HashMap<Long,Vector<MidiEvent>> tickMap = new HashMap<Long,Vector<MidiEvent>>();
-	private HashMap<Integer,SortedMap<Long,Integer>> controllerMap = new HashMap<Integer,SortedMap<Long,Integer>>();
-	private SortedMap<Long,MidiMessage> tempoMap = new TreeMap<Long,MidiMessage>(); 
+	private HashMap<Long,Vector<MidiEvent>> tickMap = new HashMap<>();
+	private HashMap<Integer,SortedMap<Long,Integer>> controllerMap = new HashMap<>();
+	private SortedMap<Long,MidiMessage> tempoMap = new TreeMap<>(); 
     
     
     Track track;
@@ -82,7 +82,7 @@ public class FrinikaTrackWrapper {
 			addEventToTickMap(event);	
 		}
         
-        controllerStateMessages = new Vector<MidiMessage>();
+        controllerStateMessages = new Vector<>();
         controllerStateMessages.ensureCapacity(128);
         
 	}
@@ -191,7 +191,7 @@ public class FrinikaTrackWrapper {
                 ccValues = controllerMap.get(ccKey);
                 if(ccValues == null)
                 {    
-                    ccValues = new TreeMap<Long,Integer>();
+                    ccValues = new TreeMap<>();
                     controllerMap.put(ccKey,ccValues);
                 }
          
@@ -375,7 +375,7 @@ public class FrinikaTrackWrapper {
                 shm.setMessage(ShortMessage.CONTROL_CHANGE,(ccKey>>8) & 0xf,ccKey & 0xff,ccValue);               
                 //System.out.println(ccKey+" "+((ccKey>>8) & 0xf)+" "+(ccKey & 0xff)+" "+ccValue);
                 controllerStateMessages.add(shm);
-            } catch(Exception e) {
+            } catch(InvalidMidiDataException e) {
             }
         }
         //timeSpent = System.currentTimeMillis()-timeSpent;

@@ -30,14 +30,15 @@ import com.frinika.util.tweaks.Tweakable;
 import com.frinika.util.tweaks.TweakableDouble;
 import com.frinika.util.tweaks.TweakableInt;
 import com.frinika.util.tweaks.gui.TweakerPanel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 import javax.swing.JPanel;
 
 public class ConstantQSpectrumController implements SpectrumController {
 
-    Vector<Tweakable> tweaks = new Vector<Tweakable>();
+    List<Tweakable> tweaks = new ArrayList<>();
     TweakableDouble minFreqT = new TweakableDouble(tweaks, 1.0, 1000.0, 55.0,
             1.0, "min Freq");
     TweakableDouble maxFreqT = new TweakableDouble(tweaks, 2.0, 20000.0,
@@ -56,6 +57,7 @@ public class ConstantQSpectrumController implements SpectrumController {
         double minFreq = minFreqT.doubleValue();
         double maxFreq = maxFreqT.doubleValue();
 
+        @Override
         public final float eval(float val) {
             double x = Math.log(val / minFreq);
             double mx = Math.log(maxFreq / minFreq);
@@ -67,17 +69,17 @@ public class ConstantQSpectrumController implements SpectrumController {
             maxFreq = maxFreqT.doubleValue();
         }
     }
+
     FreqMapper freqMapper;
     Observer reco;
 
     public ConstantQSpectrumController(final ConstantQSpectrogramDataBuilder spectroData, final LimitedAudioReader reader) {
 
-
         freqMapper = new FreqMapper();
-
 
         reco = new Observer() {
 
+            @Override
             public void update(Observable o, Object arg) {
                 freqMapper.update();
                 spectroData.setParameters(reader, minFreqT.doubleValue(),
@@ -94,17 +96,19 @@ public class ConstantQSpectrumController implements SpectrumController {
         spread.addObserver(reco);
     }
 
+    @Override
     public Mapper getFrequencyMapper() {
         // TODO Auto-generated method stub
         return freqMapper;
     }
 
+    @Override
     public void update() {
         reco.update(null, null);
     }
 
+    @Override
     public JPanel getTweakPanel() {
-
         TweakerPanel tpanel = new TweakerPanel(2, 4);
         for (Tweakable t : tweaks) {
             tpanel.addSpinTweaker(t);

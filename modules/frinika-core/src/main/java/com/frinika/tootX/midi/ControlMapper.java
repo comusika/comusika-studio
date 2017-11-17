@@ -62,6 +62,7 @@ public class ControlMapper implements Receiver {
             case ShortMessage.CONTROL_CHANGE:
                 valueizer = new Valueizer() {
 
+                    @Override
                     public float getValue(ShortMessage mess) {
                         return (float) (mess.getData2() / 127.0);
                     }
@@ -71,6 +72,7 @@ public class ControlMapper implements Receiver {
             case ShortMessage.NOTE_ON:
                 valueizer = new Valueizer() {
 
+                    @Override
                     public float getValue(ShortMessage mess) {
                         return (float) (mess.getData2() / 127.0);
                     }
@@ -80,6 +82,7 @@ public class ControlMapper implements Receiver {
             case ShortMessage.PITCH_BEND:
                 valueizer = new Valueizer() {
 
+                    @Override
                     public float getValue(ShortMessage mess) {
                         short low = (byte) mess.getData1();
                         short high = (byte) mess.getData2();
@@ -96,9 +99,11 @@ public class ControlMapper implements Receiver {
 
     }
 
+    @Override
     public void close() {
     }
 
+    @Override
     public void send(MidiMessage mess, long arg1) {
         ShortMessage smsg = (ShortMessage) mess;
         System.out.println("ch cmd data1 data2: " + smsg.getChannel() + " " + smsg.getCommand() + " " + smsg.getData1() + " " + smsg.getData2());

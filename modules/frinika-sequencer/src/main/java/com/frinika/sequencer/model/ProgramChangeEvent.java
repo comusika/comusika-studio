@@ -102,6 +102,7 @@ public class ProgramChangeEvent extends ChannelEvent {
                 zombie=false;
 	}
 
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		// TODO Auto-generated method stub
 		ProgramChangeEvent evt=(ProgramChangeEvent)object;

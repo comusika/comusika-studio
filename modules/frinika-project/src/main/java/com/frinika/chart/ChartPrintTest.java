@@ -72,6 +72,7 @@ public class ChartPrintTest extends JPanel {
         JFrame f = new JFrame("Print");
         f.addWindowListener(new WindowAdapter() {
 
+            @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
@@ -79,12 +80,14 @@ public class ChartPrintTest extends JPanel {
         JButton printButton = new JButton("Print");
         printButton.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 PrinterJob job = PrinterJob.getPrinterJob();
 
 
                 job.setPrintable(new Printable() {
 
+                    @Override
                     public int print(Graphics g, PageFormat pf, int page)
                             throws PrinterException {
                         if (page > 0) {
@@ -133,6 +136,7 @@ public class ChartPrintTest extends JPanel {
     }
 
 //	NotationGraphics ng = new NotationGraphics();
+    @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,

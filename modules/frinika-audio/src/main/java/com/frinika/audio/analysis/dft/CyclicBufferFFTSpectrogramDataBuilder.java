@@ -21,186 +21,164 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 import com.frinika.audio.analysis.FFTMagnitude;
 import com.frinika.audio.analysis.FFTWorker;
 import com.frinika.audio.analysis.gui.CyclicSpectrogramDataListener;
 import java.awt.Dimension;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 
-
 /**
  * Creates a spectrogram from a DoubleDataSource
- * 
+ *
  * Observers are notified when data changes (during build)
- * 
+ *
  * SizeObserver are notify when the number of frequency bins is changed.
- * 
+ *
  * @author pjl
- * 
+ *
  */
-public class CyclicBufferFFTSpectrogramDataBuilder 	implements CyclicSpectrumDataBuilder {
+public class CyclicBufferFFTSpectrogramDataBuilder implements CyclicSpectrumDataBuilder {
 
-	Vector<CyclicSpectrogramDataListener> sizeObservers = new Vector<CyclicSpectrogramDataListener>();
+    List<CyclicSpectrogramDataListener> sizeObservers = new ArrayList<>();
 
-	private AudioProcess reader;
+    private AudioProcess reader;
 
     FFTWorker fftWorker;
 
-
-    private float [][] data;
-	private float[][] magnArray;
+    private float[][] data;
+    private float[][] magnArray;
 
     double fftBuffer[][];
 
-	//private float[][] smoothMagnArray; 
- 
-	//private float[][] phaseArray;
+    //private float[][] smoothMagnArray; 
+    //private float[][] phaseArray;
+    //private float[][] dPhaseFreqHz;
+    int chunkPtr = 0;
 
-	//private float[][] dPhaseFreqHz;
+    private int sizeInChunks;
 
+    double Fs;
 
+    //int nFrame;
+    int chunksize;
 
-	int chunkPtr = 0;
+    int fftsize;
 
-	private int sizeInChunks;
+    double dt;
 
+    Dimension size;
 
-	double Fs;
+    private int chunkStartInSamples;
 
-	//int nFrame;
+    private int totalFramesRendered;
 
-	int chunksize;
-
-	int fftsize;
-
-	double dt;
-
-	Dimension size;
-
-	private int chunkStartInSamples;
-
-	private int totalFramesRendered;
-
-	
-	//private double[] dPhaRef;
-
-
-	private double[] input;
+    //private double[] dPhaRef;
+    private double[] input;
 
 //	private double logMagn[];
-	
 //	private double twoPI;
+    private AudioBuffer buffer;
 
-	private AudioBuffer buffer;
+    boolean abortFlag = false;
 
-	boolean abortFlag=false;
+    private boolean running = false;
 
-	private boolean running=false;
+    private Thread runThread = null;
 
-	private Thread runThread=null;
-
-	private Thread abortWaiter;
+    private Thread abortWaiter;
     private FFTMagnitude fftMagn;
-	
-	/**
-	 * 
-	 * @param minF
-	 * @param nOctave
-	 * @param binsPerOctave
-	 */
-	public CyclicBufferFFTSpectrogramDataBuilder(AudioProcess reader,
-			int bufferSize,double Fs) {
-		this.reader = reader;
-		this.sizeInChunks = bufferSize;
+
+    public CyclicBufferFFTSpectrogramDataBuilder(AudioProcess reader,
+            int bufferSize, double Fs) {
+        this.reader = reader;
+        this.sizeInChunks = bufferSize;
 //		twoPI = 2 * Math.PI;
-        fftWorker=new FFTWorker(Fs,true);
-        fftMagn=new FFTMagnitude();
-        data=new float[1][];
+        fftWorker = new FFTWorker(Fs, true);
+        fftMagn = new FFTMagnitude();
+        data = new float[1][];
     }
 
-	synchronized public void setParameters(int chunksize, int fftsize,float Fs) {
+    synchronized public void setParameters(int chunksize, int fftsize, float Fs) {
 
-		
-		System.err.println(" AAAA ");
-		
-		this.Fs=Fs;
-		if (chunksize == this.chunksize && fftsize == this.fftsize)	return;		
-		
-		System.out.println(" ABORT REQUEST "+System.currentTimeMillis());
-		
-		abortFlag=true;
-		abortWaiter=Thread.currentThread();
-		
-		while(running) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		abortWaiter=null;
-		
-		System.out.println(" ABORT DONE "+System.currentTimeMillis());
+        System.err.println(" AAAA ");
 
-		
-		buffer = new AudioBuffer("TEMP", 1, chunksize,Fs);
-	
+        this.Fs = Fs;
+        if (chunksize == this.chunksize && fftsize == this.fftsize) {
+            return;
+        }
 
-		this.chunksize = chunksize;
-		this.fftsize = fftsize;
+        System.out.println(" ABORT REQUEST " + System.currentTimeMillis());
 
-		dt = chunksize / Fs;
+        abortFlag = true;
+        abortWaiter = Thread.currentThread();
 
-		System.out.println(" RESIZE FFT REQUEST "+System.currentTimeMillis());
-		resize();
-		System.out.println(" RESIZE FFT DONE "+System.currentTimeMillis());
-		
-		Runnable runner= new Runnable() {
-			public void run() {
-				doWork();
-				runThread=null;
-			}
-		};
-		
-		runThread = new Thread(runner);
-		runThread.start();
-	}
+        while (running) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        abortWaiter = null;
 
-	
-	public void abortConstruction() {
+        System.out.println(" ABORT DONE " + System.currentTimeMillis());
 
-	
-	}
-	
-	
-	public void addSizeObserver(CyclicSpectrogramDataListener o) {
-		sizeObservers.add(o);
-	}
+        buffer = new AudioBuffer("TEMP", 1, chunksize, Fs);
 
-	void notifyMoreDataObservers(float buff[]) {
-		for (CyclicSpectrogramDataListener o : sizeObservers)
-			o.notifyMoreDataReady(buff);
+        this.chunksize = chunksize;
+        this.fftsize = fftsize;
 
-	}
+        dt = chunksize / Fs;
 
-	public int getSizeInChunks() {
-		return sizeInChunks;
-	}
+        System.out.println(" RESIZE FFT REQUEST " + System.currentTimeMillis());
+        resize();
+        System.out.println(" RESIZE FFT DONE " + System.currentTimeMillis());
 
-	public int getChunkRenderedCount() {
-		return totalFramesRendered;
-	}
+        Runnable runner = new Runnable() {
+            @Override
+            public void run() {
+                doWork();
+                runThread = null;
+            }
+        };
+
+        runThread = new Thread(runner);
+        runThread.start();
+    }
+
+    public void abortConstruction() {
+
+    }
+
+    @Override
+    public void addSizeObserver(CyclicSpectrogramDataListener o) {
+        sizeObservers.add(o);
+    }
+
+    void notifyMoreDataObservers(float buff[]) {
+        for (CyclicSpectrogramDataListener o : sizeObservers) {
+            o.notifyMoreDataReady(buff);
+        }
+    }
+
+    @Override
+    public int getSizeInChunks() {
+        return sizeInChunks;
+    }
+
+    public int getChunkRenderedCount() {
+        return totalFramesRendered;
+    }
 
 //	public int getBinCount() {
 //		return nBin;
 //	}
-
 //	public float[][] getMagnitude() {
 //		return magnArray;
 //	}
@@ -209,139 +187,129 @@ public class CyclicBufferFFTSpectrogramDataBuilder 	implements CyclicSpectrumDat
 //	public float[][] getSmoothMagnitude() {
 //		return smoothMagnArray;
 //	}
-
-	synchronized void resize() {
+    synchronized void resize() {
         fftWorker.resize(fftsize);
-        
-	
 
-		/*
+        /*
 		 * Here the size of arrays changes any user should synchronize with me
 		 * here
-		 */
+         */
+        int nBin = fftWorker.getSizeInBins();
 
-        int nBin=fftWorker.getSizeInBins();
-        
-		for (int i = 0; i < nBin; i++) {
+        for (int i = 0; i < nBin; i++) {
 //			freq[i] = (i * Fs / nBin);
 //			freqArray[i] = (float) freq[i];
 
-			// System.out.println(" fftsize/chunkSIze = " + fftsize + "/"
-			// + chunksize);
-
-			size = new Dimension(sizeInChunks, nBin);
+            // System.out.println(" fftsize/chunkSIze = " + fftsize + "/"
+            // + chunksize);
+            size = new Dimension(sizeInChunks, nBin);
 
 //			dPhaseFreqHz = new float[sizeInChunks][nBin];
-
-			magnArray = new float[sizeInChunks][nBin];
+            magnArray = new float[sizeInChunks][nBin];
             fftBuffer = new double[sizeInChunks][fftsize];
 
 //			smoothMagnArray = new float[sizeInChunks][nBin];
 //			logMagn = new double[nBin*2];
 //			phaseArray = new float[sizeInChunks][nBin];
-		}
+        }
 
-	
-		// Phase change (radians) of each bin due to chunksize translation
+        // Phase change (radians) of each bin due to chunksize translation
 //		dPhaRef = new double[nBin];
 //		for (int i = 0; i < nBin; i++) {
 //			dPhaRef[i] = (twoPI * freq[i] * dt); // >0
 //		}
+        input = new double[fftsize];
 
-	
-		input = new double[fftsize];
-		
-		System.out.println(" Resized " + fftsize);
+        System.out.println(" Resized " + fftsize);
+    }
 
+    protected void doWork() {
+        running = true;
+        abortFlag = false;
+        chunkPtr = 0; // make invalid
 
-	}
+        //	int nRead = 0;
+        chunkStartInSamples = 0;
+        //	float phaLast[] = phaseArray[0];
 
-	protected void doWork() {
+        totalFramesRendered = 0;
+        //	notifySizeObservers();
 
-		running =true;
-		abortFlag=false;
-		chunkPtr = 0; // make invalid
-	
-	//	int nRead = 0;
+        do {
 
-		chunkStartInSamples = 0;
-	//	float phaLast[] = phaseArray[0];
+            if (abortFlag) {
+                break;
+            }
+            if (fftsize != chunksize) {
+                for (int i = 0; i < fftsize - chunksize; i++) {
+                    input[i] = input[i + chunksize];
+                }
+            }
 
-		
-		totalFramesRendered = 0;
-	//	notifySizeObservers();
-		
-		do {
-			
-			if (abortFlag) break;
-			if (fftsize != chunksize) {
-				for (int i = 0; i < fftsize - chunksize; i++)
-					input[i] = input[i + chunksize];
-			}
-
-			buffer.makeSilence();                    
+            buffer.makeSilence();
             reader.processAudio(buffer);
 
-			float left[] = buffer.getChannel(0);
+            float left[] = buffer.getChannel(0);
 
-			// System.out.println(" mm =" + left[0]);
+            // System.out.println(" mm =" + left[0]);
+            for (int i = fftsize - chunksize, j = 0; i < fftsize; i++, j++) {
+                // if (ch == 2)
+                // input[i] = buffer[2 * j + 1];
+                // else
+                input[i] = left[j];
+            }
 
-			for (int i = fftsize - chunksize, j = 0; i < fftsize; i++, j++) {
-				// if (ch == 2)
-				// input[i] = buffer[2 * j + 1];
-				// else
-				input[i] = left[j];
-			}
+            if (chunkPtr < 0) {
+                chunkPtr++;
+                chunkStartInSamples += chunksize;
+                continue;
+            }
 
-			if (chunkPtr < 0) {
-				chunkPtr++;
-				chunkStartInSamples += chunksize;
-				continue;
-			}
+            fftWorker.process(input, fftBuffer[chunkPtr]);
 
-
-            fftWorker.process(input,fftBuffer[chunkPtr]);
-
-            data[0]=magnArray[chunkPtr];
+            data[0] = magnArray[chunkPtr];
             fftMagn.getData(data, fftBuffer[chunkPtr]);
-       
-			// System.out.println(" maqxV " + maxV);
 
-			notifyMoreDataObservers(magnArray[chunkPtr]);
+            // System.out.println(" maqxV " + maxV);
+            notifyMoreDataObservers(magnArray[chunkPtr]);
 
-			chunkPtr++;
-			totalFramesRendered++;
-			if (chunkPtr >= sizeInChunks)
-				chunkPtr = 0;
-			// System.out.println(vertPtr[0]);
-			// bar.setValue(pix);
-			// if (chunkPtr % 50 == 0) {
+            chunkPtr++;
+            totalFramesRendered++;
+            if (chunkPtr >= sizeInChunks) {
+                chunkPtr = 0;
+            }
+            // System.out.println(vertPtr[0]);
+            // bar.setValue(pix);
+            // if (chunkPtr % 50 == 0) {
 
-			// }
-			// nFrame = (int) reader.getLengthInFrames();
-			// } while (!reader.eof() && chunkPtr < sizeInChunks);
-		} while (true);
+            // }
+            // nFrame = (int) reader.getLengthInFrames();
+            // } while (!reader.eof() && chunkPtr < sizeInChunks);
+        } while (true);
 
-		running=false;
-		abortFlag=false;
-		if (abortWaiter != null) abortWaiter.interrupt();
-		System.out.println(" ABORTED ");
+        running = false;
+        abortFlag = false;
+        if (abortWaiter != null) {
+            abortWaiter.interrupt();
+        }
+        System.out.println(" ABORTED ");
+    }
 
-	}
+    public float[] getFreqArray() {
+        return fftWorker.getFreqArray();
+    }
 
-	public float[] getFreqArray() {
-		return fftWorker.getFreqArray();
-	}
+    public float[] getMagnitudeAt(long chunkPtr) {
+        if (magnArray == null) {
+            return null;
+        }
 
-	public float[] getMagnitudeAt(long chunkPtr) {
-		if (magnArray == null)
-			return null;
-
-		// int pix = (int) (framePtr / chunksize);
-		if (chunkPtr >= magnArray.length || chunkPtr < 0)
-			return null;
-		return magnArray[(int) chunkPtr];
-	}
+        // int pix = (int) (framePtr / chunksize);
+        if (chunkPtr >= magnArray.length || chunkPtr < 0) {
+            return null;
+        }
+        return magnArray[(int) chunkPtr];
+    }
 //
 //	public float[] getPhaseAt(long chunkPtr) {
 //		if (phaseArray == null)
@@ -363,37 +331,34 @@ public class CyclicBufferFFTSpectrogramDataBuilder 	implements CyclicSpectrumDat
 //		return dPhaseFreqHz[(int) chunkPtr];
 //	}
 
-	// public long getLengthInFrames() {
-	// return reader.getLengthInFrames();
-	// }
+    // public long getLengthInFrames() {
+    // return reader.getLengthInFrames();
+    // }
+    public long chunkStartInSamples(long chunkPtr) {
+        return chunkStartInSamples + chunkPtr * chunksize;
+    }
 
-	public long chunkStartInSamples(long chunkPtr) {
+    public int getChunkAtFrame(long framePtr) {
+        int chunkPtr1 = (int) ((framePtr - chunkStartInSamples) / chunksize);
+        return chunkPtr1;
+    }
 
-		return chunkStartInSamples + chunkPtr * chunksize;
-	}
+    public boolean validAt(long chunkPtr2) {
+        return chunkPtr2 >= 0 && chunkPtr2 < this.chunkPtr;
+    }
 
-	public int getChunkAtFrame(long framePtr) {
+    public double getSampleRate() {
+        // TODO Auto-generated method stub
+        return Fs;
+    }
 
-		int chunkPtr1 = (int) ((framePtr - chunkStartInSamples) / chunksize);
-
-		return chunkPtr1;
-	}
-
-	public boolean validAt(long chunkPtr2) {
-		return chunkPtr2 >= 0 && chunkPtr2 < this.chunkPtr;
-	}
-
-	public double getSampleRate() {
-		// TODO Auto-generated method stub
-		return Fs;
-	}
-
+    @Override
     public int getBinCount() {
         return fftWorker.getSizeInBins(); //throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public float[][] getMagnitude() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

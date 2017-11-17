@@ -59,6 +59,7 @@ public final class LoPass {
         loPass.setCutOff(0.001f);
         final JFrame frame = new JFrame()
         {
+            @Override
             public void paint(java.awt.Graphics g)
             {
                 g.clearRect(0,0,600,600);
@@ -84,6 +85,7 @@ public final class LoPass {
         
         new Thread()
         {
+            @Override
             public void run()
             {
                 float cutOff = -1;
@@ -95,7 +97,7 @@ public final class LoPass {
                     try
                     {
                         Thread.sleep(500);
-                    } catch(Exception e) {}
+                    } catch(InterruptedException e) {}
                 }
                 
             }

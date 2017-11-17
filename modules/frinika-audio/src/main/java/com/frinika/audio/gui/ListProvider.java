@@ -24,12 +24,11 @@ package com.frinika.audio.gui;
 
 public interface ListProvider {
 
-	/**
-	 * 
-	 * Objects must provide a toString that is sensible for a popupmenu text.
-	 * 
-	 * @return list of objects to populate the selector
-	 */
-	public Object [] getList() ;
-
+    /**
+     *
+     * Objects must provide a toString that is sensible for a popupmenu text.
+     *
+     * @return list of objects to populate the selector
+     */
+    public Object[] getList();
 }

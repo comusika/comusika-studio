@@ -55,10 +55,12 @@ public class TimeSignatureEditAction extends AbstractAction {
 		this.list = project.getProjectContainer().getTimeSignatureList();
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 
 		SwingUtilities.invokeLater(new Runnable() {
 
+                @Override
 			public void run() {
 
 				JFrame frame = new JFrame();
@@ -67,15 +69,18 @@ public class TimeSignatureEditAction extends AbstractAction {
 					int bar;
 					int nBeat;
 
+                        @Override
 					public int getColumnCount() {
 						return 2;
 					}
 
+                        @Override
 					public int getRowCount() {
 						list.reco();
 						return list.getList().size()+1;
 					}
 
+                        @Override
 					public Object getValueAt(int row, int col) {
 						if (row >= list.getList().size()) return "";
 						TimeSignatureEvent ev = list.getList().elementAt(row);
@@ -85,10 +90,12 @@ public class TimeSignatureEditAction extends AbstractAction {
 							return ev.beatsPerBar;
 					}
 
+                        @Override
 					public boolean isCellEditable(int row, int col) {
 						return true;
 					}
 
+                        @Override
 					public void setValueAt(Object value, int row, int col) {
 						boolean newE = row >= list.getList().size();
 
@@ -113,7 +120,7 @@ public class TimeSignatureEditAction extends AbstractAction {
 							if (!newE )	list.remove(ev.bar);
 							list.add(bar, nBeat);
 							list.reco();
-						} catch (Exception e) {
+						} catch (NumberFormatException e) {
 							e.printStackTrace();
 						}
 						fireTableDataChanged();

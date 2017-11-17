@@ -35,31 +35,26 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import uk.org.toot.swingui.controlui.ControlPanel;
 
-public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
+public class MidiLearnPanel extends JPanel implements MidiLearnIF {
 
-   
-     
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-  
+
     ShortMessage lastMessage;
     MidiDevice dev = null;
     MidiInDeviceSelectPanel deviceSelector;
     ControlPanel focus;
-   // static MidiLearnFrame the;
+    // static MidiLearnFrame the;
     MidiDeviceRouter devRouter;
-    
-    public  MidiLearnPanel(final MidiDeviceRouter devRouter) {
-  //      assert (the == null);
-    
-        this.devRouter=devRouter;
-     //   the = this;
+
+    public MidiLearnPanel(final MidiDeviceRouter devRouter) {
+        //      assert (the == null);
+
+        this.devRouter = devRouter;
+        //   the = this;
 //        JPanel panel = new JPanel();
 //        setContentPane(panel);
 
-        JPanel panel=this;
+        JPanel panel = this;
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         deviceSelector = new MidiInDeviceSelectPanel();
@@ -67,10 +62,11 @@ public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
 
         deviceSelector.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 dev = deviceSelector.getSelected();
 
-            //			monit(dev);
+                //			monit(dev);
             }
         });
 
@@ -82,6 +78,7 @@ public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
 
         apply.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 dev = deviceSelector.getSelected();
                 if (dev == null) {
@@ -96,6 +93,7 @@ public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
         buts.add(learn);
         learn.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 dev = deviceSelector.getSelected();
                 if (dev == null) {
@@ -105,9 +103,9 @@ public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
                 router.setLearning(focus.getControl());
             }
         });
-    //    pack();
+        //    pack();
         //this.setVisible(true);
-  //      deviceSelector.setSelectedIndex(0);
+        //      deviceSelector.setSelectedIndex(0);
 
     }
 
@@ -117,16 +115,13 @@ public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
 //        }
 //        return the;
 //    }
-
+    @Override
     public void setFocus(ControlPanel focus1) {
 //       MidiInDeviceManager.open();
         this.focus = focus1;
 
 //		Runtime.getRuntime().addShutdownHook(new Thread(new ExitHandler()));
-
     }
-
-  
 
 //	void monit(MidiDevice dev1) {
 //		// if (in != null)
@@ -147,6 +142,7 @@ public class MidiLearnPanel extends JPanel implements MidiLearnIF  {
 //	}
     class ExitHandler implements Runnable {
 
+        @Override
         public void run() {
             if (dev != null) {
                 dev.close();

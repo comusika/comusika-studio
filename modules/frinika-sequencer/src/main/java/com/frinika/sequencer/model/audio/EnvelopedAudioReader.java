@@ -58,6 +58,7 @@ public class EnvelopedAudioReader extends AudioReader {
 
 	}
 
+        @Override
 	protected void processAudioImp(AudioBuffer buffer, int startChunk,
 			int endChunk) {
 		// Decode byte data and insert into voiceserver buffer

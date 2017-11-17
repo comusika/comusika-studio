@@ -15,6 +15,7 @@ import javax.sound.midi.Soundbank;
 import javax.sound.midi.Synthesizer;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Line;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
 
@@ -29,10 +30,11 @@ public class SoundfontSynthTest {
 
                 MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
                 MidiDevice.Info info = null;
-                for (int i = 0; i < infos.length; i++) {
-                if(infos[i].getName().equals("RasmusDSP Synthesizer"))
-                info = infos[i];
+            for (MidiDevice.Info info1 : infos) {
+                if (info1.getName().equals("RasmusDSP Synthesizer")) {
+                    info = info1;
                 }
+            }
                 if(info == null) return; // RasmusDSP Synthesizer wasn't found!
 
 //               2. Open RasmusDSP Synthesizer
@@ -62,7 +64,7 @@ public class SoundfontSynthTest {
                       pcm_float = true;
                           
                   }
-                  catch(Exception e)
+                  catch(LineUnavailableException e)
                   {
                           System.out.println("PCM_FLOAT not supported - "  + e.toString()); 
                           AudioFormat format = new AudioFormat(44100, 16, 2, true, false);

@@ -210,6 +210,7 @@ public class SamplerOscillator extends Oscillator {
 	/* (non-Javadoc)
 	 * @see com.petersalomonsen.mystudio.audio.IAudioOutputGenerator#fillBuffer(int, int, float[])
 	 */
+        @Override
 	public void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
 		if(monitoring)
 		{

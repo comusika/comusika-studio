@@ -61,26 +61,25 @@ public class VersionProperties {
 	public static void main(String[] args) throws Exception
 	{
 		File versionPropsFile = new File("src/version.properties");
-		BufferedReader rd = new BufferedReader(new FileReader(versionPropsFile));
-		Vector<String> lines = new Vector<String>();
-		String line = rd.readLine();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		while(line!=null)
-		{
-			
-
-			if(line.indexOf("copyrightEnd")==0)
-				line="copyrightEnd			= "+new GregorianCalendar().get(GregorianCalendar.YEAR);
-			else if(line.indexOf("build-date")==0)
-				line="build-date				= "+dateFormat.format(new Date());
-			
-			System.out.println(line);
-			lines.add(line);
-			line = rd.readLine();
-		}
-		
-		rd.close();
+                Vector<String> lines;
+            try (BufferedReader rd = new BufferedReader(new FileReader(versionPropsFile))) {
+                lines = new Vector<>();
+                String line = rd.readLine();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                while(line!=null)
+                {
+                    
+                    
+                    if(line.indexOf("copyrightEnd")==0)
+                        line="copyrightEnd			= "+new GregorianCalendar().get(GregorianCalendar.YEAR);
+                    else if(line.indexOf("build-date")==0)
+                        line="build-date				= "+dateFormat.format(new Date());
+                    
+                    System.out.println(line);
+                    lines.add(line);
+                    line = rd.readLine();
+                }
+            }
 		versionPropsFile.delete();
 		versionPropsFile.createNewFile();
 		BufferedWriter wr = new BufferedWriter(new FileWriter(versionPropsFile));

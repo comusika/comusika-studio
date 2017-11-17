@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Patch;
@@ -91,7 +92,7 @@ public class SynthRackSoundbankReader extends SoundbankReader {
 						synth.loadSettings(setup.getSynthSettings()[index]);
 						Patch patch = new Patch(0,index);
 						soundbank.createAndRegisterInstrument(patch, synth);
-					} catch (Exception e) {
+					} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

@@ -78,7 +78,7 @@ public class PartViewEditor extends ItemScrollPane {
 		final AbstractSequencerProjectContainer project=frame.getProjectContainer();
 				
                 partView = new PartView(frame, this);
-		Vector<ItemPanel> clients=new Vector<ItemPanel>();
+		Vector<ItemPanel> clients=new Vector<>();
 		clients.add(partView);
 		ItemRollToolBar toolBar = new ItemRollToolBar(clients,project);
 		JPanel new_panel = new JPanel();
@@ -92,6 +92,7 @@ public class PartViewEditor extends ItemScrollPane {
 		new_button.setMargin(insets);
 		new_button.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						showNewMenu(new_button);
 					}
@@ -107,6 +108,7 @@ public class PartViewEditor extends ItemScrollPane {
 		up_button.setMargin(insets);
 		up_button.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						Collection<Lane> selected_lane = partView.getProjectContainer().getLaneSelection().getSelected();
 						if(selected_lane.size() == 1)
@@ -130,6 +132,7 @@ public class PartViewEditor extends ItemScrollPane {
 		down_button.setMargin(insets);
 		down_button.addActionListener(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						Collection<Lane> selected_lane = partView.getProjectContainer().getLaneSelection().getSelected();
 						if(selected_lane.size() == 1)
@@ -172,6 +175,7 @@ public class PartViewEditor extends ItemScrollPane {
 
 			JColorChooser colorChooser;
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 
 				if (colorChooser == null)
@@ -227,6 +231,7 @@ public class PartViewEditor extends ItemScrollPane {
 		return partView;
 	}
 
+        @Override
 	protected void rebuild() {
 		// TODO this is naff
 		laneHeaderPanel.visibleLanes.rebuild();

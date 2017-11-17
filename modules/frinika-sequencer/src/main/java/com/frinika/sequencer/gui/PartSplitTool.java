@@ -39,6 +39,7 @@ public class PartSplitTool extends ToolAdapter  implements EditTool {
 
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		
 		client=(ItemPanel)e.getSource();
@@ -73,13 +74,16 @@ public class PartSplitTool extends ToolAdapter  implements EditTool {
 		// client.repaintItems();
 	}
 
+        @Override
 	public void mouseDragged(MouseEvent e) {
 	}
 
+        @Override
 	public void mouseReleased(MouseEvent e) {
 
 	}
 
+        @Override
 	public void mouseMoved(MouseEvent e) {
 		client=(ItemPanel)e.getSource();
 	

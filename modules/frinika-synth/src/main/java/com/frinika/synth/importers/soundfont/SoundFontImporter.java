@@ -174,18 +174,18 @@ public class SoundFontImporter {
 						rootKey = shdr.originalPitch[igen.genAmount[n]];
 					if(shdr.samples[igen.genAmount[n]] == null)
 					{
-						FileInputStream fis = new FileInputStream(file);
-						chSmpl = new Chunk(fis,"smpl");
-						sampleData = new short[shdr.sampleEnd[igen.genAmount[n]]
-											   -shdr.sampleStart[igen.genAmount[n]]];
-						fis.skip(shdr.sampleStart[igen.genAmount[n]]*2);
-						byte bSample[] = new byte[sampleData.length*2];
-				
-						fis.read(bSample);
-				
-						for(int sCount=0;sCount<bSample.length;sCount+=2)
-							sampleData[sCount/2] = (short)((0xff & bSample[sCount+0]) + ((0xff & bSample[sCount+1]) * 256));
-						fis.close();
+                                            try (FileInputStream fis = new FileInputStream(file)) {
+                                                chSmpl = new Chunk(fis,"smpl");
+                                                sampleData = new short[shdr.sampleEnd[igen.genAmount[n]]
+                                                        -shdr.sampleStart[igen.genAmount[n]]];
+                                                fis.skip(shdr.sampleStart[igen.genAmount[n]]*2);
+                                                byte bSample[] = new byte[sampleData.length*2];
+                                                
+                                                fis.read(bSample);
+                                                
+                                                for(int sCount=0;sCount<bSample.length;sCount+=2)
+                                                    sampleData[sCount/2] = (short)((0xff & bSample[sCount+0]) + ((0xff & bSample[sCount+1]) * 256));
+                                            }
 				
 						shdr.samples[igen.genAmount[n]] = sampleData;
 					}

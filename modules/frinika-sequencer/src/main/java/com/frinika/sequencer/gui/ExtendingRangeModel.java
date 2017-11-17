@@ -27,6 +27,7 @@ import javax.swing.DefaultBoundedRangeModel;
 
 public class ExtendingRangeModel extends DefaultBoundedRangeModel {
 	
+        @Override
 	public void setValue(int val) {
 		
 		if (val >= getMaximum()) {

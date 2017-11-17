@@ -243,6 +243,7 @@ public class TimeSelector extends JPanel {
 		if (format == TimeFormat.NOTE_LENGTH) {
 			if (multiLine) {
 				listBox.addListSelectionListener(new ListSelectionListener() { // wrap ListSelectionEvent to ActionEvent
+                                        @Override
 					public void valueChanged(ListSelectionEvent e) {
 						ChangeEvent ce = new ChangeEvent(listBox);
 						l.stateChanged(ce);
@@ -251,6 +252,7 @@ public class TimeSelector extends JPanel {
 			} else {
 				//comboBox.addActionListener(l);
 				comboBox.addActionListener(new ActionListener() { // wrap ListSelectionEvent to ActionEvent
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						ChangeEvent ce = new ChangeEvent(comboBox);
 						l.stateChanged(ce);

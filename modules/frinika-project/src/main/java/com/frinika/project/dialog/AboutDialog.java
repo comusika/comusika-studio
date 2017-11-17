@@ -41,6 +41,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -131,7 +132,7 @@ public class AboutDialog extends JDialog {
             	bos.write(is.read());
             }
             licenseAgreement = new JTextArea(new String(bos.toByteArray()));
-        } catch(Exception e)
+        } catch(IOException e)
         {
             e.printStackTrace();
             System.out.println("Couldn't find license agreement.. Exiting.");
@@ -155,14 +156,17 @@ public class AboutDialog extends JDialog {
 	public void whitening(Container co)
 	{
         Component[] comps = co.getComponents();
-        for (int i = 0; i < comps.length; i++) {
-        	if(comps[i] instanceof JOptionPane)
-        		comps[i].setBackground(Color.WHITE);
-        	if(comps[i] instanceof JPanel)
-        		comps[i].setBackground(Color.WHITE);
-			if(comps[i] instanceof Container)
-				whitening((Container)comps[i]);
-		}		
+            for (Component comp : comps) {
+                if (comp instanceof JOptionPane) {
+                    comp.setBackground(Color.WHITE);
+                }
+                if (comp instanceof JPanel) {
+                    comp.setBackground(Color.WHITE);
+                }
+                if (comp instanceof Container) {		
+                    whitening((Container) comp);
+                }
+            }
 	}
 	
 	public void showCredits()
@@ -250,6 +254,7 @@ public class AboutDialog extends JDialog {
 			JButton button = new JButton("License");
 			button.addActionListener(new ActionListener()
 					{
+                                                @Override
 						public void actionPerformed(ActionEvent e) {
 							showLicense();
 						}
@@ -261,6 +266,7 @@ public class AboutDialog extends JDialog {
 			JButton button = new JButton("Credits");
 			button.addActionListener(new ActionListener()
 					{
+                                                @Override
 						public void actionPerformed(ActionEvent e) {
 							showCredits();
 						}
@@ -272,6 +278,7 @@ public class AboutDialog extends JDialog {
 			JButton button = new JButton("System Info");
 			button.addActionListener(new ActionListener()
 					{
+                                                @Override
 						public void actionPerformed(ActionEvent e) {
 							showSystemInfo();
 						}
@@ -283,6 +290,7 @@ public class AboutDialog extends JDialog {
 			JButton button = new JButton("OK");
 			button.addActionListener(new ActionListener()
 					{
+                                                @Override
 						public void actionPerformed(ActionEvent e) {
 							setVisible(false);
 						}
@@ -311,6 +319,7 @@ public class AboutDialog extends JDialog {
 		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		panel.registerKeyboardAction(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						setVisible(false);
 					}

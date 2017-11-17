@@ -61,9 +61,9 @@ public class MidiPacket {
 		crc32.update((byte)pitchbend_data1);  
 		crc32.update((byte)pitchbend_data2);  
 		
-		for (int i = 0; i < events.length; i++) {
-			crc32.update(events[i].getMessage().getMessage());  
-		}
+            for (MidiEvent event : events) {
+                crc32.update(event.getMessage().getMessage());
+            }
 
 		if(controls != null)
 		{

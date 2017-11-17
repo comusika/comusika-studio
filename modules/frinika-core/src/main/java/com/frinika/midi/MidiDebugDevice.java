@@ -27,8 +27,8 @@ import javax.sound.midi.Transmitter;
  */
 public class MidiDebugDevice implements MidiDevice {
 
-    List<Transmitter> trans = new Vector<Transmitter>();
-    List<Receiver> recvs = new Vector<Receiver>();
+    List<Transmitter> trans = new Vector<>();
+    List<Receiver> recvs = new Vector<>();
 
     static class DeviceInfo extends MidiDevice.Info {
 
@@ -41,11 +41,13 @@ public class MidiDebugDevice implements MidiDevice {
 
     class Rec implements Receiver {
 
+        @Override
         public void close() {
             MidiDebugDevice.this.recvs.remove(this);
 
         }
 
+        @Override
         public void send(MidiMessage mess, long timeStamp) {
             // byte a[] = mess.getMessage();
 
@@ -110,6 +112,7 @@ public class MidiDebugDevice implements MidiDevice {
 
         Receiver recv;
 
+        @Override
         public void close() {
             MidiDebugDevice.this.trans.remove(this);
             if (this.recv != null) {
@@ -118,10 +121,12 @@ public class MidiDebugDevice implements MidiDevice {
             this.recv = null;
         }
 
+        @Override
         public Receiver getReceiver() {
             return this.recv;
         }
 
+        @Override
         public void setReceiver(Receiver recv) {
             this.recv = recv;
         }
@@ -130,49 +135,60 @@ public class MidiDebugDevice implements MidiDevice {
     public MidiDebugDevice() {
     }
 
+    @Override
     public long getMicrosecondPosition() {
         return -1;
     }
 
+    @Override
     public List<Transmitter> getTransmitters() {
         return this.trans;
     }
 
+    @Override
     public List<Receiver> getReceivers() {
         return this.recvs;
     }
 
+    @Override
     public void close() {
     }
 
+    @Override
     public Transmitter getTransmitter() {
         Trans t = new Trans();
         this.trans.add(t);
         return t;
     }
 
+    @Override
     public Receiver getReceiver() {
         Rec r = new Rec();
         this.recvs.add(r);
         return r;
     }
 
+    @Override
     public int getMaxTransmitters() {
         return -1;
     }
 
+    @Override
     public int getMaxReceivers() {
         return -1;
     }
 
+    @Override
     public MidiDevice.Info getDeviceInfo() {
         return info;
     }
 
+    @Override
     public void open() {
         this.isOpen = true;
     }
 
+    @Override
     public boolean isOpen() {
         return this.isOpen;
     }

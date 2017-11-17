@@ -48,6 +48,7 @@ abstract class AbstractTimeSelectorMidiActionEditor<T extends AbstractMidiAction
 		this.setLayout(new GridBagLayout());
 		final TimeSelector ts = new TimeSelector(getLabel(), getTicks(), true, project, TimeFormat.BEAT_TICK);
 		ts.addChangeListener(new ChangeListener(){
+                        @Override
 			public void stateChanged(ChangeEvent e) {
 				setTicks(ts.getTicks());
 			}

@@ -43,6 +43,7 @@ import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
@@ -203,6 +204,7 @@ public class MidiLane extends Lane implements RecordableLane {
         return midiChannel;
     }
 
+    @Override
     public void restoreFromClone(EditHistoryRecordable object) {
         // TODO Auto-generated method stub
     }
@@ -294,7 +296,7 @@ public class MidiLane extends Lane implements RecordableLane {
             programEvent = new ProgramChangeEvent(trackHeaderPart, 0, 0, 0, 0);
         }
 
-        midiMessageListeners = new HashSet<MidiMessageListener>(); // Jens
+        midiMessageListeners = new HashSet<>(); // Jens
 
         programEvent.commitAdd();
     //	getPlayOptions();
@@ -362,6 +364,7 @@ public class MidiLane extends Lane implements RecordableLane {
         return patch;
     }
 
+    @Override
     public Selectable deepCopy(Selectable parent) {
         MidiLane clone = new MidiLane(this);
 
@@ -371,19 +374,23 @@ public class MidiLane extends Lane implements RecordableLane {
     /**
      * Lanes just move down the list. SIlly generic interface.
      */
+    @Override
     public void deepMove(long tick) {
     }
 
+    @Override
     public void addToModel() {
         super.addToModel();
         onLoad();
 
     }
 
+    @Override
     public boolean isRecording() {
         return project.getSequencer().isRecording(this);
     }
 
+    @Override
     public boolean isMute() {
         // return project.getSequencer().isMute(this);
         return playOptions.muted; // Jens
@@ -394,6 +401,7 @@ public class MidiLane extends Lane implements RecordableLane {
     //	return project.getSequencer().isSolo(this);
     }
 
+    @Override
     public void setRecording(boolean b) {
 
         MidiInDeviceManager.open(FrinikaConfig.getMidiInDeviceList()); // Possibly redundant now?
@@ -406,6 +414,7 @@ public class MidiLane extends Lane implements RecordableLane {
 
     }
 
+    @Override
     public void setMute(boolean b) {
         // project.getSequencer().setMute(this,b);
         playOptions.muted = b; // Jens
@@ -416,6 +425,7 @@ public class MidiLane extends Lane implements RecordableLane {
     // project.getSequencer().setSolo(this, b);
     }
 
+    @Override
     public double getMonitorValue() {
         if (peakMonitor == null) {
             peakMonitor = new MidiPeakMonitor();
@@ -568,7 +578,7 @@ public class MidiLane extends Lane implements RecordableLane {
                             if (getChannels != null) {
                                 channels = (boolean[]) getChannels.invoke(li, (Object[]) null);
                             }
-                        } catch (Exception e) {
+                        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
                         }
 
 
@@ -609,7 +619,7 @@ public class MidiLane extends Lane implements RecordableLane {
                                 if (getChannels != null) {
                                     channels = (boolean[]) getChannels.invoke(li, (Object[]) null);
                                 }
-                            } catch (Exception e) {
+                            } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
                             }
                             // System. out.print(ins.getName() + " "
                             // + ins.getPatch().getBank() + " "
@@ -636,7 +646,7 @@ public class MidiLane extends Lane implements RecordableLane {
                             if (getKeys != null) {
                                 keyNames = (String[]) getKeys.invoke(inst, (Object[]) null);
                             }
-                        } catch (Exception e) {
+                        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
                         }
                     }
                 }

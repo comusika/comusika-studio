@@ -52,6 +52,7 @@ public class PostOscillator extends Oscillator {
 	/* (non-Javadoc)
 	 * @see com.petersalomonsen.mystudio.audio.IAudioOutputGenerator#fillBuffer(int, int, float[])
 	 */
+        @Override
 	public void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
         // -------------------------- For debugging ------------------------------
 	    // Need to find out whether it is preOscillator or preOscillator.sampleBuffer == null

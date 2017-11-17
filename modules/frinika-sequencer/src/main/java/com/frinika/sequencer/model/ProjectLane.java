@@ -47,7 +47,7 @@ public class ProjectLane extends Lane {
 	Vector<LaneTreeListener> laneTreeListeners;
 
     {
-        parts=new Vector<Part>();
+        parts=new Vector<>();
     }
     
     /**
@@ -65,6 +65,7 @@ public class ProjectLane extends Lane {
 		setHidden(true);
     }
     
+    @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		// TODO Auto-generated method stub	
 	}
@@ -76,16 +77,19 @@ public class ProjectLane extends Lane {
 		
 	}
 
+    @Override
 	public Selectable deepCopy(Selectable parent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+    @Override
 	public void deepMove(long tick) {
 		// TODO Auto-generated method stub
 		
 	}
 
+    @Override
 	public long rightTickForMove() {
 		// TODO Auto-generated method stub
 		return 0;

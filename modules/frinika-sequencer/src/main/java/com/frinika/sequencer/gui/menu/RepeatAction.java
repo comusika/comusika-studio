@@ -72,16 +72,19 @@ public class RepeatAction extends AbstractDialogAction {
 		
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if(!(java.awt.EventQueue.getCurrentEvent().getSource() instanceof JMenuItem))
 		if(!(KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner() instanceof PartView)) return;
 		super.actionPerformed(e);
 	}	
 
+        @Override
 	protected JComponent createGUI() {
 		return new RepeatActionEditor(this, (AbstractSequencerProjectContainer) project);
 	}
 
+        @Override
 	protected void performPrepare() {
 		SelectionFocusable focus = ((AbstractSequencerProjectContainer) project).getSelectionFocus();
 		if (focus != null) {
@@ -123,6 +126,7 @@ public class RepeatAction extends AbstractDialogAction {
 		}
 	}
 	
+        @Override
 	protected void performAction() {
 		for (Selectable elem : list) {
 			if (elem instanceof Part) {

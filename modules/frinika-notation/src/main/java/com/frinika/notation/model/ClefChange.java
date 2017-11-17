@@ -62,6 +62,7 @@ public class ClefChange extends NotationEvent {
 		super(part, startTick);
 	}
 	
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		ClefChange evt=(ClefChange)object;
 		this.clef_type = evt.clef_type;

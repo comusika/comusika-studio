@@ -55,6 +55,7 @@ public class LaneHeaderPanel extends JPanel implements ComponentListener,
 		project.getEditHistoryContainer()
 				.addEditHistoryListener(this);
 		timer = new Timer(50, new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent ae) {
 				updateMeters();
 			}
@@ -117,29 +118,35 @@ public class LaneHeaderPanel extends JPanel implements ComponentListener,
 		repaint();
 	}
 
+        @Override
 	public void componentResized(ComponentEvent e) {
 		rePositionItems();
 	}
 
+        @Override
 	public void componentMoved(ComponentEvent e) {
 
 	}
 
+        @Override
 	public void componentShown(ComponentEvent e) {
 		System.out.println("SHWON");
 		timer.start();
 
 	}
 
+        @Override
 	public void componentHidden(ComponentEvent e) {
 		timer.stop();
 	}
 
+        @Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 		rePositionItems();
 
 	}
 
+        @Override
 	public void fireSequenceDataChanged(EditHistoryAction[] edithistoryActions) {
 		boolean doit = false;
 
@@ -161,6 +168,7 @@ public class LaneHeaderPanel extends JPanel implements ComponentListener,
 		}
 	}
 
+        @Override
 	public void fireLaneTreeChanged() {
 		rebuild();
 		rePositionItems();

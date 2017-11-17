@@ -95,8 +95,8 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 	protected Lane(String name, AbstractSequencerProjectContainer project) {
 		height = 1; // Layout.getLaneItemHeight();
 		this.project = project;
-		parts = new Vector<Part>();
-		children = new Vector<Lane>();
+		parts = new Vector<>();
+		children = new Vector<>();
 		setName(name);
 	
 		//	colorID = colorCount++;
@@ -113,7 +113,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 	 *
 	 */
 	public void removeAll() {
-		Vector<Part> partsCopy=new Vector<Part>(parts);
+		Vector<Part> partsCopy=new Vector<>(parts);
 		for (Part part:partsCopy) {
 			remove(part);
 		}
@@ -125,6 +125,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 	 * Call project.getEditHistoryContainer().notfiyObserers().
 	 * 
 	 */
+        @Override
 	public void remove(Part part) {
 		part.commitEventsRemove();
 		synchronized(this) {
@@ -136,6 +137,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 				EditHistoryRecordableAction.EDIT_HISTORY_TYPE_REMOVE, part);
 	}
 
+        @Override
 	public void add(Part part) {
 	//	System.out.println("Lane.add " + part);
 		synchronized(this) {
@@ -164,6 +166,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 		return project;
 	}
 
+        @Override
 	public void setSelected(boolean b) {
 		selected = b;
 	}
@@ -224,7 +227,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 	 * @return a List of all the lanes including this and all decendents
 	 */
 	public List<Lane> getFamilyLanes() {
-		Vector<Lane> lanes = new Vector<Lane>();
+		Vector<Lane> lanes = new Vector<>();
 		lanes.add(this);
 		if (children != null)
 			for (Lane child : children) {
@@ -336,6 +339,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 	 * Override to do any subclass specific stuff.
 	 * (used by undo) 
 	 */
+        @Override
 	public void removeFromModel() {
 		project.remove(this);
 		detachComponents();
@@ -358,6 +362,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 	 * (used by redo)
 	 */
 
+        @Override
 	public void addToModel() {
 		project.add(this);
 		attachComponents();
@@ -378,10 +383,12 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 
 	}
 
+        @Override
 	public long leftTickForMove() {
 		return 0;
 	}
 
+        @Override
 	public long rightTickForMove() {
 		// TODO Auto-generated method stub
 		return 0;

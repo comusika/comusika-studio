@@ -40,12 +40,14 @@ public class DragViewTool extends ToolAdapter {
 		// this.panel=panel;
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		client=(ItemPanel)e.getSource();
 		x = e.getX();
 		y = e.getY();
 	}
 
+        @Override
 	public void mouseDragged(MouseEvent e) {
 		//Rectangle visibleRect = client.getVisibleRect();
 	       

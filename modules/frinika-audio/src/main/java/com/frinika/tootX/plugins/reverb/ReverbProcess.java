@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.plugins.reverb;
 
 import com.frinika.global.FrinikaConfig;
@@ -33,93 +32,98 @@ import uk.org.toot.audio.core.AudioControls;
 import uk.org.toot.audio.core.AudioProcess;
 
 public class ReverbProcess implements AudioProcess {
-	private ReverbProcessVariables vars;
 
-	Freeverb freeverb = null;
+    private ReverbProcessVariables vars;
 
-	double reverbBufferIn[] = null;
+    Freeverb freeverb = null;
 
-	double reverbBufferOut[] = null;
+    double reverbBufferIn[] = null;
 
-	public ReverbProcess(ReverbProcessVariables variables) {
-		vars = variables;
-		((AudioControls)vars).addObserver(new Observer() {
+    double reverbBufferOut[] = null;
 
-			public void update(Observable arg0, Object arg1) {
-				ReverbProcess.this.update();
-			}
-			
-		});
-		
-	}
+    public ReverbProcess(ReverbProcessVariables variables) {
+        vars = variables;
+        ((AudioControls) vars).addObserver(new Observer() {
 
-	public void update() {
-		
-		float wet=vars.getMix();
-		float dry=1.0f-wet;
-		float level=vars.getLevel();
-		freeverb.setwet(wet*level);	
-		freeverb.setdry(dry*level);	
-		freeverb.setroomsize(vars.getRoomSize());
-		freeverb.setwidth(vars.getWidth());
-		freeverb.setdamp(vars.getDamp());
-		
-	}
+            @Override
+            public void update(Observable arg0, Object arg1) {
+                ReverbProcess.this.update();
+            }
 
-	public void open() {
-		freeverb = new Freeverb(FrinikaConfig.sampleRate, 1.0);
-		update();
-	}
+        });
 
-	float mix1 = -1;
+    }
 
-	public int processAudio(AudioBuffer buffer) {
+    public void update() {
+        float wet = vars.getMix();
+        float dry = 1.0f - wet;
+        float level = vars.getLevel();
+        freeverb.setwet(wet * level);
+        freeverb.setdry(dry * level);
+        freeverb.setroomsize(vars.getRoomSize());
+        freeverb.setwidth(vars.getWidth());
+        freeverb.setdamp(vars.getDamp());
+    }
 
-		if (((AudioControls)vars).isBypassed() ) return AUDIO_OK;
-		int n = buffer.getSampleCount();
+    @Override
+    public void open() {
+        freeverb = new Freeverb(FrinikaConfig.sampleRate, 1.0);
+        update();
+    }
 
-		if (freeverb != null
-				&& (reverbBufferIn == null || reverbBufferIn.length != n)) {
-			reverbBufferIn = new double[2 * n];
-			reverbBufferOut = new double[2 * n];
-		}
+    float mix1 = -1;
 
-		int nCh = buffer.getChannelCount();
+    @Override
+    public int processAudio(AudioBuffer buffer) {
 
-		float inL[] = buffer.getChannel(0);
+        if (((AudioControls) vars).isBypassed()) {
+            return AUDIO_OK;
+        }
+        int n = buffer.getSampleCount();
 
-		if (nCh == 1) {
-			for (int i = 0; i < n; i++) {
-				reverbBufferIn[2 * n] = inL[n];
-				reverbBufferIn[2 * n + 1] = inL[n];
-			}
+        if (freeverb != null
+                && (reverbBufferIn == null || reverbBufferIn.length != n)) {
+            reverbBufferIn = new double[2 * n];
+            reverbBufferOut = new double[2 * n];
+        }
 
-		} else if (nCh == 2) {
-			float inR[] = buffer.getChannel(1);
+        int nCh = buffer.getChannelCount();
 
-			for (int i = 0; i < n; i++) {
-				reverbBufferIn[2 * i] = inL[i];
-				reverbBufferIn[2 * i + 1] = inR[i];
-			}
-		}
+        float inL[] = buffer.getChannel(0);
 
-		freeverb.processReplace(reverbBufferIn, reverbBufferOut, 0, 2*n, 2);
+        if (nCh == 1) {
+            for (int i = 0; i < n; i++) {
+                reverbBufferIn[2 * n] = inL[n];
+                reverbBufferIn[2 * n + 1] = inL[n];
+            }
 
-		if (buffer.getChannelCount() == 1)
-			buffer.addChannel(false);
+        } else if (nCh == 2) {
+            float inR[] = buffer.getChannel(1);
 
-		inL = buffer.getChannel(0);
-		float inR[] = buffer.getChannel(1);
+            for (int i = 0; i < n; i++) {
+                reverbBufferIn[2 * i] = inL[i];
+                reverbBufferIn[2 * i + 1] = inR[i];
+            }
+        }
 
-		for (int i = 0; i < n; i++) {
-			inL[i] = (float) reverbBufferOut[2 * i];
-			inR[i] = (float) reverbBufferOut[2 * i + 1];
-		}
+        freeverb.processReplace(reverbBufferIn, reverbBufferOut, 0, 2 * n, 2);
 
-		return AUDIO_OK;
-	}
+        if (buffer.getChannelCount() == 1) {
+            buffer.addChannel(false);
+        }
 
-	public void close() {
-	}
+        inL = buffer.getChannel(0);
+        float inR[] = buffer.getChannel(1);
+
+        for (int i = 0; i < n; i++) {
+            inL[i] = (float) reverbBufferOut[2 * i];
+            inR[i] = (float) reverbBufferOut[2 * i + 1];
+        }
+
+        return AUDIO_OK;
+    }
+
+    @Override
+    public void close() {
+    }
 }
-

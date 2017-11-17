@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2006 P.J.Leonard
@@ -29,8 +28,7 @@ import java.io.RandomAccessFile;
 import javax.sound.sampled.AudioFormat;
 
 /**
- * 
- *  minimal implementation of a wav writer. Writes bytes data.
+ * Minimal implementation of a wav writer. Writes bytes data.
  *
  * @author pjl
  */
@@ -55,7 +53,6 @@ public class BasicAudioWriter {
         fis.write("fmt ".getBytes(), 0, 4);
         writeInt(0x10, fis);
 
-
         writeShort(1, fis);
 
         writeShort(nChannel = format.getChannels(), fis);
@@ -71,7 +68,6 @@ public class BasicAudioWriter {
         writeShort(16, fis);
         fis.write("data".getBytes(), 0, 4);
         writeInt(0, fis); // 4
-
     }
 
     public void close() {
@@ -100,7 +96,6 @@ public class BasicAudioWriter {
 
     /**
      * If file ends up not being used then call this.
-     *
      */
     public void discard() {
         if (fis == null) {
@@ -117,6 +112,7 @@ public class BasicAudioWriter {
         file = null;
     }
 
+    @Override
     protected void finalize() {
         // also check if count is zero DOes this ever get called ?
         if (fis == null) {

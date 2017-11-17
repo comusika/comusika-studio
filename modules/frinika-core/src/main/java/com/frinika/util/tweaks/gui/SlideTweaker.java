@@ -43,7 +43,8 @@ class SlideTweaker implements ChangeListener {
     }
 
 
+    @Override
     public void stateChanged(ChangeEvent e) {
-	t.set(new Integer(slider.getValue()));
+	t.set(slider.getValue());
     }
 }

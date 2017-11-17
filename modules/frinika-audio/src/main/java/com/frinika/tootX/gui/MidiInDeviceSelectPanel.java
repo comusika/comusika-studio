@@ -24,7 +24,8 @@
 package com.frinika.tootX.gui;
 
 import com.frinika.tootX.midi.MidiInDeviceManager;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
@@ -40,17 +41,17 @@ public class MidiInDeviceSelectPanel extends JComboBox {
     JComboBox combo;
 
     public MidiInDeviceSelectPanel() {
-        super(getList());
-    // MidiDeviceHandle [] list= MidiHub.getMidiInHandles();
+        super(getList().toArray());
+        // MidiDeviceHandle [] list= MidiHub.getMidiInHandles();
 
     }
 
-    static Vector<MidiDevice.Info> getList() {
+    static List<MidiDevice.Info> getList() {
         //	Info infos[] = MidiSystem.getMidiDeviceInfo();
 
-   //     MidiInDeviceManager.open();
-        Vector<MidiDevice.Info> list = new Vector<MidiDevice.Info>();
-        Vector<MidiInDeviceManager.DeviceReceiver> recvs = MidiInDeviceManager.getOpenDeviceReceivers();
+        //     MidiInDeviceManager.open();
+        List<MidiDevice.Info> list = new ArrayList<>();
+        List<MidiInDeviceManager.DeviceReceiver> recvs = MidiInDeviceManager.getOpenDeviceReceivers();
 
         for (MidiInDeviceManager.DeviceReceiver revc : recvs) {
             System.out.println(revc.getDevice().getDeviceInfo().toString());
@@ -59,8 +60,6 @@ public class MidiInDeviceSelectPanel extends JComboBox {
         }
 
         return list;
-
-
     }
 
     public MidiDevice getSelected() {
@@ -76,11 +75,9 @@ public class MidiInDeviceSelectPanel extends JComboBox {
     }
 
     public static void main(String args[]) {
-
         JFrame f = new JFrame();
         f.setContentPane(new MidiInDeviceSelectPanel());
         f.pack();
         f.setVisible(true);
     }
 }
-

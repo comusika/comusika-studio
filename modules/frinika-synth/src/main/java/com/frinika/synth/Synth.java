@@ -40,16 +40,16 @@ import javax.sound.midi.*;
 public abstract class Synth implements MidiChannel {
 	protected boolean sustain = false;
 	
-	protected HashMap<Integer,Oscillator> keys = new HashMap<Integer,Oscillator>();
-	protected HashMap<Integer,Oscillator> sustainedKeys = new HashMap<Integer,Oscillator>();
-	protected LinkedList<Oscillator> oscillators = new LinkedList<Oscillator>();
+	protected HashMap<Integer,Oscillator> keys = new HashMap<>();
+	protected HashMap<Integer,Oscillator> sustainedKeys = new HashMap<>();
+	protected LinkedList<Oscillator> oscillators = new LinkedList<>();
 		
 	protected PreOscillator preOscillator;
 	protected PostOscillator postOscillator;
 
     private String instrumentName = "New Synth";
 
-    private Vector<InstrumentNameListener> instrumentNameListeners = new Vector<InstrumentNameListener>();
+    private Vector<InstrumentNameListener> instrumentNameListeners = new Vector<>();
 
     private boolean mute;
 	
@@ -76,24 +76,25 @@ public abstract class Synth implements MidiChannel {
 		{	
 			if(sustain)
 			{
-				sustainedKeys.get(new Integer(noteNumber)).release();
-				sustainedKeys.remove(new Integer(noteNumber));
+				sustainedKeys.get(noteNumber).release();
+				sustainedKeys.remove(noteNumber);
 			}
 			else
 			{
-				keys.get(new Integer(noteNumber)).release();
-				keys.remove(new Integer(noteNumber));
+				keys.get(noteNumber).release();
+				keys.remove(noteNumber);
 			}
 		} catch(NullPointerException e) {}
 
 		osc.nextVoice = postOscillator;
 		frinikaSynth.getVoiceServer().addTransmitter(osc);
-		keys.put(new Integer(noteNumber),osc);
+		keys.put(noteNumber,osc);
 		oscillators.add(osc);		
 	}
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#noteOff(int, int)
 	 */
+        @Override
 	public void noteOff(int noteNumber, int velocity) {
 		noteOff(noteNumber);
 	}
@@ -101,16 +102,17 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#noteOff(int)
 	 */
+        @Override
 	public synchronized void noteOff(int noteNumber) {
 		if(sustain)
-			sustainedKeys.put(new Integer(noteNumber),keys.get(new Integer(noteNumber)));
+			sustainedKeys.put(noteNumber,keys.get(noteNumber));
 		else
 		{
-            Oscillator voice = keys.get(new Integer(noteNumber));
+            Oscillator voice = keys.get(noteNumber);
             if(voice!=null)
                 voice.release();
         }
-		keys.remove(new Integer(noteNumber));
+		keys.remove(noteNumber);
 	}
 
 	public abstract void loadSettings(Serializable settings);
@@ -120,6 +122,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setPolyPressure(int, int)
 	 */
+        @Override
 	public void setPolyPressure(int noteNumber, int pressure) {
 		// TODO Auto-generated method stub
 		
@@ -128,6 +131,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getPolyPressure(int)
 	 */
+        @Override
 	public int getPolyPressure(int noteNumber) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -136,6 +140,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setChannelPressure(int)
 	 */
+        @Override
 	public void setChannelPressure(int pressure) {
 		// TODO Auto-generated method stub
 		
@@ -144,6 +149,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getChannelPressure()
 	 */
+        @Override
 	public int getChannelPressure() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -152,6 +158,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#controlChange(int, int)
 	 */
+        @Override
 	public void controlChange(int controller, final int value) {
 		switch(controller)
 		{
@@ -163,6 +170,7 @@ public abstract class Synth implements MidiChannel {
 				break;
             case 10:
                 getAudioOutput().interruptTransmitter(postOscillator, new VoiceInterrupt() {
+                @Override
                     public void doInterrupt() {
                         postOscillator.setPan(value);
                     }
@@ -170,6 +178,7 @@ public abstract class Synth implements MidiChannel {
                 break;
 			case 7:
 				getAudioOutput().interruptTransmitter(postOscillator, new VoiceInterrupt() {
+                @Override
 					public void doInterrupt() {
 						postOscillator.setVolume(MidiVolume.midiVolumeToAmplitudeRatio(value));
 					}
@@ -177,6 +186,7 @@ public abstract class Synth implements MidiChannel {
 				break;
 			case 20:
 				getAudioOutput().interruptTransmitter(postOscillator, new VoiceInterrupt() {
+                @Override
 					public void doInterrupt() {
 						postOscillator.setOverDriveAmount(value);
 					}
@@ -184,6 +194,7 @@ public abstract class Synth implements MidiChannel {
 				break;
 			case 22:
 				getAudioOutput().interruptTransmitter(postOscillator, new VoiceInterrupt() {
+                @Override
 					public void doInterrupt() {
 						postOscillator.setEchoAmount(value);
 					}
@@ -191,6 +202,7 @@ public abstract class Synth implements MidiChannel {
 				break;
 			case 23:
 				getAudioOutput().interruptTransmitter(postOscillator, new VoiceInterrupt() {
+                @Override
 					public void doInterrupt() {
 						postOscillator.setEchoLength(value);
 					}
@@ -204,6 +216,7 @@ public abstract class Synth implements MidiChannel {
 				break;
 			case 91:
 				getAudioOutput().interruptTransmitter(postOscillator, new VoiceInterrupt() {
+                @Override
 					public void doInterrupt() {
 						postOscillator.setReverb(MidiVolume.midiVolumeToAmplitudeRatio(value));
 					}
@@ -215,6 +228,7 @@ public abstract class Synth implements MidiChannel {
 	void enableSustain()
 	{
 		getAudioOutput().interruptTransmitter(preOscillator, new VoiceInterrupt() {
+                        @Override
 			public void doInterrupt() {
 				sustain = true;
 			}
@@ -232,6 +246,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getController(int)
 	 */
+        @Override
 	public int getController(int controller) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -240,6 +255,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#programChange(int)
 	 */
+        @Override
 	public void programChange(int program) {
 		// TODO Auto-generated method stub
 		
@@ -248,6 +264,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#programChange(int, int)
 	 */
+        @Override
 	public void programChange(int bank, int program) {
 		// TODO Auto-generated method stub
 		
@@ -256,6 +273,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getProgram()
 	 */
+        @Override
 	public int getProgram() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -264,8 +282,10 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setPitchBend(int)
 	 */
+        @Override
 	public void setPitchBend(final int bend) {
 		getAudioOutput().interruptTransmitter(preOscillator, new VoiceInterrupt() {
+                @Override
 			public void doInterrupt() {
 				preOscillator.pitchBend = bend;
 				preOscillator.pitchBendFactor = (float)Math.pow(2.0,( ((double)(bend-0x2000) / (double)0x1000)/12.0));
@@ -276,6 +296,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getPitchBend()
 	 */
+        @Override
 	public int getPitchBend() {
 		return preOscillator.pitchBend;
 	}
@@ -283,6 +304,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#resetAllControllers()
 	 */
+        @Override
 	public void resetAllControllers() {
 		// TODO Auto-generated method stub
 		
@@ -291,6 +313,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#allNotesOff()
 	 */
+        @Override
 	public void allNotesOff() {
 		for(Oscillator osc : oscillators)
 			osc.release();		
@@ -299,6 +322,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#allSoundOff()
 	 */
+        @Override
 	public void allSoundOff() {
 		for(Oscillator osc : oscillators)
 			frinikaSynth.getVoiceServer().removeTransmitter(osc);
@@ -309,6 +333,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#localControl(boolean)
 	 */
+        @Override
 	public boolean localControl(boolean on) {
 		// TODO Auto-generated method stub
 		return false;
@@ -317,6 +342,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setMono(boolean)
 	 */
+        @Override
 	public void setMono(boolean on) {
 		// TODO Auto-generated method stub
 		
@@ -325,6 +351,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getMono()
 	 */
+        @Override
 	public boolean getMono() {
 		// TODO Auto-generated method stub
 		return false;
@@ -333,6 +360,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setOmni(boolean)
 	 */
+        @Override
 	public void setOmni(boolean on) {
 		// TODO Auto-generated method stub
 		
@@ -341,6 +369,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getOmni()
 	 */
+        @Override
 	public boolean getOmni() {
 		// TODO Auto-generated method stub
 		return false;
@@ -349,6 +378,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setMute(boolean)
 	 */
+        @Override
 	public void setMute(boolean mute) {
         this.mute = mute;
 	}
@@ -356,6 +386,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getMute()
 	 */
+        @Override
 	public boolean getMute() {
 		return mute;
 	}
@@ -363,6 +394,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#setSolo(boolean)
 	 */
+        @Override
 	public void setSolo(boolean soloState) {
 		// TODO Auto-generated method stub
 		
@@ -371,6 +403,7 @@ public abstract class Synth implements MidiChannel {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#getSolo()
 	 */
+        @Override
 	public boolean getSolo() {
 		// TODO Auto-generated method stub
 		return false;

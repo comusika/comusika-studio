@@ -21,26 +21,21 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.release;
 
-import static com.frinika.project.dialog.VersionProperties.getBuildDate;
-import static com.frinika.project.dialog.VersionProperties.getVersion;
+import com.frinika.project.dialog.VersionProperties;
 import java.io.File;
 
 /**
- * Automatically rename released file to include version information
+ * Automatically rename released file to include version information.
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class ApplyReleaseVersion {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		File file = new File("../frinika.zip");
-		file.renameTo(new File("../frinika-"+getVersion()+"-"+getBuildDate()+".zip"));
-	}
-
+    public static void main(String[] args) {
+        File file = new File("../frinika.zip");
+        file.renameTo(new File("../frinika-" + VersionProperties.getVersion() + "-" + VersionProperties.getBuildDate() + ".zip"));
+    }
 }

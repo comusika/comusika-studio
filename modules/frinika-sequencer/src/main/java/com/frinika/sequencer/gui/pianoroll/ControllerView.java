@@ -124,6 +124,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		partListener = new ItemPanelPartListener(this);
 
 		eventsOnScreen = new Iterable<MultiEvent>() {
+                        @Override
 			public Iterator<MultiEvent> iterator() {
 				return new EventsInPartsIterator(project.getPartSelection()
 						.getSelected(), ControllerView.this);
@@ -131,6 +132,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		};
 
 		eventsInFocus = new Iterable<MultiEvent>() {
+                        @Override
 			public Iterator<MultiEvent> iterator() {
 				Part focus = project.getPartSelection().getFocus();
 				if (focus == null)
@@ -170,6 +172,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		editHistory.removeEditHistoryListener(this);
 	}
 
+        @Override
 	public void dragTo(Point p) {
 
 		if (dragArmed)
@@ -250,6 +253,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		repaintItems();
 	}
 
+        @Override
 	public void clientClearSelection() {
 		project.getMultiEventSelection().clearSelection();
 	}
@@ -291,11 +295,12 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	 * @param rect
 	 *            rectangle in score screen space.
 	 */
+        @Override
 	public synchronized void selectInRect(Rectangle rect,boolean shift) {
 
 	
-		Collection<MultiEvent> addTmp = new Vector<MultiEvent>();
-		Collection<MultiEvent> delTmp = new Vector<MultiEvent>();
+		Collection<MultiEvent> addTmp = new Vector<>();
+		Collection<MultiEvent> delTmp = new Vector<>();
 		Iterable<MultiEvent> list;
 
 		Part focusPart = project.getPartSelection().getFocus();
@@ -378,6 +383,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		repaintItems();
 	}
 
+        @Override
 	protected synchronized void writePressedAt(Point p) {
 		Part focusPart = project.getPartSelection().getFocus();
 
@@ -467,7 +473,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	}
 
 	private Vector<MultiEvent> eventsUnderScreen(int x1, int x2) {
-		Vector<MultiEvent> noteEvents = new Vector<MultiEvent>();
+		Vector<MultiEvent> noteEvents = new Vector<>();
 		for (MultiEvent note : ((MidiPart) project.getPartSelection()
 				.getFocus()).getMultiEvents()) {
 			if (!isValidEvent(note))
@@ -485,7 +491,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	}
 
 	private Vector<MultiEvent> eventsUnderTime(long tick1, long tick2) {
-		Vector<MultiEvent> noteEvents = new Vector<MultiEvent>();
+		Vector<MultiEvent> noteEvents = new Vector<>();
 		for (MultiEvent note : ((MidiPart) project.getPartSelection()
 				.getFocus()).getMultiEvents()) {
 			if (!isValidEvent(note))
@@ -517,6 +523,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	 * @param y
 	 * @return the NoteEvent at this point.
 	 */
+        @Override
 	public Item itemAt(Point p) {
 		MultiEvent at = null;
 		for (MultiEvent note : eventsOnScreen) {
@@ -532,12 +539,14 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		return at;
 	}
 
+        @Override
 	public void fireSequenceDataChanged(EditHistoryAction[] edithistoryActions) {
 
 	
 		repaintItems();
 	}
 
+        @Override
 	public synchronized void paintImageImpl(final Rectangle visibleRect,
 			Graphics2D g) {
 
@@ -557,6 +566,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 
 	}
 
+        @Override
 	public synchronized void paintImageImplLabel(Graphics2D g) {
 
 		if (g == null)
@@ -918,6 +928,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 
 	}
 
+        @Override
 	public void erase(Item it) {
 		MultiEvent note = (MultiEvent) it;
 		velocityMode = cntrl.isVelocity();
@@ -966,65 +977,78 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 	 */
 	class NoteOnScreenCollection implements Collection<MultiEvent> {
 
+                @Override
 		public int size() {
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
+                @Override
 		public boolean isEmpty() {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public boolean contains(Object o) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public Iterator<MultiEvent> iterator() {
 			return new NoteOnScreenIterator();
 		}
 
+                @Override
 		public Object[] toArray() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+                @Override
 		public <T> T[] toArray(T[] a) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
+                @Override
 		public boolean add(MultiEvent o) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public boolean remove(Object o) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public boolean containsAll(Collection<?> c) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public boolean addAll(Collection<? extends MultiEvent> c) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public boolean removeAll(Collection<?> c) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public boolean retainAll(Collection<?> c) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
+                @Override
 		public void clear() {
 			// TODO Auto-generated method stub
 
@@ -1064,6 +1088,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 			return false;
 		}
 
+                @Override
 		public boolean hasNext() {
 			if (noteIter == null)
 				return false;
@@ -1074,6 +1099,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 			return advanceToNextMidiPart();
 		}
 
+                @Override
 		public MultiEvent next() {
 			if (noteIter.hasNext()) {
 				MultiEvent ev = noteIter.next();
@@ -1086,6 +1112,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 			return null;
 		}
 
+                @Override
 		public void remove() {
 			assert (false);
 			// TODO Auto-generated method stub
@@ -1121,6 +1148,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		return OVER_NOTHING;
 	}
 
+        @Override
 	public void adjustmentValueChanged(AdjustmentEvent arg0) {
 		setX(arg0.getValue());
 	}
@@ -1142,6 +1170,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		repaintItems();
 	}
 
+        @Override
 	final public boolean isValidEvent(MultiEvent ev) {
 
 		// are we in velocity mode then only use NoteEvents.
@@ -1163,7 +1192,7 @@ public class ControllerView extends PianoRollPanelAdapter  implements Adjustment
 		Part focus=project.getPartSelection().getFocus();
 		if (focus == null ) return;
 
-		Vector<MultiEvent> events=new Vector<MultiEvent> ();
+		Vector<MultiEvent> events=new Vector<> ();
 		for (MultiEvent e:eventsInFocus) {
 			events.add(e);
 		}

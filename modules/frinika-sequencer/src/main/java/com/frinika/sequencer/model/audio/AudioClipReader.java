@@ -88,6 +88,7 @@ public class AudioClipReader implements DoubleDataSource, AudioProcess {
 	 * @param nFrame
 	 *            number of frames to read.
 	 */
+        @Override
 	public void readNextDouble(double buffer[], int offSet, int nFrame) {
 //		nch = this.reader.getChannels();
 		int nByte = nFrame * nch * 2; // assmume 2 byte
@@ -125,6 +126,7 @@ public class AudioClipReader implements DoubleDataSource, AudioProcess {
 	 * @param nFrame
 	 *            number of frames to read.
 	 */
+        @Override
 	public int processAudio(AudioBuffer buffer) {
 	//	nch = this.reader.getChannels();
 		int nFrame = buffer.getSampleCount();
@@ -172,6 +174,7 @@ public class AudioClipReader implements DoubleDataSource, AudioProcess {
 	/**
 	 * Seek frame absolute frame postion pos-startFrame
 	 */
+        @Override
 	public void seekFrame(long pos) {
 		try {
 			reader.seekFrame(pos - startFrame);
@@ -184,10 +187,12 @@ public class AudioClipReader implements DoubleDataSource, AudioProcess {
 	/**
 	 * true if ptr is after the last data in the file.
 	 */
+        @Override
 	public boolean endOfFile() {
 		return reader.eof();
 	}
 
+        @Override
 	public int getChannels() {
 		return nch;
 	}
@@ -197,20 +202,24 @@ public class AudioClipReader implements DoubleDataSource, AudioProcess {
 
 	}
 
+        @Override
 	public void open() {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public void close() {
 		// TODO Auto-generated method stub
 
 	}
 	
+        @Override
 	public long getCurrentFrame() {
 		return reader.getCurrentFrame();// (fPtrBytes-audioDataStartBytePtr)/nChannels/2;		
 	}
 
+        @Override
 	public long getLengthInFrames() {
 		// TODO Auto-generated method stub
 		return reader.getLengthInFrames();

@@ -101,6 +101,7 @@ public class WelcomeDialog extends JDialog {
 			button.addActionListener(new ActionListener()
 					{
 					    int index = ix; 
+                                            @Override
 						public void actionPerformed(ActionEvent e) {
 							
 							ActionListener listener = listeners.get(index);
@@ -140,6 +141,7 @@ public class WelcomeDialog extends JDialog {
 		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		panel.registerKeyboardAction(new ActionListener()
 				{
+                                        @Override
 					public void actionPerformed(ActionEvent e) {
 						sel = -1;
 						setVisible(false);
@@ -171,7 +173,7 @@ public class WelcomeDialog extends JDialog {
 				
 	}
 	
-	Map<Integer, ActionListener> listeners = new HashMap<Integer, ActionListener>();
+	Map<Integer, ActionListener> listeners = new HashMap<>();
 	public void addButtonActionListener(int id, ActionListener listener)
 	{
 		listeners.put(id, listener);

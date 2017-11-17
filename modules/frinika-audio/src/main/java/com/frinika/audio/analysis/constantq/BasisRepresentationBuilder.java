@@ -21,37 +21,25 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.constantq;
 
 import com.frinika.audio.analysis.SpectrumDataBuilder;
 
 public class BasisRepresentationBuilder {
 
-	
-	void doit(SpectrumDataBuilder b){
-		
-		int nBin=b.getBinCount();
-		int nChunk=b.getSizeInChunks();
-		
-		
-		float [][] target=b.getMagnitude();
-		float [][] tt=new float[target.length][];
-		
-		for(int i=0;i<target.length;i++){
-		
-		}
-		
-		for (int i=0;i<nChunk;i++){
-			
-			
-		}
-		
-	}
-	
-	class Basis {
-		
-		
-	}
+    void doit(SpectrumDataBuilder b) {
 
+        int nBin = b.getBinCount();
+        int nChunk = b.getSizeInChunks();
+
+        float[][] target = b.getMagnitude();
+        float[][] tt = new float[target.length][];
+
+        for (float[] target1 : target) {
+        }
+
+        for (int i = 0; i < nChunk; i++) {
+
+        }
+    }
 }

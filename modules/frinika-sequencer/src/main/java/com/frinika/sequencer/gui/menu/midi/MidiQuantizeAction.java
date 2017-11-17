@@ -51,14 +51,17 @@ public class MidiQuantizeAction extends AbstractMidiAction {
 		return d;
 	}
 	
+        @Override
 	protected JComponent createGUI() {
 		return new MidiQuantizeActionEditor(this);
 	}
 	
+        @Override
 	public void modifyNoteEvent(NoteEvent note) {
 		q.quantize(note);
 	}
 	
+        @Override
         public AbstractSequencerProjectContainer getProject() {
             return (AbstractSequencerProjectContainer) super.getProject();
         }

@@ -40,6 +40,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +48,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,6 +129,7 @@ public class SynthLaneView extends LaneView {
 		add(sep, gc2);		
 	}
 
+        @Override
 	protected void makeButtons() {
 		
 		makeHeader();
@@ -142,6 +145,7 @@ public class SynthLaneView extends LaneView {
 	                /* (non-Javadoc)
 	                 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
 	                 */
+                        @Override
 	                public void mouseClicked(MouseEvent e) {
 						try
 						{
@@ -157,7 +161,7 @@ public class SynthLaneView extends LaneView {
 								((SynthesizerDescriptorIntf)midiDescriptor).setSoundBankFileName(soundFontFile.getAbsolutePath());
                                 soundBankNamelabel.setText(soundFontFile.getAbsolutePath());
                             };
-						} catch(Exception ex) { ex.printStackTrace(); }
+						} catch(HeadlessException | IOException | InvalidMidiDataException ex) { ex.printStackTrace(); }
 	                }
 	            } );
 	            add(loadSoundbankButton,gc);
@@ -165,13 +169,12 @@ public class SynthLaneView extends LaneView {
                     JButton reloadSoundbankButton = new JButton(getMessage("mididevices.reloadsoundbank"));
                     reloadSoundbankButton.addActionListener(new ActionListener() {
 
+                        @Override
                         public void actionPerformed(ActionEvent e) {
                             try {
                                 String soundbankFilename = ((SynthesizerDescriptorIntf)midiDescriptor).getSoundBankFileName();
                                 synthWrapper.loadAllInstruments(synthWrapper.getSoundbank(new File(soundbankFilename)));
-                            } catch (InvalidMidiDataException ex) {
-                                Logger.getLogger(SynthLaneView.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (IOException ex) {
+                            } catch (InvalidMidiDataException | IOException ex) {
                                 Logger.getLogger(SynthLaneView.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
@@ -184,6 +187,7 @@ public class SynthLaneView extends LaneView {
 					
 		        	JButton showSettingsButton = new JButton(getMessage("mididevices.show"));
 		        	showSettingsButton.addMouseListener(new MouseAdapter() {
+                            @Override
 		                public void mouseClicked(MouseEvent e) {
 		                	
 		                	MidiDevice dev = synthWrapper.getRealDevice();
@@ -191,14 +195,13 @@ public class SynthLaneView extends LaneView {
 							try {
 								method = dev.getClass().getMethod("show");
 			                	method.invoke(dev);
-							} catch (Exception e1) {
+							} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e1) {
 								e1.printStackTrace();
 							}
 		                }
 		            } );
 		            add(showSettingsButton,gc);				
-				} catch (SecurityException e1) {
-				} catch (NoSuchMethodException e1) {
+				} catch (SecurityException | NoSuchMethodException e1) {
 				}
 			
 	        }

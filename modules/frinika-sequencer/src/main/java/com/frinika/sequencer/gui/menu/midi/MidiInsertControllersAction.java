@@ -72,7 +72,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 	}
 	
 	private void initControllerFunctions() {
-		availableFunctions = new ArrayList<ControllerFunction>();
+		availableFunctions = new ArrayList<>();
 		availableFunctions.add(new Linear());
 		availableFunctions.add(new Triangle());
 		availableFunctions.add(new Saw());
@@ -141,7 +141,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 	}
 	
 	private void removeAllControllers(MidiPart part, int ctrl, long start, long length) {
-		for (MultiEvent evt : new ArrayList<MultiEvent>(part.getMultiEvents()) ) {
+		for (MultiEvent evt : new ArrayList<>(part.getMultiEvents()) ) {
 			if (evt instanceof ControllerEvent) {
 				long st = evt.getStartTick();
 				if ((st >= start) && (st <= start + length)) {
@@ -198,14 +198,17 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			this.height = height;
 		}
 
+                @Override
 		public int getIconHeight() {
 			return width;
 		}
 
+                @Override
 		public int getIconWidth() {
 			return height;
 		}
 
+                @Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			int v = f(0);
 			g.setColor(java.awt.Color.black);
@@ -240,10 +243,12 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			this.name = name;
 		}
 		
+                @Override
 		public String getName() {
 			return name;
 		}
 		
+                @Override
 		public Icon getIcon(int width, int height) { 
 			return new ControllerFunctionIcon(this, width, height);	
 		}
@@ -262,11 +267,13 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			super(name);
 		}
 		
+                @Override
 		public JComponent createGUI() {
 			//JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			JPanel panel = new JPanel(new FlowLayout());
 			panel.add(new JLabel("Between"));
 			panel.add(spinner(min, 0, 127, new ChangeListener() {
+                        @Override
 				public void stateChanged(ChangeEvent e) {
 					((SpinnerNumberModel)((JSpinner)e.getSource()).getModel()).setMaximum( (controller == 64) ? 16383 : 127); // hack to allow use of pitch bend, too
 					min = (Integer)((JSpinner)e.getSource()).getValue();
@@ -274,6 +281,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			}));
 			panel.add(new JLabel("and"));
 			panel.add(spinner(max, 0, 127, new ChangeListener() {
+                        @Override
 				public void stateChanged(ChangeEvent e) {
 					((SpinnerNumberModel)((JSpinner)e.getSource()).getModel()).setMaximum( (controller == 64) ? 16383 : 127); // hack to allow use of pitch bend, too
 					max = (Integer)((JSpinner)e.getSource()).getValue();
@@ -288,6 +296,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			panel.add(new JLabel("Interval"));
 			final TimeSelector phaseTimeSelector = new TimeSelector(phase, (AbstractSequencerProjectContainer) project, TimeFormat.BAR_BEAT_TICK);
 			phaseTimeSelector.addChangeListener(new ChangeListener() {
+                                @Override
 				public void stateChanged(ChangeEvent e) {
 					phase = phaseTimeSelector.getTicks();
 				}
@@ -296,6 +305,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			panel.add(new JLabel("Shift"));
 			final TimeSelector shiftTimeSelector = new TimeSelector(shift, (AbstractSequencerProjectContainer) project, TimeFormat.BAR_BEAT_TICK);
 			phaseTimeSelector.addChangeListener(new ChangeListener() {
+                                @Override
 				public void stateChanged(ChangeEvent e) {
 					shift = shiftTimeSelector.getTicks();
 				}
@@ -312,10 +322,12 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			super(getMessage("sequencer.midi.controllerfunction.linear"));
 		}
 		
+                @Override
 		public int value(long x) {
 			return min + Math.round(((max - min) * x) / (float)length);
 		}
 
+                @Override
 		public int iconValue(int x, int width, int height) {
 			return (x * height) / width;
 		}
@@ -333,6 +345,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			super(getMessage("sequencer.midi.controllerfunction.triangle"));
 		}
 
+                @Override
 		public int value(long x) {
 			int ph = (int)((x + shift) % phase);
 			int diff = max - min;
@@ -344,6 +357,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			return val;
 		}
 
+                @Override
 		public int iconValue(int x, int width, int height) {
 			int y = (x * 4) % (height * 2);
 			int d = y - height;
@@ -359,6 +373,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			super(getMessage("sequencer.midi.controllerfunction.saw"));
 		}
 
+                @Override
 		public int value(long x) {
 			int ph = (int)((x + shift) % phase);
 			int diff = max - min;
@@ -366,6 +381,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			return val;
 		}
 
+                @Override
 		public int iconValue(int x, int width, int height) {
 			return (x*2) % height;
 		}
@@ -378,6 +394,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			super(getMessage("sequencer.midi.controllerfunction.sine"));
 		}
 
+                @Override
 		public int value(long x) {
 			double amplitude = (max - min)/2.0;
 			double center = min + amplitude;
@@ -386,6 +403,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			return val;
 		}
 
+                @Override
 		public int iconValue(int x, int width, int height) {
 			int h = height / 2;
 			int y = (int) Math.round( Math.sin( ( x / 3f ) + (1.75 * Math.PI) )  * h * 0.75 ) + h;
@@ -400,10 +418,12 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 			super(getMessage("sequencer.midi.controllerfunction.square"));
 		}
 
+                @Override
 		public int value(long x) {
 			return min + (int)(((x + shift ) / phase) % 2) * (max - min);
 		}
 
+                @Override
 		public int iconValue(int x, int width, int height) {
 			return ( ((x / 8) % 2) != 0  ? height-height/4 : height/4 );
 		}

@@ -222,6 +222,7 @@ public class TextPart extends Part { //implements ConfigListener {
 	/* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Selectable#deepCopy(com.frinika.sequencer.model.Selectable)
 	 */
+        @Override
 	public Selectable deepCopy(Selectable parent) {
 		// TODO Auto-generated method stub
 		return null;
@@ -230,6 +231,7 @@ public class TextPart extends Part { //implements ConfigListener {
 	/* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Selectable#deepMove(long)
 	 */
+        @Override
 	public void deepMove(long tick) {
 		// nop
 	}
@@ -237,6 +239,7 @@ public class TextPart extends Part { //implements ConfigListener {
 	/* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.EditHistoryRecordable#restoreFromClone(com.frinika.sequencer.model.EditHistoryRecordable)
 	 */
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		// TODO Auto-generated method stub
 
@@ -320,15 +323,17 @@ public class TextPart extends Part { //implements ConfigListener {
 			fontpanel.setLayout(new BorderLayout(5,5));
 			final JTextField fontTextField = new JTextField();
 			JButton fontButton = new JButton("Pick Font...");
-			Map<Field, Object> bindMap = new HashMap<Field, Object>();
+			Map<Field, Object> bindMap = new HashMap<>();
 			bindMap.put(FrinikaConfig._TEXT_LANE_FONT.getField(), fontTextField);
 			binder = new DefaultOptionsBinder(bindMap, null);
 			fontTextField.addActionListener(new ActionListener() {
+                                @Override
 				public void actionPerformed(ActionEvent e) {
 					updateFont(fontTextField.getText());
 				}
 			});
 			fontButton.addActionListener(new ActionListener() {
+                                @Override
 				public void actionPerformed(ActionEvent e) {
 					FrinikaConfig.pickFont(frame.getFrame(), fontTextField);
 					updateFont(fontTextField.getText());

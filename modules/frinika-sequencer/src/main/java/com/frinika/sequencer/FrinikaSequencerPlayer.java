@@ -103,7 +103,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 
 	int priority = 0;
 
-	private HashMap<FrinikaTrackWrapper, QuantizeBuffer> quantizeBuffersByTrack = new HashMap<FrinikaTrackWrapper, QuantizeBuffer>();
+	private HashMap<FrinikaTrackWrapper, QuantizeBuffer> quantizeBuffersByTrack = new HashMap<>();
 
 	public FrinikaSequencerPlayer(FrinikaSequencer sequencer) {
 		this.sequencer = sequencer;
@@ -354,7 +354,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 									}
 								}
 							}
-						} catch (Exception e) {
+						} catch (InvalidMidiDataException | MidiUnavailableException e) {
 						}
 					}
 				}
@@ -467,7 +467,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 			}
 			Vector<MidiEvent> v = quantizeBuffer.data[(int) d];
 			if (v == null) {
-				v = new Vector<MidiEvent>();
+				v = new Vector<>();
 				quantizeBuffer.data[(int) d] = v;
 			}
 			v.add(event);
@@ -528,13 +528,10 @@ public class FrinikaSequencerPlayer implements Runnable {
 						.getControllerStateAtTick(tickPosition)) {
 					try {
 						sendMidiMessage(msg, trackWrapper);
-					} catch (InvalidMidiDataException e) {
+					} catch (InvalidMidiDataException | MidiUnavailableException e) {
 						// TODO Auto-generated catch block
 						// e.printStackTrace();
-					} catch (MidiUnavailableException e) {
-						// TODO Auto-generated catch block
-						// e.printStackTrace();
-					}
+                                        }
 				}
 			}
 		}
@@ -683,7 +680,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 					done++;
 				}
 			}
-		} catch (Exception e) {
+		} catch (InvalidMidiDataException e) {
 		}
 	}
 
@@ -731,6 +728,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 	}
 
 	// Note that this thread should do nothing but sending the timerEvents
+        @Override
 	public void run() {
 		finished = false;
 		priority = 0;
@@ -745,7 +743,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 				Thread.sleep(1);
 				// wait(1);
 				timerEvent();
-			} catch (Exception e) {
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
@@ -832,6 +830,7 @@ public class FrinikaSequencerPlayer implements Runnable {
 
 		long intervalInMillis = 50;
 
+                @Override
 		public void run() {
 			while (true) {
 				try {

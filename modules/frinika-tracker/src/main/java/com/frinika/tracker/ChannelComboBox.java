@@ -53,6 +53,7 @@ public class ChannelComboBox extends JComboBox implements GlobalInstrumentNameLi
     /* (non-Javadoc)
      * @see com.petersalomonsen.mystudio.mysynth.GlobalInstrumentNameListener#instrumentNameChange(int, java.lang.String)
      */
+    @Override
     public void instrumentNameChange(int synthIndex, String instrumentName) {
         boolean isSelected = false;
         if(getSelectedIndex()==synthIndex)

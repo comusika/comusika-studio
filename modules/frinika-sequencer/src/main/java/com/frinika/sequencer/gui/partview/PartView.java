@@ -114,6 +114,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
         tempoList.addTempoListListener(new TempoListListener() {
 
+            @Override
             public void notifyTempoListChange() {
 
                 // System.out.println(" PART VIEW TEMPO CHANGE");
@@ -151,6 +152,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
     }
 
+    @Override
     protected void processMouseEvent(MouseEvent e) {
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
             grabFocus();
@@ -328,7 +330,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
      */
     public void startDrag() {
 
-        this.dragList = new Vector<PartImage>();
+        this.dragList = new Vector<>();
         for (Part it : this.project.getPartSelection().getSelected()) {
             PartImage pi = new PartImage(it, it.getLane().getDisplayID());
             this.dragList.add(pi);
@@ -347,8 +349,8 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
      */
     @Override
     public synchronized void selectInRect(Rectangle rect, boolean shift) {
-        Vector<Part> addTmp = new Vector<Part>();
-        Vector<Part> delTmp = new Vector<Part>();
+        Vector<Part> addTmp = new Vector<>();
+        Vector<Part> delTmp = new Vector<>();
 
         for (Lane lane : this.project.getLanes()) {
 
@@ -1074,10 +1076,12 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         return null;
     }
 
+    @Override
     public void fireSequenceDataChanged(EditHistoryAction[] edithistoryActions) {
         repaintItems();
     }
 
+    @Override
     public void selectionChanged(SelectionContainer<? extends Part> src) {
         repaintItems();
     }
@@ -1167,7 +1171,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     }
 
     public void selectAll() {
-        Vector<Part> list = new Vector<Part>();
+        Vector<Part> list = new Vector<>();
         for (Lane lane : this.laneHeader.visibleLanes) {
             for (Part part : lane.getParts()) {
                 list.add(part);

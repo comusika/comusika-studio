@@ -45,7 +45,7 @@ import java.util.Vector;
  */
 public class MySampler extends Synth {
 	protected HashMap<Integer,Vector<SoundFontOscillator>> exclusiveClasses = 
-        new HashMap<Integer,Vector<SoundFontOscillator>>();
+        new HashMap<>();
     public SoundFontImporter sfi;
 	public SamplerOscillator samplerOscillator = new SamplerOscillator(this);
 	public SamplerGUI gui;
@@ -83,6 +83,7 @@ public class MySampler extends Synth {
 		sampledSounds[noteNumber][velocity] = snd;
 	}
 	
+        @Override
 	public void loadSettings(Serializable settings)
 	{
 		try
@@ -114,6 +115,7 @@ public class MySampler extends Synth {
 		}
 	}
 	
+        @Override
 	public Serializable getSettings()
 	{
 		Sampler20050227 settings = new Sampler20050227();
@@ -143,6 +145,7 @@ public class MySampler extends Synth {
     /* (non-Javadoc)
      * @see com.petersalomonsen.mystudio.mysynth.Synth#close()
      */
+        @Override
     public void close() {
         super.close();
         getAudioOutput().removeTransmitter(samplerOscillator);
@@ -151,6 +154,7 @@ public class MySampler extends Synth {
 	/* (non-Javadoc)
 	 * @see javax.sound.midi.MidiChannel#noteOn(int, int)
 	 */
+        @Override
 	public synchronized void noteOn(int noteNumber, int velocity) { 
 		
 
@@ -292,6 +296,7 @@ public class MySampler extends Synth {
 	/* (non-Javadoc)
 	 * @see com.petersalomonsen.mystudio.mysynth.Synth#showGUI()
 	 */
+        @Override
 	public void showGUI() {
 		gui = new SamplerGUI(this);
 	}
@@ -312,6 +317,7 @@ public class MySampler extends Synth {
         /* (non-Javadoc)
          * @see com.petersalomonsen.mystudio.mysynth.Oscillator#release()
          */
+                @Override
         public void release() {
             if(!releaseTriggered)
             {
@@ -350,6 +356,7 @@ public class MySampler extends Synth {
         /* (non-Javadoc)
 		 * @see com.petersalomonsen.mystudio.audio.IAudioOutputGenerator#fillBuffer(int, int, float[])
 		 */
+                @Override
 		public final void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
         
 		}
@@ -378,7 +385,7 @@ public class MySampler extends Synth {
         float rightLevel;
         VolumeEnvelope envelope = new VolumeEnvelope(sampleRate,-100f,0);
         
-        Vector<SoundFontOscillator> layers = new Vector<SoundFontOscillator>();
+        Vector<SoundFontOscillator> layers = new Vector<>();
         
 		public SoundFontOscillator(Synth synth, int noteNumber, int velocity)
 		{
@@ -445,13 +452,14 @@ public class MySampler extends Synth {
                 }
                 if(!exclusiveClasses.containsKey(exclusiveClass))
                 {
-                    Vector<SoundFontOscillator> exOscillators = new Vector<SoundFontOscillator>();
+                    Vector<SoundFontOscillator> exOscillators = new Vector<>();
                     exOscillators.add(this);
                     exclusiveClasses.put(exclusiveClass,exOscillators);
                 }
             }
 		}
 					
+                @Override
 		public final void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
 			for(int n=startBufferPos;n<endBufferPos;)
 			{
@@ -520,6 +528,7 @@ public class MySampler extends Synth {
 	/**
 	 * 
 	 */
+        @Override
 	public String toString() {
 		return "MS: "+getInstrumentName();
 	}

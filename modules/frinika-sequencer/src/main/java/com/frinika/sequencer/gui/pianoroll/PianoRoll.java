@@ -124,6 +124,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		super(project, scroller, true, true);
 
 		notesOnScreen = new Iterable<MultiEvent>() {
+                        @Override
 			public Iterator<MultiEvent> iterator() {
 				return new EventsInPartsIterator(project.getPartSelection()
 						.getSelected(), PianoRoll.this);
@@ -131,6 +132,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		};
 
 		notesInFocus = new Iterable<MultiEvent>() {
+                        @Override
 			public Iterator<MultiEvent> iterator() {
 				Part focus = project.getPartSelection().getFocus();
 				if (focus == null)
@@ -159,6 +161,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		editHistory.addEditHistoryListener(this);
 
 		project.getDragList().addDragEventListener(new DragEventListener() {
+                        @Override
 			public void update() {
 				repaintItems();
 			}
@@ -181,6 +184,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		setFocusable(true);
 	}
 
+        @Override
 	protected void processMouseEvent(MouseEvent e) {
 		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
 			grabFocus();
@@ -199,6 +203,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 	 * drags the dragList to Point p.
 	 * 
 	 */
+        @Override
 	public void dragTo(Point p) {
 
 		int dxDragged = p.x - xAnchor;
@@ -327,6 +332,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		// repaintItems();
 	}
 
+        @Override
 	public void clientClearSelection() {
 		project.getMultiEventSelection().clearSelection();
 	}
@@ -351,9 +357,10 @@ public class PianoRoll extends PianoRollPanelAdapter {
 	 * @param rect
 	 *            rectangle in score screen space.
 	 */
+        @Override
 	public synchronized void selectInRect(Rectangle rect, boolean shift) {
-		Collection<MultiEvent> addTmp = new Vector<MultiEvent>();
-		Collection<MultiEvent> delTmp = new Vector<MultiEvent>();
+		Collection<MultiEvent> addTmp = new Vector<>();
+		Collection<MultiEvent> delTmp = new Vector<>();
 
 		Iterable<? extends MultiEvent> list;
 
@@ -400,6 +407,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		writeAtPoint=null;
 	}
 
+        @Override
 	public synchronized void writeDraggedAt(Point p) {
 		if (newNote == null)
 			return;
@@ -446,6 +454,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 	/**
 	 * Used by the write tool to insert a note.
 	 */
+        @Override
 	protected synchronized void writePressedAt(Point p) {
 		Part focusPart = project.getPartSelection().getFocus();
 		if (focusPart == null || !(focusPart instanceof MidiPart)) {
@@ -499,6 +508,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 	 * @param y
 	 * @return the NoteEvent at this point.
 	 */
+        @Override
 	public Item itemAt(Point p) {
 		Item at = null;
 		for (MultiEvent note : notesOnScreen) {
@@ -522,6 +532,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		return (pitchTop - pitch) * noteItemHeight;
 	}
 
+        @Override
 	public void fireSequenceDataChanged(EditHistoryAction[] edithistoryActions) {
 
 		repaintItems();
@@ -540,6 +551,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		return alphaColor(c, ((NoteEvent) note).getVelocity());
 	}
 
+        @Override
 	public synchronized void paintImageImpl(final Rectangle visibleRect,
 			Graphics2D g) {
 
@@ -917,6 +929,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		project.getDragList().endDrag(controlIsDown);
 	}
 
+        @Override
 	public void erase(Item it) {
 		NoteEvent note = (NoteEvent) it;
 		editHistory.mark(getMessage("sequencer.pianoroll.erase_note"));
@@ -932,6 +945,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 	/**
 	 * play the note
 	 */
+        @Override
 	public void feedBack(Item item) {
 		audioFeedBack.select((NoteEvent) item);
 	}
@@ -1008,15 +1022,18 @@ public class PianoRoll extends PianoRollPanelAdapter {
 
 	}
 
+        @Override
 	public final boolean isValidEvent(MultiEvent event) {
 		return event instanceof NoteEvent;
 	}
 
+        @Override
 	public void ignorePartWarp(boolean b) {
 		PartSelectedAction.ignoreWarp = b;
 
 	}
 
+        @Override
 	public synchronized void componentResized(ComponentEvent arg0) {
 		super.componentResized(arg0);
 
@@ -1029,7 +1046,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
 		if (focus == null)
 			return;
 
-		Vector<MultiEvent> notes = new Vector<MultiEvent>();
+		Vector<MultiEvent> notes = new Vector<>();
 		for (MultiEvent e : notesInFocus) {
 			notes.add(e);
 		}

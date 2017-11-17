@@ -33,7 +33,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 public class FrinikaSequence extends Sequence {
-    Vector<FrinikaTrackWrapper> frinikaTrackWrappers = new Vector<FrinikaTrackWrapper>();
+    Vector<FrinikaTrackWrapper> frinikaTrackWrappers = new Vector<>();
         
     transient FrinikaSequencer sequencer;
     

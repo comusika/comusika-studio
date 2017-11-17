@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import java.awt.Dimension;
@@ -31,47 +30,37 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 
+public class SingleImagePanel extends JPanel implements Observer {
 
-public class SingleImagePanel extends JPanel implements Observer  {
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	SpectralSliceImage image;
-	
-	public SingleImagePanel(SpectralSliceImage image) {
-		this.image = image;
-		image.addObserver(this);
-	}
+    SpectralSliceImage image;
 
-	void dispose() {
-		image.deleteObserver(this);	
-	}
-	
-	
-    @Override
-	public void paint(Graphics g) {
-	//	super.paintComponent(g);
-		image.setRect(this.getBounds());
-		image.drawImage((Graphics2D)g,0,0);
-		
-	//	System.out.println("Graph Paint");
-	
-	}
+    public SingleImagePanel(SpectralSliceImage image) {
+        this.image = image;
+        image.addObserver(this);
+    }
 
+    void dispose() {
+        image.deleteObserver(this);
+    }
 
     @Override
-	public Dimension getPreferredSize() {
-		return new Dimension(1000, 120);  // TODO 
-	}
+    public void paint(Graphics g) {
+        //	super.paintComponent(g);
+        image.setRect(this.getBounds());
+        image.drawImage((Graphics2D) g, 0, 0);
 
-	
+        //	System.out.println("Graph Paint");
+    }
 
-	public void update(Observable arg0, Object arg1) {
-		repaint();
-	}
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(1000, 120);  // TODO 
+    }
 
-
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        repaint();
+    }
 }

@@ -54,6 +54,7 @@ class MultiEventCellComponent extends JTextField
 
     }
     
+    @Override
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e, int condition, boolean pressed) {	    
 	try{            
             if(e.getKeyCode()==KeyEvent.VK_DELETE) {
@@ -91,13 +92,14 @@ class MultiEventCellComponent extends JTextField
 
 		    new Thread()
 		    {
+                        @Override
 			public void run()
 			{
 			    VirtualKeyboard.noteOn(getReceiver(),note,trackerPanel.getPart().getMidiChannel(),trackerPanel.getTableModel().getEditVelocity());
 			    try
 			    {
 				    Thread.sleep(300);
-			    } catch(Exception e) {}
+			    } catch(InterruptedException e) {}
 			    VirtualKeyboard.noteOff(getReceiver(),note,trackerPanel.getPart().getMidiChannel());
 			}
 		    }.start();

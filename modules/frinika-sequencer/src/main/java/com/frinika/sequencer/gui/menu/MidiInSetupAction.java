@@ -42,6 +42,7 @@ public class MidiInSetupAction extends AbstractAction {
 	}
 
 	@SuppressWarnings("unchecked")
+    @Override
     public void actionPerformed(ActionEvent e) {
 		frame.setVisible(true);
 	}

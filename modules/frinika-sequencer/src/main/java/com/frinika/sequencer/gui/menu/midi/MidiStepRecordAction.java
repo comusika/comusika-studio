@@ -63,6 +63,7 @@ public class MidiStepRecordAction extends AbstractAction {
 		this.project = project;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		
 		if(!(java.awt.EventQueue.getCurrentEvent().getSource() instanceof JMenuItem))
@@ -85,7 +86,7 @@ public class MidiStepRecordAction extends AbstractAction {
 		MidiPart part = project.getMidiSelection().getMidiPart(); 
 		
 		if (part != null) {
-			SortedSet<Integer> inserted = new TreeSet<Integer>();
+			SortedSet<Integer> inserted = new TreeSet<>();
 			
 			project.getEditHistoryContainer().mark(getMessage(actionId));
 			
@@ -103,9 +104,11 @@ public class MidiStepRecordAction extends AbstractAction {
 			final long newPosition = position;
 			project.getSequencer().setTickPosition(position);
 			project.getEditHistoryContainer().push(new EditHistoryAction() {
+                                @Override
 				public void undo() {
 					project.getSequencer().setTickPosition(oldPosition);
 				}
+                                @Override
 				public void redo() {
 					project.getSequencer().setTickPosition(newPosition);
 				}

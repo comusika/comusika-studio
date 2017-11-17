@@ -59,34 +59,40 @@ public class FrinikaDeviceRenderer {
 	
 	public void beforeStart()
 	{		
-		for (int i = 0; i < channels.length; i++) {
-			if(channels[i] != null)
-				channels[i].beforeStart();
-		}
-		for (int i = 0; i < channels.length; i++) {
-			if(channels[i] != null)
-				channels[i].beforeStart2();
-		}
+            for (FrinikaChannelRenderer channel : channels) {
+                if (channel != null) {
+                    channel.beforeStart();
+                }
+            }
+            for (FrinikaChannelRenderer channel : channels) {
+                if (channel != null) {
+                    channel.beforeStart2();
+                }
+            }
 
 	}
 	
 	AudioProcess renderProcess = new AudioProcess()
 	{
+                @Override
 		public void open() {
 		}
 
+                @Override
 		public int processAudio(AudioBuffer buffer) {
 			
 			int samplecount = buffer.getSampleCount();
 			
-			for (int i = 0; i < channels.length; i++) {
-				if(channels[i] != null)
-					channels[i].processAudio(buffer);
-			}
+                    for (FrinikaChannelRenderer channel : channels) {
+                        if (channel != null) {
+                            channel.processAudio(buffer);
+                        }
+                    }
 			
 			return 0;
 		}
 
+                @Override
 		public void close() {
 		}
 	};
@@ -107,10 +113,11 @@ public class FrinikaDeviceRenderer {
 			((SynthWrapper)dev).setRenderAudioProcess(null);
 		}
 		
-		for (int i = 0; i < channels.length; i++) {
-			if(channels[i] != null)
-				channels[i].stop();
-		}
+            for (FrinikaChannelRenderer channel : channels) {
+                if (channel != null) {
+                    channel.stop();
+                }
+            }
 	}
 
 	

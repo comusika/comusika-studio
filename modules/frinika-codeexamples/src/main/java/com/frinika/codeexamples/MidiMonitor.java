@@ -56,6 +56,7 @@ public class MidiMonitor {
 		frame.setVisible(true);
 	
 		SwingUtilities.invokeLater(new Runnable(){
+                        @Override
 			public void run() {
 				MidiMonitor.run();	
 			}			
@@ -81,6 +82,7 @@ public class MidiMonitor {
 
 		inDeviceSelector.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent arg0) {
 				
 				MidiDevice dev =  inDeviceSelector.getSelected();
@@ -99,6 +101,7 @@ public class MidiMonitor {
 		
 		outDeviceSelector.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent arg0) {
 				MidiDevice dev =  outDeviceSelector.getSelected();
 				try {

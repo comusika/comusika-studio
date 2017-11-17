@@ -41,6 +41,7 @@ public class MovePartEditAction implements EditHistoryAction {
 		this.dstLane = dstLane;
 	}
 
+        @Override
 	public void undo() {
 		
 		// TODO put this into the Part interface.
@@ -62,6 +63,7 @@ public class MovePartEditAction implements EditHistoryAction {
 
 	}
 
+        @Override
 	public void redo() {
 //		part.startTick += dTick;
 //		part.endTick += dTick;

@@ -64,7 +64,7 @@ ComponentListener, SelectionListener<Lane> {
 		notationEditor = new NotationEditor(project, this);
 
 		// Create a toll bar and set the clients
-		Vector<ItemPanel> clients = new Vector<ItemPanel>();
+		Vector<ItemPanel> clients = new Vector<>();
 		clients.add(notationEditor);
 		
 		ItemRollToolBar toolBar = new ItemRollToolBar(clients, project);
@@ -104,6 +104,7 @@ ComponentListener, SelectionListener<Lane> {
 
 			}
 
+                        @Override
 			public void selectionChanged(SelectionContainer src) {
 				// System.out.println(" PRSP select changed" );
 				Part newFocus = project.getPartSelection().getFocus();
@@ -141,6 +142,7 @@ ComponentListener, SelectionListener<Lane> {
 
 		ListProvider resource = new ListProvider() {
 
+                        @Override
 			public Object[] getList() {
 				Lane lane = project.getLaneSelection().getFocus();
 				if (lane instanceof MidiLane) {
@@ -164,6 +166,7 @@ ComponentListener, SelectionListener<Lane> {
 		rebuild();
 	}
 
+        @Override
 	protected void rebuild() {
 		//int maxY = 128 * Layout.getNoteItemHeight();
 		//pianoRoll.yRangeModel.setMaximum(maxY);
@@ -179,26 +182,31 @@ ComponentListener, SelectionListener<Lane> {
 		
 	}
 
+        @Override
 	public void componentResized(ComponentEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void componentMoved(ComponentEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void componentShown(ComponentEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void componentHidden(ComponentEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void selectionChanged(SelectionContainer<? extends Lane> src) {
 		// TODO Auto-generated method stub
 		notationEditor.repaintItems();

@@ -142,6 +142,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
             midiLaneLabel = label;
             midiLaneLabel.addMouseListener(new MouseListener() {
 
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (((MidiLane) lane).isDrumLane()) {
                         ((MidiLane) lane).setType(MidiLane.MELODIC);
@@ -151,15 +152,19 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
                     repaint();
                 }
 
+                @Override
                 public void mouseEntered(MouseEvent e) {
                 }
 
+                @Override
                 public void mouseExited(MouseEvent e) {
                 }
 
+                @Override
                 public void mousePressed(MouseEvent e) {
                 }
 
+                @Override
                 public void mouseReleased(MouseEvent e) {
                 }
             });
@@ -182,6 +187,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
         this.voice.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 lane.setName(voice.getText());
                 if (notify) {
@@ -197,6 +203,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
         this.voice.addFocusListener(new FocusListener() {
 
+            @Override
             public void focusGained(FocusEvent e) {
                 if (notify) {
                     lane.getProject().getLaneSelection().setSelected(lane);
@@ -204,6 +211,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
                 }
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 lane.setName(voice.getText());
                 voice.setBorder(BorderFactory.createEmptyBorder(3, 2, 3, 2));
@@ -258,6 +266,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
             this.prerender.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     ((MidiLane) lane).getPlayOptions().preRendered = (!((MidiLane) lane).getPlayOptions().preRendered);
@@ -279,6 +288,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
             this.looped.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     ((MidiLane) lane).getPlayOptions().looped = (!((MidiLane) lane).getPlayOptions().looped);
                     if (notify) {
@@ -298,6 +308,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
             mute.setFocusable(false);
             this.mute.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     RecordableLane rl = (RecordableLane) lane;
@@ -318,6 +329,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
             solo.setFocusable(false);
             this.solo.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     RecordableLane rl = (RecordableLane) lane;
@@ -347,6 +359,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
             this.record.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     RecordableLane rl = (RecordableLane) lane;
@@ -565,6 +578,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
         }
     }
 
+    @Override
     public void update(Observable o, Object arg) {
         repaint();
     }

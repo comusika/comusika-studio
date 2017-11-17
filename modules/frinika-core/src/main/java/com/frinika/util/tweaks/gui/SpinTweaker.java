@@ -49,11 +49,13 @@ public class SpinTweaker extends JSpinner implements ChangeListener {
 		
 		getEditor().addMouseListener(new MouseListener(){
 
+                        @Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mouseEntered(MouseEvent e) {
 				System.out.println("N");
 
@@ -63,17 +65,20 @@ public class SpinTweaker extends JSpinner implements ChangeListener {
 				
 			}
 
+                        @Override
 			public void mouseExited(MouseEvent e) {
 				System.out.println("X");
 				getEditor().getRootPane().requestFocusInWindow();
 				
 			}
 
+                        @Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
 
+                        @Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
@@ -99,6 +104,7 @@ public class SpinTweaker extends JSpinner implements ChangeListener {
 //		p.add(new JLabel(t.getLabel()), spin);
 //	}
 
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		
 		t.set(((SpinnerNumberModel)getModel()).getNumber());

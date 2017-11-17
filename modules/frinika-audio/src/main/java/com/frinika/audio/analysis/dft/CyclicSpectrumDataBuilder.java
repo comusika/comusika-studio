@@ -21,21 +21,18 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.dft;
 
 import com.frinika.audio.analysis.gui.CyclicSpectrogramDataListener;
 
 public interface CyclicSpectrumDataBuilder {
 
-	int getBinCount();
+    int getBinCount();
 
-	int getSizeInChunks();
+    int getSizeInChunks();
 
 //	void addSizeObserver(CyclicSpectrogrumImage image);
+    float[][] getMagnitude();
 
-	float[][] getMagnitude();
-
-	void addSizeObserver(CyclicSpectrogramDataListener image);
-
+    void addSizeObserver(CyclicSpectrogramDataListener image);
 }

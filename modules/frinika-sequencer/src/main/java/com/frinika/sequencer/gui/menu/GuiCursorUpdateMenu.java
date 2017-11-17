@@ -58,6 +58,7 @@ public class GuiCursorUpdateMenu extends JMenu {
 			item.setEnabled(true);
 		item.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				project.setPixelsPerRedraw(-1);
 			}
@@ -72,6 +73,7 @@ public class GuiCursorUpdateMenu extends JMenu {
 			item.setSelected(true);
 		}
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				project.setPixelsPerRedraw(1);
 			}
@@ -84,6 +86,7 @@ public class GuiCursorUpdateMenu extends JMenu {
 		if (inc == 2)
 			item.setEnabled(true);
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				project.setPixelsPerRedraw(2);
 			}
@@ -96,6 +99,7 @@ public class GuiCursorUpdateMenu extends JMenu {
 		if (inc == 5)
 			item.setEnabled(true);
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				project.setPixelsPerRedraw(5);
 			}
@@ -108,6 +112,7 @@ public class GuiCursorUpdateMenu extends JMenu {
 		if (inc == 20)
 			item.setEnabled(true);
 		item.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				project.setPixelsPerRedraw(20);
 			}

@@ -44,13 +44,14 @@ public class MultiEventEndTickComparable implements Comparable {
         return multiEvent;
     }
     
+    @Override
     public int compareTo(Object obj)
     {
-        int ret = new Long(multiEvent.getEndTick()).compareTo(new Long(((MultiEventEndTickComparable)obj).getMultiEvent().getEndTick()));
+        int ret = new Long(multiEvent.getEndTick()).compareTo(((MultiEventEndTickComparable)obj).getMultiEvent().getEndTick());
         // In case the tick is the same use multiEventID for ordering
         if(ret==0 && obj != this)
         {
-            return new Long(multiEvent.multiEventID).compareTo(new Long(((MultiEventEndTickComparable)obj).getMultiEvent().multiEventID));
+            return new Long(multiEvent.multiEventID).compareTo(((MultiEventEndTickComparable)obj).getMultiEvent().multiEventID);
         }
         else
             return ret;

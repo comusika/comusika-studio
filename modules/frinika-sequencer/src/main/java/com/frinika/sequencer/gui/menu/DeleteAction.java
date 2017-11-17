@@ -41,6 +41,7 @@ public class DeleteAction extends AbstractAction {
 		this.project=project;		
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		
 		project.getEditHistoryContainer().mark(getMessage("sequencer.project.delete"));
@@ -58,7 +59,7 @@ public class DeleteAction extends AbstractAction {
 		
 	//	project.clipBoard().copy(list);
 		
-		Collection<Selectable> list2=new Vector<Selectable>(list);
+		Collection<Selectable> list2=new Vector<>(list);
 		for (Selectable it:list2) {
 			it.removeFromModel();
 		}

@@ -35,6 +35,7 @@ public class GearFileFilter extends FileFilter {
 	/* (non-Javadoc)
 	 * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
 	 */
+        @Override
 	public boolean accept(File f) {
 		if(f.getName().toLowerCase().indexOf(".gear")>0 || f.isDirectory())
 			return true;
@@ -45,6 +46,7 @@ public class GearFileFilter extends FileFilter {
 	/* (non-Javadoc)
 	 * @see javax.swing.filechooser.FileFilter#getDescription()
 	 */
+        @Override
 	public String getDescription() {
 		return "myStudio gear setup";
 	}

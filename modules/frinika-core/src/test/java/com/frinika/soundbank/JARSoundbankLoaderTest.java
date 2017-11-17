@@ -85,20 +85,19 @@ public class JARSoundbankLoaderTest {
         
         String sourceFileName = "testsoundbank/TestSoundBank.java";
         File sourceFile   = new File(sourceFileName);
-        FileWriter writer = new FileWriter(sourceFile);
-
-        writer.write(
-                "package testsoundbank;\n"+
-            "public class TestSoundBank extends com.sun.media.sound.ModelAbstractOscillator { \n" +
-                "    @Override public int read(float[][] buffers, int offset, int len) throws java.io.IOException { \n" +
-                "   return 0;\n" +
-                " }\n"+
-                "    @Override public String getVersion() {\n"+
-                "   return \""+(soundbankRevision++)+"\";\n"+
-                "    }\n"+
-                "}\n"
-        );
-        writer.close();
+        try (FileWriter writer = new FileWriter(sourceFile)) {
+            writer.write(
+                    "package testsoundbank;\n"+
+                            "public class TestSoundBank extends com.sun.media.sound.ModelAbstractOscillator { \n" +
+                            "    @Override public int read(float[][] buffers, int offset, int len) throws java.io.IOException { \n" +
+                            "   return 0;\n" +
+                            " }\n"+
+                            "    @Override public String getVersion() {\n"+
+                            "   return \""+(soundbankRevision++)+"\";\n"+
+                                    "    }\n"+
+                                    "}\n"
+            );
+        }
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager =

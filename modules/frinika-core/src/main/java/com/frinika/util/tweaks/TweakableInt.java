@@ -39,12 +39,13 @@ public class TweakableInt extends Tweakable {
 
 
 
+    @Override
     public void   set(String s) {
 	try {
 	    n = new Integer(s);
 	    setChanged();
 		notifyObservers();
-	} catch(Exception e) {
+	} catch(NumberFormatException e) {
 	} // TODO
 	
     }

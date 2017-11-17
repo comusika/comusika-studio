@@ -93,12 +93,14 @@ public class AudioStreamVoice extends SynchronizedAudioProcess {
 		nChannel = ais.getFormat().getChannels();
 
 		sequencer.addSongPositionListener(new SongPositionListener() {
+                        @Override
 			public void notifyTickPosition(long tick) {
 				setRunning(sequencer.isRunning());
 				setFramePos(getFramePos(sequencer, audioServer,
 						clipStartPositionInMillis));
 			}
 
+                        @Override
 			public boolean requiresNotificationOnEachTick() {
 				return false;
 			}
@@ -162,10 +164,12 @@ public class AudioStreamVoice extends SynchronizedAudioProcess {
 		clipStartPositionInFrames = (long) ((clipStartPositionInMillis * sampleRate) / 1000000);
 	}
 
+        @Override
 	public void close() {
 	
 	}
 
+        @Override
 	public void open() {
 	
 	}

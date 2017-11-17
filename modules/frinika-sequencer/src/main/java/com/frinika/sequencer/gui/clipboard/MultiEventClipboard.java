@@ -68,14 +68,17 @@ public class MultiEventClipboard {
 		System.out.println(" CLIPBOARD COPY ");
 			getClipboard().setContents(new Transferable() {
 
+                        @Override
 			public DataFlavor[] getTransferDataFlavors() {
 				return new DataFlavor[] { new MultiEventDataFlavor() };
 			}
 
+                        @Override
 			public boolean isDataFlavorSupported(DataFlavor flavor) {
 				return true;
 			}
 
+                        @Override
 			public Object getTransferData(DataFlavor flavor)
 					throws UnsupportedFlavorException, IOException {
 				// TODO Auto-generated method stub
@@ -83,6 +86,7 @@ public class MultiEventClipboard {
 			}
 		}, new ClipboardOwner() {
 
+                        @Override
 			public void lostOwnership(Clipboard clipboard, Transferable contents) {
 
 			}
@@ -119,13 +123,10 @@ public class MultiEventClipboard {
 			destinationGroup.getEditHistoryContainer()
 					.notifyEditHistoryListeners();
 
-		} catch (UnsupportedFlavorException e) {
+		} catch (UnsupportedFlavorException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+                }
 	}
 
 	/**
@@ -182,13 +183,10 @@ public class MultiEventClipboard {
 			history.notifyEditHistoryListeners();
 		    // project.getMultiEventSelection().notifyListeners();
 			assert(false); // FIXME if no0t deprecated
-		} catch (UnsupportedFlavorException e) {
+		} catch (UnsupportedFlavorException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+                }
 	}
 
 	public void setQuantization(double quantization) {

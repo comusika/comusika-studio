@@ -47,6 +47,7 @@ public class GluePartEditAction implements EditHistoryAction {
 		project = part.getLane().getProject();
 	}
 
+        @Override
 	public void undo() {
 
 		if (newPart == null)
@@ -63,6 +64,7 @@ public class GluePartEditAction implements EditHistoryAction {
 
 	}
 
+        @Override
 	public void redo() {
 
 		if (newPart == null) {

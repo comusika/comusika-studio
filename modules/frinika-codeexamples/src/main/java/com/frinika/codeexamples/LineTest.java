@@ -21,54 +21,51 @@ public class LineTest {
 					+ mixerInfos[i].getDescription() + " vend: "
 					+ mixerInfos[i].getVendor() + " ver: "
 					+ mixerInfos[i].getVersion());
-			Mixer mixer = AudioSystem.getMixer(mixerInfos[i]);
-
-			try {
-				mixer.open();
-			} catch (LineUnavailableException e) {
-				e.printStackTrace();
-			}
-			Line.Info[] sourceLines = mixer.getSourceLineInfo();
-			System.out
-					.println(" ---------------SOURCE -------------------------------- " + sourceLines.length);
-			for (Line.Info info : sourceLines) {
-				Line line = null;
-				try {
-					line = mixer.getLine(info);
-					System.out.println(info + " | " + line);
-				} catch (LineUnavailableException e) {
-					e.printStackTrace();
-				}
-				if (info instanceof DataLine.Info) {
-					DataLine.Info dinfo = (DataLine.Info) info;
-					for (AudioFormat af : dinfo.getFormats()) {
-						System.out.println(af);
-
-					}
-				}
-			}
-			
-			Line.Info[] targetLines = mixer.getTargetLineInfo();
-			System.out
-			.println(" --------------- TARGET -------------------------------- " + targetLines.length);
-			for (Line.Info info : targetLines) {
-				Line line = null;
-				try {
-					line = mixer.getLine(info);
-					System.out.println(info + " | " + line);
-				} catch (LineUnavailableException e) {
-					e.printStackTrace();
-				}
-				if (info instanceof DataLine.Info) {
-					DataLine.Info dinfo = (DataLine.Info) info;
-					for (AudioFormat af : dinfo.getFormats()) {
-						System.out.println(af);
-
-					}
-				}
-
-			}
-			mixer.close();
-		}
+			try (Mixer mixer = AudioSystem.getMixer(mixerInfos[i])) {
+                            try {
+                                mixer.open();
+                            } catch (LineUnavailableException e) {
+                                e.printStackTrace();
+                            }
+                            Line.Info[] sourceLines = mixer.getSourceLineInfo();
+                            System.out
+                                    .println(" ---------------SOURCE -------------------------------- " + sourceLines.length);
+                            for (Line.Info info : sourceLines) {
+                                Line line = null;
+                                try {
+                                    line = mixer.getLine(info);
+                                    System.out.println(info + " | " + line);
+                                } catch (LineUnavailableException e) {
+                                    e.printStackTrace();
+                                }
+                                if (info instanceof DataLine.Info) {
+                                    DataLine.Info dinfo = (DataLine.Info) info;
+                                    for (AudioFormat af : dinfo.getFormats()) {
+                                        System.out.println(af);
+                                        
+                                    }
+                                }
+                            }
+                            Line.Info[] targetLines = mixer.getTargetLineInfo();
+                            System.out
+                                    .println(" --------------- TARGET -------------------------------- " + targetLines.length);
+                            for (Line.Info info : targetLines) {
+                                Line line = null;
+                                try {
+                                    line = mixer.getLine(info);
+                                    System.out.println(info + " | " + line);
+                                } catch (LineUnavailableException e) {
+                                    e.printStackTrace();
+                                }
+                                if (info instanceof DataLine.Info) {
+                                    DataLine.Info dinfo = (DataLine.Info) info;
+                                    for (AudioFormat af : dinfo.getFormats()) {
+                                        System.out.println(af);
+                                        
+                                    }
+                                }
+                                
+                            }
+			}		}
 	}
 }

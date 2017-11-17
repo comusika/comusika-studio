@@ -88,11 +88,11 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 
 	final Color pink = new Color(255, 175, 175);
 
-	Vector<Key> blackKeys = new Vector<Key>();
+	Vector<Key> blackKeys = new Vector<>();
 
 	Key keys[] = new Key[128];
 
-	Vector<Key> whiteKeys = new Vector<Key>();
+	Vector<Key> whiteKeys = new Vector<>();
 
 	Key prevKey;
 
@@ -253,6 +253,7 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		prevKey = getKey(e.getPoint());
 		if (prevKey != null) {
@@ -261,6 +262,7 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 		}
 	}
 
+        @Override
 	public void mouseReleased(MouseEvent e) {
 		if (prevKey != null) {
 			prevKey.off();
@@ -268,6 +270,7 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 		}
 	}
 
+        @Override
 	public void mouseExited(MouseEvent e) {
 		if (prevKey != null) {
 			prevKey.off();
@@ -276,9 +279,11 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 		}
 	}
 
+        @Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
+        @Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
@@ -300,6 +305,7 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 		return null;
 	}
 
+        @Override
 	public void paintComponent(Graphics g) {
 		//Thread.yield();
 		super.paintComponent(g);
@@ -447,6 +453,7 @@ public class VirtualPianoVert extends JPanel implements MouseListener,
 		}
 	}// End class Key
 
+        @Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
 
 		yScroll = e.getValue();

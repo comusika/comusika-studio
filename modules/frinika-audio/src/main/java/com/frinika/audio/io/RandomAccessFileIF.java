@@ -21,15 +21,18 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.io;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public interface RandomAccessFileIF {
-	void seek(long l, boolean realTime)  throws IOException;
-	int read(byte[] byteBuff, int offset, int n, boolean realTime) throws IOException;
-	long length()  throws IOException ;
-	RandomAccessFile getRandomAccessFile();
+
+    void seek(long l, boolean realTime) throws IOException;
+
+    int read(byte[] byteBuff, int offset, int n, boolean realTime) throws IOException;
+
+    long length() throws IOException;
+
+    RandomAccessFile getRandomAccessFile();
 }

@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2006 P.J.Leonard
@@ -21,7 +20,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.io;
 
 import java.io.IOException;
@@ -30,9 +28,8 @@ import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
 
 /**
+ * A reader which provides a view of a portion of a wave file.
  *
- *  A reader which provides a view of a portion of a wave file.
- * 
  * @author pjl
  */
 public interface LimitedAudioReader extends AudioProcess {
@@ -45,10 +42,10 @@ public interface LimitedAudioReader extends AudioProcess {
 
     public double getSampleRate();
 
+    @Override
     public int processAudio(AudioBuffer buffer);
 
     public void seekEnvelopeStart(boolean b) throws IOException;
 
     public void seekFrameInEnvelope(long framePtr, boolean b) throws IOException;
-
 }

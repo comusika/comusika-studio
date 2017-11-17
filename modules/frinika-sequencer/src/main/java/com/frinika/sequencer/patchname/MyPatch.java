@@ -51,17 +51,20 @@ public class MyPatch implements Serializable {
 
 	
 
+        @Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof MyPatch)) return false;		
 		MyPatch c = (MyPatch)obj;
 		return c.prog == prog && c.msb == msb && c.lsb == lsb;
 	}
 
+        @Override
 	public int hashCode() {
 		return prog + msb*0x100 + lsb*0x10000;
 	}
 	
 	
+        @Override
 	public String toString() {
 		return "prog:"+prog+" msb:"+msb + " lsb:"+lsb;
 	}

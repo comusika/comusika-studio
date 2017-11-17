@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.gui;
 
 import com.frinika.tootX.midi.MidiLearnIF;
@@ -33,70 +32,72 @@ import uk.org.toot.swingui.controlui.ControlPanel;
 
 public class ControlFocus {
 
-	//private MidiLearnFrame learnFrame;
+    //private MidiLearnFrame learnFrame;
+    private MouseListener mouseListener;
 
-	private MouseListener mouseListener;
+    private ControlPanel focus;
 
-	private ControlPanel focus;
+    public ControlFocus(final MidiLearnIF midiLearnIF) {
 
-	public ControlFocus(final MidiLearnIF midiLearnIF) {
-	
-	
-		
-		mouseListener = new MouseListener() {
+        mouseListener = new MouseListener() {
 
-			private boolean setFocus(MouseEvent arg0) {
-				
-				JComponent c = (JComponent) arg0.getSource();
-				System.out.println(c.getClass());
-				if (c instanceof ControlPanel ) {
-				
-				System.out.println("Clicked " + c);
-				if (c == focus)
-					return true;
-				if (focus != null)
-					((JComponent)focus).setBackground(null);
-				c.setBackground(Color.RED);
-				focus = (ControlPanel)c;
-				}
-				return true;
-			}
+            private boolean setFocus(MouseEvent arg0) {
 
-			public void mouseClicked(MouseEvent arg0) {
-				System.out.println(" Click (focus) ");
-				setFocus(arg0);
-			}
+                JComponent c = (JComponent) arg0.getSource();
+                System.out.println(c.getClass());
+                if (c instanceof ControlPanel) {
 
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+                    System.out.println("Clicked " + c);
+                    if (c == focus) {
+                        return true;
+                    }
+                    if (focus != null) {
+                        ((JComponent) focus).setBackground(null);
+                    }
+                    c.setBackground(Color.RED);
+                    focus = (ControlPanel) c;
+                }
+                return true;
+            }
 
-			}
+            @Override
+            public void mouseClicked(MouseEvent arg0) {
+                System.out.println(" Click (focus) ");
+                setFocus(arg0);
+            }
 
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+            @Override
+            public void mouseEntered(MouseEvent arg0) {
+                // TODO Auto-generated method stub
+            }
 
-			}
+            @Override
+            public void mouseExited(MouseEvent arg0) {
+                // TODO Auto-generated method stub
+            }
 
-			public void mousePressed(MouseEvent arg0) {
-				if (!setFocus(arg0)) return;
-				if(arg0.getButton() == MouseEvent.BUTTON3) {
-	//				learnFrame=MidiLearnFrame.the();
-					midiLearnIF.setFocus(focus);
-					midiLearnIF.setVisible(true);				
-				}
-			}
+            @Override
+            public void mousePressed(MouseEvent arg0) {
+                if (!setFocus(arg0)) {
+                    return;
+                }
+                if (arg0.getButton() == MouseEvent.BUTTON3) {
+                    //				learnFrame=MidiLearnFrame.the();
+                    midiLearnIF.setFocus(focus);
+                    midiLearnIF.setVisible(true);
+                }
+            }
 
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+            @Override
+            public void mouseReleased(MouseEvent arg0) {
+                // TODO Auto-generated method stub
 
-			}
+            }
+        };
 
-		};
+    }
 
-	}
-
-	public void addComponent(JComponent c) {
-		c.addMouseListener(mouseListener);
-	}
-
+    public void addComponent(JComponent c) {
+        c.addMouseListener(mouseListener);
+    }
 }

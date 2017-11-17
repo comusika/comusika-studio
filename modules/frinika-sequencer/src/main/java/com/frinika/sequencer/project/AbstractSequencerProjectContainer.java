@@ -67,6 +67,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -102,6 +103,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
 
     public abstract FrinikaSequencer getSequencer();
 
+    @Override
     public abstract EditHistoryContainer getEditHistoryContainer();
 
     public abstract List<Lane> getLanes();
@@ -196,6 +198,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
 
     public abstract void setPartViewSnapQuantized(boolean val);
 
+    @Override
     public abstract void add(Lane lane);
 
     public abstract void add(int index, Lane lane);
@@ -249,7 +252,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
             try {
                     Method icon_method = dev.getClass().getMethod("getIcon");
                     icon = (Icon) icon_method.invoke(dev);
-            } catch (Exception e) {
+            } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
             }
             return icon;
     }
@@ -287,14 +290,14 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
 
     // NBP
     public void addMidiDevices(JComponent menu) {
-            List<MidiDevice.Info> infos = new ArrayList<MidiDevice.Info>();
-            List<Icon> icons = new ArrayList<Icon>();
+            List<MidiDevice.Info> infos = new ArrayList<>();
+            List<Icon> icons = new ArrayList<>();
 
-            List<MidiDevice.Info> infos1 = new ArrayList<MidiDevice.Info>();
-            List<Icon> icons1 = new ArrayList<Icon>();
+            List<MidiDevice.Info> infos1 = new ArrayList<>();
+            List<Icon> icons1 = new ArrayList<>();
 
-            List<MidiDevice.Info> infos2 = new ArrayList<MidiDevice.Info>();
-            List<Icon> icons2 = new ArrayList<Icon>();
+            List<MidiDevice.Info> infos2 = new ArrayList<>();
+            List<Icon> icons2 = new ArrayList<>();
 
             for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
                     try {
@@ -313,7 +316,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
                                     }
                             }
 
-                    } catch (Exception e) {
+                    } catch (MidiUnavailableException e) {
                     }
             }
 
@@ -348,6 +351,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
             this.icon = icon;
         }
         
+        @Override
         public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
 
@@ -364,7 +368,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
 
                         midiDevice = new SynthWrapper(project, midiDevice);
 
-                } catch (Exception e2) {
+                } catch (MidiUnavailableException e2) {
                         // TODO Auto-generated catch block
                         e2.printStackTrace();
                 }
@@ -488,7 +492,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
 
                 addMidiOutDevice(midiDevice);
 
-            } catch (Exception e2) {
+            } catch (MidiUnavailableException e2) {
                 e2.printStackTrace();
                 midiDevice = null;
             }

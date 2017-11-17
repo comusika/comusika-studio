@@ -172,24 +172,27 @@ public abstract class MultiEvent implements Comparable,Serializable,EditHistoryR
         commitAdd();
     }
     
+    @Override
     public int compareTo(Object obj)
     {
-        int ret = new Long(startTick).compareTo(new Long(((MultiEvent)obj).getStartTick()));
+        int ret = new Long(startTick).compareTo(((MultiEvent)obj).getStartTick());
         // In case the tick is the same use multiEventID for ordering
         if(ret==0 && obj != this)
         {
-            return new Long(multiEventID).compareTo(new Long(((MultiEvent)obj).multiEventID));
+            return new Long(multiEventID).compareTo(((MultiEvent)obj).multiEventID);
         }
         else
             return ret;
     }
     
 
+    @Override
     public void setSelected(boolean yes) {
     	if (selected == yes) return;
     	selected = yes;
     }
 
+    @Override
     public boolean isSelected() {
     	return selected;
     }
@@ -210,6 +213,7 @@ public abstract class MultiEvent implements Comparable,Serializable,EditHistoryR
 		return ev;
     }
     
+    @Override
 	public Selectable deepCopy(Selectable parent) {
 		MultiEvent ev=null;
 		try {
@@ -247,24 +251,29 @@ public abstract class MultiEvent implements Comparable,Serializable,EditHistoryR
 
     public void setValueUI(int val) {setValue(val);}  
 	
+    @Override
     public void deepMove(long tick) {
 		startTick+=tick;	
 	}
     
+    @Override
     public void removeFromModel() {
 		part.remove(this);
 	}
     
+    @Override
     public void addToModel() {
 		part.add(this);
 	}
     
+    @Override
     public long leftTickForMove() {
 		return startTick;
 	}
     /**
      * PLease override if need be
      */
+    @Override
     public long rightTickForMove() {
 		return startTick;
 	}

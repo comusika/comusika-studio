@@ -61,7 +61,7 @@ public class EditHistoryEntry {
         {
             recordableClone = (EditHistoryRecordable)recordable.clone();
         }
-        catch(Exception e)
+        catch(CloneNotSupportedException e)
         {
             
         }

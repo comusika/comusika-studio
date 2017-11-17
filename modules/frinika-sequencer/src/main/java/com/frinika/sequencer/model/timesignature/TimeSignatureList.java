@@ -61,8 +61,8 @@ public class TimeSignatureList implements Serializable {
     static double tol = 1e-6;
 
     public TimeSignatureList() {
-        eventByBar = new TreeMap<Integer, TimeSignatureEvent>();
-        list = new Vector<TimeSignatureEvent>();
+        eventByBar = new TreeMap<>();
+        list = new Vector<>();
         // eventByBeat = new TreeMap<Integer, TimeSignitureEvent>(new
         // Comparator<TimeSignitureEvent>() {
         // });
@@ -201,7 +201,7 @@ public class TimeSignatureList implements Serializable {
     private void readObject(ObjectInputStream in)
             throws ClassNotFoundException, IOException {
          in.defaultReadObject();
-         eventByBar = new TreeMap<Integer, TimeSignatureEvent>();
+         eventByBar = new TreeMap<>();
          for (TimeSignatureEvent ev:list) {
              eventByBar.put(ev.bar,ev);
          }
@@ -289,10 +289,12 @@ public class TimeSignatureList implements Serializable {
             tsNext = null;
         }
 
+        @Override
         public boolean hasNext() {
             return beatNext <= beat2;
         }
 
+        @Override
         public void next() {
             barNow++;
             beatNow = beatNext;
@@ -307,14 +309,17 @@ public class TimeSignatureList implements Serializable {
             }
         }
 
+        @Override
         public double getBeat() {
             return beatNow;
         }
 
+        @Override
         public boolean isBar() {
             return true;
         }
 
+        @Override
         public int getBar() {
             return barNow;
         }
@@ -351,10 +356,12 @@ public class TimeSignatureList implements Serializable {
             }
         }
 
+        @Override
         public boolean hasNext() {
             return count >= 0;
         }
 
+        @Override
         public void next() {
             beat += step;
             isBar = Math.abs((beat + tol - ts.beat) % ts.beatsPerBar) < 2 * tol;
@@ -372,14 +379,17 @@ public class TimeSignatureList implements Serializable {
 
         }
 
+        @Override
         public double getBeat() {
             return beat;
         }
 
+        @Override
         public boolean isBar() {
             return isBar;
         }
 
+        @Override
         public int getBar() {
             return ts.bar + ((int) (beat - ts.beat)) / ts.beatsPerBar;
         }
@@ -439,11 +449,9 @@ public class TimeSignatureList implements Serializable {
 
         OutputStream fout = new FileOutputStream(tt);
 
-        ObjectOutputStream out = new ObjectOutputStream(fout);
-
-        out.writeObject(list);
-
-        out.close();
+        try (ObjectOutputStream out = new ObjectOutputStream(fout)) {
+            out.writeObject(list);
+        }
 
         InputStream fin = new FileInputStream(tt);
 

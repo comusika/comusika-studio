@@ -35,6 +35,7 @@ public class NotationEvent extends MultiEvent {
    		super(part, startTick);
     }	
 
+        @Override
 	public long getEndTick() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -50,6 +51,7 @@ public class NotationEvent extends MultiEvent {
 	public void commitAddImpl() {
 	}
 
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {		
 		NotationEvent evt=(NotationEvent)object;
 		this.part = evt.part;

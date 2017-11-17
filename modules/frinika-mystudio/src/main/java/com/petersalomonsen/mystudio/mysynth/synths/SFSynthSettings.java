@@ -39,44 +39,56 @@ class SFSynthSettings implements SamplerSettings,Serializable
     public String instrumentName;
     public SampledSound[][] sampledSounds;
     
+    @Override
     public String getSoundFontName() {
         return soundFontName;
     }
+    @Override
     public void setSoundFontName(String soundFontName) {
         this.soundFontName = soundFontName; 
         
     }
+    @Override
     public int getInstrumentIndex() {
         return instrumentIndex;
     }
+    @Override
     public void setInstrumentIndex(int instrumentIndex) {
         this.instrumentIndex = instrumentIndex;
     }
     
+    @Override
     public String getInstrumentName() {
         return instrumentName;
     }
+    @Override
     public void setInstrumentName(String instrumentName) {
         this.instrumentName = instrumentName;
     }
+    @Override
     public SampledSoundSettings[][] getSampledSounds() {
         return (SampledSoundSettings[][])sampledSounds;
     }
+    @Override
     public void setSampledSounds(SampledSoundSettings[][] sampledSounds) {
         this.sampledSounds = (SampledSound[][])sampledSounds;
     }
+    @Override
     public int getLayers() {
         // TODO Auto-generated method stub
         return 0;
     }
+    @Override
     public void setLayers(int layers) {
         // TODO Auto-generated method stub
         
     }
+    @Override
     public float getFreqSpread() {
         // TODO Auto-generated method stub
         return 0;
     }
+    @Override
     public void setFreqSpread(float freqSpread) {
         // TODO Auto-generated method stub
         

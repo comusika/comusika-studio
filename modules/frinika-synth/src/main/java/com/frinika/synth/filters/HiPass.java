@@ -62,6 +62,7 @@ public final class HiPass {
         hiPass.setCutOff(0.001f);
         final JFrame frame = new JFrame()
         {
+            @Override
             public void paint(java.awt.Graphics g)
             {
                 g.clearRect(0,0,600,600);
@@ -87,6 +88,7 @@ public final class HiPass {
         
         new Thread()
         {
+            @Override
             public void run()
             {
                 float cutOff = 0.0000f;
@@ -98,7 +100,7 @@ public final class HiPass {
                     try
                     {
                         Thread.sleep(500);
-                    } catch(Exception e) {}
+                    } catch(InterruptedException e) {}
                 }
                 
             }

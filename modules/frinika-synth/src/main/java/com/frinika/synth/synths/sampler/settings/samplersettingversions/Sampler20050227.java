@@ -41,42 +41,54 @@ public class Sampler20050227 implements SamplerSettings,Serializable{
     private int layers = 1;
     private float freqSpread = 0;
     
+    @Override
     public String getSoundFontName() {
         return soundFontName;
     }
+    @Override
     public void setSoundFontName(String soundFontName) {
         this.soundFontName = soundFontName; 
         
     }
+    @Override
     public int getInstrumentIndex() {
         return instrumentIndex;
     }
+    @Override
     public void setInstrumentIndex(int instrumentIndex) {
         this.instrumentIndex = instrumentIndex;
     }
     
+    @Override
     public String getInstrumentName() {
         return instrumentName;
     }
+    @Override
     public void setInstrumentName(String instrumentName) {
         this.instrumentName = instrumentName;
     }
+    @Override
     public SampledSoundSettings[][] getSampledSounds() {
         return sampledSounds;
     }
+    @Override
     public void setSampledSounds(SampledSoundSettings[][] sampledSounds) {
         this.sampledSounds = sampledSounds;
     }
+    @Override
     public int getLayers() {
         return layers;
     }
+    @Override
     public void setLayers(int layers) {
         this.layers = layers;
     }
     
+    @Override
     public float getFreqSpread() {
         return freqSpread;
     }
+    @Override
     public void setFreqSpread(float freqSpread) {
         this.freqSpread = freqSpread;
     }

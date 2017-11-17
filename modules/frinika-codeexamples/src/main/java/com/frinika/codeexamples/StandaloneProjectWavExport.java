@@ -7,6 +7,7 @@ import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
 import java.io.File;
+import java.io.IOException;
 import javax.sound.sampled.AudioFileFormat.Type;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -57,7 +58,7 @@ public class StandaloneProjectWavExport {
                 sequencer.stop();
                 project.close();
                 System.out.println("Done with all");
-            } catch(Exception e)
+            } catch(IOException e)
             {
                 e.printStackTrace();
             }

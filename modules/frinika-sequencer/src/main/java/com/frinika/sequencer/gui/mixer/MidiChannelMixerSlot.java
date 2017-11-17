@@ -76,6 +76,7 @@ public class MidiChannelMixerSlot extends JPanel {
                 /* (non-Javadoc)
                  * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
                  */
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     ((Synth)midiChannel).showGUI();
                 }
@@ -86,6 +87,7 @@ public class MidiChannelMixerSlot extends JPanel {
         JCheckBox muteCB = new JCheckBox("Mute");
         muteCB.addItemListener(new ItemListener() {
 
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange()==ItemEvent.SELECTED)
                     midiChannel.setMute(true);
@@ -99,6 +101,7 @@ public class MidiChannelMixerSlot extends JPanel {
         volSlider = new JSlider(JSlider.VERTICAL,0,127,100);
         volSlider.addChangeListener(new ChangeListener() {
 
+            @Override
             public void stateChanged(ChangeEvent e) {
                 midiChannel.controlChange(7,volSlider.getValue());
             }});
@@ -112,6 +115,7 @@ public class MidiChannelMixerSlot extends JPanel {
         
         panSlider = new JSlider(JSlider.HORIZONTAL,0,127,64);
         panSlider.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 midiChannel.controlChange(10,panSlider.getValue());
             }});

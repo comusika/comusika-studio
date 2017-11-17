@@ -22,6 +22,7 @@ public class StartAction extends AbstractAction {
 
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 			
 		if (!sequencer.isRunning()) sequencer.start();	

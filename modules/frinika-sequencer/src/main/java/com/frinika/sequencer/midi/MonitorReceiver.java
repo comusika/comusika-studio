@@ -57,6 +57,7 @@ public class MonitorReceiver implements Receiver {
 		this.listeners = listeners;
 	}
 
+        @Override
 	public void send(MidiMessage message, long timeStamp) {
 
 		// I hope no one is interested in these events
@@ -92,6 +93,7 @@ public class MonitorReceiver implements Receiver {
 		notifyListeners(message);
 	}
 
+        @Override
 	public void close() {
 		chained.close();
 	}

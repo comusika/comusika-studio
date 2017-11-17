@@ -44,6 +44,7 @@ public class MultiEventCellEditor extends DefaultCellEditor
 	/* (non-Javadoc)
 	 * @see javax.swing.CellEditor#getCellEditorValue()
 	 */
+    @Override
 	public Object getCellEditorValue() {
 		try
 		{

@@ -127,6 +127,7 @@ public class OptionsDialog extends AbstractDialog {
     }// </editor-fold>//GEN-END:initComponents
     
     private boolean firstTimeShow = true;
+    @Override
     public void show() {
         //midiAction.setCancel(true);
         canceled = false;
@@ -141,6 +142,7 @@ public class OptionsDialog extends AbstractDialog {
         super.show();
     }
 
+    @Override
     public void hide() {
         if (( ! isCanceled() ) && (content instanceof OptionsEditor)) {
             ((OptionsEditor)content).update();

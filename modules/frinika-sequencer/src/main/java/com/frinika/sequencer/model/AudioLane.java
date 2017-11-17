@@ -94,6 +94,7 @@ public class AudioLane extends Lane implements RecordableLane,
 		writer.discard();
 	}
 
+        @Override
 	public void removeFromModel() {
 		project.removeStrip(stripInt+"");
 		super.removeFromModel();
@@ -104,12 +105,15 @@ public class AudioLane extends Lane implements RecordableLane,
 		peakMonitor = new AudioPeakMonitor();
 
 		audioProcess = new AudioProcess() {
+                        @Override
 			public void close() {
 			}
 
+                        @Override
 			public void open() {
 			}
 
+                        @Override
 			public int processAudio(AudioBuffer buffer) {
 				// Process audio of all parts in this lane
 				// do we need to zero the buffer here ?
@@ -161,24 +165,29 @@ public class AudioLane extends Lane implements RecordableLane,
 		sequencer.addSequencerListener(this);
 	}
 
+        @Override
 	public void restoreFromClone(EditHistoryRecordable object) {
 		System.out.println("AudioLane restroeFromClone");
 	}
 
+        @Override
 	public Selectable deepCopy(Selectable parent) {
 
 		return null;
 	}
 
+        @Override
 	public void deepMove(long tick) {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public boolean isRecording() {
 		return armed;
 	}
 
+        @Override
 	public boolean isMute() {
 		return mixerControls.isMute();
 	}
@@ -187,6 +196,7 @@ public class AudioLane extends Lane implements RecordableLane,
 		return mixerControls.isSolo();
 	}
 
+        @Override
 	public void setRecording(boolean b) {
 		if (b && audioInProcess == null) {
 			armed = false;
@@ -198,6 +208,7 @@ public class AudioLane extends Lane implements RecordableLane,
 
 	}
 
+        @Override
 	public void setMute(boolean b) {
 		mixerControls.getMuteControl().setValue(b);
 	}
@@ -224,6 +235,7 @@ public class AudioLane extends Lane implements RecordableLane,
 		writer = newAudioWriter();
 	}
 
+        @Override
 	public double getMonitorValue() {
 		return peakMonitor.getPeak();
 	}
@@ -270,9 +282,11 @@ public class AudioLane extends Lane implements RecordableLane,
 		return clipFile;
 	}
 
+        @Override
 	public void beforeStart() {
 	}
 
+        @Override
 	public void start() {
 		isRecording = project.getSequencer().isRecording();
 		if (isRecording) {
@@ -280,6 +294,7 @@ public class AudioLane extends Lane implements RecordableLane,
 		}
 	}
 
+        @Override
 	public void stop() {
 		isRecording = false;
 		if (hasRecorded) {

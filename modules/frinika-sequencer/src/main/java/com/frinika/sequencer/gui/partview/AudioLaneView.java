@@ -53,6 +53,7 @@ public class AudioLaneView extends LaneView {
 
 	
 
+        @Override
 	protected void makeButtons() {
 
 		JComponent but = createDeviceSelector();
@@ -74,6 +75,7 @@ public class AudioLaneView extends LaneView {
 		// ------------------------------------------------------------------------------------
 
 		ListProvider resource = new ListProvider() {
+                        @Override
 			public Object[] getList() {
 				// TODO connections setup
 //				Vector<AudioDeviceHandle> vec = AudioHub.getAudioInHandles();
@@ -95,6 +97,7 @@ public class AudioLaneView extends LaneView {
 	
 		
 		PopupClient client = new PopupClient() {
+                        @Override
 			public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
 				AudioProcess in;
 				try {

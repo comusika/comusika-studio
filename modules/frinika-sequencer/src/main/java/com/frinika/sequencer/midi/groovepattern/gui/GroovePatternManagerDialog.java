@@ -93,7 +93,7 @@ public class GroovePatternManagerDialog extends AbstractDialog {
         int index = itemsList.getSelectedIndex();
         Collection<GroovePatternFromSequence> patterns = manager.getUserGroovePatterns();
         //Vector<String> names = new Vector<String>();
-        Vector<GroovePattern> items = new Vector<GroovePattern>();
+        Vector<GroovePattern> items = new Vector<>();
         for (GroovePattern gp : patterns) {
             //names.add(gp.getName());
             items.add(gp);
@@ -261,7 +261,7 @@ public class GroovePatternManagerDialog extends AbstractDialog {
     							dialog.refreshItemsList();
     							dialog.itemsList.setSelectedValue(gp.getName(), true);
     						}
-    					} catch (Exception e) {
+    					} catch (IOException e) {
     						frame.error(e);
     					}
     				}
@@ -285,7 +285,7 @@ public class GroovePatternManagerDialog extends AbstractDialog {
 				GroovePattern gp = GroovePatternManager.getInstance().importUserGroovePattern(file);
 				refreshItemsList();
 				itemsList.setSelectedValue(gp, true);
-			} catch (Exception e) {
+			} catch (IOException e) {
 				((ProjectFrame) frame).error(e);
 			}
     	}

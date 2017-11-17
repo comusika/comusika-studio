@@ -45,6 +45,7 @@ public class MidiIMonitorAction extends AbstractAction {
 	}
 
 	@SuppressWarnings("unchecked")
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		MidiDevice in = null;
                 // FIXME 
@@ -57,10 +58,12 @@ public class MidiIMonitorAction extends AbstractAction {
 				double dtRef=2000.0/96.0;
 				double dtMax=0.0;
 				long cnt=0;
+                    @Override
 				public void close() {
 					// TODO Auto-generated method stub
 				}
 
+                    @Override
 				public void send(MidiMessage message, long timeStamp) {
 					
 					if (first) {

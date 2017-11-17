@@ -49,7 +49,7 @@ public class Chart extends Observable implements Serializable {
 	private String scale;
 	
 	public Chart() {
-		bars = new Vector<Bar>();
+		bars = new Vector<>();
 	}
 
 
@@ -88,7 +88,7 @@ public class Chart extends Observable implements Serializable {
 		int beats;
 
 		private Bar(int beats) {
-			chords = new Vector<Chord>();
+			chords = new Vector<>();
 			this.beats = beats;
 		}
 
@@ -135,6 +135,7 @@ public class Chart extends Observable implements Serializable {
 
 		}
 		
+                @Override
 		public String toString() {
 
 			StringBuffer str=new StringBuffer();
@@ -232,6 +233,7 @@ public class Chart extends Observable implements Serializable {
 			return root;
 		}
 		
+                @Override
 		public String toString() {
 			return name;
 		}
@@ -257,6 +259,7 @@ public class Chart extends Observable implements Serializable {
 	}
 
 	
+        @Override
 	public String toString() {
 		StringBuffer buff=new StringBuffer();
 		for(Bar bar:bars) {

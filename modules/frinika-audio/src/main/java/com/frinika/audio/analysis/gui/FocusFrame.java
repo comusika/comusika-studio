@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import java.awt.KeyboardFocusManager;
@@ -31,79 +30,86 @@ import javax.swing.JFrame;
 
 public class FocusFrame extends JFrame {
 
-	
-	KeyboardFocusManager oldkbm;
-	
-	KeyboardFocusManager kbd;
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	boolean dorun=true;
-	Thread thread;
-	
-	FocusFrame() {
-		
-		if (oldkbm == null) this.oldkbm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-	
-		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
-		kbd = KeyboardFocusManager
-				.getCurrentKeyboardFocusManager();
-		
-		Runnable runner =new Runnable() {
-		
-			public synchronized void run() {
-				
-				while(dorun) {
-					KeyboardFocusManager.setCurrentKeyboardFocusManager(kbd);
-					try {
-						wait();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-					// e.printStackTrace();
-					}
-				}
-			}
-		};
-		thread=new Thread(runner);
-		thread.start();
-		
-		addWindowListener(new WindowListener() {
+    KeyboardFocusManager oldkbm;
 
-			public void windowOpened(WindowEvent arg0) {
-			}
+    KeyboardFocusManager kbd;
 
-			public void windowClosing(WindowEvent evt) {
-				evt.getWindow().dispose();
-				KeyboardFocusManager.setCurrentKeyboardFocusManager(oldkbm);
-				dorun=false;
-			}
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    boolean dorun = true;
+    Thread thread;
 
-			public void windowClosed(WindowEvent arg0) {
+    FocusFrame() {
+        if (oldkbm == null) {
+            this.oldkbm = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        }
 
-			}
+        KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
+        kbd = KeyboardFocusManager
+                .getCurrentKeyboardFocusManager();
 
-			public void windowIconified(WindowEvent arg0) {
+        Runnable runner = new Runnable() {
 
-			}
+            @Override
+            public synchronized void run() {
 
-			public void windowDeiconified(WindowEvent arg0) {
+                while (dorun) {
+                    KeyboardFocusManager.setCurrentKeyboardFocusManager(kbd);
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        // e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread = new Thread(runner);
+        thread.start();
 
-			}
+        addWindowListener(new WindowListener() {
 
-			public void windowActivated(WindowEvent arg0) {
-				thread.interrupt();
-			}
+            @Override
+            public void windowOpened(WindowEvent arg0) {
+            }
 
-			public void windowDeactivated(WindowEvent arg0) {
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                evt.getWindow().dispose();
+                KeyboardFocusManager.setCurrentKeyboardFocusManager(oldkbm);
+                dorun = false;
+            }
 
-			}
-		});
+            @Override
+            public void windowClosed(WindowEvent arg0) {
 
-	}
-	
-	public KeyboardFocusManager getKeyboardFocusManager() {
-		return kbd;
-	}
+            }
+
+            @Override
+            public void windowIconified(WindowEvent arg0) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent arg0) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent arg0) {
+                thread.interrupt();
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent arg0) {
+
+            }
+        });
+    }
+
+    public KeyboardFocusManager getKeyboardFocusManager() {
+        return kbd;
+    }
 }

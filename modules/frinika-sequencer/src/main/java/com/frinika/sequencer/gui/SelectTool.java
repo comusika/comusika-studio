@@ -40,6 +40,7 @@ public class SelectTool extends ToolAdapter  implements EditTool {
 
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		
 		client=(ItemPanel)e.getSource();
@@ -108,6 +109,7 @@ public class SelectTool extends ToolAdapter  implements EditTool {
 		client.ignorePartWarp(false);
 	}
 
+        @Override
 	public void mouseDragged(MouseEvent e) {
 	
 		Point p = new Point(e.getX(), e.getY());
@@ -124,6 +126,7 @@ public class SelectTool extends ToolAdapter  implements EditTool {
 		client.repaint();
 	}
 
+        @Override
 	public void mouseReleased(MouseEvent e) {
 
 		if (client.selectRect.isActive()) {
@@ -145,6 +148,7 @@ public class SelectTool extends ToolAdapter  implements EditTool {
 	
 	static int dragMode=-1;
 
+        @Override
 	public void mouseMoved(MouseEvent e) {
 		client=(ItemPanel)e.getSource();
 	//	System.out.println(" MOUSE MOVE");
@@ -156,6 +160,7 @@ public class SelectTool extends ToolAdapter  implements EditTool {
 		client.setDragMode(dragNew);
 	}
 
+        @Override
 	public void mouseClicked(MouseEvent e) { // Jens
 		handleMouseClicked(e, this);
 	}

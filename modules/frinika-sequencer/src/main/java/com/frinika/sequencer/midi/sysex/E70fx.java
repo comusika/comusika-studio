@@ -38,6 +38,7 @@ import javax.sound.midi.SysexMessage;
  */
 public class E70fx extends E70SysexMacroAbstract {
 	
+        @Override
 	public String usage() {
 		return "Usage: e70fx <reverb-type> <reverb-intensity> <chorus-type> <chorus-intensity>  [ <user-prg> ] [ <use-prg-change> ]";
 	}
@@ -91,6 +92,7 @@ public class E70fx extends E70SysexMacroAbstract {
 	 *                    15 if counting from 0 to 15), use -1 to disable sending
 	 *                    user-program changes before and after the sysex data.
 	 */
+        @Override
 	public MidiMessage[] parseMessages(String macro) throws InvalidMidiDataException {
 		String[] args = splitArgs(macro);
 		int usrPrg = 0;
@@ -120,6 +122,7 @@ public class E70fx extends E70SysexMacroAbstract {
 		}
 	}
 	
+        @Override
 	public byte[] parse(String[] args) throws InvalidMidiDataException {
 		if (args.length < 4) {
 			error("At least 4 parameters are required.");

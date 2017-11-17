@@ -48,7 +48,7 @@ public class MidiRouterSerialization implements Serializable {
 
         DevRep(String name) {
             devName = name;
-            maprep = new Vector<MapEntryRep>();
+            maprep = new Vector<>();
         }
         String devName;
         Vector<MapEntryRep> maprep;
@@ -71,7 +71,7 @@ public class MidiRouterSerialization implements Serializable {
      * @param router
      */
     public void buildSerialization(ControlResolver cntrlResolver,MidiDeviceRouter router) {
-        devReps = new Vector<DevRep>();
+        devReps = new Vector<>();
         System.out.println(" BUilding MidiRouter serialization ");
         for (Entry<MidiDevice.Info, MidiEventRouter> e : router.map.entrySet()) {
             String devName = e.getKey().toString();

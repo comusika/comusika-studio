@@ -36,6 +36,7 @@ public class ObjectInputStreamFixer extends ObjectInputStream {
 		super(in);
 	}
 
+        @Override
 	protected ObjectStreamClass readClassDescriptor() throws IOException, ClassNotFoundException {
 		ObjectStreamClass osc = super.readClassDescriptor();		
 		ObjectStreamClass target_osc = ObjectStreamClass.lookup(Class.forName(osc.getName()));

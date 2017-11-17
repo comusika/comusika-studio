@@ -50,7 +50,7 @@ public class SplitPartAction implements EditHistoryAction {
 	public SplitPartAction(AbstractSequencerProjectContainer project, long tick) {
 
                 // victims are the existing parts to be split
-		victims = new Vector<Part>();
+		victims = new Vector<>();
 		splitTick = tick;
 
                 for (Part part : project.getPartSelection().getSelected()) {
@@ -63,6 +63,7 @@ public class SplitPartAction implements EditHistoryAction {
 		this.project = project;
 	}
 
+        @Override
 	public void undo() {
 
 		for (Part part : newParts) {
@@ -78,6 +79,7 @@ public class SplitPartAction implements EditHistoryAction {
 		project.getPartSelection().removeSelected(newParts);
 	}
 
+        @Override
 	public void redo() {
 
 		// Save some resources if this is really a redo
@@ -96,7 +98,7 @@ public class SplitPartAction implements EditHistoryAction {
 		}
 
                 // Here if we are splitting for the first time
-		newParts = new Vector<Part>();
+		newParts = new Vector<>();
 		// Part focus = project.getPartSelection().getFocus();
 		// Part fff=null;
 

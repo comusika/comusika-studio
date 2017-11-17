@@ -41,7 +41,7 @@ public abstract class Voice {
 	 * add this buffer to the main buffer when processed.
 	 */
 	public Voice nextVoice = null;
-	public Vector<VoiceInterrupt> interrupts = new Vector<VoiceInterrupt>();
+	public Vector<VoiceInterrupt> interrupts = new Vector<>();
 
     /**
      * This is where the raw audio data should be produced. The passed in buffer contains the

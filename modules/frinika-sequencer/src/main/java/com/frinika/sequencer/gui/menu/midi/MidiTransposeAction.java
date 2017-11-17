@@ -41,10 +41,12 @@ public class MidiTransposeAction extends AbstractMidiAction {
 		super(project, "sequencer.midi.transpose");
 	}
 
+        @Override
 	public void modifyNoteEvent(NoteEvent note) {
 		note.setNote( note.getNote() + transpose );
 	}
 			
+        @Override
 	protected JComponent createGUI() {
 		return new MidiTransposeActionEditor(this);
 	}

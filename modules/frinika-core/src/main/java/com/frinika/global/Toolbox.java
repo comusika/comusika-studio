@@ -76,7 +76,7 @@ public class Toolbox {
 	}
 
 	public static List<String> splitString(String s, String delim) {
-		ArrayList<String> l = new ArrayList<String>();
+		ArrayList<String> l = new ArrayList<>();
 		int start = 0;
 		int d = delim.length();
 		int pos;
@@ -115,39 +115,39 @@ public class Toolbox {
 	}
 	
 	public static void extractFromJar(File jarfile, String prefix, File targetDir) throws IOException {
-		JarInputStream jar = new JarInputStream(new FileInputStream(jarfile));
-		JarEntry entry = jar.getNextJarEntry();
-		while (entry != null) {
-			if ( ! entry.isDirectory() ) {
-				String name = entry.getName();
-				if ((prefix == null) || (name.startsWith(prefix))) { // entry to decopompress found
-					String n;
-					int pos = name.lastIndexOf(File.separator);
-					if (pos != -1) {
-						n = name.substring(pos + File.separator.length()); // name without preceeding path
-					} else {
-						n = name;
-					}
-					File outFile = new File(targetDir, n);
-					FileOutputStream out = new FileOutputStream(outFile);
-					
-					System.out.print(name+" -> "+outFile.getAbsolutePath()+", ");			
-					byte[] b = new byte[10 * 1024];
-					int total = 0;
-					int hasRead;
-					do {
-						hasRead = jar.read(b);
-						if (hasRead  > 0) {
-							out.write(b, 0, hasRead);
-						}
-						total += hasRead;
-					} while (hasRead > 0);
-					System.out.println(total+" bytes");
-					out.close();
-				}
-			}
-			entry = jar.getNextJarEntry();
-		}
-		jar.close();
+            try (JarInputStream jar = new JarInputStream(new FileInputStream(jarfile))) {
+                JarEntry entry = jar.getNextJarEntry();
+                while (entry != null) {
+                    if (! entry.isDirectory()) {
+                        String name = entry.getName();
+                        if ((prefix == null) || (name.startsWith(prefix))) {
+                            // entry to decopompress found
+                            String n;
+                            int pos = name.lastIndexOf(File.separator);
+                            if (pos != -1) {
+                                n = name.substring(pos + File.separator.length()); // name without preceeding path
+                            } else {
+                                n = name;
+                            }
+                            File outFile = new File(targetDir, n);
+                            try (FileOutputStream out = new FileOutputStream(outFile)) {
+                                System.out.print(name+" -> "+outFile.getAbsolutePath()+", ");
+                                byte[] b = new byte[10 * 1024];
+                                int total = 0;
+                                int hasRead;
+                                do {
+                                    hasRead = jar.read(b);
+                                    if (hasRead  > 0) {
+                                        out.write(b, 0, hasRead);
+                                    }
+                                    total += hasRead;
+                                } while (hasRead > 0);
+                                System.out.println(total+" bytes");
+                            }
+                        }
+                    }
+                    entry = jar.getNextJarEntry();
+                }
+            }
 	}
 }

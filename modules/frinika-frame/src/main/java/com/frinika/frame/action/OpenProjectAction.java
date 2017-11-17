@@ -56,6 +56,7 @@ public class OpenProjectAction extends  AbstractAction {
 
 	
 
+        @Override
 		public void actionPerformed(ActionEvent e) {
 			try {					
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

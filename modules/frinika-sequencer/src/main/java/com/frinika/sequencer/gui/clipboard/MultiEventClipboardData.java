@@ -34,7 +34,7 @@ import java.util.Vector;
 public class MultiEventClipboardData implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    Vector<MultiEvent> multiEvents = new Vector<MultiEvent>();
+    Vector<MultiEvent> multiEvents = new Vector<>();
     long referenceTick;
     
     /**
@@ -62,7 +62,7 @@ public class MultiEventClipboardData implements Serializable {
      * @return Returns a cloned copy of the multiEvents in this object
      */
     public Collection<MultiEvent> getClonedMultiEvents() {
-        Vector<MultiEvent> multiEvents = new Vector<MultiEvent>();
+        Vector<MultiEvent> multiEvents = new Vector<>();
         for(MultiEvent multiEvent : this.multiEvents)
             try {
                 multiEvents.add((MultiEvent)multiEvent.clone());

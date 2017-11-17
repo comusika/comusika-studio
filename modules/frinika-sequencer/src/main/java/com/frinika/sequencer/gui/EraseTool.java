@@ -35,6 +35,7 @@ public class EraseTool extends ToolAdapter implements EditTool {
 		super( cursor);
 	}
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		client=(ItemPanel)e.getSource();
 		
@@ -55,6 +56,7 @@ public class EraseTool extends ToolAdapter implements EditTool {
 		}
 	}
 
+        @Override
 	public void mouseDragged(MouseEvent e) {
 
 		// TODO effecient ?

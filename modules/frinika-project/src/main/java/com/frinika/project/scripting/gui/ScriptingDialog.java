@@ -124,6 +124,7 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
             this.source = source;
         }
         
+        @Override
         abstract public void actionPerformed(ActionEvent e);
     }
     
@@ -160,6 +161,7 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
             bg.add(item);
             item.setSelected(f == getActiveEditor());
             item.addActionListener(new SourceActionListener<JInternalFrame>(f) {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                 	try {
                 		source.setIcon(false);
@@ -242,39 +244,41 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
     
     protected ScriptEditorInternalFrame findByFilename(String filename) {
         JInternalFrame[] f = desktopPane.getAllFrames();
-        for (int i = 0; i < f.length; i++) {
-            try {
-                DefaultFrinikaScript script = (DefaultFrinikaScript) ((ScriptEditorInternalFrame)f[i]).getScript();
-                if (script.getFilename().equals(filename)) {
-                    return (ScriptEditorInternalFrame)f[i];
+            for (JInternalFrame f1 : f) {
+                try {
+                    DefaultFrinikaScript script = (DefaultFrinikaScript) ((ScriptEditorInternalFrame) f1).getScript();
+                    if (script.getFilename().equals(filename)) {
+                        return (ScriptEditorInternalFrame) f1;
+                    }
+                }catch (Throwable t) {
+                    // nop
                 }
-            } catch (Throwable t) {
-                // nop
             }
-        }
         return null;
     }
 
     protected ScriptEditorInternalFrame findByScript(FrinikaScript script) {
         JInternalFrame[] f = desktopPane.getAllFrames();
-        for (int i = 0; i < f.length; i++) {
-            try {
-                FrinikaScript sc = ((ScriptEditorInternalFrame)f[i]).getScript();
-                if (sc == script) {
-                    return (ScriptEditorInternalFrame)f[i];
+            for (JInternalFrame f1 : f) {
+                try {
+                    FrinikaScript sc = ((ScriptEditorInternalFrame) f1).getScript();
+                    if (sc == script) {
+                        return (ScriptEditorInternalFrame) f1;
+                    }
+                }catch (Throwable t) {
+                    // nop
                 }
-            } catch (Throwable t) {
-                // nop
             }
-        }
         return null;
     }
 
 
+        @Override
 	public void scriptStarted(FrinikaScript script) {
 		// nop
 	}
 
+        @Override
     public void scriptExited(FrinikaScript script, Object returnValue) {
         switch(script.getLanguage()) {
             case FrinikaScript.LANGUAGE_JAVASCRIPT:
@@ -290,17 +294,20 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
     }
 
 
+        @Override
 	public void internalFrameActivated(InternalFrameEvent e) {
         activeEditor = (ScriptEditorInternalFrame)e.getInternalFrame();
         updateMenus();
     }
     
+        @Override
     public void internalFrameDeactivated(InternalFrameEvent e) {
         if ( activeEditor == e.getInternalFrame() ) {
             activeEditor = null;
         }
     }
 
+        @Override
     public void internalFrameClosed(InternalFrameEvent e) {
     	ScriptEditorInternalFrame f = (ScriptEditorInternalFrame)e.getInternalFrame();
     	FrinikaScript script = f.getScript();
@@ -312,6 +319,7 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
         updateMenus();
     }
 
+        @Override
     public void internalFrameClosing(InternalFrameEvent e) {
     	ScriptEditorInternalFrame f = (ScriptEditorInternalFrame)e.getInternalFrame();
     	if ( f.hasBeenModifiedWithoutSaving() ) {
@@ -323,12 +331,15 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
         f.dispose();
     }
 
+        @Override
     public void internalFrameIconified(InternalFrameEvent e) {
     }
 
+        @Override
     public void internalFrameDeiconified(InternalFrameEvent e) {
     }
 
+        @Override
     public void internalFrameOpened(InternalFrameEvent e) {
     }
 
@@ -673,7 +684,7 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
     // End of variables declaration//GEN-END:variables
     
     private void initPresetMenu() {
-    	presets = new HashMap<String, FrinikaScript>();
+    	presets = new HashMap<>();
     	
         preset("Hello World", "// Hello World:\n\nprint(\"Hello\");\nprintln(\" World\");\n\n\ns = \"Hello\";\ns += \" World\";\nprintln(s);\n");
         
@@ -687,7 +698,7 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
         	boolean separator = false;
         	while (line != null) {
             	// lines of the form "#### <preset-name>" indicate a new preset
-    			if (line.indexOf(doubleDelim) != -1) { // ######## -> separatpr
+    			if (line.contains(doubleDelim)) { // ######## -> separatpr
     				separator = true;
     			} else if (line.startsWith(PRESETS_DELIM)) {
         			if (presetName != null) {
@@ -716,12 +727,15 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
     
     private void preset(final String name, final String source) {
         FrinikaScript script = new FrinikaScript() {
+            @Override
             public int getLanguage() {
                 return FrinikaScript.LANGUAGE_JAVASCRIPT;
             }
+            @Override
             public String getName() {
                 return name;
             }
+            @Override
             public String getSource() {
                 return source;
             }
@@ -729,6 +743,7 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
         presets.put(name, script);
         JMenuItem item = new JMenuItem(name);
         item.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 String n = ((JMenuItem)e.getSource()).getText();
                 FrinikaScript script = presets.get(n);

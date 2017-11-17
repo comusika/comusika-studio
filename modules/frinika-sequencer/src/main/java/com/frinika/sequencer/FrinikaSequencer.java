@@ -106,49 +106,49 @@ public class FrinikaSequencer implements Sequencer {
     private float bpm = 100;
     private boolean recording;
    
-	private final List<Transmitter> transmitters = new ArrayList<Transmitter>();
-	private final List<Receiver> receivers = new ArrayList<Receiver>();
-	private final List<SongPositionListener> songPositionListeners = new ArrayList<SongPositionListener>();
-	private final ArrayList<SequencerListener> sequencerListeners = new ArrayList<SequencerListener>();
-	private final Collection<MidiMessageListener> midiMessageListeners = new HashSet<MidiMessageListener>(); // Jens
+	private final List<Transmitter> transmitters = new ArrayList<>();
+	private final List<Receiver> receivers = new ArrayList<>();
+	private final List<SongPositionListener> songPositionListeners = new ArrayList<>();
+	private final ArrayList<SequencerListener> sequencerListeners = new ArrayList<>();
+	private final Collection<MidiMessageListener> midiMessageListeners = new HashSet<>(); // Jens
 	
 	
     /**
      * List of Midi Out Devices mapped to the transmitters
      */
-	private final HashMap<MidiDevice,Transmitter> midiOutDeviceTransmitters = new HashMap<MidiDevice,Transmitter>();
-    private final List<MidiDevice> midiOutDevices = new ArrayList<MidiDevice>();
+	private final HashMap<MidiDevice,Transmitter> midiOutDeviceTransmitters = new HashMap<>();
+    private final List<MidiDevice> midiOutDevices = new ArrayList<>();
     
 	/** 
      * Songposition listeners that requires to be notified on each tick  
 	 */
-    private final ArrayList<SongPositionListener> intenseSongPositionListeners = new ArrayList<SongPositionListener>();
+    private final ArrayList<SongPositionListener> intenseSongPositionListeners = new ArrayList<>();
     
 	/** 
      * Tempochange listeners   
 	 */
-    private final ArrayList<TempoChangeListener> tempoChangeListeners = new ArrayList<TempoChangeListener>();
+    private final ArrayList<TempoChangeListener> tempoChangeListeners = new ArrayList<>();
     /**
      * MidiLanes that are armed for recording
      */
-    private final HashSet<RecordableLane> recordingLanes = new HashSet<RecordableLane>();
-    private Vector<Vector<MultiEvent>> recordingTakes = new Vector<Vector<MultiEvent>>();
+    private final HashSet<RecordableLane> recordingLanes = new HashSet<>();
+    private Vector<Vector<MultiEvent>> recordingTakes = new Vector<>();
     // The current recording take - will be added to recordingTake when recording is stopped, or in case of a loop - and provided that there are multievents in the take
-    private Vector<MultiEvent> currentRecordingTake = new Vector<MultiEvent>();
+    private Vector<MultiEvent> currentRecordingTake = new Vector<>();
     private RecordingDialog recordingTakeDialog = null;
     
     /**
      * Solo / mute
      */
-    private final HashSet<FrinikaTrackWrapper> soloFrinikaTrackWrappers = new HashSet<FrinikaTrackWrapper>();
+    private final HashSet<FrinikaTrackWrapper> soloFrinikaTrackWrappers = new HashSet<>();
     //private final HashSet<FrinikaTrackWrapper> muteFrinikaTrackWrappers = new HashSet<FrinikaTrackWrapper>(); // Jens
     //private final HashSet<FrinikaTrackWrapper> loopedFrinikaTrackWrappers = new HashSet<FrinikaTrackWrapper>(); // Jens
-    private final HashMap<FrinikaTrackWrapper, MidiPlayOptions> frinikaTrackWrappersMidiPlayOptions = new HashMap<FrinikaTrackWrapper, MidiPlayOptions>(); // Jens
+    private final HashMap<FrinikaTrackWrapper, MidiPlayOptions> frinikaTrackWrappersMidiPlayOptions = new HashMap<>(); // Jens
     
     // The default transmitter
 	private Transmitter transmitter;
 
-    HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<Integer,NoteEvent>();
+    HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<>();
 
     int lastLoopCount;
     
@@ -160,6 +160,7 @@ public class FrinikaSequencer implements Sequencer {
             currentRecordingTake.add(event);
         }
         
+        @Override
         public void send(MidiMessage message, long timeStamp) {
             long tick = player.getRealTimeTickPosition();                
             
@@ -213,7 +214,7 @@ public class FrinikaSequencer implements Sequencer {
 
                     		System.out.println(shm.getData1() + " "  + shm.getData2() + "  " + throughShm.getData1() + " " + throughShm.getData2());
                     	}
-                    } catch (Exception e) {
+                    } catch (InvalidMidiDataException | MidiUnavailableException e) {
                         e.printStackTrace();
                     }
                 }
@@ -277,6 +278,7 @@ public class FrinikaSequencer implements Sequencer {
             }
         }
 
+        @Override
         public void close() {
             
         }        
@@ -308,19 +310,23 @@ public class FrinikaSequencer implements Sequencer {
         setLoopStartPoint(ticks);
     }
 	
+        @Override
 	public void setSequence(Sequence sequence) throws InvalidMidiDataException {
 		this.sequence = (FrinikaSequence)sequence;
 	}
 
+        @Override
 	public void setSequence(InputStream stream) throws IOException, InvalidMidiDataException {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public Sequence getSequence() {
 		return sequence;
 	}
 
+        @Override
 	public void start() {
         player.setLatencyCompensationInMillis(FrinikaAudioSystem.getAudioServer().getOutputLatencyMillis());
         for(SequencerListener listener : sequencerListeners)
@@ -330,6 +336,7 @@ public class FrinikaSequencer implements Sequencer {
             listener.start();
 	}
 
+        @Override
 	public void stop() {
         if(recording)
         {
@@ -346,6 +353,7 @@ public class FrinikaSequencer implements Sequencer {
 
 	}
 
+        @Override
 	public boolean isRunning() {
 		return player.isRunning();
 	}
@@ -369,7 +377,7 @@ public class FrinikaSequencer implements Sequencer {
             }
         }
         
-        currentRecordingTake = new Vector<MultiEvent>();
+        currentRecordingTake = new Vector<>();
     }
 
     /**
@@ -387,7 +395,7 @@ public class FrinikaSequencer implements Sequencer {
      */
     public void deployTake(int[] takeNumbers)
     {
-        Vector<MidiPart> parts = new Vector<MidiPart>();
+        Vector<MidiPart> parts = new Vector<>();
         for(RecordableLane lane : recordingLanes)
         {
         	
@@ -445,6 +453,7 @@ public class FrinikaSequencer implements Sequencer {
         return recordingTakes.get(takeNo);
     }
     
+        @Override
     public void startRecording() {
         pendingNoteEvents.clear();
         lastLoopCount = 0;
@@ -453,10 +462,12 @@ public class FrinikaSequencer implements Sequencer {
         start();
 	}
 
+        @Override
 	public void stopRecording() {
 	    stop();
 	}
 
+        @Override
 	public boolean isRecording() {
 		return recording;
 	}
@@ -464,6 +475,7 @@ public class FrinikaSequencer implements Sequencer {
     /**
      * @deprecated Use recordEnable on MidiLane instead
      */
+        @Override
 	public void recordEnable(Track track, int channel) {
 		// TODO Auto-generated method stub
 		
@@ -477,6 +489,7 @@ public class FrinikaSequencer implements Sequencer {
     /**
      * @deprecated Use recordEnable on MidiLane instead
      */
+        @Override
     public void recordDisable(Track track) {
         // TODO Auto-generated method stub
         
@@ -490,35 +503,42 @@ public class FrinikaSequencer implements Sequencer {
 		recordingLanes.remove(lane);
 	}
 
+        @Override
 	public float getTempoInBPM() {
 		return bpm;
 	}
 
+        @Override
 	public void setTempoInBPM(float bpm) {
 	    this.bpm = bpm;
 	    notifyTempoChangeListeners();
 	}
 
+        @Override
 	public float getTempoInMPQ() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public void setTempoInMPQ(float mpq) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void setTempoFactor(float factor) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public float getTempoFactor() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public long getTickLength() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -529,98 +549,118 @@ public class FrinikaSequencer implements Sequencer {
 		return player.getTicksLooped();
 	}
 	
+        @Override
 	public long getTickPosition() {
 		return player.getTickPosition();
 	}
 
+        @Override
 	public void setTickPosition(long tick) {
 		player.setTickPosition(tick);
 	}
 
+        @Override
 	public long getMicrosecondLength() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public long getMicrosecondPosition() {
 		return player.getMicroSecondPosition();
 	}
 
+        @Override
 	public void setMicrosecondPosition(long microseconds) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void setMasterSyncMode(SyncMode sync) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public SyncMode getMasterSyncMode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public SyncMode[] getMasterSyncModes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public void setSlaveSyncMode(SyncMode sync) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public SyncMode getSlaveSyncMode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public SyncMode[] getSlaveSyncModes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public void setTrackMute(int track, boolean mute) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public boolean getTrackMute(int track) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public void setTrackSolo(int track, boolean solo) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public boolean getTrackSolo(int track) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public boolean addMetaEventListener(MetaEventListener listener) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public void removeMetaEventListener(MetaEventListener listener) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public int[] addControllerEventListener(ControllerEventListener listener, int[] controllers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public int[] removeControllerEventListener(ControllerEventListener listener, int[] controllers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public void setLoopStartPoint(long tick) {
 		this.loopStartPoint = tick;
 		
@@ -628,11 +668,13 @@ public class FrinikaSequencer implements Sequencer {
 		notifySongPositionListeners(player.getTickPosition());
 	}
 
+        @Override
 	public long getLoopStartPoint() {
 		
 		return loopStartPoint;
 	}
 
+        @Override
 	public void setLoopEndPoint(long tick) {
 		this.loopEndPoint = tick;
 		
@@ -640,60 +682,73 @@ public class FrinikaSequencer implements Sequencer {
 		notifySongPositionListeners(player.getTickPosition());		
 	}
 
+        @Override
 	public long getLoopEndPoint() {
 		
 		return loopEndPoint;
 	}
 
+        @Override
 	public void setLoopCount(int count) {
 		this.loopCount = count;	
 	}
 
+        @Override
 	public int getLoopCount() {
 		return loopCount;
 	}
 
+        @Override
 	public Info getDeviceInfo() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public void open() throws MidiUnavailableException {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void close() {
 		stop();
 	}
 
+        @Override
 	public boolean isOpen() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+        @Override
 	public int getMaxReceivers() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public int getMaxTransmitters() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public Receiver getReceiver() throws MidiUnavailableException {
 		return receiver;
 	}
 
+        @Override
 	public List<Receiver> getReceivers() {
 		return receivers;
 	}
 
+        @Override
 	public Transmitter getTransmitter() throws MidiUnavailableException {
 		return transmitter;
 	}
 
+        @Override
 	public List<Transmitter> getTransmitters() {
 		return transmitters;
 	}
@@ -707,14 +762,17 @@ public class FrinikaSequencer implements Sequencer {
     {
         Transmitter transmitter = new Transmitter() {
             Receiver receiver = midiDevice.getReceiver();
+            @Override
             public void setReceiver(Receiver receiver) {
                 this.receiver = receiver;
             }
 
+            @Override
             public Receiver getReceiver() {
                 return receiver;
             }
 
+            @Override
             public void close() {
             
             }       

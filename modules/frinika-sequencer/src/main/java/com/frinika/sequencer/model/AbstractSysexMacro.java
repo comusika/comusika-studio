@@ -72,11 +72,8 @@ public abstract class AbstractSysexMacro implements SysexMacro {
 			}
 			Object o = cl.newInstance();
 			macro = (SysexMacro)o;
-		} catch (InstantiationException ie) {
+		} catch (InstantiationException | IllegalAccessException ie) {
 			ie.printStackTrace();
-			return null;
-		} catch (IllegalAccessException iae) {
-			iae.printStackTrace();
 			return null;
 		} catch (ClassNotFoundException cnfe) { // not found: maybe raw data
 			try {
@@ -98,6 +95,7 @@ public abstract class AbstractSysexMacro implements SysexMacro {
 	 * @param macro
 	 * @return
 	 */
+        @Override
 	public MidiMessage[] parseMessages(String macro) throws InvalidMidiDataException {
 		byte[] data = parse(macro);
 		SysexMessage syxm = new SysexMessage();

@@ -21,75 +21,72 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis;
 
-import java.util.Vector;
-
+import java.util.List;
+import java.util.ArrayList;
 
 public abstract class DataBuilder {
-	
-	protected Vector<SpectrogramDataListener> sizeObservers = new Vector<SpectrogramDataListener>();
-	
-	private Thread runThread = null;
 
-	private boolean isConstructing;
+    protected List<SpectrogramDataListener> sizeObservers = new ArrayList<>();
 
-	public DataBuilder() {
-		isConstructing = false;
-		runThread=null;
-	}
+    private Thread runThread = null;
 
+    private boolean isConstructing;
 
-	/**
-	 * Does the building. Should test Thread.interrupted() and return ASAP if true.
-	 *
-	 */
-	protected abstract void doWork();
+    public DataBuilder() {
+        isConstructing = false;
+        runThread = null;
+    }
 
-	
-	public boolean isConstructing() {
-		if (runThread == null)
-			return false;
-		return runThread.isAlive();
-	}
+    /**
+     * Does the building.
+     *
+     * Should test Thread.interrupted() and return ASAP if true.
+     */
+    protected abstract void doWork();
 
-	
-	protected void abortConstruction() {
-		
-		/* could possibly put this on a thread if doWork is not responsive ?
-		 * 
-		 */
-		while (isConstructing()) {
-			runThread.interrupt();
-			try {
-				Thread.sleep(20); // bigger delays con
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		runThread=null;
-	}
+    public boolean isConstructing() {
+        if (runThread == null) {
+            return false;
+        }
+        return runThread.isAlive();
+    }
 
-	protected void startConstruction() {
-		
-		// final Worker worker=createWorker();
-		
-		Runnable runner= new Runnable() {
-			public void run() {
-				System.out.println(" DO WORK ");
-				doWork();
-				runThread=null;
-			}
-		};
-		
-		runThread = new Thread(runner);
-		runThread.start();
-	}
-	
-	public void dispose() {
-		sizeObservers.clear();		
-	}
+    protected void abortConstruction() {
 
+        /**
+         * could possibly put this on a thread if doWork is not responsive ?
+         */
+        while (isConstructing()) {
+            runThread.interrupt();
+            try {
+                Thread.sleep(20); // bigger delays con
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        runThread = null;
+    }
+
+    protected void startConstruction() {
+
+        // final Worker worker=createWorker();
+        Runnable runner = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(" DO WORK ");
+                doWork();
+                runThread = null;
+            }
+        };
+
+        runThread = new Thread(runner);
+        runThread.start();
+    }
+
+    public void dispose() {
+        sizeObservers.clear();
+    }
 }

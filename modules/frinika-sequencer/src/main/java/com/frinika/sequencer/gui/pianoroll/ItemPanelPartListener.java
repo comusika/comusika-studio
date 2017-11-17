@@ -46,6 +46,7 @@ public class ItemPanelPartListener implements SelectionListener<Part> {
 	}
 
 
+        @Override
 	public void selectionChanged(SelectionContainer<? extends Part> src) {
 		// TODO Auto-generated method stub
 		itemPanel.repaintItems();	

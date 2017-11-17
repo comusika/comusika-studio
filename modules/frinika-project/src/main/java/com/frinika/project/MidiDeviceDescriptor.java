@@ -7,6 +7,7 @@ import com.frinika.sequencer.model.SynthLane;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import com.frinika.synth.SynthRack;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
@@ -55,6 +56,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 	 * 
 	 * @return
 	 */
+        @Override
 	public String getMidiDeviceName() {
 		return midiDeviceName;
 	}
@@ -64,6 +66,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 	 * 
 	 * @param midiDeviceName
 	 */
+        @Override
 	public void setMidiDeviceName(String midiDeviceName) {
 		this.midiDeviceName = midiDeviceName;
 	}
@@ -74,6 +77,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 	 * 
 	 * @return
 	 */
+        @Override
 	public String getProjectName() {
 		return projectName;
 	}
@@ -84,6 +88,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 	 * 
 	 * @param projectName
 	 */
+        @Override
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 
@@ -94,7 +99,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 				Method setName = realdevice.getClass().getMethod("setName",
 						String.class);
 				setName.invoke(realdevice, projectName);
-			} catch (Exception e) {
+			} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
 			}
 
 		}
@@ -216,10 +221,12 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 
 	}
 
+        @Override
 	public MidiDevice getMidiDevice() {
 		return midiDevice;
 	}
 	
+        @Override
 	public Serializable getSerializableMidiDevice() {
 		return serializableMidiDevice;
 	}
@@ -229,10 +236,12 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 		return getProjectName() + " (" + getMidiDeviceName() + ")";
 	}
 
+        @Override
 	public Icon getIcon() {
 		return ProjectContainer.getMidiDeviceIcon(midiDevice);
 	}
 	
+        @Override
 	public Icon getLargeIcon() {
 		return ProjectContainer.getMidiDeviceLargeIcon(midiDevice);
 	}

@@ -39,6 +39,7 @@ public class CreateAudioLaneAction extends AbstractAction {
 		super(getMessage("sequencer.project.add_audio_lane"));
 		this.project=project;		
 	}
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.menu.add_audio_lane"));
 		project.getProjectContainer().createAudioLane();

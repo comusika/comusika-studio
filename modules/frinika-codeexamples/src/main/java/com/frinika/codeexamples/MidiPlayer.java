@@ -100,6 +100,7 @@ public class MidiPlayer {
 
             proj.getSequencer().addSongPositionListener(new SongPositionListener() {
 
+                @Override
                 public void notifyTickPosition(long tick) {
                     if (tick > endTick) {
                         try {
@@ -112,6 +113,7 @@ public class MidiPlayer {
                     }
                 }
 
+                @Override
                 public boolean requiresNotificationOnEachTick() {
                     return false;
                 }

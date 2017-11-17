@@ -4,6 +4,7 @@ import com.frinika.swing.ProgressBarDialog;
 import com.frinika.synth.synths.sampler.settings.SampledSoundSettings;
 import com.frinika.synth.synths.sampler.settings.sampledsoundsettingversions.SampledSound20050403;
 import java.io.File;
+import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
@@ -27,6 +28,7 @@ public class WavImporter {
     
         final ProgressBarDialog pbd = new ProgressBarDialog(null, "Importing wav", ais.available());
         new Thread() {
+            @Override
             public void run()
             {
                 try
@@ -43,7 +45,7 @@ public class WavImporter {
                         sCount++;
                         pbd.setProgressValue(sCount*bytes.length);
                     }
-                } catch(Exception e)
+                } catch(IOException e)
                 {
                     
                 }

@@ -64,6 +64,7 @@ public class ChartTest {
 			 */
 			private static final long serialVersionUID = 1L;
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
 				fc.setFileFilter(chartFileFilter);
@@ -78,10 +79,8 @@ public class ChartTest {
 						Object obj = in.readObject();
 						chartPanel.setChart((Chart) obj);
 
-					} catch (IOException e1) {
+					} catch (IOException | ClassNotFoundException e1) {
 						e1.printStackTrace();
-					} catch (ClassNotFoundException e2) {
-						e2.printStackTrace();
 					}
 				}
 			}
@@ -95,6 +94,7 @@ public class ChartTest {
 			 */
 			private static final long serialVersionUID = 1L;
 			
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
 				fc.setFileFilter(chartFileFilter);
@@ -130,6 +130,7 @@ public class ChartTest {
 	}
 	
 	private static class ChartFileFilter extends FileFilter {
+                @Override
 		public boolean accept(File f) {	
 			if(f.isDirectory()) return true;
 			if(!f.isFile()) return false;		
@@ -137,6 +138,7 @@ public class ChartTest {
 			return false;
 		}
 
+                @Override
 		public String getDescription() {
 			return "Chart Files (*.chart)";
 		}

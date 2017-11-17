@@ -115,6 +115,7 @@ public class GlobalToolBar extends JToolBar {
 		final JSpinner tempoSpinner = new JSpinnerDraggable(
 				new SpinnerNumberModel((double) bpm, 0d, 999d, 1d));
 		tempoSpinner.addChangeListener(new ChangeListener() {
+                        @Override
 			public void stateChanged(ChangeEvent e) {
 				long tickNow = project.getSequencer().getTickPosition();
 
@@ -132,6 +133,7 @@ public class GlobalToolBar extends JToolBar {
 		project.getSequencer()
 				.addTempoChangeListener(new TempoChangeListener() {
 
+                                        @Override
 					public void notifyTempoChange(float bpm) {
 						// System.out.println(" TEMPO CHANGE "+ bpm);
 						tempoSpinner.setValue((double)bpm);
@@ -166,6 +168,7 @@ public class GlobalToolBar extends JToolBar {
 
 			metronomeSlider.addChangeListener(new ChangeListener() {
 
+                                @Override
 				public void stateChanged(ChangeEvent e) {
 					metronome.setVelocity(metronomeSlider.getValue());
 				}
@@ -178,6 +181,7 @@ public class GlobalToolBar extends JToolBar {
 		}
 		ActionListener act = new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				FrinikaSequencer sequencer = project.getSequencer();
 				sequencer.panic();

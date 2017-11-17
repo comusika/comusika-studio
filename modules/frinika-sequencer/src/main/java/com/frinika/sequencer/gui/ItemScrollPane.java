@@ -80,6 +80,7 @@ public abstract class ItemScrollPane extends JPanel implements AdjustmentListene
 		minus.setMargin(m);
 		
 		ActionListener vzoom=new ActionListener() {		
+                        @Override
 			public void actionPerformed(ActionEvent e) {		
 				JButton but=(JButton)e.getSource();			
 				if (but == plus) {
@@ -118,6 +119,7 @@ public abstract class ItemScrollPane extends JPanel implements AdjustmentListene
 		add(tb, BorderLayout.NORTH);
 	}
 
+        @Override
 	public void adjustmentValueChanged(AdjustmentEvent ev) {
 		if (itemPanel == null) return;
 		JScrollBar bar = (JScrollBar) (ev.getSource());

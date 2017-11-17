@@ -28,27 +28,23 @@ package com.frinika.audio;
  *
  */
 public final class Decibel {
-	
-	static final float[] amplitudeRatio = new float[11000];
-	static
-	{
-		for(float x=-100;x<10;x+=0.01)
-			amplitudeRatio[(int)(x*100)+10000] = (float)Math.pow(10,x/20.0); 
-	}
-	
-/*	public static final float getPowerRatio(float dB)
-	{
-		return((float)Math.pow(10,dB/10.0));
-	}*/
-	
-	public static final float getAmplitudeRatio(float dB)
-	{
-		return(amplitudeRatio[(int)(dB*100)+10000]);
-	}
-	
-	public static void main(String[] args)
-	{
-        System.out.println(    getAmplitudeRatio(-96));
 
-	}
+    static final float[] AMPLITUDE_RATIO = new float[11000];
+
+    static {
+        for (float x = -100; x < 10; x += 0.01) {
+            AMPLITUDE_RATIO[(int) (x * 100) + 10000] = (float) Math.pow(10, x / 20.0);
+        }
+    }
+
+//    public static final float getPowerRatio(float dB) {
+//        return ((float) Math.pow(10, dB / 10.0));
+//    }
+    public static final float getAmplitudeRatio(float dB) {
+        return AMPLITUDE_RATIO[(int) (dB * 100) + 10000];
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getAmplitudeRatio(-96));
+    }
 }

@@ -41,7 +41,7 @@ public class MidiResource {
 
 	public MidiResource(FrinikaSequencer sequencer) {
 		this.sequencer = sequencer;
-		voiceTreeMap = new HashMap<String, PatchNameMap>();
+		voiceTreeMap = new HashMap<>();
 
 		for (String name : patchFiles) {
 			PatchNameMap sw = loadSerial(name); // new
@@ -71,18 +71,15 @@ public class MidiResource {
 			
 			try {
 			
-				ObjectInputStream ois = new ObjectInputStream(str);
-				pn = (PatchNameMap) ois.readObject();
-				ois.close();
+                    try (ObjectInputStream ois = new ObjectInputStream(str)) {
+                        pn = (PatchNameMap) ois.readObject();
+                    }
 				str.close();
 				return pn;
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
+			} catch (IOException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

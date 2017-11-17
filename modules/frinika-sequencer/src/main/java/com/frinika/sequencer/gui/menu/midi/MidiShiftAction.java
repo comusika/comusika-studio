@@ -41,6 +41,7 @@ public class MidiShiftAction extends AbstractMidiAction {
 		super(project, "sequencer.midi.shift");
 	}
 
+        @Override
 	protected JComponent createGUI() {
 		return new AbstractTimeSelectorMidiActionEditor<MidiShiftAction>((AbstractSequencerProjectContainer) project, this) {
 

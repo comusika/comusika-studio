@@ -55,6 +55,7 @@ public class MidiDevicesPanel extends JPanel {
     		
     		final JButton but = new JButton("New MIDI Out Device");
     		but.addActionListener(new ActionListener() {
+                            @Override
     			public void actionPerformed(ActionEvent e) {
     				
     				JPopupMenu popup = new JPopupMenu();

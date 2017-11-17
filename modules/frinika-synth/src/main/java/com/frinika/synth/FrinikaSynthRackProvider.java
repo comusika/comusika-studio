@@ -40,10 +40,12 @@ public class FrinikaSynthRackProvider extends MidiDeviceProvider {
 		infos[0]=deviceInfo;
 	}
 	
+        @Override
 	public Info[] getDeviceInfo() {
 		return infos;
 	}
 	
+        @Override
 	public MidiDevice getDevice(Info arg0) {
 		if(!(arg0 instanceof SynthRack.SynthRackInfo)) return null;
 		return new SynthRack(new VoiceServer(){

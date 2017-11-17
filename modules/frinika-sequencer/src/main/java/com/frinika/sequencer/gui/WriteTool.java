@@ -45,6 +45,7 @@ public class WriteTool extends ToolAdapter  implements EditTool {
 	}
 	
 	int button = 0;
+        @Override
 	public void mousePressed(MouseEvent e) {
 
 		button = e.getButton();
@@ -63,6 +64,7 @@ public class WriteTool extends ToolAdapter  implements EditTool {
 		
 	}
 	
+        @Override
 	public void mouseDragged(MouseEvent e) {
 
 		if(button == 3)
@@ -78,6 +80,7 @@ public class WriteTool extends ToolAdapter  implements EditTool {
 	}
 	
 	
+        @Override
 	public void mouseReleased(MouseEvent e) {
 
 		if(e.getButton() == 3)
@@ -92,6 +95,7 @@ public class WriteTool extends ToolAdapter  implements EditTool {
 		
 	}
 	
+        @Override
 	public void mouseClicked(MouseEvent e) { // Jens
 		if(e.getButton() == 3)
 		{

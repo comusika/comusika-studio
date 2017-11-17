@@ -226,36 +226,44 @@ public class BezierSetup extends JDialog implements ActionListener, WindowListen
 //File Pass 3...(Window and Action Listeners)
 
   // Window listener interface methods
+        @Override
   public void windowActivated (WindowEvent e) {
     //$ System.out.println ("Window activated");
   } // windowActivated ()
 
+        @Override
   public void windowClosed (WindowEvent e) {
     //$ System.out.println ("Window closed");
   } // windowClosed ()
 
+        @Override
   public void windowClosing (WindowEvent e) {
     //$ System.out.println ("Window closing");
     setVisible (false);
   } // windowClosing ()
 
+        @Override
   public void windowDeactivated (WindowEvent e) {
     //$ System.out.println ("Window deactivated");
   } // windowDeactivated ()
 
+        @Override
   public void windowDeiconified (WindowEvent e) {
     //$ System.out.println ("Window deiconified");
   } // windowDeiconified ()
 
+        @Override
   public void windowIconified (WindowEvent e) {
     //$ System.out.println ("Window iconified");
   } // windowIconifed ()
 
+        @Override
   public void windowOpened (WindowEvent e) {
     //$ System.out.println ("Window opened");
   } // windowOpened ()
 
   // Action Listener interface method
+        @Override
   public void actionPerformed (ActionEvent event) {
     Object target = event.getSource ();
     if (target == accept) {
@@ -274,6 +282,7 @@ public class BezierSetup extends JDialog implements ActionListener, WindowListen
 //File Pass 5...(Item Listener)
 
   // Item Listener interface method
+        @Override
   public void itemStateChanged (ItemEvent event) {
     Object target = event.getSource ();
     if (target == midiInput) {

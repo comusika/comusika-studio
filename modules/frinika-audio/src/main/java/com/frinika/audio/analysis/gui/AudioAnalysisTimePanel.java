@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.audio.analysis.gui;
 
 import com.frinika.audio.DynamicMixer;
@@ -42,9 +41,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
 import javax.swing.JPanel;
 import uk.org.toot.audio.core.AudioBuffer;
 import uk.org.toot.audio.core.AudioProcess;
@@ -54,403 +54,394 @@ import uk.org.toot.audio.server.IOAudioProcess;
 @SuppressWarnings("serial")
 public class AudioAnalysisTimePanel extends JPanel implements Observer {
 
-	Vector<CursorObserver> cursorObservers = new Vector<CursorObserver>();
-
+    List<CursorObserver> cursorObservers = new ArrayList<>();
 
     AudioReaderFactory part;
 
-	LimitedAudioReader input;
+    LimitedAudioReader input;
 
-	WaveImage wavePanel;
+    WaveImage wavePanel;
 
-	SpectrogramImage spectroImage;
+    SpectrogramImage spectroImage;
 
-	//SpectrumDataBuilder spectroData;
+    //SpectrumDataBuilder spectroData;
+    boolean isPlaying;
 
-	boolean isPlaying;
+    private Dimension size = new Dimension(400, 100);
 
-	private Dimension size = new Dimension(400, 100);
+    private int chunkCursor;
 
-	private int chunkCursor;
+    private long framePtr = 0;
 
-	private long framePtr = 0;
+    AudioProcess myProcess;
 
-	AudioProcess myProcess;
+    DynamicMixer mixer;
 
-	DynamicMixer mixer;
+    private boolean staticSynthMode = false;
 
-	private boolean staticSynthMode = false;
+    StaticSpectrogramSynth synthPlayer;
 
-	StaticSpectrogramSynth synthPlayer;
+    private KeyboardFocusManager kbd;
 
-	private KeyboardFocusManager kbd;
+    static int count = 0;
+    String tag;
 
-	static int count=0;
-	String tag;
+    private KeyEventDispatcher keyDispatcher;
+    float curBin;
 
-	private KeyEventDispatcher keyDispatcher;
-	float  curBin;
-	
-	public AudioAnalysisTimePanel(AudioReaderFactory part, DynamicMixer mixer,Mapper mapper,
-			SpectrumDataBuilder spectroData,KeyboardFocusManager kbd) {
-	//	synthPlayer = spectroData.getSynth(); //new StaticSpectrogramSynth(spectroData);
-		if (synthPlayer != null) addCursorObserver(synthPlayer); 
-		this.part = part;
-		this.kbd=kbd;
-	//	this.client = new MyClient();
-		this.mixer=mixer;
-		myProcess=new MyAudioProcess();
-		
-		mixer.addMixerInput(myProcess, tag="XYZ"+count++);
-	//	FrinikaAudioSystem.stealAudioServer(this, this.client);
+    public AudioAnalysisTimePanel(AudioReaderFactory part, DynamicMixer mixer, Mapper mapper,
+            SpectrumDataBuilder spectroData, KeyboardFocusManager kbd) {
+        //	synthPlayer = spectroData.getSynth(); //new StaticSpectrogramSynth(spectroData);
+        if (synthPlayer != null) {
+            addCursorObserver(synthPlayer);
+        }
+        this.part = part;
+        this.kbd = kbd;
+        //	this.client = new MyClient();
+        this.mixer = mixer;
+        myProcess = new MyAudioProcess();
 
-		try {
+        mixer.addMixerInput(myProcess, tag = "XYZ" + count++);
+        //	FrinikaAudioSystem.stealAudioServer(this, this.client);
 
-			this.spectroImage = new SpectrogramImage(spectroData, mapper);
-			this.wavePanel = new WaveImage(part.createAudioReader());
+        try {
 
-			spectroData.addSizeObserver(this.wavePanel);
-			spectroData.addSizeObserver(this.spectroImage);
-			// spectroData.addObserver(spectroImage);
+            this.spectroImage = new SpectrogramImage(spectroData, mapper);
+            this.wavePanel = new WaveImage(part.createAudioReader());
 
-			this.spectroImage.addObserver(this);
-			this.wavePanel.addObserver(this);
-			addMouseListener(new MyMouseListener());
-			
-			
-			addMouseMotionListener(new  MouseMotionListener() {
-				
-				public void mouseMoved(MouseEvent e) {
-					if (isPlaying) return;
-					
-					int curY=e.getY();
-					curBin=spectroImage.pixToBin(curY);
-					
-					chunkCursor=e.getX();
-					notifyCursorObservers();
-					repaint();
-				//	System.out.println(" MOUSE MOVED");
-				}
-				
-				public void mouseDragged(MouseEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
+            spectroData.addSizeObserver(this.wavePanel);
+            spectroData.addSizeObserver(this.spectroImage);
+            // spectroData.addObserver(spectroImage);
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		setFocusable(true);
-		overrideKeys();
-	
-	}
+            this.spectroImage.addObserver(this);
+            this.wavePanel.addObserver(this);
+            addMouseListener(new MyMouseListener());
 
-	StaticSpectrogramSynth getSynth() {
-		return synthPlayer;
-	}
-	
-	// public Vector<Tweakable> getTweaks() {
-	// return spectroImage.getTweaks();
-	// }
-	//	
-	public void dispose() {
+            addMouseMotionListener(new MouseMotionListener() {
 
-		// TODO remove other types of observers
-		this.wavePanel.deleteObservers();
-		this.spectroImage.deleteObservers();
-		
-		mixer.removeStrip(tag);
-		
-		kbd.removeKeyEventDispatcher(keyDispatcher);
-		keyDispatcher=null;
-		  
-	//	FrinikaAudioSystem.returnAudioServer(this);
-	
-	}
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    if (isPlaying) {
+                        return;
+                    }
 
+                    int curY = e.getY();
+                    curBin = spectroImage.pixToBin(curY);
 
-	@Override
-	public void paintComponent(Graphics gg) {
-		super.paintComponent(gg);
-	//	System.out.println(" AnalysisPanel PAINT");
-		Graphics2D g = (Graphics2D) gg;
-		this.spectroImage.drawImage(g, 0, 0);
-		this.wavePanel.drawImage(g, 0, this.spectroImage.getHeight());
-		g.setColor(Color.RED);
-		g.drawLine(this.chunkCursor, 0, this.chunkCursor, this.size.height);
-	}
+                    chunkCursor = e.getX();
+                    notifyCursorObservers();
+                    repaint();
+                    //	System.out.println(" MOUSE MOVED");
+                }
 
-	public void update(Observable o, Object arg) {
-	
-		this.size = new Dimension(this.wavePanel.getWidth(), this.spectroImage.getHeight()
-				+ this.wavePanel.getHeight());
-		revalidate();
-	//	getParent().validate();
-		repaint();
-	}
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    // TODO Auto-generated method stub
 
-	@Override
-	public Dimension getPreferredSize() {
-		return this.size;
-	}
+                }
+            });
 
-	@Override
-	public Dimension getMinimumSize() {
-		return this.size;
-	}
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-	@Override
-	public Dimension getMaximumSize() {
-		return this.size;
-	}
+        setFocusable(true);
+        overrideKeys();
+    }
 
-	public void addCursorObserver(CursorObserver o) {
-		this.cursorObservers.add(o);
-	}
+    StaticSpectrogramSynth getSynth() {
+        return synthPlayer;
+    }
 
-	private void notifyCursorObservers() {
-		for (CursorObserver o : this.cursorObservers) {
-			o.notifyCursorChange(this.chunkCursor,this.curBin);
-		}
-	}
+    // public Vector<Tweakable> getTweaks() {
+    // return spectroImage.getTweaks();
+    // }
+    //	
+    public void dispose() {
 
+        // TODO remove other types of observers
+        this.wavePanel.deleteObservers();
+        this.spectroImage.deleteObservers();
 
+        mixer.removeStrip(tag);
 
-	public void startStop() {
-		//System.out.println(" START-STOP");
-		this.isPlaying = !this.isPlaying;
-	}
+        kbd.removeKeyEventDispatcher(keyDispatcher);
+        keyDispatcher = null;
 
-	public void nudge(int pixs) {
-		this.chunkCursor += pixs;
-		this.framePtr = this.wavePanel.screenToFrame(this.chunkCursor);
-		try {
-			this.input.seekFrameInEnvelope(this.framePtr,false);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		notifyCursorObservers();
-		repaint();
-	}
+        //	FrinikaAudioSystem.returnAudioServer(this);
+    }
 
-	public int cursorChunkPos() {
+    @Override
+    public void paintComponent(Graphics gg) {
+        super.paintComponent(gg);
+        //	System.out.println(" AnalysisPanel PAINT");
+        Graphics2D g = (Graphics2D) gg;
+        this.spectroImage.drawImage(g, 0, 0);
+        this.wavePanel.drawImage(g, 0, this.spectroImage.getHeight());
+        g.setColor(Color.RED);
+        g.drawLine(this.chunkCursor, 0, this.chunkCursor, this.size.height);
+    }
 
-		return this.chunkCursor;
-	}
+    @Override
+    public void update(Observable o, Object arg) {
+        this.size = new Dimension(this.wavePanel.getWidth(), this.spectroImage.getHeight()
+                + this.wavePanel.getHeight());
+        revalidate();
+        //	getParent().validate();
+        repaint();
+    }
 
-	void overrideKeys() {
-	
-		
-		
-		kbd.addKeyEventDispatcher(keyDispatcher=new KeyEventDispatcher() {
+    @Override
+    public Dimension getPreferredSize() {
+        return this.size;
+    }
 
-			public boolean dispatchKeyEvent(KeyEvent e) {
+    @Override
+    public Dimension getMinimumSize() {
+        return this.size;
+    }
 
-		//		System.out.println(" KEY HIT " + e);
+    @Override
+    public Dimension getMaximumSize() {
+        return this.size;
+    }
 
-				switch (e.getKeyCode()) {
-				case KeyEvent.VK_SPACE:
-					if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-						startStop();
-					}
-					return true;
+    public void addCursorObserver(CursorObserver o) {
+        this.cursorObservers.add(o);
+    }
 
-				case KeyEvent.VK_LEFT:
-					if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-						nudge(-1);
-					}
-					return true;
+    private void notifyCursorObservers() {
+        for (CursorObserver o : this.cursorObservers) {
+            o.notifyCursorChange(this.chunkCursor, this.curBin);
+        }
+    }
 
-				case KeyEvent.VK_RIGHT:
-					if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-						nudge(1);
-					}
-					return true;
+    public void startStop() {
+        //System.out.println(" START-STOP");
+        this.isPlaying = !this.isPlaying;
+    }
 
-					//
-					// case KeyEvent.VK_HOME:
-					// if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-					// rewind.actionPerformed(null);
-					// }
-					// return true;
-					//
-					// case KeyEvent.VK_MULTIPLY:
-					// if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-					// record.actionPerformed(null);
-					// }
-					// return true;
-					//
-					// case KeyEvent.VK_NUMPAD1:
-					// if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-					// warpToLeft.actionPerformed(null);
-					// }
-					// return true;
-					//
-					// case KeyEvent.VK_NUMPAD2:
-					// if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-					// warpToRight.actionPerformed(null);
-					// }
-					// return true;
-					//
-					// case KeyEvent.VK_A:
-					//
-					// if ((e.getID() == KeyEvent.KEY_PRESSED)) {
-					//
-					// if (e.isControlDown()) {
-					// return selectAllAction.selectAll(e);
-					// }
-					// }
+    public void nudge(int pixs) {
+        this.chunkCursor += pixs;
+        this.framePtr = this.wavePanel.screenToFrame(this.chunkCursor);
+        try {
+            this.input.seekFrameInEnvelope(this.framePtr, false);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        notifyCursorObservers();
+        repaint();
+    }
 
-				default:
-					return false;
-				}
-			}
-		});
+    public int cursorChunkPos() {
+        return this.chunkCursor;
+    }
 
-	}
+    void overrideKeys() {
+        kbd.addKeyEventDispatcher(keyDispatcher = new KeyEventDispatcher() {
 
-	class MyClient implements AudioClient {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
 
-		IOAudioProcess output;
+                //		System.out.println(" KEY HIT " + e);
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_SPACE:
+                        if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                            startStop();
+                        }
+                        return true;
 
-		AudioBuffer buffer;
+                    case KeyEvent.VK_LEFT:
+                        if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                            nudge(-1);
+                        }
+                        return true;
 
-		private boolean enabled;
+                    case KeyEvent.VK_RIGHT:
+                        if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                            nudge(1);
+                        }
+                        return true;
 
-		MyClient() {
-			this.buffer = FrinikaAudioSystem.getAudioServer().createAudioBuffer(
-					"TiemAnalysis");
-			this.output = FrinikaAudioSystem.getDefaultOutput(null);
-			try {
-				input = part.createAudioReader(); // TODO CachedAudio stuff
-				input.seekFrameInEnvelope(framePtr,false);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+                    //
+                    // case KeyEvent.VK_HOME:
+                    // if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                    // rewind.actionPerformed(null);
+                    // }
+                    // return true;
+                    //
+                    // case KeyEvent.VK_MULTIPLY:
+                    // if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                    // record.actionPerformed(null);
+                    // }
+                    // return true;
+                    //
+                    // case KeyEvent.VK_NUMPAD1:
+                    // if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                    // warpToLeft.actionPerformed(null);
+                    // }
+                    // return true;
+                    //
+                    // case KeyEvent.VK_NUMPAD2:
+                    // if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                    // warpToRight.actionPerformed(null);
+                    // }
+                    // return true;
+                    //
+                    // case KeyEvent.VK_A:
+                    //
+                    // if ((e.getID() == KeyEvent.KEY_PRESSED)) {
+                    //
+                    // if (e.isControlDown()) {
+                    // return selectAllAction.selectAll(e);
+                    // }
+                    // }
+                    default:
+                        return false;
+                }
+            }
+        });
+    }
 
-		public void work(int size) {
+    class MyClient implements AudioClient {
 
-			buffer.makeSilence();
-			if (staticSynthMode) {
-				synthPlayer.processAudio(this.buffer);
-			} else if (isPlaying) {
-				input.processAudio(this.buffer);
-				framePtr += buffer.getSampleCount();
-				updateCursorFromFramePos();
-			} else {
-				buffer.makeSilence();
-			}
+        IOAudioProcess output;
 
-		output.processAudio(buffer);
+        AudioBuffer buffer;
 
-		}
+        private boolean enabled;
 
-		private void updateCursorFromFramePos() {
-			int newCursor = wavePanel.frameToScreen(framePtr);
-			if (newCursor != chunkCursor) {
-				chunkCursor = newCursor;
-				notifyCursorObservers();
-				repaint();
-			}
-		}
+        MyClient() {
+            this.buffer = FrinikaAudioSystem.getAudioServer().createAudioBuffer(
+                    "TiemAnalysis");
+            this.output = FrinikaAudioSystem.getDefaultOutput(null);
+            try {
+                input = part.createAudioReader(); // TODO CachedAudio stuff
+                input.seekFrameInEnvelope(framePtr, false);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
-		public void setEnabled(boolean b) {
-			this.enabled = b;
-		}
+        @Override
+        public void work(int size) {
 
-	}
+            buffer.makeSilence();
+            if (staticSynthMode) {
+                synthPlayer.processAudio(this.buffer);
+            } else if (isPlaying) {
+                input.processAudio(this.buffer);
+                framePtr += buffer.getSampleCount();
+                updateCursorFromFramePos();
+            } else {
+                buffer.makeSilence();
+            }
 
-	
-	class MyAudioProcess implements AudioProcess {
+            output.processAudio(buffer);
+        }
 
+        private void updateCursorFromFramePos() {
+            int newCursor = wavePanel.frameToScreen(framePtr);
+            if (newCursor != chunkCursor) {
+                chunkCursor = newCursor;
+                notifyCursorObservers();
+                repaint();
+            }
+        }
 
-		private boolean enabled;
+        @Override
+        public void setEnabled(boolean b) {
+            this.enabled = b;
+        }
+    }
 
-		MyAudioProcess() {
+    class MyAudioProcess implements AudioProcess {
+
+        private boolean enabled;
+
+        MyAudioProcess() {
 //			this.buffer = FrinikaAudioSystem.getAudioServer().createAudioBuffer(
 //					"TiemAnalysis");
 //			this.output = FrinikaAudioSystem.getDefaultOutput(null);
-			try {
-				input = part.createAudioReader(); // TODO CachedAudio stuff
-				input.seekFrameInEnvelope(framePtr,false);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+            try {
+                input = part.createAudioReader(); // TODO CachedAudio stuff
+                input.seekFrameInEnvelope(framePtr, false);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
-		public int processAudio(AudioBuffer buffer) {
+        @Override
+        public int processAudio(AudioBuffer buffer) {
 
-			buffer.makeSilence();
-			if (staticSynthMode) {
-				synthPlayer.processAudio(buffer);
-			} else if (isPlaying) {
-				input.processAudio(buffer);
-				framePtr += buffer.getSampleCount();
-				updateCursorFromFramePos();
-			} else {
-				buffer.makeSilence();
-			}
-			
-			return AUDIO_OK;
-		}
+            buffer.makeSilence();
+            if (staticSynthMode) {
+                synthPlayer.processAudio(buffer);
+            } else if (isPlaying) {
+                input.processAudio(buffer);
+                framePtr += buffer.getSampleCount();
+                updateCursorFromFramePos();
+            } else {
+                buffer.makeSilence();
+            }
 
-		private void updateCursorFromFramePos() {
-			int newCursor = wavePanel.frameToScreen(framePtr);
-			if (newCursor != chunkCursor) {
-				chunkCursor = newCursor;
-				notifyCursorObservers();
-				repaint();
-			}
-		}
+            return AUDIO_OK;
+        }
 
-		public void setEnabled(boolean b) {
-			this.enabled = b;
-		}
+        private void updateCursorFromFramePos() {
+            int newCursor = wavePanel.frameToScreen(framePtr);
+            if (newCursor != chunkCursor) {
+                chunkCursor = newCursor;
+                notifyCursorObservers();
+                repaint();
+            }
+        }
 
-		public void close() throws Exception {
-			// TODO Auto-generated method stub
-			
-		}
+        public void setEnabled(boolean b) {
+            this.enabled = b;
+        }
 
-		public void open() throws Exception {
-			// TODO Auto-generated method stub
-			
-		}
+        @Override
+        public void close() throws Exception {
+            // TODO Auto-generated method stub
+        }
 
-	}
-	class MyMouseListener extends MouseAdapter {
-		@Override
-		public void mousePressed(MouseEvent e) {
+        @Override
+        public void open() throws Exception {
+            // TODO Auto-generated method stub
+        }
+    }
+
+    class MyMouseListener extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent e) {
 //			if (chunkCursor == e.getX()) {
 //				return;
 //			}
-			chunkCursor = e.getX();
-			framePtr = wavePanel.screenToFrame(chunkCursor);
-			try {
-				input.seekFrameInEnvelope(framePtr,false);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			notifyCursorObservers();
-			repaint();
-		}
+            chunkCursor = e.getX();
+            framePtr = wavePanel.screenToFrame(chunkCursor);
+            try {
+                input.seekFrameInEnvelope(framePtr, false);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            notifyCursorObservers();
+            repaint();
+        }
 
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			requestFocusInWindow();
-		}
+        @Override
+        public void mouseEntered(MouseEvent arg0) {
+            requestFocusInWindow();
+        }
+    }
 
-	}
-
-	public void setSynthMode(boolean b) {
-		this.staticSynthMode=b;
-	}
+    public void setSynthMode(boolean b) {
+        this.staticSynthMode = b;
+    }
 }

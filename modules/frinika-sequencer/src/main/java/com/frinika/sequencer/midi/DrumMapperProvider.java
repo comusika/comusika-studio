@@ -38,10 +38,12 @@ public class DrumMapperProvider extends MidiDeviceProvider {
 		infos[0]=deviceInfo;
 	}
 	
+        @Override
 	public Info[] getDeviceInfo() {
 		return infos;
 	}
 	
+        @Override
 	public MidiDevice getDevice(Info arg0) {
 		if(!(arg0 instanceof DrumMapper.DrumMapperInfo)) return null;
 		return new DrumMapper();

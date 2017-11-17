@@ -38,33 +38,26 @@ public class MidiHub {
         MidiDevice[] transList;
         Info info[] = MidiSystem.getMidiDeviceInfo();
 
-        Vector<MidiDevice> recV = new Vector<MidiDevice>();
-        Vector<MidiDevice> transV = new Vector<MidiDevice>();
+        Vector<MidiDevice> recV = new Vector<>();
+        Vector<MidiDevice> transV = new Vector<>();
 
-        for (int i = 0; i < info.length; i++) {
-         //   System.out.println("---------------------------------------------");
+        for (Info info1 : info) {
+            //   System.out.println("---------------------------------------------");
             MidiDevice dev = null;
-         
-            
-            
-              try {
-                dev = MidiSystem.getMidiDevice(info[i]);
-           
-              } catch (MidiUnavailableException ex1) {
+            try {
+                dev = MidiSystem.getMidiDevice(info1);
+            }catch (MidiUnavailableException ex1) {
                 ex1.printStackTrace();
             }
-
-              // TODO: Why do you want to exclude these two? This also excludes RasmusDSP
-              // At one point they did not work with frinika. Do they now? The javvasound  synth ? (PJL)
-              
-              //if (dev instanceof javax.sound.midi.Synthesizer) continue;
-              //if (dev instanceof javax.sound.midi.Sequencer) continue;
-         
-              
+            
+            // TODO: Why do you want to exclude these two? This also excludes RasmusDSP
+            // At one point they did not work with frinika. Do they now? The javvasound  synth ? (PJL)
+            
+            //if (dev instanceof javax.sound.midi.Synthesizer) continue;
+            //if (dev instanceof javax.sound.midi.Sequencer) continue;
             if (dev.getMaxReceivers() != 0) {
                 recV.add(dev);               
             }
-   
             if (dev.getMaxTransmitters() != 0) {
                 transV.add(dev);
             }
@@ -86,15 +79,14 @@ public class MidiHub {
 
         System.out.println(" Trans devices ------------------------------ ");
 
-        for (int i = 0; i < transList.length; i++) {
-            System.out.println(transList[i].getDeviceInfo());
-
+        for (MidiDevice transList1 : transList) {
+            System.out.println(transList1.getDeviceInfo());
         }
         
         System.out.println(" Recv  devices ------------------------------- ");
 
-        for (int i = 0; i < recvList.length; i++) {
-            System.out.println(recvList[i].getDeviceInfo());
+        for (MidiDevice recvList1 : recvList) {
+            System.out.println(recvList1.getDeviceInfo());
         }
     }
 
