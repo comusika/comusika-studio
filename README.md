@@ -3,6 +3,11 @@ Frinika Studio
 
 Frinika Studio is experimental fork of frinika (http://frinika.com).
 
+Screenshot
+----------
+
+![Frinika Studio Screenshot](images/screenshot.png?raw=true)
+
 Frinika is a free, complete music workstation software for Linux, Windows, Mac OSX and other operating systems running Java. 
 It features sequencer, soft-synths, realtime effects and audio recording.
 
