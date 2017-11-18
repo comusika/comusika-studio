@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 /**
  * Since the URLClassLoader might cache loaded JAR file, this class will create
  * a temporary unique file for the jar
+ *
  * @author Peter Johan Salomonsen
  */
 public class JARSoundbankLoader {
@@ -44,11 +45,10 @@ public class JARSoundbankLoader {
         File outputFile = null;
         try {
             fis = new FileInputStream(JARSoundBankFile);
-            outputFile = new File(System.getProperty("java.io.tmpdir")+"/"+JARSoundBankFile.getName().toLowerCase().replace(".jar", System.currentTimeMillis()+".jar"));
+            outputFile = new File(System.getProperty("java.io.tmpdir") + "/" + JARSoundBankFile.getName().toLowerCase().replace(".jar", System.currentTimeMillis() + ".jar"));
             fos = new FileOutputStream(outputFile);
             int b = fis.read();
-            while(b!=-1)
-            {
+            while (b != -1) {
                 fos.write(b);
                 b = fis.read();
             }
@@ -68,7 +68,6 @@ public class JARSoundbankLoader {
             } catch (IOException ex) {
                 Logger.getLogger(JARSoundbankLoader.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }        
+        }
     }
-    
 }

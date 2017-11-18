@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2006 P.J.Leonard
@@ -33,8 +32,8 @@ import uk.org.toot.control.Control;
 
 /**
  *
- * A tempory object to aid the serialization of the MidiRouting
- * 
+ * A tempory object to aid the serialization of the MidiRouting.
+ *
  * @author pjl
  */
 public class MidiRouterSerialization implements Serializable {
@@ -67,25 +66,24 @@ public class MidiRouterSerialization implements Serializable {
 
     /**
      * Creates the serializable representation used for saving
-     * 
+     *
      * @param router
      */
-    public void buildSerialization(ControlResolver cntrlResolver,MidiDeviceRouter router) {
+    public void buildSerialization(ControlResolver cntrlResolver, MidiDeviceRouter router) {
         devReps = new Vector<>();
         System.out.println(" BUilding MidiRouter serialization ");
         for (Entry<MidiDevice.Info, MidiEventRouter> e : router.map.entrySet()) {
             String devName = e.getKey().toString();
-        
-            System.out.println(" DEVICE:" + devName );
-            
-            
+
+            System.out.println(" DEVICE:" + devName);
+
             DevRep dr = new DevRep(devName);
             MidiEventRouter er = e.getValue();
             devReps.add(dr);
             for (Entry<Control, Long> ee : er.controlToHash.entrySet()) {
-                String cntrlName =cntrlResolver.generateKey(ee.getKey());
+                String cntrlName = cntrlResolver.generateKey(ee.getKey());
                 dr.maprep.add(new MapEntryRep(ee.getValue(), cntrlName));
-                System.out.println(ee.getValue() + "|"+ cntrlName);
+                System.out.println(ee.getValue() + "|" + cntrlName);
             }
         }
     }
@@ -94,16 +92,15 @@ public class MidiRouterSerialization implements Serializable {
     }
 
     /**
-     *  Used after reading serialized form  
+     * Used after reading serialized form
      */
     public void buildDeviceRouter(ControlResolver cntrlResolver, MidiDeviceRouter router) {
 
-
         System.out.println(" Building Device Router ");
-        
+
         for (DevRep devrep : devReps) {
-            System.out.println("Device:"+ devrep.devName);
-            
+            System.out.println("Device:" + devrep.devName);
+
             try {
                 MidiDevice dev = MidiDeviceResolver.resolveDevice(devrep.devName);
 
@@ -114,8 +111,8 @@ public class MidiRouterSerialization implements Serializable {
                 MidiEventRouter eventRouter = router.getRouter(dev);
                 for (MapEntryRep er : devrep.maprep) {
                     Control contrl = cntrlResolver.resolve(er.cntrlKey);
-                     System.out.println("map:" + er.midiHash + ":" + er.cntrlKey );
-                      
+                    System.out.println("map:" + er.midiHash + ":" + er.cntrlKey);
+
                     if (contrl == null) {
                         throw new Throwable(" Unknown control in MidiRouter table " + er.cntrlKey);
                     }
@@ -126,7 +123,5 @@ public class MidiRouterSerialization implements Serializable {
                 Logger.getLogger(MidiRouterSerialization.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 }
-

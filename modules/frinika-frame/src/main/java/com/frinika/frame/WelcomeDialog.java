@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.frame;
 
 import com.frinika.project.dialog.AboutDialog;
@@ -53,136 +52,134 @@ import javax.swing.SwingConstants;
 
 public class WelcomeDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	
-	int sel = 0;
-	int ix = 0;
-	
-	public int getSelectedOption()
-	{
-		return sel;
-	}
+    private static final long serialVersionUID = 1L;
+    private boolean darkMode = true;
 
-	public WelcomeDialog()
-	{
-		this(new Object[0]);
-	}
+    Map<Integer, ActionListener> listeners = new HashMap<>();
 
-	
-	public WelcomeDialog(Object[] options)
-	{		
-		setUndecorated(true);
-		setModal(true);		
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.setBackground(Color.WHITE);
-		Icon welcome = new javax.swing.ImageIcon(ProjectFrame.class.getResource("/frinika.png"));
-		JLabel label = new JLabel(welcome);
-		label.setHorizontalTextPosition(SwingConstants.CENTER);
-		label.setVerticalTextPosition(SwingConstants.BOTTOM);
-		label.setFont(label.getFont().deriveFont(Font.PLAIN));
-		label.setText(AboutDialog.MAIN_TITLE);
-		label.setBorder(BorderFactory.createEmptyBorder(25,5,5,5));
-		panel.add(label, BorderLayout.NORTH);
-		panel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
-		
-		JPanel contentpane = new JPanel();
-		contentpane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-		contentpane.setLayout(new BorderLayout());
-		contentpane.add(panel);
-		setContentPane(contentpane);
-		
-		JPanel buttonpanel = new JPanel();
-		buttonpanel.setOpaque(false);
-		for (int i = 0; i < options.length; i++) {
-			ix = i;
-			JButton button = new JButton(options[i].toString());
-			button.addActionListener(new ActionListener()
-					{
-					    int index = ix; 
-                                            @Override
-						public void actionPerformed(ActionEvent e) {
-							
-							ActionListener listener = listeners.get(index);
-							if(listener != null)
-							{
-								listener.actionPerformed(e);
-								return;
-							}
-							
-							sel = index;
-							setVisible(false);
-						}
-					});
-			if(i == 0)
-			{
-				button.setDefaultCapable(true);
-				getRootPane().setDefaultButton(button);
-			}
-						
-			buttonpanel.add(button);
-		}
-		panel.add(buttonpanel, BorderLayout.CENTER);
-		
-		JPanel copyrightpanel = new JPanel();
-		copyrightpanel.setOpaque(false);
+    private int selectedOption = 0;
+    private int ix = 0;
 
-		JLabel line = new JLabel(AboutDialog.COPYRIGHT_NOTICE);
-		line.setHorizontalTextPosition(SwingConstants.CENTER);
-		line.setFont(line.getFont().deriveFont(10f).deriveFont(Font.PLAIN));		
-		
-		copyrightpanel.add(line);
+    public int getSelectedOption() {
+        return selectedOption;
+    }
 
-		panel.add(copyrightpanel, BorderLayout.SOUTH);
-		
-		setTitle("Welcome");
-		
-		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-		panel.registerKeyboardAction(new ActionListener()
-				{
-                                        @Override
-					public void actionPerformed(ActionEvent e) {
-						sel = -1;
-						setVisible(false);
-					}
-				}
-				, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);		
-		
-		pack();
-		
-	    Rectangle windowSize ;
-	    Insets windowInsets;		
-		
-	    Toolkit toolkit = Toolkit.getDefaultToolkit();
-	    GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();	    
-	    if(gc == null) 
-	        gc = getGraphicsConfiguration();	    
-	    
-	    if(gc != null) {
-	    	windowSize = gc.getBounds();
-	    } else {
-	    	windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-	    }	    						
-		
-		Dimension size = getSize();		
-		Point parent_loc = getLocation();			
-		setLocation(parent_loc.x + windowSize.width/2 - (size.width/2),
-				    parent_loc.y + windowSize.height/2 - (size.height/2));
-				
-	}
-	
-	Map<Integer, ActionListener> listeners = new HashMap<>();
-	public void addButtonActionListener(int id, ActionListener listener)
-	{
-		listeners.put(id, listener);
-	}
-	
-	public static int showModal(Object[] options)
-	{
-		WelcomeDialog panel = new WelcomeDialog(options);
-		panel.setVisible(true);		
-		return panel.sel;
-	}
+    public WelcomeDialog() {
+        this(new Object[0]);
+    }
+
+    public WelcomeDialog(Object[] options) {
+        init(options);
+    }
+
+    private void init(Object[] options) {
+        setUndecorated(true);
+        setModal(true);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
+        Icon welcome = new javax.swing.ImageIcon(ProjectFrame.class.getResource(darkMode ? "/frinika-studio-dark.png" : "/frinika.png"));
+        JLabel label = new JLabel(welcome);
+        label.setHorizontalTextPosition(SwingConstants.CENTER);
+        label.setVerticalTextPosition(SwingConstants.BOTTOM);
+        label.setFont(label.getFont().deriveFont(Font.PLAIN));
+        label.setText(AboutDialog.MAIN_TITLE);
+        label.setBorder(BorderFactory.createEmptyBorder(25, 5, 5, 5));
+        panel.add(label, BorderLayout.NORTH);
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        JPanel contentpane = new JPanel();
+        contentpane.setBorder(BorderFactory.createLineBorder(darkMode ? Color.WHITE : Color.BLACK, 2));
+        contentpane.setLayout(new BorderLayout());
+        contentpane.add(panel);
+        setContentPane(contentpane);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        for (int i = 0; i < options.length; i++) {
+            ix = i;
+            JButton button = new JButton(options[i].toString());
+            button.setOpaque(false);
+            button.addActionListener(new ActionListener() {
+                int index = ix;
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    ActionListener listener = listeners.get(index);
+                    if (listener != null) {
+                        listener.actionPerformed(e);
+                        return;
+                    }
+
+                    selectedOption = index;
+                    setVisible(false);
+                }
+            });
+            if (i == 0) {
+                button.setDefaultCapable(true);
+                getRootPane().setDefaultButton(button);
+            }
+
+            buttonPanel.add(button);
+        }
+        panel.add(buttonPanel, BorderLayout.CENTER);
+
+        JPanel copyrightpanel = new JPanel();
+        copyrightpanel.setOpaque(false);
+
+        JLabel line = new JLabel(AboutDialog.COPYRIGHT_NOTICE);
+        line.setHorizontalTextPosition(SwingConstants.CENTER);
+        line.setFont(line.getFont().deriveFont(10f).deriveFont(Font.PLAIN));
+
+        copyrightpanel.add(line);
+
+        panel.add(copyrightpanel, BorderLayout.SOUTH);
+
+        setTitle("Welcome");
+
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        panel.registerKeyboardAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedOption = -1;
+                setVisible(false);
+            }
+        },
+                stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        pack();
+
+        Rectangle windowSize;
+        Insets windowInsets;
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+        if (gc == null) {
+            gc = getGraphicsConfiguration();
+        }
+
+        if (gc != null) {
+            windowSize = gc.getBounds();
+        } else {
+            windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
+        }
+
+        Dimension size = getSize();
+        Point parent_loc = getLocation();
+        setLocation(parent_loc.x + windowSize.width / 2 - (size.width / 2),
+                parent_loc.y + windowSize.height / 2 - (size.height / 2));
+    }
+
+    public void addButtonActionListener(int id, ActionListener listener) {
+        listeners.put(id, listener);
+    }
+
+    public static int showModal(Object[] options) {
+        WelcomeDialog panel = new WelcomeDialog(options);
+        panel.setVisible(true);
+        return panel.selectedOption;
+    }
 }

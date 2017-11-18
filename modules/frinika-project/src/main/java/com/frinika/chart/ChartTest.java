@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.chart;
 
 import java.awt.event.ActionEvent;
@@ -42,105 +41,105 @@ import javax.swing.filechooser.FileFilter;
 
 public class ChartTest {
 
-	static private FileFilter chartFileFilter=new ChartFileFilter();
+    static private FileFilter chartFileFilter = new ChartFileFilter();
 
-	public static void main(String args[]) {
-		JFrame frame = new JFrame();
-		Chart chart = new Chart();
+    public static void main(String args[]) {
+        JFrame frame = new JFrame();
+        Chart chart = new Chart();
 
-		String keyRoot="C";
-		String scale="Major";
-		
-		final ChartPanel chartPanel = new ChartPanel(chart);
+        String keyRoot = "C";
+        String scale = "Major";
 
-		JMenuBar bar = new JMenuBar();
+        final ChartPanel chartPanel = new ChartPanel(chart);
 
-		frame.setJMenuBar(bar);
+        JMenuBar bar = new JMenuBar();
 
-		bar.add(new JMenuItem(new AbstractAction("load") {
+        frame.setJMenuBar(bar);
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+        bar.add(new JMenuItem(new AbstractAction("load") {
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(chartFileFilter);
+            private static final long serialVersionUID = 1L;
 
-				int returnVal = fc.showOpenDialog(chartPanel);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					try {
-						InputStream fin = new FileInputStream(file);
-						ObjectInputStream in;
-						in = new ObjectInputStream(fin);
-						Object obj = in.readObject();
-						chartPanel.setChart((Chart) obj);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(chartFileFilter);
 
-					} catch (IOException | ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
+                int returnVal = fc.showOpenDialog(chartPanel);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    try {
+                        InputStream fin = new FileInputStream(file);
+                        ObjectInputStream in;
+                        in = new ObjectInputStream(fin);
+                        Object obj = in.readObject();
+                        chartPanel.setChart((Chart) obj);
 
-		}));
+                    } catch (IOException | ClassNotFoundException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
 
-		bar.add(new JMenuItem(new AbstractAction("save") {
+        }));
 
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				fc.setFileFilter(chartFileFilter);
-				int returnVal = fc.showOpenDialog(chartPanel);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					try {
-						OutputStream fout = new FileOutputStream(file);
-						ObjectOutputStream out;
-						out = new ObjectOutputStream(fout);
-						out.writeObject(chartPanel.getChart());
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
-			}
+        bar.add(new JMenuItem(new AbstractAction("save") {
 
-		}));
+            private static final long serialVersionUID = 1L;
 
-		frame.setContentPane(chartPanel);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fc = new JFileChooser();
+                fc.setFileFilter(chartFileFilter);
+                int returnVal = fc.showOpenDialog(chartPanel);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    try {
+                        OutputStream fout = new FileOutputStream(file);
+                        ObjectOutputStream out;
+                        out = new ObjectOutputStream(fout);
+                        out.writeObject(chartPanel.getChart());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }));
 
-		chart.setDefaultKey(keyRoot,scale);
-		chart.appendBar("C", 4);
-		chart.appendBar("Gm7", 4);
-		chart.appendBar("A#+5", 4);
-		chart.appendBar("D / Cm /", 4);
-		chart.appendBar("A / / F", 4);
-		chart.appendBar("Dbmaj7(b5) / / /", 4);
+        frame.setContentPane(chartPanel);
 
-		frame.setSize(500, 800);
-		frame.setVisible(true);
-		frame.repaint();
-	}
-	
-	private static class ChartFileFilter extends FileFilter {
-                @Override
-		public boolean accept(File f) {	
-			if(f.isDirectory()) return true;
-			if(!f.isFile()) return false;		
-			if(f.getName().toLowerCase().endsWith(".chart")) return true;
-			return false;
-		}
+        chart.setDefaultKey(keyRoot, scale);
+        chart.appendBar("C", 4);
+        chart.appendBar("Gm7", 4);
+        chart.appendBar("A#+5", 4);
+        chart.appendBar("D / Cm /", 4);
+        chart.appendBar("A / / F", 4);
+        chart.appendBar("Dbmaj7(b5) / / /", 4);
 
-                @Override
-		public String getDescription() {
-			return "Chart Files (*.chart)";
-		}
-	}	
+        frame.setSize(500, 800);
+        frame.setVisible(true);
+        frame.repaint();
+    }
+
+    private static class ChartFileFilter extends FileFilter {
+
+        @Override
+        public boolean accept(File f) {
+            if (f.isDirectory()) {
+                return true;
+            }
+            if (!f.isFile()) {
+                return false;
+            }
+            if (f.getName().toLowerCase().endsWith(".chart")) {
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public String getDescription() {
+            return "Chart Files (*.chart)";
+        }
+    }
 }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX;
 
 import com.frinika.midi.MidiMessageListener;
@@ -29,32 +28,32 @@ import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
 
 /**
- * A simple MidiMessageMonitor that looks for the peak value.
- * It is reset when yoiu call getPeak()
- * @author pjl
+ * A simple MidiMessageMonitor that looks for the peak value. It is reset when
+ * yoiu call getPeak()
  *
+ * @author pjl
  */
-
 public class MidiPeakMonitor implements MidiMessageListener {
 
-	float monitVal = 0.0f;
+    float monitVal = 0.0f;
 
-	public float getPeak() {
-		float t = monitVal;
-		monitVal = 0.0f;
-		return t;
-	}
+    public float getPeak() {
+        float t = monitVal;
+        monitVal = 0.0f;
+        return t;
+    }
 
+    @Override
+    public void midiMessage(MidiMessage message) {
+        if (!(message instanceof ShortMessage)) {
+            return;
+        }
 
-        @Override
-	public void midiMessage(MidiMessage message) {
-		if (!(message instanceof ShortMessage)) return;	
-		
-		if (message.getStatus() == ShortMessage.NOTE_ON) {
-			float val=(float) ((((ShortMessage)message).getData1())/127.0);
-			if (val > monitVal) monitVal=val;
-		}
-		
-	}
-
+        if (message.getStatus() == ShortMessage.NOTE_ON) {
+            float val = (float) ((((ShortMessage) message).getData1()) / 127.0);
+            if (val > monitVal) {
+                monitVal = val;
+            }
+        }
+    }
 }

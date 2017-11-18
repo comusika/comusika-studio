@@ -24,34 +24,36 @@
 package com.frinika.voiceserver;
 
 /**
- * An audio context is the glue between a Frinika Voice server and the audio interfaces of the
- * operating system. By creating an instance of audio context, you'll automatically get a voice
- * server connected to your operating systems sound resources. 
- * 
+ * An audio context is the glue between a Frinika Voice server and the audio
+ * interfaces of the operating system. By creating an instance of audio context,
+ * you'll automatically get a voice server connected to your operating systems
+ * sound resources.
+ *
  * @author Peter Johan Salomonsen
  */
 public class AudioContext {
+
     private static AudioContext defaultAudioContext = null;
-    
+
     VoiceServer voiceServer = null;
-    
+
     /**
-     *  Create an audio context with the given VoiceServer
-     *  
+     * Create an audio context with the given VoiceServer
+     *
      * @param server
      */
     public AudioContext(VoiceServer server) {
         defaultAudioContext = this;
-        voiceServer=server;
+        voiceServer = server;
     }
-    
+
     /**
-     * Create a audio context with a Jack voice server if it exists ot JavaSound if not
-     * 
+     * Create a audio context with a Jack voice server if it exists ot JavaSound
+     * if not
+     *
      * @throws Exception
      */
-    public AudioContext() throws Exception
-    {
+    public AudioContext() throws Exception {
         voiceServer = new JavaSoundVoiceServer();
         defaultAudioContext = this;
     }
@@ -62,13 +64,13 @@ public class AudioContext {
     public VoiceServer getVoiceServer() {
         return voiceServer;
     }
-    
+
     /**
      * Returns the default audio context
+     *
      * @return
      */
-    public static final AudioContext getDefaultAudioContext()
-    {
+    public static final AudioContext getDefaultAudioContext() {
         return defaultAudioContext;
     }
 }

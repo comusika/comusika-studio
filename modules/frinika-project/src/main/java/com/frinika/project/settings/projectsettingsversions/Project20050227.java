@@ -29,14 +29,17 @@ import java.io.Serializable;
 
 /**
  * For backwards compatibility (Frinika 0.1.0 format)
+ *
  * @author Peter Johan Salomonsen
  *
  */
-public class Project20050227 implements ProjectSettings,Serializable {
+public class Project20050227 implements ProjectSettings, Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     private byte[] sequence;
     private SynthSettings synthSettings;
+
     /**
      * @return Returns the sequence.
      */
@@ -44,6 +47,7 @@ public class Project20050227 implements ProjectSettings,Serializable {
     public byte[] getSequence() {
         return sequence;
     }
+
     /**
      * @param sequence The sequence to set.
      */
@@ -51,6 +55,7 @@ public class Project20050227 implements ProjectSettings,Serializable {
     public void setSequence(byte[] sequence) {
         this.sequence = sequence;
     }
+
     /**
      * @return Returns the synthSettings.
      */
@@ -58,6 +63,7 @@ public class Project20050227 implements ProjectSettings,Serializable {
     public SynthSettings getSynthSettings() {
         return synthSettings;
     }
+
     /**
      * @param synthSettings The synthSettings to set.
      */

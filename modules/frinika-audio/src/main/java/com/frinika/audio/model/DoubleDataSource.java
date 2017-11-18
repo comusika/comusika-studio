@@ -25,15 +25,15 @@ package com.frinika.audio.model;
 
 public interface DoubleDataSource {
 
-    public void readNextDouble(double buffer[], int offSet, int nFrame);
+    void readNextDouble(double buffer[], int offSet, int nFrame);
 
-    public int getChannels();
+    int getChannels();
 
-    public void seekFrame(long pos);
+    void seekFrame(long pos);
 
-    public boolean endOfFile();
+    boolean endOfFile();
 
-    public long getCurrentFrame();
+    long getCurrentFrame();
 
-    public long getLengthInFrames();
+    long getLengthInFrames();
 }

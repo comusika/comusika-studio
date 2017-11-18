@@ -21,22 +21,20 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.scripting;
 
 import java.util.Collection;
 
 /**
  * A container for handling a set of scripts.
- *  
+ *
  * @author Jens Gulden
  */
 public interface ScriptContainer {
 
-	public Collection<FrinikaScript> getScripts();
-	
-	public void addScript(FrinikaScript script);
-	
-	public void removeScript(FrinikaScript script);
-	
+    Collection<FrinikaScript> getScripts();
+
+    void addScript(FrinikaScript script);
+
+    void removeScript(FrinikaScript script);
 }

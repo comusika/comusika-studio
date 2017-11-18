@@ -23,32 +23,36 @@
  */
 package com.frinika.voiceserver;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Voice base class. A voice is producing raw audio data by filling floats into the buffer
- * passed each time fillBuffer is called. 
- *  
+ * Voice base class. A voice is producing raw audio data by filling floats into
+ * the buffer passed each time fillBuffer is called.
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public abstract class Voice {
-	public long startFramePos = 0;
-	
-	/**
-	 * For process ordering you'll set nextVoice to be the voice to be processed after this voice. If you want
-	 * the next voice to do effect processing on this voice only, you should use a separate buffer, and let nextVoice
-	 * add this buffer to the main buffer when processed.
-	 */
-	public Voice nextVoice = null;
-	public Vector<VoiceInterrupt> interrupts = new Vector<>();
+
+    public long startFramePos = 0;
 
     /**
-     * This is where the raw audio data should be produced. The passed in buffer contains the
-     * audio data from the previous voice in the chain, thus new data should just be added 
-     * to the buffer. It's important to just fill within the start and stop positions, because
-     * this is how the interrupt functions control that parameter modification occur at the
-     * right place.
+     * For process ordering you'll set nextVoice to be the voice to be processed
+     * after this voice. If you want the next voice to do effect processing on
+     * this voice only, you should use a separate buffer, and let nextVoice add
+     * this buffer to the main buffer when processed.
+     */
+    public Voice nextVoice = null;
+    public List<VoiceInterrupt> interrupts = new ArrayList<>();
+
+    /**
+     * This is where the raw audio data should be produced. The passed in buffer
+     * contains the audio data from the previous voice in the chain, thus new
+     * data should just be added to the buffer. It's important to just fill
+     * within the start and stop positions, because this is how the interrupt
+     * functions control that parameter modification occur at the right place.
+     *
      * @param startBufferPos
      * @param endBufferPos
      * @param buffer

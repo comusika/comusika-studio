@@ -21,78 +21,76 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.audio.model.ControllerListProvider;
 import com.frinika.sequencer.gui.pianoroll.ControllerHandle;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 /**
  * GUI element for selecting a MIDI-controller type from a drop-down-list.
- * 
+ *
  * @author Jens Gulden
  */
 public class ControllerSelector extends JPanel {
-	
-	int controllerType = 7;
-	private JComboBox comboBox;
 
-	public ControllerSelector() {
-		super(new BorderLayout());
-		comboBox = new JComboBox();
-		comboBox.setEditable(true);
-		this.add(comboBox);
-	}	
-	
-	public int getControllerType() {
-		Object o = comboBox.getSelectedItem();
-		if (o instanceof ControllerHandle) {
-			ControllerHandle ch = (ControllerHandle)o;
-			controllerType = ch.getController(); 
-		} else if (o instanceof String) { // user-edited: direct number
-			try {
-				controllerType = Integer.parseInt((String)o);
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-			}
-		}
-		return controllerType;
-	}
+    int controllerType = 7;
+    private JComboBox<Object> comboBox;
 
-	public void setControllerType(int controllerType) {
-		this.controllerType = controllerType;
-		for (int i = 0; i < comboBox.getItemCount(); i++) {
-			ControllerHandle ch = (ControllerHandle)comboBox.getItemAt(i);
-			if (ch.getController() == controllerType) {
-				comboBox.setSelectedIndex(i);
-				return;
-			}
-		}
-		// reached here: not found in list
-		comboBox.getEditor().setItem(String.valueOf(controllerType));
-	}
+    public ControllerSelector() {
+        super(new BorderLayout());
+        comboBox = new JComboBox<>();
+        comboBox.setEditable(true);
+        this.add(comboBox);
+    }
 
-	public void setControllerList(ControllerListProvider clp) {
-		comboBox.setModel(new DefaultComboBoxModel(clp.getList()));
-	}
+    public int getControllerType() {
+        Object o = comboBox.getSelectedItem();
+        if (o instanceof ControllerHandle) {
+            ControllerHandle ch = (ControllerHandle) o;
+            controllerType = ch.getController();
+        } else if (o instanceof String) { // user-edited: direct number
+            try {
+                controllerType = Integer.parseInt((String) o);
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
+        }
+        return controllerType;
+    }
 
+    public void setControllerType(int controllerType) {
+        this.controllerType = controllerType;
+        for (int i = 0; i < comboBox.getItemCount(); i++) {
+            ControllerHandle ch = (ControllerHandle) comboBox.getItemAt(i);
+            if (ch.getController() == controllerType) {
+                comboBox.setSelectedIndex(i);
+                return;
+            }
+        }
+        // reached here: not found in list
+        comboBox.getEditor().setItem(String.valueOf(controllerType));
+    }
 
-	public void addPseudoController(String name, int nr) {
-		comboBox.addItem(new ControllerHandle(name, 0, 0, nr, nr)); // pseudo, local-only
-	}
+    public void setControllerList(ControllerListProvider provider) {
+        List<Object> controllers = provider.getList();
+        comboBox.setModel(new DefaultComboBoxModel<>(controllers.toArray()));
+    }
 
-	public void addActionListener(ActionListener l) {
-		comboBox.addActionListener(l);
-	}
+    public void addPseudoController(String name, int nr) {
+        comboBox.addItem(new ControllerHandle(name, 0, 0, nr, nr)); // pseudo, local-only
+    }
 
-	public void removeActionListener(ActionListener l) {
-		comboBox.removeActionListener(l);
-	}
+    public void addActionListener(ActionListener l) {
+        comboBox.addActionListener(l);
+    }
 
-	
+    public void removeActionListener(ActionListener l) {
+        comboBox.removeActionListener(l);
+    }
 }

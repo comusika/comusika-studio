@@ -23,7 +23,6 @@
  */
 package com.frinika.frame.action;
 
-
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
 import static com.frinika.localization.CurrentLocale.getMessage;
@@ -37,77 +36,77 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
 @SuppressWarnings("serial")
-public class CreateProjectAction extends  AbstractAction {
-	
+public class CreateProjectAction extends AbstractAction {
 
-	ProjectFrame frame;
-        @Override
-		public void actionPerformed(ActionEvent e) {
+    ProjectFrame frame;
 
-			try {
-				frame=new FrinikaFrame(new ProjectContainer());
-			} catch (Exception e3) {
-				// TODO Auto-generated catch block
-				e3.printStackTrace();
-			}
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-			
-			if (true) return;
-			
-			File newProject = new File("New.frinika");
-			if(newProject.exists())
-			{
-				newProject.delete();
-				try {
-					newProject.createNewFile();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			
-			try {
-			
-				frame=new FrinikaFrame(new ProjectContainer());
-			} catch (Exception e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
+        try {
+            frame = new FrinikaFrame(new ProjectContainer());
+        } catch (Exception e3) {
+            // TODO Auto-generated catch block
+            e3.printStackTrace();
+        }
 
-			if (true) return;
-			
-			try {
-				
-				
-				
-				JFileChooser chooser = new JFileChooser();
-				chooser
-						.setDialogTitle(getMessage("project.menu.file.new_project.dialogtitle"));
-				chooser.setFileFilter(new ProjectFileFilter());
-		//		if (project.getProjectFile() != null)
-		//			chooser.setSelectedFile(project.getProjectFile());
-				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					newProject = chooser.getSelectedFile();
-					
-					if(chooser.getFileFilter() instanceof ProjectFileFilter)
-						if(!chooser.getFileFilter().accept(newProject))
-							newProject = new File(newProject.getPath() + ".frinika");
-					
-					frame=new FrinikaFrame(ProjectContainer
-							.loadProject(newProject));
-					FrinikaConfig.setLastProjectFilename(newProject
-							.getAbsolutePath());
-				}
-			
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	
-		public ProjectFrame getProjectFrame() {
-			return frame;
-		}
-	}
+        if (true) {
+            return;
+        }
 
+        File newProject = new File("New.frinika");
+        if (newProject.exists()) {
+            newProject.delete();
+            try {
+                newProject.createNewFile();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
 
+        try {
+
+            frame = new FrinikaFrame(new ProjectContainer());
+        } catch (Exception e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
+
+        if (true) {
+            return;
+        }
+
+        try {
+
+            JFileChooser chooser = new JFileChooser();
+            chooser
+                    .setDialogTitle(getMessage("project.menu.file.new_project.dialogtitle"));
+            chooser.setFileFilter(new ProjectFileFilter());
+            //		if (project.getProjectFile() != null)
+            //			chooser.setSelectedFile(project.getProjectFile());
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                newProject = chooser.getSelectedFile();
+
+                if (chooser.getFileFilter() instanceof ProjectFileFilter) {
+                    if (!chooser.getFileFilter().accept(newProject)) {
+                        newProject = new File(newProject.getPath() + ".frinika");
+                    }
+                }
+
+                frame = new FrinikaFrame(ProjectContainer
+                        .loadProject(newProject));
+                FrinikaConfig.setLastProjectFilename(newProject
+                        .getAbsolutePath());
+            }
+
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
+
+    public ProjectFrame getProjectFrame() {
+        return frame;
+    }
+}

@@ -31,12 +31,9 @@ import uk.org.toot.control.Control;
 import uk.org.toot.control.ControlLaw;
 import uk.org.toot.control.LawControl;
 
-
 /**
- * 
  * Used to control a toot Control using the data of a midi message.
- * 
- * 
+ *
  * @author pjl
  */
 public class ControlMapper implements Receiver {
@@ -50,11 +47,11 @@ public class ControlMapper implements Receiver {
     }
     Valueizer valueizer;
 
-   /**
-    * 
-    * @param cntrl  the control to be tweaked 
-    * @param proto  an example of the midi message to do the job
-    */
+    /**
+     *
+     * @param cntrl the control to be tweaked
+     * @param proto an example of the midi message to do the job
+     */
     public ControlMapper(Control cntrl, ShortMessage proto) {
         this.cntrl = cntrl;
         this.proto = proto;
@@ -93,10 +90,7 @@ public class ControlMapper implements Receiver {
                         return (float) (val / 8192.0);
                     }
                 };
-
         }
-
-
     }
 
     @Override
@@ -117,8 +111,8 @@ public class ControlMapper implements Receiver {
             float val = (float) (law.getMaximum() * t + law.getMinimum() * (1 - t));
             ((LawControl) cntrl).setValue(val);
         } else if (cntrl instanceof BooleanControl) {
-              System.out.println(" BOOLEAN" );
-              ((BooleanControl) cntrl).setValue(t>0);       
+            System.out.println(" BOOLEAN");
+            ((BooleanControl) cntrl).setValue(t > 0);
         }
     }
 }

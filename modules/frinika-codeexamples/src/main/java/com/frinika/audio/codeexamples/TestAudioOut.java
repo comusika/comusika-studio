@@ -52,18 +52,14 @@ public class TestAudioOut {
 
     public static void main(String args[]) throws Exception {
 
-
         String serverName = AudioServerChooser.showDialog("server");
-
 
         //   Class<AudioServer> clazz=new Class<AudioServer>();
         // AudioServerServices.printServiceDescriptors(null);
-
         audioServer = AudioServerServices.createServer(serverName); // new MultiIOJavaSoundAudioServer();
 
         if (audioServer instanceof MultiplexedJavaSoundAudioServer) {
             MultiplexedJavaSoundAudioServer s = (MultiplexedJavaSoundAudioServer) audioServer;
-
 
             List<String> list = s.getOutDeviceList();
             Object a[] = new Object[list.size()];
@@ -75,10 +71,7 @@ public class TestAudioOut {
             s.setOutDevice((String) selectedValue);
         }
 
-
         serverConfig = AudioServerServices.createServerConfiguration(audioServer);
-
-
 
         List<String> list = audioServer.getAvailableOutputNames();
         Object a[] = new Object[list.size()];
@@ -93,7 +86,6 @@ public class TestAudioOut {
         final IOAudioProcess output = audioServer.openAudioOutput((String) selectedValue,
                 "output");
 
-
         chunk = audioServer.createAudioBuffer("default");
         chunk.setRealTime(true);
         final Synth synth = new Synth();
@@ -102,7 +94,6 @@ public class TestAudioOut {
 
             @Override
             public void work(int arg0) {
-
 
                 synth.processAudio(chunk);
 
@@ -117,8 +108,6 @@ public class TestAudioOut {
         });
         audioServer.start();
         configure();
-
-
     }
 
     static class Synth implements AudioProcess {
@@ -154,8 +143,6 @@ public class TestAudioOut {
 
     public static void configure() {
 
-
-
         final JComponent ui = AudioServerUIServices.createServerUI(audioServer,
                 serverConfig);
 
@@ -166,7 +153,6 @@ public class TestAudioOut {
         frame = new JFrame();
         JPanel content = new JPanel();
         content.add(ui);
-
 
         frame.setAlwaysOnTop(true);
         frame.setContentPane(content);

@@ -1,4 +1,3 @@
-package com.frinika.model;
 /*
  * Created on Mar 5, 2006
  *
@@ -22,28 +21,38 @@ package com.frinika.model;
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.frinika.model;
 
 /**
- * Objects which changes are to be recorded in the editHistoryContainer should implement this interface
- *  
- * EditHistory container records adding and removal of objects - if you need to change a property on the 
- * object you should remove it first, do your changes, and add it again.
- * 
- * On removal the EditHistoryContainer will attempt to clone the object - and if restored later
- * it will use the restoreFromClone method to restore the cloned data on the original instance.
+ * Objects which changes are to be recorded in the editHistoryContainer should
+ * implement this interface
+ *
+ * EditHistory container records adding and removal of objects - if you need to
+ * change a property on the object you should remove it first, do your changes,
+ * and add it again.
+ *
+ * On removal the EditHistoryContainer will attempt to clone the object - and if
+ * restored later it will use the restoreFromClone method to restore the cloned
+ * data on the original instance.
+ *
  * @author Peter Johan Salomonsen
  */
 public interface EditHistoryRecordable {
+
     /**
      * If restoration from a clone is needed - this method should return a clone
      * otherwise throw the CloneNotSupportedException
+     *
      * @return
      * @throws CloneNotSupportedException
      */
     public Object clone() throws CloneNotSupportedException;
+
     /**
-     * On removal the EditHistoryContainer will attempt to clone the object - and if restored later
-     * it will use the restoreFromClone method to restore the cloned data on the original instance.
+     * On removal the EditHistoryContainer will attempt to clone the object -
+     * and if restored later it will use the restoreFromClone method to restore
+     * the cloned data on the original instance.
+     *
      * @param object
      */
     public abstract void restoreFromClone(EditHistoryRecordable object);

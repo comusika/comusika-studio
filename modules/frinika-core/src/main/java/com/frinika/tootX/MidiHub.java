@@ -1,6 +1,5 @@
 package com.frinika.tootX;
 
-
 import com.frinika.midi.MidiDebugDevice;
 import java.util.Vector;
 import javax.sound.midi.MidiDevice;
@@ -9,29 +8,17 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 
 /**
- * <p>Title: </p>
- *
- * <p>Description: </p>
- *
- * <p>Copyright: Copyright (c) 2005</p>
- *
- * <p>Company: </p>
- *
  * @author pjl
  * @version 1.0
- * 
+ *
  * @deprecated
- * 
  */
 public class MidiHub {
 
-	
     static MidiDeviceHandle[] recvHandle;
-    
+
     static MidiDeviceHandle[] transHandle;
 
-
-  
     static {
 
         MidiDevice[] recvList;
@@ -46,29 +33,26 @@ public class MidiHub {
             MidiDevice dev = null;
             try {
                 dev = MidiSystem.getMidiDevice(info1);
-            }catch (MidiUnavailableException ex1) {
+            } catch (MidiUnavailableException ex1) {
                 ex1.printStackTrace();
             }
-            
+
             // TODO: Why do you want to exclude these two? This also excludes RasmusDSP
             // At one point they did not work with frinika. Do they now? The javvasound  synth ? (PJL)
-            
             //if (dev instanceof javax.sound.midi.Synthesizer) continue;
             //if (dev instanceof javax.sound.midi.Sequencer) continue;
             if (dev.getMaxReceivers() != 0) {
-                recV.add(dev);               
+                recV.add(dev);
             }
             if (dev.getMaxTransmitters() != 0) {
                 transV.add(dev);
             }
         }
 
-
-        MidiDebugDevice filt= new MidiDebugDevice();
+        MidiDebugDevice filt = new MidiDebugDevice();
         recV.add(filt);
         recvList = new MidiDevice[recV.size()];
         recV.toArray(recvList);
-
 
         recvHandle = makeHandles(recvList);
         transV.add(filt);
@@ -82,7 +66,7 @@ public class MidiHub {
         for (MidiDevice transList1 : transList) {
             System.out.println(transList1.getDeviceInfo());
         }
-        
+
         System.out.println(" Recv  devices ------------------------------- ");
 
         for (MidiDevice recvList1 : recvList) {
@@ -91,13 +75,13 @@ public class MidiHub {
     }
 
     static public MidiDeviceHandle[] getMidiOutHandles() {
-    	return recvHandle;
+        return recvHandle;
     }
- 
+
     static public MidiDeviceHandle[] getMidiInHandles() {
-    	return transHandle;
+        return transHandle;
     }
-    
+
     static public MidiDeviceHandle getMidiInHandleOf(MidiDevice dev) {
         for (MidiDeviceHandle h : transHandle) {
             //  System.out.println(dev + "    " + h.getMidiDevice());
@@ -108,7 +92,6 @@ public class MidiHub {
 
         System.err.println(" Device not in list " + dev);
         return null;
-
     }
 
     static public MidiDeviceHandle getMidiOutHandleOf(MidiDevice dev) {
@@ -119,25 +102,26 @@ public class MidiHub {
         }
         System.err.println(" Device not in  list " + dev);
         return null;
-
     }
 
     public static MidiDevice getMidiOutDeviceByName(String name) {
-    	for (MidiDeviceHandle handle:recvHandle)
-    	{
-    		if (handle.toString().equals(name)) return handle.getMidiDevice();
-    	}
-    	return null;
+        for (MidiDeviceHandle handle : recvHandle) {
+            if (handle.toString().equals(name)) {
+                return handle.getMidiDevice();
+            }
+        }
+        return null;
     }
-    
+
     public static MidiDevice getMidiInDeviceByName(String name) {
-    	for (MidiDeviceHandle handle:transHandle)
-    	{
-    		if (handle.toString().equals(name)) return handle.getMidiDevice();
-    	}
-    	return null;
+        for (MidiDeviceHandle handle : transHandle) {
+            if (handle.toString().equals(name)) {
+                return handle.getMidiDevice();
+            }
+        }
+        return null;
     }
-    
+
     static MidiDeviceHandle[] makeHandles(MidiDevice[] l) {
         MidiDeviceHandle[] ret = new MidiDeviceHandle[l.length + 1];
         ret[0] = new MidiDeviceHandle(null);
@@ -146,6 +130,4 @@ public class MidiHub {
         }
         return ret;
     }
-
-  
 }

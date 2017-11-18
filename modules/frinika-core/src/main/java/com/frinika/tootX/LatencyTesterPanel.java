@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX;
 
 import com.frinika.base.FrinikaAudioSystem;
@@ -39,143 +38,130 @@ import javax.swing.JTextField;
 
 public class LatencyTesterPanel extends JPanel {
 
-	private LatencyTester tester;
+    private LatencyTester tester;
 
-	private JTextField latencyLabel;
-	private JLabel currentVal;
-	
-	private JFrame frame;
-	
-	public LatencyTesterPanel(JFrame frame1) {
-		this.frame=frame1;
-		tester = new LatencyTester();
-		add(latencyLabel = new JTextField(10));
-		int lat=FrinikaAudioSystem.getAudioServer().getTotalLatencyFrames();
-		add(new JLabel("samples latency. (current value="+lat+")"));
-		tester.addObserver(new Observer() {
+    private JTextField latencyLabel;
+    private JLabel currentVal;
 
-                        @Override
-			public void update(Observable o, Object arg) {
-				String str;
-				int latency = tester.getLatencyInSamples();
-				if (latency < 0) {
-					str = "No signal";
-				} else {
-					str = ""+latency;
-				}
-				latencyLabel.setText(str);
-			}
+    private JFrame frame;
 
-		});
-		
-	JButton set=new JButton("Apply");
-		
-		add(set);
-	
-		set.addActionListener(new ActionListener() {
+    public LatencyTesterPanel(JFrame frame1) {
+        this.frame = frame1;
+        tester = new LatencyTester();
+        add(latencyLabel = new JTextField(10));
+        int lat = FrinikaAudioSystem.getAudioServer().getTotalLatencyFrames();
+        add(new JLabel("samples latency. (current value=" + lat + ")"));
+        tester.addObserver(new Observer() {
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-			
-				int lat=Integer.parseInt(latencyLabel.getText());
-				//FrinikaAudioSystem.setTotalLatency(tester.getLatencyInSamples());
-				FrinikaAudioSystem.setTotalLatency(lat);
-				// dispose();				
-			}
-			
-			
-		});
+            @Override
+            public void update(Observable o, Object arg) {
+                String str;
+                int latency = tester.getLatencyInSamples();
+                if (latency < 0) {
+                    str = "No signal";
+                } else {
+                    str = "" + latency;
+                }
+                latencyLabel.setText(str);
+            }
+        });
 
-		
-	JButton reset=new JButton("Reset");
-		
-		add(reset);
-	
-		set.addActionListener(new ActionListener() {
+        JButton set = new JButton("Apply");
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				tester.reset();
-			}	
-		});
+        add(set);
 
-		
-		JButton abort=new JButton("Quit");
-		
-		add(abort);
-	
-		abort.addActionListener(new ActionListener() {
+        set.addActionListener(new ActionListener() {
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();				
-			}
-			
-			
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int lat = Integer.parseInt(latencyLabel.getText());
+                //FrinikaAudioSystem.setTotalLatency(tester.getLatencyInSamples());
+                FrinikaAudioSystem.setTotalLatency(lat);
+                // dispose();				
+            }
+        });
+
+        JButton reset = new JButton("Reset");
+
+        add(reset);
+
+        set.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tester.reset();
+            }
+        });
+
+        JButton abort = new JButton("Quit");
+
+        add(abort);
+
+        abort.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
 
 //		setPreferredSize(new Dimension(200, 50));
+        if (frame != null) {
+            frame.addWindowListener(new WindowListener() {
 
-		if (frame != null) {
-			frame.addWindowListener(new WindowListener(){
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    // TODO Auto-generated method stub
+                }
 
-                                @Override
-				public void windowActivated(WindowEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
+                @Override
+                public void windowClosed(WindowEvent e) {
+                }
 
-                                @Override
-				public void windowClosed(WindowEvent e) {
-				}
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    if (tester != null) {
+                        tester.stop();
+                    }
+                    tester = null;
+                    if (frame != null) {
+                        frame.dispose();
+                    }
+                    frame = null;
 
-                                @Override
-				public void windowClosing(WindowEvent e) {
-					if (tester!=null) tester.stop();
-					tester=null;
-					if (frame!= null) frame.dispose();
-					frame=null;
+                    // TODO Auto-generated method stub
+                }
 
-					// TODO Auto-generated method stub
-					
-				}
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                    // TODO Auto-generated method stub
+                }
 
-                                @Override
-				public void windowDeactivated(WindowEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                    // TODO Auto-generated method stub
+                }
 
-                                @Override
-				public void windowDeiconified(WindowEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
+                @Override
+                public void windowIconified(WindowEvent e) {
+                    // TODO Auto-generated method stub
+                }
 
-                                @Override
-				public void windowIconified(WindowEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
+                @Override
+                public void windowOpened(WindowEvent e) {
+                    // TODO Auto-generated method stub
+                }
 
-                                @Override
-				public void windowOpened(WindowEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-			});
-			tester.start(frame);
-		}
-		
+            });
+            tester.start(frame);
+        }
+    }
 
-	}
-	
-	void dispose() {
-		tester.stop();
-		tester=null;
-		frame.dispose();		
-		frame=null;
-	}
-
+    void dispose() {
+        tester.stop();
+        tester = null;
+        frame.dispose();
+        frame = null;
+    }
 }

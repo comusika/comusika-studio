@@ -39,59 +39,47 @@ import javax.sound.midi.Transmitter;
 
 /**
  * Wrapper for external midi out devices
- * 
+ *
  * @author Peter Johan Salomonsen
  */
-public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serializable   {
+public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// TODO transient or not transient that is the question
-	transient ControllerListProvider controllerList;
-	//Info name;
-	
+    // TODO transient or not transient that is the question
+    transient ControllerListProvider controllerList;
+    //Info name;
+
     transient MidiDevice midiDevice;
     transient MidiDeviceMixerPanel gui;
-    transient Receiver receiver = new Receiver(){
-
+    transient Receiver receiver = new Receiver() {
         /* (non-Javadoc)
          * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage, long)
          */
         @Override
         public void send(MidiMessage message, long timeStamp) {
-            
-            try
-            {
-                midiDevice.getReceiver().send(message,timeStamp);
-                
+
+            try {
+                midiDevice.getReceiver().send(message, timeStamp);
+
                 // Check if short message and update the gui
-                if(message instanceof ShortMessage)
-                {
-                    ShortMessage shm = (ShortMessage)message;
+                if (message instanceof ShortMessage) {
+                    ShortMessage shm = (ShortMessage) message;
                     int channel = shm.getChannel();
-    
+
                     // Pass the message onto midi device
-                    
-                    if(shm.getCommand() == ShortMessage.NOTE_ON)
-                    {
-                    }
-                    else if(shm.getCommand() == ShortMessage.CONTROL_CHANGE)
-                    {
-                        if(gui!=null && shm.getData1()==7)
+                    if (shm.getCommand() == ShortMessage.NOTE_ON) {
+                    } else if (shm.getCommand() == ShortMessage.CONTROL_CHANGE) {
+                        if (gui != null && shm.getData1() == 7) {
                             gui.mixerSlots[channel].setVolume(shm.getData2());
-                        else if(gui!=null && shm.getData1()==10)
+                        } else if (gui != null && shm.getData1() == 10) {
                             gui.mixerSlots[channel].setPan(shm.getData2());
-                    }
-                    else if(shm.getCommand() == ShortMessage.PITCH_BEND)
-                    {
-                        
+                        }
+                    } else if (shm.getCommand() == ShortMessage.PITCH_BEND) {
+
                     }
                 }
-            }
-            catch(MidiUnavailableException e) {
+            } catch (MidiUnavailableException e) {
                 // For debugging
                 //e.printStackTrace();
             }
@@ -107,33 +95,30 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
             } catch (MidiUnavailableException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }            
+            }
         }
-        
     };
-    
 
-    public MidiOutDeviceWrapper(MidiDevice midiDevice)
-    {
+    public MidiOutDeviceWrapper(MidiDevice midiDevice) {
         this.midiDevice = midiDevice;
-        controllerList=MidiResource.getDefaultControllerList();
+        controllerList = MidiResource.getDefaultControllerList();
 //        name=midiDevice.getDeviceInfo();
     }
 
-        @Override
+    @Override
     public Receiver getReceiver() throws MidiUnavailableException {
         return receiver;
     }
 
-        @Override
+    @Override
     public List<Receiver> getReceivers() {
         List<Receiver> receivers = new ArrayList<>();
         receivers.add(receiver);
-        for(Receiver recv : midiDevice.getReceivers())
-        {
+        for (Receiver recv : midiDevice.getReceivers()) {
             try {
-                if(recv != midiDevice.getReceiver())
+                if (recv != midiDevice.getReceiver()) {
                     receivers.add(recv);
+                }
             } catch (MidiUnavailableException e) {
                 e.printStackTrace();
             }
@@ -141,57 +126,55 @@ public class MidiOutDeviceWrapper implements MidiDevice, MidiListProvider,Serial
         return receivers;
     }
 
-        @Override
+    @Override
     public Transmitter getTransmitter() throws MidiUnavailableException {
         return midiDevice.getTransmitter();
     }
 
-        @Override
+    @Override
     public List<Transmitter> getTransmitters() {
         return midiDevice.getTransmitters();
     }
 
-        @Override
+    @Override
     public Info getDeviceInfo() {
         return midiDevice.getDeviceInfo();
     }
 
-        @Override
+    @Override
     public void open() throws MidiUnavailableException {
         midiDevice.open();
-        
+
     }
 
-        @Override
+    @Override
     public void close() {
         midiDevice.close();
     }
 
-        @Override
+    @Override
     public boolean isOpen() {
         return midiDevice.isOpen();
     }
 
-        @Override
+    @Override
     public long getMicrosecondPosition() {
         return midiDevice.getMicrosecondPosition();
     }
 
-        @Override
+    @Override
     public int getMaxReceivers() {
         return midiDevice.getMaxReceivers();
     }
 
-        @Override
+    @Override
     public int getMaxTransmitters() {
         return midiDevice.getMaxTransmitters();
     }
 
-        @Override
-	public ControllerListProvider getControllerList() {
-		// TODO Auto-generated method stub
-		return controllerList;
-	}
-
-
+    @Override
+    public ControllerListProvider getControllerList() {
+        // TODO Auto-generated method stub
+        return controllerList;
+    }
 }

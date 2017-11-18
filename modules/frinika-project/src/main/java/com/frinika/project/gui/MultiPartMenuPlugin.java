@@ -33,7 +33,6 @@ public class MultiPartMenuPlugin implements MenuPlugin {
         if ((obj instanceof MidiPart)) {
             final MidiPart mp = (MidiPart) obj;
 
-
             final MultiPart multi = mp.getMultiPart();
             if (multi != null) {
 
@@ -53,13 +52,11 @@ public class MultiPartMenuPlugin implements MenuPlugin {
                 for (final Part part : multi.getParts()) {
                     take++;
 
-
-
                     if (isDrum) {
                         final JCheckBoxMenuItem item = new JCheckBoxMenuItem();
 
                         item.setSelected(part.isAttached()
-                                );
+                        );
 
                         item.setAction(new AbstractAction(" take " + take) {
 
@@ -89,7 +86,7 @@ public class MultiPartMenuPlugin implements MenuPlugin {
                                 System.out.println(part + " " + item.isSelected());
 
                                 for (Part partX : multi.getParts()) {
-                                    System.out.println(partX + " --> " +partX.isAttached());
+                                    System.out.println(partX + " --> " + partX.isAttached());
                                     if (partX != part) {
                                         if (partX.isAttached()) {
                                             partX.removeFromModel();
@@ -107,12 +104,8 @@ public class MultiPartMenuPlugin implements MenuPlugin {
                     }
                 }
 
-
                 popup.add(subMenu);
             }
-
-
         }
     }
 }
-

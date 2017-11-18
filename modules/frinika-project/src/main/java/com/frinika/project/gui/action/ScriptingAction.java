@@ -21,11 +21,10 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.gui.action;
 
 import com.frinika.gui.AbstractDialog;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.project.ProjectContainer;
 import com.frinika.project.scripting.FrinikaScript;
 import com.frinika.project.scripting.gui.ScriptingDialog;
@@ -36,57 +35,56 @@ import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 
 /**
- * 
- * This class will be instantiated multiple times, using
- * the two different constructors with different semantics: constructor
- * ScriptingAction(frame) opens the project-wide scripting-dialog, while
- * constructor ScriptingAction(frame, FrinikaScript) will provide an action that
- * immediately executed the specified script.
- * This action is used to build the "Tools/Scripting" sub-menu.
- * 
- * Although this inherits AbstractMidiAction for implementation reasons, the
- * use of scripts generally is not restricted to modifying midi events, so
- * this class is located in package com.frinika.sequencer.gui.menu.
- * 
+ *
+ * This class will be instantiated multiple times, using the two different
+ * constructors with different semantics: constructor ScriptingAction(frame)
+ * opens the project-wide scripting-dialog, while constructor
+ * ScriptingAction(frame, FrinikaScript) will provide an action that immediately
+ * executed the specified script. This action is used to build the
+ * "Tools/Scripting" sub-menu.
+ *
+ * Although this inherits AbstractMidiAction for implementation reasons, the use
+ * of scripts generally is not restricted to modifying midi events, so this
+ * class is located in package com.frinika.sequencer.gui.menu.
+ *
  * @author Jens Gulden
  */
 public class ScriptingAction extends AbstractAction {
 
-	public final static String actionId = "sequencer.project.scripting"; // also accessed by ScriptingDialog
+    public final static String actionId = "sequencer.project.scripting"; // also accessed by ScriptingDialog
 
-	private AbstractSequencerProjectContainer project;
-	private FrinikaScript script; 
-	private ScriptingDialog scriptingDialog;
+    private AbstractSequencerProjectContainer project;
+    private FrinikaScript script;
+    private ScriptingDialog scriptingDialog;
 
-	
-	public ScriptingAction(AbstractSequencerProjectContainer project) {
-		super(getMessage(actionId));
-		this.project = project;
-		script = null;
-	}
-	
-	public ScriptingAction(AbstractSequencerProjectContainer project, FrinikaScript script) {
-		super(script.getName());
-		this.project = project;
-		this.script = script;
-		scriptingDialog = null;
-	}
+    public ScriptingAction(AbstractSequencerProjectContainer project) {
+        super(CurrentLocale.getMessage(actionId));
+        this.project = project;
+        script = null;
+    }
 
-	public void initDialog(JMenu scriptingSubmenu) { // must be called extra, after menu-item as been added to submenu
-		scriptingDialog = new ScriptingDialog(new AbstractDialog(), (ProjectContainer) project, scriptingSubmenu);
-	}
+    public ScriptingAction(AbstractSequencerProjectContainer project, FrinikaScript script) {
+        super(script.getName());
+        this.project = project;
+        this.script = script;
+        scriptingDialog = null;
+    }
 
-        @Override
-	public void actionPerformed(ActionEvent e) {
-		if ( script == null ) {
-			if(JOptionPane.showConfirmDialog(scriptingDialog, "WARNING: Scripts may damage your "
-                            + "computer and abuse your private data.\r\nDo not run a script if you don't know what "
-                            + "the script is doing.","Script warning",JOptionPane.OK_CANCEL_OPTION)
-                            == JOptionPane.OK_OPTION) {
-                        scriptingDialog.setVisible(true);
-                    }
-		} else {
-			((ProjectContainer) project).getScriptingEngine().executeScript(script, (ProjectContainer) project, null);
-		}
-	}
+    public void initDialog(JMenu scriptingSubmenu) { // must be called extra, after menu-item as been added to submenu
+        scriptingDialog = new ScriptingDialog(new AbstractDialog(), (ProjectContainer) project, scriptingSubmenu);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (script == null) {
+            if (JOptionPane.showConfirmDialog(scriptingDialog, "WARNING: Scripts may damage your "
+                    + "computer and abuse your private data.\r\nDo not run a script if you don't know what "
+                    + "the script is doing.", "Script warning", JOptionPane.OK_CANCEL_OPTION)
+                    == JOptionPane.OK_OPTION) {
+                scriptingDialog.setVisible(true);
+            }
+        } else {
+            ((ProjectContainer) project).getScriptingEngine().executeScript(script, (ProjectContainer) project, null);
+        }
+    }
 }

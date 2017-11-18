@@ -30,16 +30,17 @@ import javax.sound.sampled.TargetDataLine;
 /**
  * @author peter
  *
- * PJL: Does not seem to be used  ?
+ * PJL: Does not seem to be used ?
  *
- *@deprecated
+ * @deprecated
  */
 public class MonoAudioInput {
-	TargetDataLine lineIn;
-	AudioFormat format = new AudioFormat((float) FrinikaConfig.sampleRate,16,1,true,true);
-	
-	public MonoAudioInput(TargetDataLine in) throws Exception
-	{	/*
+
+    TargetDataLine lineIn;
+    AudioFormat format = new AudioFormat((float) FrinikaConfig.sampleRate, 16, 1, true, true);
+
+    public MonoAudioInput(TargetDataLine in) throws Exception {
+        /*
 		if(AudioContext.getDefaultAudioContext().getVoiceServer() instanceof AudioOutput)
 		{
 			lineIn = com.frinika.audio.drivers.jack.AudioInput.getInstance(); 
@@ -47,22 +48,19 @@ public class MonoAudioInput {
 			DataLine.Info infoIn = new DataLine.Info(TargetDataLine.class, format);		
 			lineIn = in.getLine(infoIn);
 		}*/
-		lineIn=in;
-		
-	}
-	
-	public void start() throws Exception
-	{
-		lineIn.open(format);
-	}
-	
-	public void stop()
-	{
-		lineIn.close();
-	}
-	
-	public TargetDataLine getLine()
-	{
-		return(lineIn);
-	}
+        lineIn = in;
+
+    }
+
+    public void start() throws Exception {
+        lineIn.open(format);
+    }
+
+    public void stop() {
+        lineIn.close();
+    }
+
+    public TargetDataLine getLine() {
+        return (lineIn);
+    }
 }

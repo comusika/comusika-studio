@@ -1,6 +1,7 @@
 package com.frinika.util.math;
 
-/** Supplies static methods for factoring integers needed by various FFT classes.
+/**
+ * Supplies static methods for factoring integers needed by various FFT classes.
  *
  * @author Bruce R. Miller bruce.miller@nist.gov
  * @author Contribution of the National Institute of Standards and Technology,
@@ -13,9 +14,11 @@ package com.frinika.util.math;
  */
 public class Factorize {
 
-    /** Return the prime factors of n.
-     * The method first extracts any factors in fromfactors, in order (which
-     * needn't actually be prime).  Remaining factors in increasing order follow. */
+    /**
+     * Return the prime factors of n. The method first extracts any factors in
+     * fromfactors, in order (which needn't actually be prime). Remaining
+     * factors in increasing order follow.
+     */
     public final static int[] factor(final int n, final int fromfactors[]) {
         int factors[] = new int[64]; // Cant be more than 64 factors.
         int nf = 0;
@@ -69,9 +72,11 @@ public class Factorize {
         return f;
     }
 
-    /** Return the integer log, base 2, of n, or -1 if n is not an integral power of 2.*/
-   
-    	static int log2(int n) {
+    /**
+     * Return the integer log, base 2, of n, or -1 if n is not an integral power
+     * of 2.
+     */
+    static int log2(int n) {
         int log = 0;
 
         for (int k = 1; k < n; k *= 2, log++) {
@@ -79,9 +84,9 @@ public class Factorize {
         }
 
         if (n != (1 << log)) {
-            return -1; /* n is not a power of 2 */
+            return -1;
+            /* n is not a power of 2 */
         }
         return log;
     }
 }
-

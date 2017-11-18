@@ -26,36 +26,31 @@ package com.frinika.voiceserver;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.TargetDataLine;
 
-
-
 /**
  * @author peter
  *
  */
 public class AudioInput {
-	TargetDataLine lineIn;
-	
-	// Always opened in 16 bit stereo
-	AudioFormat format;
-	
-	public AudioInput(TargetDataLine lineIn,float Fs) throws Exception
-	{
-        format = new AudioFormat(Fs,16,2,true,true);
-		this.lineIn = lineIn;
-	}
-	
-	public void start() throws Exception
-	{
-		lineIn.open(format);
-	}
-	
-	public void stop()
-	{
-		lineIn.close();
-	}
-	
-	public TargetDataLine getLine()
-	{
-		return(lineIn);
-	}
+
+    TargetDataLine lineIn;
+
+    // Always opened in 16 bit stereo
+    AudioFormat format;
+
+    public AudioInput(TargetDataLine lineIn, float Fs) throws Exception {
+        format = new AudioFormat(Fs, 16, 2, true, true);
+        this.lineIn = lineIn;
+    }
+
+    public void start() throws Exception {
+        lineIn.open(format);
+    }
+
+    public void stop() {
+        lineIn.close();
+    }
+
+    public TargetDataLine getLine() {
+        return (lineIn);
+    }
 }

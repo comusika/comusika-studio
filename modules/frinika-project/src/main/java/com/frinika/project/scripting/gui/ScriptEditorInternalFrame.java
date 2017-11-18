@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.scripting.gui;
 
 import com.frinika.project.scripting.DefaultFrinikaScript;
@@ -36,7 +35,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
 /**
- * A simple text-editor for script source-code. 
+ * A simple text-editor for script source-code.
  *
  * (Created with NetBeans 5.5 gui-editor, see corresponding .form file.)
  *
@@ -44,23 +43,25 @@ import javax.swing.JInternalFrame;
  * @author Jens Gulden
  */
 class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener, Runnable {
-    
+
     final int EXTERNAL_CHANGE_TEST_INTERVAL = 250; // milliseconds to test whether file externally overwritten
-	
+
     protected FrinikaScript script;
     protected boolean dirty;
     protected ScriptingDialog dialog;
     protected long lastSaveTimestamp = 0;
-    
-    /** Creates new form ScriptEditorInternalFrame */
+
+    /**
+     * Creates new form ScriptEditorInternalFrame
+     */
     public ScriptEditorInternalFrame(FrinikaScript script, ScriptingDialog dialog) {
-    	super();
-    	this.script = script;
+        super();
+        this.script = script;
         this.dialog = dialog;
-    	dirty = false;
+        dirty = false;
         initComponents();
-        if (! (script instanceof DefaultFrinikaScript) ) {
-            editorPane.setEditable( false );
+        if (!(script instanceof DefaultFrinikaScript)) {
+            editorPane.setEditable(false);
             editorPane.setBackground(new Color(240, 240, 240));
         }
         getRootPane().setDefaultButton(runButton);
@@ -91,7 +92,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
         		update();
         	}
         });*/
-        /*editorPane.getDocument().addDocumentListener(new DocumentListener() {
+ /*editorPane.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
 				setDirty(true);
 			}
@@ -105,41 +106,41 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
         refresh();
         dialog.engine.addScriptListener(this);
         //editorPane.requestFocus();
-        if ( script instanceof DefaultFrinikaScript ) {
-        	String filename = ((DefaultFrinikaScript)script).getFilename();
-        	if (filename != null) {
-        		File file = new File(filename);
-        		if (file.exists()) {
-                	lastSaveTimestamp = file.lastModified(); 
-        		}
-        	}
+        if (script instanceof DefaultFrinikaScript) {
+            String filename = ((DefaultFrinikaScript) script).getFilename();
+            if (filename != null) {
+                File file = new File(filename);
+                if (file.exists()) {
+                    lastSaveTimestamp = file.lastModified();
+                }
+            }
             (new Thread(this)).start(); // watchdog for external changes
         }
     }
-    
+
     @Override
     public void toFront() {
-    	super.toFront();
-    	editorPane.requestFocus();
+        super.toFront();
+        editorPane.requestFocus();
     }
-    
+
     void setDirty(boolean d) {
-    	if (dirty != d) {
-        	dirty = d;
-    		updateTitle();
-    	}
+        if (dirty != d) {
+            dirty = d;
+            updateTitle();
+        }
     }
-    
+
     boolean hasBeenModifiedWithoutSaving() {
-    	return dirty;
+        return dirty;
     }
-    
+
     boolean hasBeenModifiedByExternalApplication() {
         if (script instanceof DefaultFrinikaScript) {
             if (lastSaveTimestamp > 0) {
-               String filename = ((DefaultFrinikaScript)script).getFilename();
-               File file = new File(filename);
-               return (file.lastModified() != lastSaveTimestamp);
+                String filename = ((DefaultFrinikaScript) script).getFilename();
+                File file = new File(filename);
+                return (file.lastModified() != lastSaveTimestamp);
             } else {
                 return false;
             }
@@ -147,25 +148,25 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
             return false;
         }
     }
-    
+
     FrinikaScript getScript() {
-    	return script;
+        return script;
     }
-    
+
     void setScript(FrinikaScript script) {
-    	this.script = script;
-    	refresh();
-    	setDirty(false);
+        this.script = script;
+        refresh();
+        setDirty(false);
     }
-    
+
     void reload() {
         try {
             //dialog.engine.reloadScript((DefaultFrinikaScript)script);
-        	DefaultFrinikaScript script = ((DefaultFrinikaScript)this.script);
-    		String filename = script.getFilename();
-    		File file = new File(filename);
-    		String source = FrinikaScriptingEngine.loadString(file);
-    		script.setSource(source);
+            DefaultFrinikaScript script = ((DefaultFrinikaScript) this.script);
+            String filename = script.getFilename();
+            File file = new File(filename);
+            String source = FrinikaScriptingEngine.loadString(file);
+            script.setSource(source);
             refresh();
             lastSaveTimestamp = file.lastModified();
             setDirty(false);
@@ -173,36 +174,36 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
             dialog.project.error(ioe);
         }
     }
-    
+
     public void refresh() {
-    	editorPane.setText(script.getSource());
+        editorPane.setText(script.getSource());
         updateTitle();
     }
-    
+
     public void update() {
         if (script instanceof DefaultFrinikaScript) {
-            ((DefaultFrinikaScript)script).setSource(editorPane.getText());
+            ((DefaultFrinikaScript) script).setSource(editorPane.getText());
         }
     }
-    
+
     protected void updateTitle() {
-    	/*String t = this.getTitle();
+        /*String t = this.getTitle();
     	boolean e = t.endsWith(" *");
     	if ( (!dirty) && e ) {
     		t = t.substring(0, t.length() - 2);
     	} else if ( dirty && (!e) ) {
     		t = t + " *";
     	}*/
-    	String t = script.getName();
+        String t = script.getName();
         if (dirty) {
             t = t + " *";
-    	}
-        if (! t.equals(this.getTitle()) ) {
-        	this.setTitle(t);
-        	dialog.updateMenus();
+        }
+        if (!t.equals(this.getTitle())) {
+            this.setTitle(t);
+            dialog.updateMenus();
         }
     }
-    
+
     @Override
     public void scriptStarted(FrinikaScript script) {
 //System.out.println("script started "+script);
@@ -222,28 +223,27 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
             stopButton.setEnabled(false);
         }
     }
-    
-    
+
     /**
      * Background thread for watching external changes.
      */
     @Override
     public void run() {
-        String filename = ((DefaultFrinikaScript)script).getFilename();
+        String filename = ((DefaultFrinikaScript) script).getFilename();
 //System. out.println("starting watchdog thread for " + filename);
-        while ( ! this.isClosed() ) {
-            if ( hasBeenModifiedByExternalApplication() ) {
-                if ( dialog.project.confirm("Script " + filename + " has been modified by an external application. Reload?") ) {
-                    if ( ( ! hasBeenModifiedWithoutSaving() ) || dialog.project.confirm( "This will DESTROY local changes. Reload anyway?" ) ) {
+        while (!this.isClosed()) {
+            if (hasBeenModifiedByExternalApplication()) {
+                if (dialog.project.confirm("Script " + filename + " has been modified by an external application. Reload?")) {
+                    if ((!hasBeenModifiedWithoutSaving()) || dialog.project.confirm("This will DESTROY local changes. Reload anyway?")) {
                         reload();
                     }
                 } else { // don't reload, leave external changes for now
-                	lastSaveTimestamp = 0;
-                	setDirty(true);
+                    lastSaveTimestamp = 0;
+                    setDirty(true);
                 }
             }
             try {
-                Thread.sleep( EXTERNAL_CHANGE_TEST_INTERVAL );
+                Thread.sleep(EXTERNAL_CHANGE_TEST_INTERVAL);
             } catch (InterruptedException ie) {
                 // nop
             }
@@ -251,17 +251,16 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
 //System. out.println("watchdog thread for " + ((DefaultFrinikaScript)script).getFilename() + " has ended");
     }
 
-/*    
+    /*    
     	update();
     	dialog.engine.executeScript(this.getScript(), dialog.frame);
 
         dialog.engine.stopScript(this.getScript());
-*/        
-        
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+     */
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -326,8 +325,10 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
     }// </editor-fold>//GEN-END:initComponents
 
     private void editorPaneKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editorPaneKeyPressed
-        if ( ! editorPane.isEditable() ) return;
-        if ( ( evt.isControlDown() ) && (evt.getKeyCode() == KeyEvent.VK_ENTER) ) { // Ctrl-Enter: execute script 
+        if (!editorPane.isEditable()) {
+            return;
+        }
+        if ((evt.isControlDown()) && (evt.getKeyCode() == KeyEvent.VK_ENTER)) { // Ctrl-Enter: execute script 
             runButton.doClick();
             evt.consume();
         } else {
@@ -338,7 +339,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
     private void editorPaneKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editorPaneKeyTyped
         //char c = evt.getKeyChar();
         //if (Character.isDefined(c)) { // 'real' character has been entered
-            setDirty(true);
+        setDirty(true);
         //}
     }//GEN-LAST:event_editorPaneKeyTyped
 
@@ -354,8 +355,8 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         dialog.stopScript(script);
     }//GEN-LAST:event_stopButtonActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JEditorPane editorPane;
     private javax.swing.JPanel jPanel1;
@@ -364,5 +365,5 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
     private javax.swing.JButton stopButton;
     private javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
-    
+
 }

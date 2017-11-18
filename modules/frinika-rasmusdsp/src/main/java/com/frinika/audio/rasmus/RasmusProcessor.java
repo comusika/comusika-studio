@@ -38,7 +38,6 @@ public class RasmusProcessor {
             throw new Exception(" File not found " + inputfile);
         }
 
-
         try {
             AudioWriter audioWriter = new AudioWriter(outputfile, format);
 
@@ -55,7 +54,6 @@ public class RasmusProcessor {
                     format.getSampleRate(), format.getChannels());
             AudioInputStream audiostream = audiosession.asByteStream(output,
                     format);
-
 
             //
             long bytes_to_render = inputfile.length();

@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2006 P.J.Leonard
@@ -21,7 +20,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.midi;
 
 import java.util.logging.Level;
@@ -34,21 +32,22 @@ import javax.sound.midi.MidiUnavailableException;
 /**
  *
  * Finds a MidiDevice given a name
- * 
+ *
  * @author pjl
  */
 class MidiDeviceResolver {
-    
-   static MidiDevice resolveDevice(String devName) {
-        Info infos[]=MidiSystem.getMidiDeviceInfo();
-        for (Info i:infos) {
-            if (i.getName().equals(devName)) try {
-                return MidiSystem.getMidiDevice(i);
-            } catch (MidiUnavailableException ex) {
-                Logger.getLogger(MidiDeviceResolver.class.getName()).log(Level.SEVERE, null, ex);
+
+    static MidiDevice resolveDevice(String devName) {
+        Info infos[] = MidiSystem.getMidiDeviceInfo();
+        for (Info i : infos) {
+            if (i.getName().equals(devName)) {
+                try {
+                    return MidiSystem.getMidiDevice(i);
+                } catch (MidiUnavailableException ex) {
+                    Logger.getLogger(MidiDeviceResolver.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         return null;
     }
-
 }

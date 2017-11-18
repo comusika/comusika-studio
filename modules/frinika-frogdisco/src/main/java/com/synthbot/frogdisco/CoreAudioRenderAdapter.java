@@ -17,7 +17,6 @@
  *  along with FrogDisco.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.synthbot.frogdisco;
 
 import java.nio.FloatBuffer;
@@ -25,14 +24,13 @@ import java.nio.ShortBuffer;
 
 public class CoreAudioRenderAdapter implements CoreAudioRenderListener {
 
-  @Override
-  public void onCoreAudioShortRenderCallback(ShortBuffer buffer) {
-    // nothing to do
-  }
+    @Override
+    public void onCoreAudioShortRenderCallback(ShortBuffer buffer) {
+        // nothing to do
+    }
 
-  @Override
-  public void onCoreAudioFloatRenderCallback(FloatBuffer buffer) {
-    // nothing to do
-  }
-
+    @Override
+    public void onCoreAudioFloatRenderCallback(FloatBuffer buffer) {
+        // nothing to do
+    }
 }

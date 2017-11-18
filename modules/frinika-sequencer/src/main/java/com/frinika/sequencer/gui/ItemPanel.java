@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.model.tempo.TempoList;
@@ -51,15 +51,13 @@ import javax.swing.JToolBar;
 
 /**
  * Basis for PianoRoll and PartView
- * 
+ *
  * We imagine the pianoRoll/trackView to be drawn on a large "virtualScreen"
  * such that the origins (pitch=0,beat=0) coincide with (0,0)
- * 
+ *
  * ItemPanel provides a view of this through itemViewRect.
- * 
- * 
+ *
  * @author pjl
- * 
  */
 abstract public class ItemPanel extends JPanel implements SongPositionListener,
         ComponentListener, Snapable {
@@ -73,7 +71,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     public static final int OVER_ENVELOPE_RIGHT = 6;
     public static final int OVER_ENVELOPE_GAIN = 7;
     static Cursor cursors[] = new Cursor[OVER_ENVELOPE_GAIN + 1];
-
 
     static {
         cursors[OVER_NOTHING] = new Cursor(Cursor.DEFAULT_CURSOR);
@@ -91,9 +88,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     private static final long serialVersionUID = 1L;
 
     // int cursorInc = Layout.cursorInc; // minimum jump of the tmie cursor in
-
     // pixels (increase
-
     // to reduce CPU burn)
     private boolean rightButtonPressed;
     private Graphics itemGraphics; // main offscreen image graphics
@@ -112,7 +107,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
 
     // protected int leftMargin = 0; // TODO doesn't work (well I can not work
     // out what to do).
-
     // I only need this to inform a rectangleZoom finish TODO a better way ?
     protected JToolBar toolBar;
     protected int xAnchor = 0;
@@ -125,9 +119,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     private boolean followSong = true; // automatic scrolling to keep time
 
     // cursor
-
     // in window
-
     // protected boolean quantize; //
     protected FrinikaSequencer sequencer;
     protected boolean dragArmed; // about to be dragged? but not started yet.
@@ -205,7 +197,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     @Override
     public String getToolTipText(MouseEvent event) {
         if (isTimeLineEvent(event)) {
-            return getMessage("sequencer.itempanel.timeline.loopmarkers.tooltip");
+            return CurrentLocale.getMessage("sequencer.itempanel.timeline.loopmarkers.tooltip");
         } else {
             return null;
         }
@@ -234,12 +226,12 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         if (newSize.height == 0 || newSize.width == 0) {
             this.itemImage = null;
             this.itemGraphics = null;
-        // System.err.println(" Warning zero height in ItemPanel image ");
-        // return;
+            // System.err.println(" Warning zero height in ItemPanel image ");
+            // return;
         } else {
             this.itemImage = createImage(newSize.width, newSize.height);
             this.itemGraphics = this.itemImage.getGraphics();
-        // this.itemViewRect.setSize(newSize);
+            // this.itemViewRect.setSize(newSize);
 
         }
 
@@ -325,9 +317,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
             userTime = tick;
         }
 
-
         // make sure scroll is OK
-
         int pixPerRedraw = 1;
 
         if (sequencer.isRunning()) {
@@ -345,16 +335,10 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
             validateEndTick();
         }
 
-
-
-
-
         double scrX = userToScreen(userTime);
         int x = (int) (scrX / pixPerRedraw) * pixPerRedraw;
 
         //if (this instanceof PartView ) System.out.println("B " + x + "  " + this.xCursor + " " + pixPerRedraw  + " " + userTime + " " + scrX);
-
-
         long st = project.getSequencer().getLoopStartPoint();
         long et = project.getSequencer().getLoopEndPoint();
 
@@ -376,7 +360,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
             if (followSong) {
                 try {
                     if (!scrollToContain(x)) {
-
 
                         Rectangle tR = this.getBounds();
                         dirtyRect.y = tR.y;
@@ -445,7 +428,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         int y2 = y1 + h;
         g.setColor(Color.PINK);
         g.drawLine(x, y1, x, y2);
-    // g.setPaintMode();
+        // g.setPaintMode();
     }
 
     public synchronized void copyImageToScreen(Graphics g) {
@@ -508,7 +491,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         if (!this.lastItemViewRect.getSize().equals(this.itemViewRect.getSize())) {
 
             // first time or resize repaint the lot.
-
             paintItemImage_(this.itemViewRect);
             if (hasTimeLine) {
                 paintTimeImage_(this.itemViewRect.x, this.itemViewRect.width);
@@ -521,7 +503,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
             // Same as last rect probably mistake in my logic / resize causes
             // this to happen.
             // paint it anyway otherwise it doesn't work
-
             paintItemImage_(this.itemViewRect);
             if (hasTimeLine) {
                 paintTimeImage_(this.itemViewRect.x, this.itemViewRect.width);
@@ -652,7 +633,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
             }
         }
 
-
         long xStart = (int) userToScreen(startLoopTime);
         long xEnd = (int) userToScreen(endLoopTime);
 
@@ -748,8 +728,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
 
         }
 
-
-
         long xStart = (int) userToScreen(tl.getTimeAtTick(startLoopTime));
         long xEnd = (int) userToScreen(tl.getTimeAtTick(endLoopTime));
 
@@ -787,8 +765,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
 
     }
 
-
-      /**
+    /**
      * Convert virtual screen x to a tick. with optional quantization
      *
      * Do not use this if x is a delta quantity
@@ -797,18 +774,19 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
      * @return
      */
     public long screenToTickAbs(int x, boolean quantizeMe) {
-        return screenToTickAbs(x,quantizeMe,false);
+        return screenToTickAbs(x, quantizeMe, false);
     }
+
     /**
      * Convert virtual screen x to a tick. with optional quantization
      *
-     * if (drumMode) quantize using round not truncate
-     * Do not use this if x is a delta quantity
+     * if (drumMode) quantize using round not truncate Do not use this if x is a
+     * delta quantity
      *
      * @param x
      * @return
      */
-    public long screenToTickAbs(int x, boolean quantizeMe,boolean drumMode) {
+    public long screenToTickAbs(int x, boolean quantizeMe, boolean drumMode) {
         double tt = (x / this.userToScreen);
 
         // if sample based then we need
@@ -824,14 +802,14 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
                 if (!drumMode) {
                     tt = (long) (tt / quant) * quant;
                 } else {
-                    tt = (long) ((tt+0.5*quant) / quant) * quant;
+                    tt = (long) ((tt + 0.5 * quant) / quant) * quant;
                 }
             } else {
                 double beat = tt / project.getTicksPerBeat();
                 TimeSignatureEvent ev = project.getTimeSignatureList().getEventAtBeat((int) beat);
                 int nBar = (int) ((beat - ev.beat + ev.beatsPerBar / 2.0) / ev.beatsPerBar);
                 tt = (ev.beat + nBar * ev.beatsPerBar) * project.getTicksPerBeat();
-            // System.out.println(" STT -ve quant " + tt);
+                // System.out.println(" STT -ve quant " + tt);
             }
         }
 
@@ -841,10 +819,8 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
     /**
      * Convert delta on the virtual screen to a tick with optional quntization
      *
-     * @param x
-     *            reference point to deduce bar boundaries
-     * @param dx
-     *            screen delta to convert
+     * @param x reference point to deduce bar boundaries
+     * @param dx screen delta to convert
      * @return
      */
     public long screenToTickRel(int x, int dx, boolean quantizeMe) {
@@ -852,7 +828,6 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         assert (!timeBased);
 
         double tt = (dx / this.userToScreen);
-
 
         // XXX
         if (quantizeMe) {
@@ -1119,9 +1094,7 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
 
     /**
      *
-     * @param b
-     *            if true panel will auto scroll to follow sequencer
-     *            songPosition.
+     * @param b if true panel will auto scroll to follow sequencer songPosition.
      */
     public void followSong(boolean b) {
 
@@ -1357,11 +1330,9 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
 
     void validateEndTick() {
 
-
         double endTimeOrTick2 = project.getEndTick();
 
         //	System.out.println(" project end time is "+ project.getTimeUtils().tickToBarBeatTick((long) endTimeOrTick2));
-
         if (timeBased) {
             endTimeOrTick2 = project.getTempoList().getTimeAtTick(endTimeOrTick2);
         }
@@ -1392,9 +1363,4 @@ abstract public class ItemPanel extends JPanel implements SongPositionListener,
         altIsDown = b;
 
     }
-
-    // public void rightButtonPressedInSpace() {
-    // // TODO Auto-generated method stub
-    //
-    // }
 }

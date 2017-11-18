@@ -22,7 +22,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX;
 
 import com.frinika.base.FrinikaAudioSystem;
@@ -36,205 +35,201 @@ import uk.org.toot.audio.server.AudioClient;
 import uk.org.toot.audio.server.AudioServer;
 import uk.org.toot.audio.server.IOAudioProcess;
 
-public class LatencyTester extends Observable  {
-	AudioBuffer outbuf;
+public class LatencyTester extends Observable {
 
-	AudioBuffer inbuf;
+    AudioBuffer outbuf;
 
-	AudioServer server;
-	
-	IOAudioProcess out;
+    AudioBuffer inbuf;
 
-	IOAudioProcess in;
+    AudioServer server;
 
-	AudioProcess pulse;
+    IOAudioProcess out;
 
-	Analysis analysis;
+    IOAudioProcess in;
 
-	int NOSIGNAL = -1;
+    AudioProcess pulse;
 
-	int period;
+    Analysis analysis;
 
-	int latency = 0;
+    int NOSIGNAL = -1;
 
-	boolean first=false;
-	boolean reset=true;
-	
-	AudioClient client=new AudioClient() {
+    int period;
 
-                @Override
-		public void work(int bufSize) {
-			
-			if (first) {
-				Priority.setPriorityRR(90);
-				first=false;
-			}
-			
-			in.processAudio(inbuf);
-			analysis.processAudio(inbuf);
-			pulse.processAudio(outbuf);
-			out.processAudio(outbuf);
-			if (latency != analysis.latency || reset ) {
-				latency=analysis.latency;
-				LatencyTester.this.setChanged();
-				notifyObservers();
-				reset= false;
-			}
+    int latency = 0;
 
-		}
+    boolean first = false;
+    boolean reset = true;
 
-                @Override
-		public void setEnabled(boolean b) {
-			// TODO ????
-		}
-	};
+    AudioClient client = new AudioClient() {
 
+        @Override
+        public void work(int bufSize) {
 
-	protected int getLatency() {
-		return latency;
-	}
+            if (first) {
+                Priority.setPriorityRR(90);
+                first = false;
+            }
 
-	public void reset() { reset=true; }
-	
-	public void start(JFrame frame) {
+            in.processAudio(inbuf);
+            analysis.processAudio(inbuf);
+            pulse.processAudio(outbuf);
+            out.processAudio(outbuf);
+            if (latency != analysis.latency || reset) {
+                latency = analysis.latency;
+                LatencyTester.this.setChanged();
+                notifyObservers();
+                reset = false;
+            }
 
+        }
 
-		server = FrinikaAudioSystem.getAudioServer();
+        @Override
+        public void setEnabled(boolean b) {
+            // TODO ????
+        }
+    };
 
+    protected int getLatency() {
+        return latency;
+    }
 
-		try {
-			out = FrinikaAudioSystem.audioOutputDialog(frame,"Select output for latency test");
-			in = FrinikaAudioSystem.audioInputDialog(frame,"Select input for latency test");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		period = (int) (FrinikaAudioSystem.getSampleRate())/2;
-		pulse = new Pulse();
-		analysis = new Analysis();
+    public void reset() {
+        reset = true;
+    }
 
-		// Send one pulse out on the output that we will look for in the input
+    public void start(JFrame frame) {
 
-		outbuf = server.createAudioBuffer("latenyOut");
+        server = FrinikaAudioSystem.getAudioServer();
 
-		inbuf = server.createAudioBuffer("latencyIn");
+        try {
+            out = FrinikaAudioSystem.audioOutputDialog(frame, "Select output for latency test");
+            in = FrinikaAudioSystem.audioInputDialog(frame, "Select input for latency test");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		System.out.println(" bffer  size = " + outbuf.getSampleCount() + " "
-				+ inbuf.getSampleCount());
-		
-		assert(false);
-		// FrinikaAudioSystem.stealAudioServer(this,client);
-		server.start();
-	}
-	
-	public void stop() {
-        assert(false);
-		// FrinikaAudioSystem.returnAudioServer(this);
-	}
-	
+        period = (int) (FrinikaAudioSystem.getSampleRate()) / 2;
+        pulse = new Pulse();
+        analysis = new Analysis();
 
-	class Pulse implements AudioProcess {
+        // Send one pulse out on the output that we will look for in the input
+        outbuf = server.createAudioBuffer("latenyOut");
 
-		long count = 0;
+        inbuf = server.createAudioBuffer("latencyIn");
 
-                @Override
-		public int processAudio(AudioBuffer buf) {
-			int n = buf.getSampleCount();
-			float buff[] = buf.getChannel(0);
-			for (int i = 0; i < n; i++, count++) {
-				if (count % period == 0)
-					buff[i] = 0.2f;
-				else
-					buff[i] = 0.0f;
-			}
-			return AUDIO_OK;
-		}
+        System.out.println(" bffer  size = " + outbuf.getSampleCount() + " "
+                + inbuf.getSampleCount());
 
-                @Override
-		public void open() {
-			// TODO Auto-generated method stub
+        assert (false);
+        // FrinikaAudioSystem.stealAudioServer(this,client);
+        server.start();
+    }
 
-		}
+    public void stop() {
+        assert (false);
+        // FrinikaAudioSystem.returnAudioServer(this);
+    }
 
-                @Override
-		public void close() {
-			// TODO Auto-generated method stub
+    class Pulse implements AudioProcess {
 
-		}
-	};
+        long count = 0;
 
-	class Analysis implements AudioProcess {
+        @Override
+        public int processAudio(AudioBuffer buf) {
+            int n = buf.getSampleCount();
+            float buff[] = buf.getChannel(0);
+            for (int i = 0; i < n; i++, count++) {
+                if (count % period == 0) {
+                    buff[i] = 0.2f;
+                } else {
+                    buff[i] = 0.0f;
+                }
+            }
+            return AUDIO_OK;
+        }
 
-		long count = 0;
+        @Override
+        public void open() {
+            // TODO Auto-generated method stub
 
-		int latency = NOSIGNAL;
+        }
 
-		int latch;
+        @Override
+        public void close() {
+            // TODO Auto-generated method stub
 
-		float threshold;
+        }
+    };
 
-		Analysis() {
-			latch = 0;
-			threshold = 0.2f;
-		}
+    class Analysis implements AudioProcess {
 
-                @Override
-		public int processAudio(AudioBuffer buf) {
-			int n = buf.getSampleCount();
-			float buff[] = buf.getChannel(0);
-			for (int i = 0; i < n; i++, count++) {
-				if (latch-- < 0) {
-					if (buff[i] > threshold) {
-						latency = (int) (count % period);
-						latch = 100;
-					}
-					if (latch < -period)
-						latency = NOSIGNAL;
-				}
-			}
-			return AUDIO_OK;
-		}
+        long count = 0;
 
-                @Override
-		public void open() {
-			// TODO Auto-generated method stub
+        int latency = NOSIGNAL;
 
-		}
+        int latch;
 
-                @Override
-		public void close() {
-			// TODO Auto-generated method stub
+        float threshold;
 
-		}
-	}
+        Analysis() {
+            latch = 0;
+            threshold = 0.2f;
+        }
 
+        @Override
+        public int processAudio(AudioBuffer buf) {
+            int n = buf.getSampleCount();
+            float buff[] = buf.getChannel(0);
+            for (int i = 0; i < n; i++, count++) {
+                if (latch-- < 0) {
+                    if (buff[i] > threshold) {
+                        latency = (int) (count % period);
+                        latch = 100;
+                    }
+                    if (latch < -period) {
+                        latency = NOSIGNAL;
+                    }
+                }
+            }
+            return AUDIO_OK;
+        }
 
+        @Override
+        public void open() {
+            // TODO Auto-generated method stub
 
-	public float getLatencyInMillis() {
-		// TODO Auto-generated method stub
-		return (float) (latency/server.getSampleRate()*1000.0);
-	}
+        }
 
+        @Override
+        public void close() {
+            // TODO Auto-generated method stub
 
-	public static void main(String args[]) throws Exception {
-		final LatencyTester l = new LatencyTester();
-		
-		l.addObserver(new Observer() {
+        }
+    }
 
-                        @Override
-			public void update(Observable o, Object arg) {
-				System.out.println(" latency is "+l.getLatencyInMillis() +"mS");
-			}
-			
-			
-		});
-		
-		l.start(null);
-		Thread.sleep(100000);
-	}
+    public float getLatencyInMillis() {
+        // TODO Auto-generated method stub
+        return (float) (latency / server.getSampleRate() * 1000.0);
+    }
 
-	public int getLatencyInSamples() {
-		return latency;
-	}
+    public static void main(String args[]) throws Exception {
+        final LatencyTester l = new LatencyTester();
+
+        l.addObserver(new Observer() {
+
+            @Override
+            public void update(Observable o, Object arg) {
+                System.out.println(" latency is " + l.getLatencyInMillis() + "mS");
+            }
+
+        });
+
+        l.start(null);
+        Thread.sleep(100000);
+    }
+
+    public int getLatencyInSamples() {
+        return latency;
+    }
 }

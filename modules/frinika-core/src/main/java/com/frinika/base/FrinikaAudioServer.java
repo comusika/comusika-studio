@@ -2,7 +2,6 @@
 // Distributed under the Toot Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.toot.org/LICENSE_1_0.txt)
-
 package com.frinika.base;
 
 import java.util.List;
@@ -12,43 +11,38 @@ import uk.org.toot.audio.server.AudioServer;
 import uk.org.toot.audio.server.IOAudioProcess;
 
 /**
- * An AudioServer that adapts any other AudioServer to add
- * a non-real-time capability.
+ * An AudioServer that adapts any other AudioServer to add a non-real-time
+ * capability.
  */
-public class FrinikaAudioServer
-    implements AudioServer
-{
+public class FrinikaAudioServer implements AudioServer {
+
     private boolean realTime = true;
 
     /**
      * @link aggregation
-     * @supplierCardinality 1 
+     * @supplierCardinality 1
      */
     private AudioServer server;
 
     /**
      * @link aggregation
-     * @supplierCardinality 1 
+     * @supplierCardinality 1
      */
-
     private List<AudioBuffer> buffers = new java.util.ArrayList<>();
 
-  
     public FrinikaAudioServer(AudioServer server) {
         this.server = server;
     }
 
-  
-	/**
-	 *
-	 * @return esitmated output latency
-	 */
-
-	public double getOutputLatencyMillis() {
-		long latInFrames = getTotalLatencyFrames()
-				- getInputLatencyFrames();
-		return latInFrames * 1000.0 / getSampleRate();
-	}
+    /**
+     *
+     * @return esitmated output latency
+     */
+    public double getOutputLatencyMillis() {
+        long latInFrames = getTotalLatencyFrames()
+                - getInputLatencyFrames();
+        return latInFrames * 1000.0 / getSampleRate();
+    }
 
     public void returnAudioServer(Object thief) {
         FrinikaAudioSystem.returnAudioServer(thief);
@@ -57,22 +51,22 @@ public class FrinikaAudioServer
     public void setRealTime(boolean rt) {
         // a server is running so we stop it, change mode and start the new one
 
-    	if (server.isRunning()) {
-    		try {
-				throw new Exception(" Maybe not a good idea to set the real time flag whilst server is running ?");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		
-    	}
-    	
-    	if ( realTime != rt ) {
+        if (server.isRunning()) {
+            try {
+                throw new Exception(" Maybe not a good idea to set the real time flag whilst server is running ?");
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+
+        if (realTime != rt) {
             realTime = rt;
             // sync the buffer modes
-	        for ( AudioBuffer buffer : buffers ) {
-            	buffer.setRealTime(realTime);
-        	}
+            for (AudioBuffer buffer : buffers) {
+                buffer.setRealTime(realTime);
+            }
         }
     }
 
@@ -82,18 +76,17 @@ public class FrinikaAudioServer
 
     @Override
     public void start() {
-        	server.start();
+        server.start();
     }
 
     @Override
     public void stop() {
-	        server.stop();
-	}
-
+        server.stop();
+    }
 
     @Override
     public boolean isRunning() {
-        return  server.isRunning();
+        return server.isRunning();
     }
 
     @Override
@@ -101,15 +94,13 @@ public class FrinikaAudioServer
         return server.getLoad();
     }
 
-
-
     @Override
     public AudioBuffer createAudioBuffer(String name) {
         AudioBuffer buffer = server.createAudioBuffer(name);
         // we maintain a list of created buffers so that we can switch
         // them between real-time and non-real-time modes.
         buffers.add(buffer);
-		return buffer;
+        return buffer;
     }
 
     @Override
@@ -154,35 +145,35 @@ public class FrinikaAudioServer
 
     @Override
     public int getInputLatencyFrames() {
-    	return server.getInputLatencyFrames();
+        return server.getInputLatencyFrames();
     }
-    
+
     @Override
     public int getOutputLatencyFrames() {
-    	return server.getOutputLatencyFrames();
+        return server.getOutputLatencyFrames();
     }
 
     @Override
     public int getTotalLatencyFrames() {
-    	return server.getTotalLatencyFrames();
+        return server.getTotalLatencyFrames();
     }
 
     @Override
-	public void setClient(AudioClient client) {
-		server.setClient(client);
-	}
-	public static AudioServer stealAudioServer(Object thief, AudioClient client) {
-        	return FrinikaAudioSystem.stealAudioServer(thief, client);
+    public void setClient(AudioClient client) {
+        server.setClient(client);
+    }
+
+    public static AudioServer stealAudioServer(Object thief, AudioClient client) {
+        return FrinikaAudioSystem.stealAudioServer(thief, client);
     }
 
     @Override
     public void removeAudioBuffer(AudioBuffer ab) {
         buffers.remove(ab);
     }
-    
+
 //	public static double getOutputlatency() {
 //		// TODO Auto-generated method stub
 //		return 0;
 //	}
-	
 }

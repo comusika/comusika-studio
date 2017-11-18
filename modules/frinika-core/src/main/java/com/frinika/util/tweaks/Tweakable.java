@@ -25,70 +25,71 @@ package com.frinika.util.tweaks;
 
 import java.util.*;
 
-abstract public class Tweakable extends Observable{
-	Number n;
+public abstract class Tweakable extends Observable {
 
-	Comparable min;
+    Number n;
 
-	Comparable max;
+    Comparable min;
 
-	String label;
+    Comparable max;
 
-	Number stepSize;
+    String label;
 
-	Tweakable(String label, Number n, Comparable min, Comparable max,
-			Number stepSize) {
-		this.label = label;
-		this.n = n;
-		this.stepSize = stepSize;
-		this.min = min;
-		this.max = max;
-	}
+    Number stepSize;
 
-	Tweakable(Collection<Tweakable> c, String label, Number n, Comparable min,
-			Comparable max, Number step) {
-		this(label, n, min, max, step);
-		c.add(this);
-	}
+    Tweakable(String label, Number n, Comparable min, Comparable max,
+            Number stepSize) {
+        this.label = label;
+        this.n = n;
+        this.stepSize = stepSize;
+        this.min = min;
+        this.max = max;
+    }
 
-	public String getLabel() {
-		return label;
-	}
+    Tweakable(Collection<Tweakable> c, String label, Number n, Comparable min,
+            Comparable max, Number step) {
+        this(label, n, min, max, step);
+        c.add(this);
+    }
 
-	public Number getNumber() {
-		return n;
-	}
+    public String getLabel() {
+        return label;
+    }
 
-	public int intValue() {
-		return n.intValue();
-	}
+    public Number getNumber() {
+        return n;
+    }
 
-	public double doubleValue() {
-		return n.doubleValue();
-	}
+    public int intValue() {
+        return n.intValue();
+    }
 
-	public Comparable getMinimum() {
-		return min;
-	}
+    public double doubleValue() {
+        return n.doubleValue();
+    }
 
-	public Comparable getMaximum() {
-		return max;
-	}
+    public Comparable getMinimum() {
+        return min;
+    }
 
-	public Number getStepSize() {
-		return stepSize;
-	}
+    public Comparable getMaximum() {
+        return max;
+    }
 
-	public abstract void set(String s);
+    public Number getStepSize() {
+        return stepSize;
+    }
 
-	public void set(Number n) {
-		this.n = n;
-		setChanged();
-		notifyObservers();
-	}
+    public abstract void set(String s);
 
-        @Override
-	public String toString() {
-		return n.toString();
-	}
+    public void set(Number n) {
+        this.n = n;
+        setChanged();
+        notifyObservers();
+    }
+
+    @Override
+    public String toString() {
+        return n.toString();
+    }
 }

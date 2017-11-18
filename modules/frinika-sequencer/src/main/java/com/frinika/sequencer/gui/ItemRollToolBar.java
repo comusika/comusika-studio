@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.gui.ToolbarSeperator;
@@ -34,7 +33,7 @@ import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.List;
 import javax.sound.midi.Sequence;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -45,198 +44,193 @@ import javax.swing.JToolBar;
 
 public class ItemRollToolBar extends JToolBar implements ActionListener {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	Insets insets = new Insets(0, 0, 0, 0);
+    Insets insets = new Insets(0, 0, 0, 0);
 
-	Cursor writeCursor;
+    Cursor writeCursor;
 
-	JToggleButton zoomBut = null; // need to rememebr the zoom button to
+    JToggleButton zoomBut = null; // need to rememebr the zoom button to
 
-	// deselect after zooming
-	JToggleButton follow;
+    // deselect after zooming
+    JToggleButton follow;
 
-	JToggleButton quantize;
-	JPanel zoom;
-	
-	Vector<ItemPanel> clients;
+    JToggleButton quantize;
+    JPanel zoom;
 
-	AbstractSequencerProjectContainer project;
+    List<ItemPanel> clients;
 
-	private JButton quantizeSet;
-	JPanel tools;
-	ButtonGroup toolGroup;
-	
-	public ItemRollToolBar(Vector<ItemPanel> cli, AbstractSequencerProjectContainer project) {
-		this.setMargin(new Insets(0, 0, 0, 0));
-		this.project = project;
-		FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 0, 0);
-		this.clients = cli;
-		for (ItemPanel client : clients)
-			client.setToolBar(this);
-		tools = new JPanel(layout);
-		tools.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-		tools.setOpaque(false);
+    AbstractSequencerProjectContainer project;
 
-		toolGroup = new ButtonGroup();
+    private JButton quantizeSet;
+    JPanel tools;
+    ButtonGroup toolGroup;
 
-		JToggleButton but = makeToggleButton("select", "select",
-				getMessage("seqeuncer.toolbar.select_tip"), this, toolGroup, tools);
-		but.setMargin(insets);
+    public ItemRollToolBar(List<ItemPanel> cli, AbstractSequencerProjectContainer project) {
+        this.setMargin(new Insets(0, 0, 0, 0));
+        this.project = project;
+        FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 0, 0);
+        this.clients = cli;
+        for (ItemPanel client : clients) {
+            client.setToolBar(this);
+        }
+        tools = new JPanel(layout);
+        tools.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        tools.setOpaque(false);
 
-		// Toolkit.getDefaultToolkit().createCustomCursor(
-		// icon.getImage(), new Point(2,icon.getIconHeight()-2), "select");
-		// selectTool =
+        toolGroup = new ButtonGroup();
 
-		makeToggleButton("pencil", "write",getMessage("seqeuncer.toolbar.write_tip"), this, toolGroup, tools)
-		.setMargin(insets);
+        JToggleButton but = makeToggleButton("select", "select",
+                getMessage("seqeuncer.toolbar.select_tip"), this, toolGroup, tools);
+        but.setMargin(insets);
 
-		makeToggleButton("eraser", "erase", getMessage("seqeuncer.toolbar.erase_tip"), this, toolGroup, tools)
-				.setMargin(insets);
+        // Toolkit.getDefaultToolkit().createCustomCursor(
+        // icon.getImage(), new Point(2,icon.getIconHeight()-2), "select");
+        // selectTool =
+        makeToggleButton("pencil", "write", getMessage("seqeuncer.toolbar.write_tip"), this, toolGroup, tools)
+                .setMargin(insets);
 
-		makeToggleButton("hand", "dragview", getMessage("seqeuncer.toolbar.dragclick_tip"),
-				this, toolGroup, tools).setMargin(insets);
+        makeToggleButton("eraser", "erase", getMessage("seqeuncer.toolbar.erase_tip"), this, toolGroup, tools)
+                .setMargin(insets);
 
-	
-		
-		add(tools);
-		add(new ToolbarSeperator());
+        makeToggleButton("hand", "dragview", getMessage("seqeuncer.toolbar.dragclick_tip"),
+                this, toolGroup, tools).setMargin(insets);
 
-		JPanel settings = new JPanel(layout);
-		//settings.setBorder(BorderFactory.createEtchedBorder());
-		settings.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-		settings.setOpaque(false);
-		
-		follow = makeFollowSongButton(this,settings);
-        
-		follow.setSelected(clients.firstElement().isFollowSong());
-		follow.setMargin(insets);
+        add(tools);
+        add(new ToolbarSeperator());
 
-		quantize = makeToggleButton("quantize", "snaptoON", getMessage("sequencer.toolbar.snapto_toggle_tip"), this,
-				null, settings);
+        JPanel settings = new JPanel(layout);
+        //settings.setBorder(BorderFactory.createEtchedBorder());
+        settings.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        settings.setOpaque(false);
 
-		quantize.setMargin(insets);
-		quantize.setSelected(clients.firstElement().isSnapQuantized());
+        follow = makeFollowSongButton(this, settings);
 
-        quantizeSet = makeSnapToButton(clients,settings,project.getSequence());
-		quantizeSet.setMargin(insets);
+        follow.setSelected(clients.get(0).isFollowSong());
+        follow.setMargin(insets);
 
-		// this assumes action listneres are notify in the order they are added
+        quantize = makeToggleButton("quantize", "snaptoON", getMessage("sequencer.toolbar.snapto_toggle_tip"), this,
+                null, settings);
 
-		add(settings);
-		add(new ToolbarSeperator());
+        quantize.setMargin(insets);
+        quantize.setSelected(clients.get(0).isSnapQuantized());
 
-		zoom = new JPanel(layout);
-		// zoom.setMargin(insets);
-		//zoom.setBorder(BorderFactory.createEtchedBorder());
-		zoom.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
-		zoom.setOpaque(false);
+        List<? extends Snapable> snapable = clients;
+        quantizeSet = makeSnapToButton((List<Snapable>) snapable, settings, project.getSequence());
+        quantizeSet.setMargin(insets);
 
-		zoomBut=makeToggleButton("viewmagfit", "magrect",
-				getMessage("sequencer.toolbar.zoomtorect_tip"), this, null, zoom);
-		
-		zoomBut.setMargin(insets);
+        // this assumes action listneres are notify in the order they are added
+        add(settings);
+        add(new ToolbarSeperator());
 
-		makePressButton("viewmag+", "zoomin", getMessage("sequencer.toolbar.zoomin_tip"), this, zoom).setMargin(
-				insets);
-		
+        zoom = new JPanel(layout);
+        // zoom.setMargin(insets);
+        //zoom.setBorder(BorderFactory.createEtchedBorder());
+        zoom.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        zoom.setOpaque(false);
 
-		makePressButton("viewmag-", "zoomout", getMessage("sequencer.toolbar.zoomout_tip"), this, zoom)
-				.setMargin(insets);
-		
+        zoomBut = makeToggleButton("viewmagfit", "magrect",
+                getMessage("sequencer.toolbar.zoomtorect_tip"), this, null, zoom);
 
-	//	makePressButton("extend", "extend", "Extend project", this, zoom)
-	//	.setMargin(insets);
+        zoomBut.setMargin(insets);
 
-		add(zoom);
-		add(new ToolbarSeperator());
+        makePressButton("viewmag+", "zoomin", getMessage("sequencer.toolbar.zoomin_tip"), this, zoom).setMargin(
+                insets);
 
-	
-		
-		// JPanel trans = new TransportPanel(pianoRoll.sequencer);
-		// trans.setBorder(BorderFactory.createEtchedBorder());
-		// add(trans);
-		but.setSelected(true);
-		for (ItemPanel client : clients)
-			client.setTool("select");
-		// buttonPressed("select");
-	}
+        makePressButton("viewmag-", "zoomout", getMessage("sequencer.toolbar.zoomout_tip"), this, zoom)
+                .setMargin(insets);
 
-	public void addButtonToTools(String icon,String cmd,String popup){
-		makeToggleButton(icon, cmd, popup, this, toolGroup, tools)
-		.setMargin(insets);
+        //	makePressButton("extend", "extend", "Extend project", this, zoom)
+        //	.setMargin(insets);
+        add(zoom);
+        add(new ToolbarSeperator());
 
-	
-	}
-	
-	public static JToggleButton makeFollowSongButton(ActionListener actionListener,JPanel panel)
-    {
+        // JPanel trans = new TransportPanel(pianoRoll.sequencer);
+        // trans.setBorder(BorderFactory.createEtchedBorder());
+        // add(trans);
+        but.setSelected(true);
+        for (ItemPanel client : clients) {
+            client.setTool("select");
+        }
+        // buttonPressed("select");
+    }
+
+    public void addButtonToTools(String icon, String cmd, String popup) {
+        makeToggleButton(icon, cmd, popup, this, toolGroup, tools)
+                .setMargin(insets);
+
+    }
+
+    public static JToggleButton makeFollowSongButton(ActionListener actionListener, JPanel panel) {
         return makeToggleButton(getMessage("sequencer.play.follow"), getMessage("sequencer.play.follow"), getMessage("sequencer.play.follow_song"), actionListener,
                 null, panel);
     }
 
-    public static JButton makeSnapToButton(final Vector clients, JPanel panel, final Sequence sequence)
-    {
+    public static JButton makeSnapToButton(final List<Snapable> clients, JPanel panel, final Sequence sequence) {
         final JButton snapToButton = makePressButton("music_quarternote", "snaptoSET",
-            getMessage("sequencer.toolbar.snaptolength_tip"), null, panel);
+                getMessage("sequencer.toolbar.snaptolength_tip"), null, panel);
         snapToButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    new NoteLengthPopup(snapToButton, clients, sequence).show(snapToButton, 0, 0);
-                    }
-                });
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NoteLengthPopup(snapToButton, clients, sequence).show(snapToButton, 0, 0);
+            }
+        });
         NoteLengthPopup.updateButton(snapToButton, clients, sequence);
         return snapToButton;
     }
-    
-	public void rectZoomFinished() {
-		for (ItemPanel client : clients)
-			client.setTool("origtool");
-		zoomBut.setSelected(false);
-	}
 
-        @Override
-	public void actionPerformed(ActionEvent e) {
+    public void rectZoomFinished() {
+        for (ItemPanel client : clients) {
+            client.setTool("origtool");
+        }
+        zoomBut.setSelected(false);
+    }
 
-		String cmd = e.getActionCommand();
-		// System.out.println(" PRollToolPanel " + cmd);
-            switch (cmd) {
-                case "zoomin":
-                    // TODO keep it still
-                    for (ItemPanel client : clients)
-                        client.zoomIn();
-                    return;
-                case "zoomout":
-                    for (ItemPanel client : clients)
-                        client.zoomOut();
-                    return;
-                case "follow":
-                    for (ItemPanel client : clients)
-                        client.followSong(follow.isSelected());
-                    return;
-                case "extend":
-                    project.setEndTick(project.getEndTick()+project.getSequence().getResolution()*8);
-                    return;
-                case "snaptoON":
-                    for (ItemPanel client : clients)
-                        client.setSnapQuantized(quantize.isSelected());
-                    return;
-                default:
-                    for (ItemPanel client : clients) {
-                        client.setTool(cmd);
-                    }
-                    // setTool(tool);
-                    break;
-            }
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-	public JPanel getZoomPanel() {
-		return zoom;
-	}
-	
+        String cmd = e.getActionCommand();
+        // System.out.println(" PRollToolPanel " + cmd);
+        switch (cmd) {
+            case "zoomin":
+                // TODO keep it still
+                for (ItemPanel client : clients) {
+                    client.zoomIn();
+                }
+                return;
+            case "zoomout":
+                for (ItemPanel client : clients) {
+                    client.zoomOut();
+                }
+                return;
+            case "follow":
+                for (ItemPanel client : clients) {
+                    client.followSong(follow.isSelected());
+                }
+                return;
+            case "extend":
+                project.setEndTick(project.getEndTick() + project.getSequence().getResolution() * 8);
+                return;
+            case "snaptoON":
+                for (ItemPanel client : clients) {
+                    client.setSnapQuantized(quantize.isSelected());
+                }
+                return;
+            default:
+                for (ItemPanel client : clients) {
+                    client.setTool(cmd);
+                }
+                // setTool(tool);
+                break;
+        }
+    }
 
-	public JPanel getToolsPanel() {
-		return tools;
-	}
-	
+    public JPanel getZoomPanel() {
+        return zoom;
+    }
+
+    public JPanel getToolsPanel() {
+        return tools;
+    }
+
 }

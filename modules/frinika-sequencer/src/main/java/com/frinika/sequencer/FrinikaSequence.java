@@ -21,10 +21,10 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
@@ -33,30 +33,30 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 public class FrinikaSequence extends Sequence {
-    Vector<FrinikaTrackWrapper> frinikaTrackWrappers = new Vector<>();
-        
+
+    List<FrinikaTrackWrapper> frinikaTrackWrappers = new ArrayList<>();
+
     transient FrinikaSequencer sequencer;
-    
-    public FrinikaSequence(Sequence sequence) throws InvalidMidiDataException
-	{
-		super(sequence.getDivisionType(),sequence.getResolution());
-	    
-		for(Track track : sequence.getTracks())
-        {
+
+    public FrinikaSequence(Sequence sequence) throws InvalidMidiDataException {
+        super(sequence.getDivisionType(), sequence.getResolution());
+
+        for (Track track : sequence.getTracks()) {
             FrinikaTrackWrapper trackWrapper = new FrinikaTrackWrapper(track);
             trackWrapper.setSequence(this);
             tracks.add(track);
-            frinikaTrackWrappers.add(trackWrapper);  
+            frinikaTrackWrappers.add(trackWrapper);
         }
-	    
-	}
 
-	public FrinikaSequence(float divisionType, int resolution, int tracks) throws InvalidMidiDataException {
-		super(divisionType,resolution);
-		for(int n=0;n<tracks;n++)
-			createTrack();
-	}   
-	
+    }
+
+    public FrinikaSequence(float divisionType, int resolution, int tracks) throws InvalidMidiDataException {
+        super(divisionType, resolution);
+        for (int n = 0; n < tracks; n++) {
+            createTrack();
+        }
+    }
+
 //	/**
 //	 * probably a bit naughty to do this ? PJL
 //	 * 
@@ -74,41 +74,34 @@ public class FrinikaSequence extends Sequence {
 //        }		
 //		return newTracks;
 //	}
-	
-	@Override
-	public Track createTrack() 
-	{
-		Track track = super.createTrack();
-		FrinikaTrackWrapper trackWrapper = new FrinikaTrackWrapper(track);
-		frinikaTrackWrappers.add(trackWrapper);
+    @Override
+    public Track createTrack() {
+        Track track = super.createTrack();
+        FrinikaTrackWrapper trackWrapper = new FrinikaTrackWrapper(track);
+        frinikaTrackWrappers.add(trackWrapper);
         trackWrapper.setSequence(this);
-		return track;
-	}
+        return track;
+    }
 
-	public FrinikaTrackWrapper createFrinikaTrack() 
-	{
-		Track track = super.createTrack();
-		FrinikaTrackWrapper trackWrapper = new FrinikaTrackWrapper(track);
-		frinikaTrackWrappers.add(trackWrapper);
+    public FrinikaTrackWrapper createFrinikaTrack() {
+        Track track = super.createTrack();
+        FrinikaTrackWrapper trackWrapper = new FrinikaTrackWrapper(track);
+        frinikaTrackWrappers.add(trackWrapper);
         trackWrapper.setSequence(this);
-		return trackWrapper;
-	}
+        return trackWrapper;
+    }
 
+    public List<FrinikaTrackWrapper> getFrinikaTrackWrappers() {
+        return frinikaTrackWrappers;
+    }
 
-
-	public Vector<FrinikaTrackWrapper> getFrinikaTrackWrappers() {
-		return frinikaTrackWrappers;
-	}
-	      
-    /**
-     * @return Returns the sequencer.
-     */
     public FrinikaSequencer getSequencer() {
         return sequencer;
     }
 
     /**
      * Will automatically be set when attached to a sequencer
+     *
      * @param sequencer The sequencer to set.
      */
     void setSequencer(FrinikaSequencer sequencer) {
@@ -116,30 +109,28 @@ public class FrinikaSequence extends Sequence {
     }
 
     /**
-     * Returns a clone of this sequence suitable for Midi file export. What it does is to map the FTW channel setting to all the midi events
-     * for the corresponding tracks
+     * Returns a clone of this sequence suitable for Midi file export. What it
+     * does is to map the FTW channel setting to all the midi events for the
+     * corresponding tracks
+     *
      * @return
-     * @throws InvalidMidiDataException 
+     * @throws InvalidMidiDataException
      */
-    public Sequence export() throws InvalidMidiDataException
-    {
-        Sequence newSeq = new Sequence(getDivisionType(),getResolution());
-        for(FrinikaTrackWrapper ftw : frinikaTrackWrappers)
-        {
+    public Sequence export() throws InvalidMidiDataException {
+        Sequence newSeq = new Sequence(getDivisionType(), getResolution());
+        for (FrinikaTrackWrapper ftw : frinikaTrackWrappers) {
             Track track = newSeq.createTrack();
-            for(int n=0;n<ftw.size();n++)
-            {
+            for (int n = 0; n < ftw.size(); n++) {
 
-                        MidiEvent sourceMidiEvent = ftw.get(n);
+                MidiEvent sourceMidiEvent = ftw.get(n);
                 MidiMessage msg = sourceMidiEvent.getMessage();
-                if(msg instanceof ShortMessage)
-                {
-                    ShortMessage shm = (ShortMessage)msg;
+                if (msg instanceof ShortMessage) {
+                    ShortMessage shm = (ShortMessage) msg;
                     ShortMessage nshm = new ShortMessage();
-                    nshm.setMessage(shm.getCommand(),ftw.getMidiChannel(),shm.getData1(),shm.getData2());
+                    nshm.setMessage(shm.getCommand(), ftw.getMidiChannel(), shm.getData1(), shm.getData2());
                     msg = nshm;
                 }
-                MidiEvent newEvent = new MidiEvent(msg,sourceMidiEvent.getTick());
+                MidiEvent newEvent = new MidiEvent(msg, sourceMidiEvent.getTick());
                 track.add(newEvent);
             }
         }

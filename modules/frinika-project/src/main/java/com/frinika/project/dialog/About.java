@@ -27,17 +27,16 @@ import javax.swing.JFrame;
 
 /**
  * @author peter
- *
  */
 public class About {
-	public static void about(JFrame parentFrame)
-	{
-		new AboutDialog(parentFrame).setVisible(true);
-		/*
+
+    public static void about(JFrame parentFrame) {
+        new AboutDialog(parentFrame).setVisible(true);
+        /*
         JOptionPane.showMessageDialog(parentFrame,
                 new AboutPanel()
          ,
 				"About Frinika",JOptionPane.INFORMATION_MESSAGE);
-				*/
-	}
+         */
+    }
 }

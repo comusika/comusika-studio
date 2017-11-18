@@ -27,7 +27,8 @@ import com.frinika.global.FrinikaConfig;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.midi.MidiDevice;
@@ -38,81 +39,81 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 public class MidiInDevicePanel extends JPanel {
-	private static final long serialVersionUID = 1L;
 
-	Vector<JCheckBox> boxes = new Vector<>();
+    private static final long serialVersionUID = 1L;
 
-	public MidiInDevicePanel() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    List<JCheckBox> boxes = new ArrayList<>();
 
-		// MidiDeviceHandle [] list= MidiHub.getMidiInHandles();
+    public MidiInDevicePanel() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		Info infos[] = MidiSystem.getMidiDeviceInfo();
+        // MidiDeviceHandle [] list= MidiHub.getMidiInHandles();
+        Info infos[] = MidiSystem.getMidiDeviceInfo();
 
-		Vector<String> names = new Vector<>();
+        List<String> names = new ArrayList<>();
 
-		for (String name : FrinikaConfig.getMidiInDeviceList()) {
-			names.add(name);
-		}
+        for (String name : FrinikaConfig.getMidiInDeviceList()) {
+            names.add(name);
+        }
 
-		ActionListener act = new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				Vector<String> list = new Vector<>();
-				for (JCheckBox box : boxes) {
-					if (box.isSelected()) {
-						list.add(box.getText());
-						// System.out.println(box.getText());
-					}
-				}
-				FrinikaConfig.setMidiInDeviceList(list);
-				FrinikaConfig.store();
-				midiInDeviceChange();
-			}
-		};
+        ActionListener act = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<String> list = new ArrayList<>();
+                for (JCheckBox box : boxes) {
+                    if (box.isSelected()) {
+                        list.add(box.getText());
+                        // System.out.println(box.getText());
+                    }
+                }
+                FrinikaConfig.setMidiInDeviceList(list);
+                FrinikaConfig.store();
+                midiInDeviceChange();
+            }
+        };
 
-		for (Info info : infos) {
-			MidiDevice dev;
-			try {
-				dev = MidiSystem.getMidiDevice(info);
+        for (Info info : infos) {
+            MidiDevice dev;
+            try {
+                dev = MidiSystem.getMidiDevice(info);
 
-				if (dev.getMaxTransmitters() != 0) {
-					String str = dev.getDeviceInfo().toString();
-					JCheckBox box = new JCheckBox(str, names.contains(str));
-					boxes.add(box);
-					box.addActionListener(act);
-					add(box);
-				}
-			} catch (MidiUnavailableException e1) {
-				// TODO Auto-generated catch block
-				Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Error opening mididevice "+info.getName(),e1);
-			}
-		}
+                if (dev.getMaxTransmitters() != 0) {
+                    String str = dev.getDeviceInfo().toString();
+                    JCheckBox box = new JCheckBox(str, names.contains(str));
+                    boxes.add(box);
+                    box.addActionListener(act);
+                    add(box);
+                }
+            } catch (MidiUnavailableException e1) {
+                // TODO Auto-generated catch block
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error opening mididevice " + info.getName(), e1);
+            }
+        }
 
-		//			
-		//			
-		// for(final MidiDeviceHandle d:list){
-		// if (d.getMidiDevice() == null) continue;
-		// JCheckBox box=new
-		// JCheckBox(d.toString(),names.contains(d.toString()));
-		// boxes.add(box);
-		// box.addActionListener(act);
-		// add(box);
-		// }
+        //			
+        //			
+        // for(final MidiDeviceHandle d:list){
+        // if (d.getMidiDevice() == null) continue;
+        // JCheckBox box=new
+        // JCheckBox(d.toString(),names.contains(d.toString()));
+        // boxes.add(box);
+        // box.addActionListener(act);
+        // add(box);
+        // }
+    }
 
-	}
+    public static void main(String args[]) {
 
-	public static void main(String args[]) {
+        JFrame f = new JFrame();
+        f.setContentPane(new MidiInDevicePanel());
+        f.pack();
+        f.setVisible(true);
+    }
 
-		JFrame f = new JFrame();
-		f.setContentPane(new MidiInDevicePanel());
-		f.pack();
-		f.setVisible(true);
-	}
-
-	public static void midiInDeviceChange() {
-		System.out.println("MIDIIN CHANGER");
-		MidiInDeviceManager.reset(FrinikaConfig.getMidiInDeviceList());
-	}
+    public static void midiInDeviceChange() {
+        System.out.println("MIDIIN CHANGER");
+        MidiInDeviceManager.reset(FrinikaConfig.getMidiInDeviceList());
+    }
 }

@@ -41,5 +41,4 @@ public interface AudioDeviceHandle {
     void open();
 
     void close();
-
 }

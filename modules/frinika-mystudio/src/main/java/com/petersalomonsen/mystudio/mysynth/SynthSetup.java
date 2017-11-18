@@ -30,32 +30,35 @@ import java.io.Serializable;
  * @author Peter Johan Salomonsen
  *
  */
-public class SynthSetup implements SynthSettings,Serializable
-{
+public class SynthSetup implements SynthSettings, Serializable {
+
     private static final long serialVersionUID = 1L;
     String[] synthClasses = new String[16];
     Serializable[] synthSettings = new Serializable[16];
-    
+
     @Override
     public String[] getSynthClassNames() {
         return synthClasses;
     }
+
     @Override
     public void setSynthClassNames(String[] synthClassNames) {
         this.synthClasses = synthClassNames;
     }
+
     @Override
     public Serializable[] getSynthSettings() {
         return synthSettings;
     }
+
     @Override
     public void setSynthSettings(Serializable[] synthSettings) {
         this.synthSettings = synthSettings;
     }
-    
+
     @Override
-	public boolean hasProgramChangeEvent() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean hasProgramChangeEvent() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

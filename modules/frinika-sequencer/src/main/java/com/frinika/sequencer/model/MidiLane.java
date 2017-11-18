@@ -85,8 +85,8 @@ public class MidiLane extends Lane implements RecordableLane {
     static public final int MELODIC = 1;
     static public final int DRUM = 2;
     static public final int SCORE = 4;
-    static public final int META=8;
-    
+    static public final int META = 8;
+
     static int nameCount = 0;
     int laneType;
     MidiPlayOptions playOptions = new MidiPlayOptions(); // Jens
@@ -198,6 +198,7 @@ public class MidiLane extends Lane implements RecordableLane {
 
     /**
      * The midi channel stored in the saved project
+     *
      * @return
      */
     public int getStoredMidiChannel() {
@@ -299,10 +300,9 @@ public class MidiLane extends Lane implements RecordableLane {
         midiMessageListeners = new HashSet<>(); // Jens
 
         programEvent.commitAdd();
-    //	getPlayOptions();
+        //	getPlayOptions();
 
-    // setUpKeys();
-
+        // setUpKeys();
     }
 
     public void setProgram(int prog, int msb, int lsb) {
@@ -322,7 +322,6 @@ public class MidiLane extends Lane implements RecordableLane {
     }
 
     public MyPatch getProgram() {
-
 
         MyPatch patch = programEvent.getPatch();
         if (patch != null) {
@@ -398,7 +397,7 @@ public class MidiLane extends Lane implements RecordableLane {
 
     public boolean isSolo() {
         return isSolo;
-    //	return project.getSequencer().isSolo(this);
+        //	return project.getSequencer().isSolo(this);
     }
 
     @Override
@@ -422,7 +421,7 @@ public class MidiLane extends Lane implements RecordableLane {
 
     public void setSolo(boolean b) {
         isSolo = b;
-    // project.getSequencer().setSolo(this, b);
+        // project.getSequencer().setSolo(this, b);
     }
 
     @Override
@@ -523,7 +522,6 @@ public class MidiLane extends Lane implements RecordableLane {
         if (true) {
             return;
         }
-       
 
         keyNames = null;
         if (!isDrumLane()) {
@@ -580,8 +578,6 @@ public class MidiLane extends Lane implements RecordableLane {
                             }
                         } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
                         }
-
-
 
 //                         System. out.print(ins.getName() + " "
 //                         + ins.getPatch().getBank() + " "
@@ -711,7 +707,9 @@ public class MidiLane extends Lane implements RecordableLane {
     }
 
     /**
-     * The index of the midiDevice according to the stored order in the saved project
+     * The index of the midiDevice according to the stored order in the saved
+     * project
+     *
      * @return
      */
     public Integer getMidiDeviceIndex() {
@@ -724,7 +722,7 @@ public class MidiLane extends Lane implements RecordableLane {
             }
         }
 //        //-----------------
-        
+
         return midiDeviceIndex;
     }
 }

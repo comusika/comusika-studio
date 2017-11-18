@@ -25,12 +25,15 @@ package com.frinika.model;
 
 /**
  * Generic interface for undo / redo.
- * 
- * A EditHistoryAction is an undoable/redoable action. You must implement the neccesary
- * state management and undo/redo mechanisms yourself.
+ *
+ * A EditHistoryAction is an undoable/redoable action. You must implement the
+ * neccesary state management and undo/redo mechanisms yourself.
+ *
  * @author Peter Johan Salomonsen
  */
 public interface EditHistoryAction {
-    public void undo();
-    public void redo();
+
+    void undo();
+
+    void redo();
 }

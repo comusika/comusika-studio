@@ -36,115 +36,108 @@ import javax.swing.JPopupMenu;
 
 public class PopupSelectorButton extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	Insets insets = new Insets(0, 0, 0, 0);
+    Insets insets = new Insets(0, 0, 0, 0);
 
-	ListProvider resource;
+    ListProvider resource;
 
-	PopupClient client;
+    PopupClient client;
 
-	// JButton button;
-	public final JButton label;
+    // JButton button;
+    public final JButton label;
 
-	JPopupMenu menu;
+    JPopupMenu menu;
 
-	Object[] list;
+    Object[] list;
 
-	private boolean displaySelected = true;
-	
-	Icon icon;
-	
-	public void setIcon(Icon icon)
-	{
-		this.icon = icon;
-		label.setIcon(icon);
-	}
+    private boolean displaySelected = true;
 
-	public PopupSelectorButton(final ListProvider resource, PopupClient client) {
-		this(resource, client, null, false);
-	}
+    Icon icon;
 
-	public PopupSelectorButton(final ListProvider resource, PopupClient client,
-			String currentState) {
-		this(resource, client, currentState, true);
-	}
+    public void setIcon(Icon icon) {
+        this.icon = icon;
+        label.setIcon(icon);
+    }
 
-	/**
-	 * 
-	 * @param resource
-	 *            provides list for a popup menu
-	 * @param client
-	 *            is notified when a slection is made (fireSelected())
-	 * @param currentState
-	 *            string to describe the initial selection.
-	 */
-	public PopupSelectorButton(final ListProvider resource, PopupClient client,
-			String currentState, boolean displaySelected) {
-		this.resource = resource;
-		this.client = client;
-		this.displaySelected = displaySelected;
-		
-		if (!displaySelected && currentState == null) {
-			ImageIcon icon = new ImageIcon(ClassLoader
-					.getSystemResource("icons/1downarrow.png"));
-			label = new JButton(icon);
-		} else {
-			// add(button);
-			label = new JButton(currentState);
-		}
-		
-		label.setMargin(insets);
-		label.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				createMenu(resource.getList(),e);
-			}
+    public PopupSelectorButton(final ListProvider resource, PopupClient client) {
+        this(resource, client, null, false);
+    }
 
-		});
+    public PopupSelectorButton(final ListProvider resource, PopupClient client,
+            String currentState) {
+        this(resource, client, currentState, true);
+    }
 
-		add(label);
-	}
+    /**
+     *
+     * @param resource provides list for a popup menu
+     * @param client is notified when a slection is made (fireSelected())
+     * @param currentState string to describe the initial selection.
+     */
+    public PopupSelectorButton(final ListProvider resource, PopupClient client,
+            String currentState, boolean displaySelected) {
+        this.resource = resource;
+        this.client = client;
+        this.displaySelected = displaySelected;
 
-	private void createMenu(Object[] list,ActionEvent e) {
-		
-		this.list = list;
-		if (list== null) return;
-		menu = new JPopupMenu();
+        if (!displaySelected && currentState == null) {
+            ImageIcon icon = new ImageIcon(ClassLoader
+                    .getSystemResource("icons/1downarrow.png"));
+            label = new JButton(icon);
+        } else {
+            // add(button);
+            label = new JButton(currentState);
+        }
+
+        label.setMargin(insets);
+        label.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createMenu(resource.getList(), e);
+            }
+
+        });
+
+        add(label);
+    }
+
+    private void createMenu(Object[] list, ActionEvent e) {
+        this.list = list;
+        if (list == null) {
+            return;
+        }
+        menu = new JPopupMenu();
 
         int count = 0;
-		for (final Object o : list) {
-			if (o != null) {
-				JMenuItem it = new JMenuItem(o.toString());
-				if(o instanceof MidiDeviceIconProvider)
-					it.setIcon(((MidiDeviceIconProvider)o).getIcon());
-				else
-					if(icon != null) it.setIcon(icon);
-				menu.add(it);
+        for (final Object o : list) {
+            if (o != null) {
+                JMenuItem it = new JMenuItem(o.toString());
+                if (o instanceof MidiDeviceIconProvider) {
+                    it.setIcon(((MidiDeviceIconProvider) o).getIcon());
+                } else if (icon != null) {
+                    it.setIcon(icon);
+                }
+                menu.add(it);
                 final int index = count++;
                 /**
-				 * PJS The action listener is moved in here in order to send the
-				 * correct index. Before the index was resolved based on
-				 * object.toString(). If two objects returned the same only the
-				 * first index were sent..
-				 */
-				it.addActionListener(new ActionListener() {
+                 * PJS The action listener is moved in here in order to send the
+                 * correct index. Before the index was resolved based on
+                 * object.toString(). If two objects returned the same only the
+                 * first index were sent..
+                 */
+                it.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent e) {                    	
-    					if (displaySelected)
-    						label.setText(e.getActionCommand());
+                    public void actionPerformed(ActionEvent e) {
+                        if (displaySelected) {
+                            label.setText(e.getActionCommand());
+                        }
                         client.fireSelected(PopupSelectorButton.this, o, index);
-                    }});
-			}
-		}
+                    }
+                });
+            }
+        }
 
-        
-        	menu.show(label, 0,0);
-        
-	}
-
-   
+        menu.show(label, 0, 0);
+    }
 }

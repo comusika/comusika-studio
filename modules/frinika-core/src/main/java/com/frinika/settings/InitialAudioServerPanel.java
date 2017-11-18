@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.settings;
 
 import com.frinika.base.FrinikaAudioSystem;
@@ -46,297 +45,303 @@ import uk.org.toot.audio.server.ExtendedAudioServer;
 
 public class InitialAudioServerPanel extends JPanel {
 
-	private ExtendedAudioServer audioServer;
+    private boolean darkMode = true;
 
-	JButton next;
-	JPanel buttonpane = new JPanel();
-	Color bgCol=Color.white;
-	InitialAudioServerPanel() {
+    private ExtendedAudioServer audioServer;
 
-		setLayout(new BorderLayout());
+    JButton next;
+    JPanel buttonPanel = new JPanel();
+    Color bgCol = darkMode ? Color.BLACK : Color.WHITE;
 
-		setBackground(bgCol);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    InitialAudioServerPanel() {
 
-		final AudioServerSelectPanel multiIO = new AudioServerSelectPanel();
-		add(multiIO);
-		if (bgCol !=null) multiIO.setBackground(bgCol);
+        setLayout(new BorderLayout());
 
-		// multiIO.setOpaque(false);
+        setBackground(bgCol);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		// buttonpane.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
-		buttonpane.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		if (bgCol !=null) buttonpane.setBackground(bgCol);
-		
-		// buttonpane.add(new JButton("OK"));
-		// buttonpane.add(new JButton("Cancel"));
+        final AudioServerSelectPanel multiIO = new AudioServerSelectPanel();
+        add(multiIO);
+        if (bgCol != null) {
+            multiIO.setBackground(bgCol);
+        }
 
-		buttonpane.add(next = new JButton("Next >"));
-		add(buttonpane, BorderLayout.SOUTH);
+        // multiIO.setOpaque(false);
+        // buttonpane.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        buttonPanel.setOpaque(false);
+        if (bgCol != null) {
+            buttonPanel.setBackground(bgCol);
+        }
 
-		next.addActionListener(new ActionListener() {
+        // buttonpane.add(new JButton("OK"));
+        // buttonpane.add(new JButton("Cancel"));
+        buttonPanel.add(next = new JButton("Next >"));
+        add(buttonPanel, BorderLayout.SOUTH);
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				multiIO.done();
-				remove(multiIO);
-				next.removeActionListener(this);
-				
-				audioServer = (ExtendedAudioServer) FrinikaAudioSystem
-						.getAudioServerInit();
+        next.addActionListener(new ActionListener() {
 
-				if (audioServer instanceof MultiplexedJavaSoundAudioServer) {
-					setStateMultiPlexedAudioServer();
-				} else {
-					setStateIO();
-				}
-			}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                multiIO.done();
+                remove(multiIO);
+                next.removeActionListener(this);
 
-		});
-	}
+                audioServer = (ExtendedAudioServer) FrinikaAudioSystem
+                        .getAudioServerInit();
 
-	private void setStateIO() {
-		final AudioServerIOPanel ioPanel;
-		add(ioPanel = new AudioServerIOPanel(audioServer), 0);
-		ioPanel.setBackground(bgCol);
-		validate();
-		repaint();
+                if (audioServer instanceof MultiplexedJavaSoundAudioServer) {
+                    setStateMultiPlexedAudioServer();
+                } else {
+                    setStateIO();
+                }
+            }
+        });
+    }
 
-		next.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				ioPanel.done();
-				remove(ioPanel);
-				setStateServerConfigured();
-				next.removeActionListener(this);
-			}
-		});
-	}
+    private void setStateIO() {
+        final AudioServerIOPanel ioPanel;
+        add(ioPanel = new AudioServerIOPanel(audioServer), 0);
+        ioPanel.setBackground(bgCol);
+        validate();
+        repaint();
 
-	void setStateServerConfigured() {
-		FrinikaAudioSystem.intitIO();
-		final JLabel label=new JLabel("Server configured.");
-		label.setBackground(bgCol);
-		add(label,0);
-		next.setText("OK");
-		validate();
-		repaint();
-	
-		next.addActionListener(new ActionListener(){
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ioPanel.done();
+                remove(ioPanel);
+                setStateServerConfigured();
+                next.removeActionListener(this);
+            }
+        });
+    }
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				Container top=getTopLevelAncestor();
-				if (getTopLevelAncestor() instanceof SetupDialog ) {
-					top.setVisible(false);
-				}
-			}
-			
-		});
+    void setStateServerConfigured() {
+        FrinikaAudioSystem.initIO();
+        final JLabel label = new JLabel("Server configured.");
+        label.setBackground(bgCol);
+        add(label, 0);
+        next.setText("OK");
+        validate();
+        repaint();
 
-	}
-		
-	private void setStateMultiPlexedAudioServer() {
-		final MultiPlexAudioServerIOPanel ioPanel;
-		add(ioPanel = new MultiPlexAudioServerIOPanel((MultiplexedJavaSoundAudioServer) audioServer), 0);
-		//next.setText("Start Audio");
-		ioPanel.setBackground(bgCol);
-		validate();
-		repaint();
+        next.addActionListener(new ActionListener() {
 
-		next.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				next.removeActionListener(this);
-				ioPanel.done();
-				remove(ioPanel);
-				setStateIO();
-			}
-		});
-	}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Container top = getTopLevelAncestor();
+                if (getTopLevelAncestor() instanceof SetupDialog) {
+                    top.setVisible(false);
+                }
+            }
+        });
+    }
+
+    private void setStateMultiPlexedAudioServer() {
+        final MultiPlexAudioServerIOPanel ioPanel;
+        add(ioPanel = new MultiPlexAudioServerIOPanel((MultiplexedJavaSoundAudioServer) audioServer), 0);
+        //next.setText("Start Audio");
+        ioPanel.setBackground(bgCol);
+        validate();
+        repaint();
+
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                next.removeActionListener(this);
+                ioPanel.done();
+                remove(ioPanel);
+                setStateIO();
+            }
+        });
+    }
 }
 
 class AudioServerSelectPanel extends JPanel {
 
-	JComboBox cb;
-	AudioServerSelectPanel() {
-		setLayout(new GridBagLayout());
+    JComboBox cb;
+
+    AudioServerSelectPanel() {
+        setLayout(new GridBagLayout());
 //		setBackground(Color.WHITE);
-		final GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.WEST;
-		// c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(2, 2, 2, 2);
-		// c.fill = GridBagConstraints.NONE;
-		c.gridwidth = 1;
-		c.gridheight = 1;
+        final GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        // c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(2, 2, 2, 2);
+        // c.fill = GridBagConstraints.NONE;
+        c.gridwidth = 1;
+        c.gridheight = 1;
 
-		c.gridy = 0;
-		c.gridx = 0;
+        c.gridy = 0;
+        c.gridx = 0;
 
-		final boolean multiplexIO = FrinikaConfig.MULTIPLEXED_AUDIO;
-		//.getPropertyBoolean("multiplexed_audio");
+        final boolean multiplexIO = FrinikaConfig.MULTIPLEXED_AUDIO;
+        //.getPropertyBoolean("multiplexed_audio");
 
-		String opt[] = { "Default Server", "Multiplexed Server" };
+        String opt[] = {"Default Server", "Multiplexed Server"};
 
-		cb = new JComboBox(opt);
-		add(new JLabel("Audio Server"));
-		c.gridx++;
-		add(cb, c);
-		
-		if (multiplexIO)
-			cb.setSelectedIndex(1);
-		else
-			cb.setSelectedIndex(0);
+        cb = new JComboBox(opt);
+        add(new JLabel("Audio Server"));
+        c.gridx++;
+        add(cb, c);
 
-	}
-	
-	void done() {
-		//FrinikaConfig.setProperty("multiplexed_audio", String
-		//		.valueOf(cb.getSelectedIndex() == 1));
-		FrinikaConfig.setMultiplexedAudio(cb.getSelectedIndex() == 1);
-		FrinikaConfig.store();
-	}
-	
+        if (multiplexIO) {
+            cb.setSelectedIndex(1);
+        } else {
+            cb.setSelectedIndex(0);
+        }
+    }
+
+    void done() {
+        //FrinikaConfig.setProperty("multiplexed_audio", String
+        //		.valueOf(cb.getSelectedIndex() == 1));
+        FrinikaConfig.setMultiplexedAudio(cb.getSelectedIndex() == 1);
+        FrinikaConfig.store();
+    }
 }
 
 class MultiPlexAudioServerIOPanel extends JPanel {
 
-	final JComboBox devOut;
-	final JComboBox devIn;
-	final String inConfigStr;
-	final String outConfigStr;
-	final MultiplexedJavaSoundAudioServer audioServer;
-	
-	MultiPlexAudioServerIOPanel(MultiplexedJavaSoundAudioServer s) {
-		audioServer=((MultiplexedJavaSoundAudioServer) s);
-		setLayout(new GridBagLayout());
+    final JComboBox devOut;
+    final JComboBox devIn;
+    final String inConfigStr;
+    final String outConfigStr;
+    final MultiplexedJavaSoundAudioServer audioServer;
 
-		final GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.WEST;
-		// c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(2, 2, 2, 2);
-		// c.fill = GridBagConstraints.NONE;
-		c.gridwidth = 1;
-		c.gridheight = 1;
+    MultiPlexAudioServerIOPanel(MultiplexedJavaSoundAudioServer s) {
+        audioServer = ((MultiplexedJavaSoundAudioServer) s);
+        setLayout(new GridBagLayout());
+        setOpaque(false);
 
-		c.gridy = 0;
-		c.gridx = 0;
+        final GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        // c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(2, 2, 2, 2);
+        // c.fill = GridBagConstraints.NONE;
+        c.gridwidth = 1;
+        c.gridheight = 1;
 
-		add(new JLabel("Output Device:"), c);
+        c.gridy = 0;
+        c.gridx = 0;
 
-		devOut = new JComboBox();
-		c.gridx++;
-		add(devOut, c);
+        add(new JLabel("Output Device:"), c);
 
-		outConfigStr = s.getConfigKey()
-		+ ".outputDevice";
-		
-		String outStr = FrinikaConfig.getProperty(outConfigStr);
+        devOut = new JComboBox();
+        c.gridx++;
+        add(devOut, c);
 
-		System.out.println("FrinikaCongigure:" + outConfigStr + "=" + outStr);
-		
-		List<String> list = audioServer.getOutDeviceList();
+        outConfigStr = s.getConfigKey()
+                + ".outputDevice";
 
-		
-		for (String str : list) {
-			devOut.addItem(str);
-			if (str == outStr) {
-				devOut.setSelectedItem(str);
-			}
-		}
+        String outStr = FrinikaConfig.getProperty(outConfigStr);
 
-		list = ((MultiplexedJavaSoundAudioServer) s).getInDeviceList();
-		list.add(0, "NONE");
+        System.out.println("FrinikaCongigure:" + outConfigStr + "=" + outStr);
 
-		c.gridy++;
-		c.gridx = 0;
-		add(new JLabel("Input Device:"), c);
+        List<String> list = audioServer.getOutDeviceList();
 
-		devIn = new JComboBox();
-		c.gridx++;
-		add(devIn, c);
+        for (String str : list) {
+            devOut.addItem(str);
+            if (str == outStr) {
+                devOut.setSelectedItem(str);
+            }
+        }
 
-		inConfigStr = s.getConfigKey()
-		+ ".inputDevice";
-		
-		String inStr=FrinikaConfig.getProperty(inConfigStr);
-		list = ((MultiplexedJavaSoundAudioServer) s).getInDeviceList();
+        list = ((MultiplexedJavaSoundAudioServer) s).getInDeviceList();
+        list.add(0, "NONE");
 
-		list.add("NONE");
-		for (String str : list) {
-			devIn.addItem(str);
-			if (str.equals(inStr))
-				devIn.setSelectedItem(str);
-		}
+        c.gridy++;
+        c.gridx = 0;
+        add(new JLabel("Input Device:"), c);
 
-		if (devIn.getSelectedItem() == null) devIn.setSelectedIndex(0);
-		if (devOut.getSelectedItem() == null) devOut.setSelectedIndex(0);
+        devIn = new JComboBox();
+        c.gridx++;
+        add(devIn, c);
 
-	}
+        inConfigStr = s.getConfigKey() + ".inputDevice";
 
-	void done() {
+        String inStr = FrinikaConfig.getProperty(inConfigStr);
+        list = ((MultiplexedJavaSoundAudioServer) s).getInDeviceList();
 
-		audioServer.setOutDevice(devOut.getSelectedItem()
-				.toString());
-		
-		audioServer.setInDevice(devIn.getSelectedItem()
-				.toString());
+        list.add("NONE");
+        for (String str : list) {
+            devIn.addItem(str);
+            if (str.equals(inStr)) {
+                devIn.setSelectedItem(str);
+            }
+        }
 
-		FrinikaConfig.setProperty(outConfigStr, devOut.getSelectedItem()
-				.toString());	
+        if (devIn.getSelectedItem() == null) {
+            devIn.setSelectedIndex(0);
+        }
+        if (devOut.getSelectedItem() == null) {
+            devOut.setSelectedIndex(0);
+        }
 
-		FrinikaConfig.setProperty(inConfigStr, devIn.getSelectedItem()
-				.toString());
+    }
 
-		FrinikaConfig.store();
-		
-	}
+    void done() {
+        audioServer.setOutDevice(devOut.getSelectedItem()
+                .toString());
+
+        audioServer.setInDevice(devIn.getSelectedItem()
+                .toString());
+
+        FrinikaConfig.setProperty(outConfigStr, devOut.getSelectedItem()
+                .toString());
+
+        FrinikaConfig.setProperty(inConfigStr, devIn.getSelectedItem()
+                .toString());
+
+        FrinikaConfig.store();
+    }
 }
 
 class AudioServerIOPanel extends JPanel {
 
-	final String outConfigStr;
-	final JComboBox devOut;
-	
-	AudioServerIOPanel(ExtendedAudioServer audioServer) {
+    final String outConfigStr;
+    final JComboBox devOut;
 
-		setLayout(new GridBagLayout());
+    AudioServerIOPanel(ExtendedAudioServer audioServer) {
 
-		final GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.WEST;
-		// c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(2, 2, 2, 2);
-		// c.fill = GridBagConstraints.NONE;
-		c.gridwidth = 1;
-		c.gridheight = 1;
+        setLayout(new GridBagLayout());
 
-		c.gridy = 0;
-		c.gridx = 0;
+        final GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.WEST;
+        // c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(2, 2, 2, 2);
+        // c.fill = GridBagConstraints.NONE;
+        c.gridwidth = 1;
+        c.gridheight = 1;
 
+        c.gridy = 0;
+        c.gridx = 0;
 
-		add(new JLabel("Output:"), c);
+        add(new JLabel("Output:"), c);
 
-		devOut = new JComboBox();
-		c.gridx++;
-		add(devOut, c);
+        devOut = new JComboBox();
+        c.gridx++;
+        add(devOut, c);
 
-		outConfigStr=audioServer.getConfigKey()+ ".output";
-		String outStr = FrinikaConfig.getProperty(outConfigStr);
-		System.out.println("FrinikaConfigure: " + outConfigStr + "=" + outStr);
-		List<String> list = audioServer.getAvailableOutputNames();
+        outConfigStr = audioServer.getConfigKey() + ".output";
+        String outStr = FrinikaConfig.getProperty(outConfigStr);
+        System.out.println("FrinikaConfigure: " + outConfigStr + "=" + outStr);
+        List<String> list = audioServer.getAvailableOutputNames();
 
-		for (String str : list) {
-			devOut.addItem(str);
-			if (str.equals(outStr))
-				devOut.setSelectedItem(str);
-		}
-		if (devOut.getSelectedItem() == null ) devOut.setSelectedIndex(0);
-		
-	}
-	
-	void done() {
-		FrinikaConfig.setProperty(outConfigStr, devOut.getSelectedItem()
-				.toString());		
-		FrinikaConfig.store();
-	}
+        for (String str : list) {
+            devOut.addItem(str);
+            if (str.equals(outStr)) {
+                devOut.setSelectedItem(str);
+            }
+        }
+        if (devOut.getSelectedItem() == null) {
+            devOut.setSelectedIndex(0);
+        }
+    }
+
+    void done() {
+        FrinikaConfig.setProperty(outConfigStr, devOut.getSelectedItem()
+                .toString());
+        FrinikaConfig.store();
+    }
 }

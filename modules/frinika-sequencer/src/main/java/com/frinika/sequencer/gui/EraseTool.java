@@ -21,51 +21,45 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-
 public class EraseTool extends ToolAdapter implements EditTool {
 
-	public EraseTool( Cursor cursor) {
-		super( cursor);
-	}
+    public EraseTool(Cursor cursor) {
+        super(cursor);
+    }
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-		client=(ItemPanel)e.getSource();
-		
-		if (client.pointInTimeLine(e.getY())) {
-			int x=client.mapX(e.getX());
-			client.setTimeAtX(x);	
-			return;
-		}
-	
-		Point p = new Point(e.getX(),e.getY());
-		client.map(p);
-		Item item= client.itemAt(p);
+    @Override
+    public void mousePressed(MouseEvent e) {
+        client = (ItemPanel) e.getSource();
 
-		if (item != null) {
-		
-			client.erase(item);
+        if (client.pointInTimeLine(e.getY())) {
+            int x = client.mapX(e.getX());
+            client.setTimeAtX(x);
+            return;
+        }
 
-		}
-	}
+        Point p = new Point(e.getX(), e.getY());
+        client.map(p);
+        Item item = client.itemAt(p);
 
-        @Override
-	public void mouseDragged(MouseEvent e) {
+        if (item != null) {
+            client.erase(item);
+        }
+    }
 
-		// TODO effecient ?
-		Point p = new Point(e.getX(),e.getY());
-		client.map(p);
-		Item item = client.itemAt(p);
-		if (item != null) {
-			client.erase(item);
-		}
-	}
-	
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        // TODO effecient ?
+        Point p = new Point(e.getX(), e.getY());
+        client.map(p);
+        Item item = client.itemAt(p);
+        if (item != null) {
+            client.erase(item);
+        }
+    }
 }

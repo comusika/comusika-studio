@@ -21,28 +21,26 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.global;
 
 public class ConfigError extends Error {
 
-	public ConfigError() {
-		// TODO Auto-generated constructor stub
-	}
+    public ConfigError() {
+        // TODO Auto-generated constructor stub
+    }
 
-	public ConfigError(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
+    public ConfigError(String message) {
+        super(message);
+        // TODO Auto-generated constructor stub
+    }
 
-	public ConfigError(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
+    public ConfigError(Throwable cause) {
+        super(cause);
+        // TODO Auto-generated constructor stub
+    }
 
-	public ConfigError(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
-
+    public ConfigError(String message, Throwable cause) {
+        super(message, cause);
+        // TODO Auto-generated constructor stub
+    }
 }

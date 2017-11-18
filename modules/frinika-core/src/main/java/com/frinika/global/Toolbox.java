@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.global;
 
 import java.io.File;
@@ -37,117 +36,121 @@ import java.util.jar.JarInputStream;
 
 /**
  * Global collection of static tool methods.
- * 
+ *
  * @author Jens Gulden
  */
-public class Toolbox {	
-	
-	/**
-	 * Private constructor to avoid instantiaton.
-	 */
-	private Toolbox() {
-		// nop
-	}
+public class Toolbox {
 
-	public static String joinStrings(Collection<String> ss, String delim) {
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		for (String s : ss) {
-			if (!first) {
-				sb.append(delim);
-			}
-			sb.append(s);
-			first = false;
-		}
-		return sb.toString();
-	}
+    /**
+     * Private constructor to avoid instantiaton.
+     */
+    private Toolbox() {
+        // nop
+    }
 
-	public static String joinStrings(String[] ss, String delim) {
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		for (String s : ss) {
-			if (!first) {
-				sb.append(delim);
-			}
-			sb.append(s);
-			first = false;
-		}
-		return sb.toString();
-	}
+    public static String joinStrings(Collection<String> ss, String delim) {
+        StringBuffer sb = new StringBuffer();
+        boolean first = true;
+        for (String s : ss) {
+            if (!first) {
+                sb.append(delim);
+            }
+            sb.append(s);
+            first = false;
+        }
+        return sb.toString();
+    }
 
-	public static List<String> splitString(String s, String delim) {
-		ArrayList<String> l = new ArrayList<>();
-		int start = 0;
-		int d = delim.length();
-		int pos;
-		do {
-			pos = s.indexOf(delim, start);
-			String ss = s.substring(start, (pos != -1) ? pos : s.length());
-			if ((pos != -1) || (ss.length() > 0)) { // ignore last one if blank only
-				l.add(ss.trim());
-			}
-			start = pos + d;
-		} while ((pos != -1) && (start < s.length()));
-		return l;
-	}
+    public static String joinStrings(String[] ss, String delim) {
+        StringBuffer sb = new StringBuffer();
+        boolean first = true;
+        for (String s : ss) {
+            if (!first) {
+                sb.append(delim);
+            }
+            sb.append(s);
+            first = false;
+        }
+        return sb.toString();
+    }
 
-	public static String firstWord(String s) {
-		s = s.trim();
-		if (s.length() == 0) return "";
-		StringTokenizer st = new StringTokenizer(s, " \t\n\r", false);
-		String w = st.nextToken();
-		return w;
-	}
+    public static List<String> splitString(String s, String delim) {
+        ArrayList<String> l = new ArrayList<>();
+        int start = 0;
+        int d = delim.length();
+        int pos;
+        do {
+            pos = s.indexOf(delim, start);
+            String ss = s.substring(start, (pos != -1) ? pos : s.length());
+            if ((pos != -1) || (ss.length() > 0)) { // ignore last one if blank only
+                l.add(ss.trim());
+            }
+            start = pos + d;
+        } while ((pos != -1) && (start < s.length()));
+        return l;
+    }
 
-	public static String capitalize(String s) {
-		if (s.length() == 0) return "";
-		return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
-	}
+    public static String firstWord(String s) {
+        s = s.trim();
+        if (s.length() == 0) {
+            return "";
+        }
+        StringTokenizer st = new StringTokenizer(s, " \t\n\r", false);
+        String w = st.nextToken();
+        return w;
+    }
 
-	public static String[] splitWords(String s) {
-		StringTokenizer st = new StringTokenizer(s, " \t\r\n", false);
-		int size = st.countTokens();
-		String[] args = new String[size];
-		for (int i = 0; i < size; i++) {
-			args[i] = st.nextToken();
-		}
-		return args;
-	}
-	
-	public static void extractFromJar(File jarfile, String prefix, File targetDir) throws IOException {
-            try (JarInputStream jar = new JarInputStream(new FileInputStream(jarfile))) {
-                JarEntry entry = jar.getNextJarEntry();
-                while (entry != null) {
-                    if (! entry.isDirectory()) {
-                        String name = entry.getName();
-                        if ((prefix == null) || (name.startsWith(prefix))) {
-                            // entry to decopompress found
-                            String n;
-                            int pos = name.lastIndexOf(File.separator);
-                            if (pos != -1) {
-                                n = name.substring(pos + File.separator.length()); // name without preceeding path
-                            } else {
-                                n = name;
-                            }
-                            File outFile = new File(targetDir, n);
-                            try (FileOutputStream out = new FileOutputStream(outFile)) {
-                                System.out.print(name+" -> "+outFile.getAbsolutePath()+", ");
-                                byte[] b = new byte[10 * 1024];
-                                int total = 0;
-                                int hasRead;
-                                do {
-                                    hasRead = jar.read(b);
-                                    if (hasRead  > 0) {
-                                        out.write(b, 0, hasRead);
-                                    }
-                                    total += hasRead;
-                                } while (hasRead > 0);
-                                System.out.println(total+" bytes");
-                            }
+    public static String capitalize(String s) {
+        if (s.length() == 0) {
+            return "";
+        }
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+    }
+
+    public static String[] splitWords(String s) {
+        StringTokenizer st = new StringTokenizer(s, " \t\r\n", false);
+        int size = st.countTokens();
+        String[] args = new String[size];
+        for (int i = 0; i < size; i++) {
+            args[i] = st.nextToken();
+        }
+        return args;
+    }
+
+    public static void extractFromJar(File jarfile, String prefix, File targetDir) throws IOException {
+        try (JarInputStream jar = new JarInputStream(new FileInputStream(jarfile))) {
+            JarEntry entry = jar.getNextJarEntry();
+            while (entry != null) {
+                if (!entry.isDirectory()) {
+                    String name = entry.getName();
+                    if ((prefix == null) || (name.startsWith(prefix))) {
+                        // entry to decopompress found
+                        String n;
+                        int pos = name.lastIndexOf(File.separator);
+                        if (pos != -1) {
+                            n = name.substring(pos + File.separator.length()); // name without preceeding path
+                        } else {
+                            n = name;
+                        }
+                        File outFile = new File(targetDir, n);
+                        try (FileOutputStream out = new FileOutputStream(outFile)) {
+                            System.out.print(name + " -> " + outFile.getAbsolutePath() + ", ");
+                            byte[] b = new byte[10 * 1024];
+                            int total = 0;
+                            int hasRead;
+                            do {
+                                hasRead = jar.read(b);
+                                if (hasRead > 0) {
+                                    out.write(b, 0, hasRead);
+                                }
+                                total += hasRead;
+                            } while (hasRead > 0);
+                            System.out.println(total + " bytes");
                         }
                     }
-                    entry = jar.getNextJarEntry();
                 }
+                entry = jar.getNextJarEntry();
             }
-	}
+        }
+    }
 }

@@ -27,11 +27,11 @@ package com.frinika.model;
  * @author Peter Johan Salomonsen
  */
 public class EditHistoryMark {
+
     private int editHistoryIndex;
     private String markString;
-    
-    public EditHistoryMark(int editHistoryIndex, String markString)
-    {
+
+    public EditHistoryMark(int editHistoryIndex, String markString) {
         this.editHistoryIndex = editHistoryIndex;
         this.markString = markString;
     }

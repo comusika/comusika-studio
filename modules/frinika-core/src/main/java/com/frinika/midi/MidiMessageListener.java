@@ -21,19 +21,18 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.midi;
 
 import javax.sound.midi.MidiMessage;
 
 /**
- * Listener that can be connected to a MonitorReceiver. It receives all MIDI 
- * events that pass through a MonitorReceiver.
- * Note that instances of MidiMessageListener don't get directly connected to
- * a MonitorReceiver (there are no addMidiMessageListener() / 
- * removeMidiMessageListener() methods on MonitorReceiver), but will be added
- * to / removed from higher-level classes that use MonitorReceivers.
- * 
+ * Listener that can be connected to a MonitorReceiver. It receives all MIDI
+ * events that pass through a MonitorReceiver. Note that instances of
+ * MidiMessageListener don't get directly connected to a MonitorReceiver (there
+ * are no addMidiMessageListener() / removeMidiMessageListener() methods on
+ * MonitorReceiver), but will be added to / removed from higher-level classes
+ * that use MonitorReceivers.
+ *
  * @see MonitorReceiver
  * @see com.frinika.sequencer.model.MidiLane
  * @see com.frinika.sequencer.model.FrinikaSequencer
@@ -41,6 +40,5 @@ import javax.sound.midi.MidiMessage;
  */
 public interface MidiMessageListener {
 
-	public void midiMessage(MidiMessage message);
-	
+    void midiMessage(MidiMessage message);
 }

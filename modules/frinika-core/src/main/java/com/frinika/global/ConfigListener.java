@@ -21,21 +21,20 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.global;
 
 import javax.swing.event.ChangeEvent;
 
 /**
- * Interfaces for classes that want to register via Config.addConfigurationListener(..).
- * For each configuration option that changed, an event is sent.
- * The source-object of the ChangeEvent is of type java.lang.reflect.Field and directly
- * refers to a static option field in class Config.
- * 
+ * Interfaces for classes that want to register via
+ * Config.addConfigurationListener(..). For each configuration option that
+ * changed, an event is sent. The source-object of the ChangeEvent is of type
+ * java.lang.reflect.Field and directly refers to a static option field in class
+ * Config.
+ *
  * @author Jens Gulden
  */
 public interface ConfigListener {
 
-	public void configurationChanged(ChangeEvent event);
-	
+    void configurationChanged(ChangeEvent event);
 }

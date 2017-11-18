@@ -55,8 +55,10 @@ public class MidiHashUtil {
 
     static ShortMessage reconstructShortMessage(long hash, ShortMessage mess) {
 
-        if (mess == null) mess=new ShortMessage();
-        
+        if (mess == null) {
+            mess = new ShortMessage();
+        }
+
         int status = (int) ((hash >> 8) & 0xFF);
         int data1 = (int) (hash & 0xFF);
         try {

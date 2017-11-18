@@ -46,91 +46,89 @@ import javax.swing.JProgressBar;
 
 /**
  * Dialog for export to wav, and monitoring progress
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class BounceToLane extends JDialog implements Runnable {
+
     private static final long serialVersionUID = 1L;
 
     JProgressBar progressBar;
     MyMidiRenderer midiRenderer;
-    
+
     ProjectContainer project;
     File file;
     AudioLane lane;
     int numberOfSamples;
-    
+
     public BounceToLane(JFrame frame,
-            ProjectContainer project, 
+            ProjectContainer project,
             File file,
-            long startTick, 
+            long startTick,
             long endTick,
-            AudioLane lane)
-    {
-        super(frame,true);
-        this.lane=lane;
+            AudioLane lane) {
+        super(frame, true);
+        this.lane = lane;
         this.project = project;
         this.setResizable(false);
         this.setUndecorated(true);
-        try
-        {
-            midiRenderer = new MyMidiRenderer(project.getMixer(),project.getSequencer(),startTick,(int)(endTick-startTick),project.getAudioServer().getSampleRate());
-            numberOfSamples = midiRenderer.available()/4;
-            progressBar = new JProgressBar(0,midiRenderer.available());
+        try {
+            midiRenderer = new MyMidiRenderer(project.getMixer(), project.getSequencer(), startTick, (int) (endTick - startTick), project.getAudioServer().getSampleRate());
+            numberOfSamples = midiRenderer.available() / 4;
+            progressBar = new JProgressBar(0, midiRenderer.available());
             progressBar.setStringPainted(true);
-            
-            setLayout(new GridLayout(0,1));
-            
-            JLabel lb = new JLabel("Exporting section to "+file.getName());
-            lb.setFont(new Font(lb.getFont().getName(),Font.BOLD,lb.getFont().getSize()*2));
+
+            setLayout(new GridLayout(0, 1));
+
+            JLabel lb = new JLabel("Exporting section to " + file.getName());
+            lb.setFont(new Font(lb.getFont().getName(), Font.BOLD, lb.getFont().getSize() * 2));
             add(lb);
             add(progressBar);
 
             this.file = file;
-    
+
             new Thread(this).start();
-            
+
             this.setSize(getPreferredSize());
-            
+
             this.setLocationRelativeTo(frame);
             this.setVisible(true);
-        } catch(IOException e) {}
+        } catch (IOException e) {
+        }
     }
-    
+
     @Override
     public void run() {
-    	// Stop audio server
-    	project.getAudioServer().stop();
+        // Stop audio server
+        project.getAudioServer().stop();
 
-    	try
-        {
-        	AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar,midiRenderer),new AudioFormat((float) FrinikaConfig.sampleRate,16,2,true,true),numberOfSamples);
+        try {
+            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
             sequencer.setRealtime(false);
             sequencer.start();
-            AudioSystem.write(ais,AudioFileFormat.Type.WAVE,file);
+            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
             sequencer.stop();
             sequencer.setRealtime(true);
             BounceToLane.this.dispose();
-        } catch(IOException e) {
-        	e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         // Restore output process (mixer) from project and restart audio server
-        
+
         project.getMixer().getMainBus().setOutputProcess(project.getOutputProcess());
         project.getAudioServer().start();
- 
- 		AudioPart part;
-		try {
-			part = new AudioPart(lane, file, (long) midiRenderer.getStartTimeInMicros());
-			part.onLoad();		
-			// TODO where is the mark ?  EDIT _HISTORY IS NOT MULTITHREADED
-			project.getEditHistoryContainer().notifyEditHistoryListeners();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		
+        AudioPart part;
+        try {
+            part = new AudioPart(lane, file, (long) midiRenderer.getStartTimeInMicros());
+            part.onLoad();
+            // TODO where is the mark ?  EDIT _HISTORY IS NOT MULTITHREADED
+            project.getEditHistoryContainer().notifyEditHistoryListeners();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

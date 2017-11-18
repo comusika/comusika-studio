@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.midi;
 
 import javax.sound.midi.MidiDevice;
@@ -29,25 +28,25 @@ import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.spi.MidiDeviceProvider;
 
 public class DrumMapperProvider extends MidiDeviceProvider {
-	
-	static Info deviceInfo = new DrumMapper.DrumMapperInfo();
-	Info infos[];
 
-	public DrumMapperProvider() {
-		infos= new Info[1];
-		infos[0]=deviceInfo;
-	}
-	
-        @Override
-	public Info[] getDeviceInfo() {
-		return infos;
-	}
-	
-        @Override
-	public MidiDevice getDevice(Info arg0) {
-		if(!(arg0 instanceof DrumMapper.DrumMapperInfo)) return null;
-		return new DrumMapper();
-	}
-	
+    static Info deviceInfo = new DrumMapper.DrumMapperInfo();
+    Info infos[];
+
+    public DrumMapperProvider() {
+        infos = new Info[1];
+        infos[0] = deviceInfo;
+    }
+
+    @Override
+    public Info[] getDeviceInfo() {
+        return infos;
+    }
+
+    @Override
+    public MidiDevice getDevice(Info arg0) {
+        if (!(arg0 instanceof DrumMapper.DrumMapperInfo)) {
+            return null;
+        }
+        return new DrumMapper();
+    }
 }
-	

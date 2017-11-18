@@ -24,35 +24,51 @@ package com.frinika.sequencer.model;
 
 import com.frinika.audio.model.ControllerListProvider;
 import com.frinika.sequencer.gui.pianoroll.ControllerHandle;
+import java.util.ArrayList;
+import java.util.List;
 import javax.sound.midi.ShortMessage;
 
 public class FrinikaControllerList implements ControllerListProvider {
-	
-	/**
-     * 
-     */
-  
 
-    static ControllerHandle[] cntrls;
-
-	static {
-		cntrls = new ControllerHandle[8];
-		cntrls[0] = new ControllerHandle("Velocity", 0, 127, 0,ShortMessage.NOTE_ON);
-		cntrls[1] = new ControllerHandle("Vibrato", 0, 127, 1,ShortMessage.CONTROL_CHANGE);
-		cntrls[2] = new ControllerHandle("Volume", 0, 127, 7,ShortMessage.CONTROL_CHANGE);
-		cntrls[3] = new ControllerHandle("Pan", 0, 127, 10,ShortMessage.CONTROL_CHANGE);
-		cntrls[4] = new ControllerHandle("Distortion", 0, 127, 20,ShortMessage.CONTROL_CHANGE);
-		cntrls[5] = new ControllerHandle("Echo", 0, 127, 22,ShortMessage.CONTROL_CHANGE);
-		cntrls[6] = new ControllerHandle("Echo length", 0, 127, 23,ShortMessage.CONTROL_CHANGE);
-		cntrls[7] = new ControllerHandle("Sustain", 0, 127, 64,ShortMessage.CONTROL_CHANGE);
-		cntrls[7] = new ControllerHandle("Pitch Bend", -8192, 16383-8192 , 64,ShortMessage.PITCH_BEND);
-
-	}
+    private static List<Object> controllers = null;
 
     @Override
-	public Object[] getList() {
-		return cntrls;
-	}
-	
+    public List<Object> getList() {
+        if (controllers == null) {
+            controllers = new ArrayList<>();
+            controllers.add(new ControllerHandle(Handles.VELOCITY.name, 0, 127, 0, ShortMessage.NOTE_ON));
+            controllers.add(new ControllerHandle(Handles.VIBRATO.name, 0, 127, 1, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.VOLUME.name, 0, 127, 7, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.PAN.name, 0, 127, 10, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.DISTORTION.name, 0, 127, 20, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.ECHO.name, 0, 127, 22, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.ECHO_LENGTH.name, 0, 127, 23, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.SUSTAIN.name, 0, 127, 64, ShortMessage.CONTROL_CHANGE));
+            controllers.add(new ControllerHandle(Handles.PITCH_BEND.name, -8192, 16383 - 8192, 64, ShortMessage.PITCH_BEND));
+        }
 
+        return controllers;
+    }
+
+    public enum Handles {
+        VELOCITY("Velocity"),
+        VIBRATO("Vibrato"),
+        VOLUME("Volume"),
+        PAN("Pan"),
+        DISTORTION("Distortion"),
+        ECHO("Echo"),
+        ECHO_LENGTH("Echo length"),
+        SUSTAIN("Sustain"),
+        PITCH_BEND("Pitch Bend");
+
+        private final String name;
+
+        private Handles(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

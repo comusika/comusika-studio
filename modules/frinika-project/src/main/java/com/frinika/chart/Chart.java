@@ -21,15 +21,14 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.chart;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import uk.org.toot.music.tonality.Key;
 import uk.org.toot.music.tonality.Pitch;
 import uk.org.toot.music.tonality.Scale;
@@ -37,244 +36,229 @@ import uk.org.toot.music.tonality.Scales;
 
 public class Chart extends Observable implements Serializable {
 
-	/**
-	 * 
-	 */
-	
-	private static final long serialVersionUID = 1L;
-	private Vector<Bar> bars;
+    private static final long serialVersionUID = 1L;
+    private List<Bar> bars;
 
-	private int beatsPerBar=4;   // TODO look at time sig
-	private String keyRoot;
-	private String scale;
-	
-	public Chart() {
-		bars = new Vector<>();
-	}
+    private int beatsPerBar = 4;   // TODO look at time sig
+    private String keyRoot;
+    private String scale;
 
+    public Chart() {
+        bars = new ArrayList<>();
+    }
 
-	public void appendBar() {
-		bars.add(new Bar(beatsPerBar));	
-	}
+    public void appendBar() {
+        bars.add(new Bar(beatsPerBar));
+    }
 
-	public void appendBar(String string, int beats) {
-		Bar bar = new Bar(beats);
-		bars.add(bar);
-		bar.set(string,keyRoot,scale);
-		setChanged();
-	}
-	
-	public void appendBar(String string,String keyRoot,String scale, int beats) {
-		Bar bar = new Bar(beats);
-		bars.add(bar);
-		bar.set(string,keyRoot,scale);
-		setChanged();
-	}
+    public void appendBar(String string, int beats) {
+        Bar bar = new Bar(beats);
+        bars.add(bar);
+        bar.set(string, keyRoot, scale);
+        setChanged();
+    }
 
-	
-	
-	public List<Bar> getBars() {
-		return bars;
-	}
+    public void appendBar(String string, String keyRoot, String scale, int beats) {
+        Bar bar = new Bar(beats);
+        bars.add(bar);
+        bar.set(string, keyRoot, scale);
+        setChanged();
+    }
 
-	public class Bar implements Serializable {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+    public List<Bar> getBars() {
+        return bars;
+    }
 
-		Vector<Chord> chords;
+    public class Bar implements Serializable {
 
-		int beats;
+        private static final long serialVersionUID = 1L;
 
-		private Bar(int beats) {
-			chords = new Vector<>();
-			this.beats = beats;
-		}
+        List<Chord> chords;
 
-		private void addChord(String string,String keyRoot,String scaleName) {
-			string=string.trim();
-			if (!string.equals("/")) {
-				chords.add(new Chord(string,keyRoot,scaleName));
-			}else {
-				chords.add(new Chord(chords.lastElement()));
-			}
-		}
+        int beats;
 
-		public int getBeats() {
-			return beats;
-		}
+        private Bar(int beats) {
+            chords = new ArrayList<>();
+            this.beats = beats;
+        }
 
-		public List<Chord> getChords() {
-			return chords;
-		}
+        private void addChord(String string, String keyRoot, String scaleName) {
+            string = string.trim();
+            if (!string.equals("/")) {
+                chords.add(new Chord(string, keyRoot, scaleName));
+            } else {
+                chords.add(new Chord(chords.get(chords.size() - 1)));
+            }
+        }
 
-		private void spaceChords() {
-			int n = chords.size();
+        public int getBeats() {
+            return beats;
+        }
 
-			if (n == 1)
-				chords.get(0).setDuration(beats);
-			else if (n == beats) {
-				for (Chord chord : chords)
-					chord.setDuration(1);
+        public List<Chord> getChords() {
+            return chords;
+        }
 
-			} else {
-				int inc=beats/chords.size();
-				int bb=0;
-				for (Chord chord : chords)
-					chord.setDuration(bb+inc);
-				
-				
-				try {
-					throw new Exception(" chords do not fit the bar");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+        private void spaceChords() {
+            int n = chords.size();
 
-		}
-		
-                @Override
-		public String toString() {
+            if (n == 1) {
+                chords.get(0).setDuration(beats);
+            } else if (n == beats) {
+                for (Chord chord : chords) {
+                    chord.setDuration(1);
+                }
 
-			StringBuffer str=new StringBuffer();
+            } else {
+                int inc = beats / chords.size();
+                int bb = 0;
+                for (Chord chord : chords) {
+                    chord.setDuration(bb + inc);
+                }
 
-			for (Chord chord:chords) {
-				str.append(chord.toString()+" ");
-			}
-			return str.toString();
-		}
+                try {
+                    throw new Exception(" chords do not fit the bar");
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
 
-		private void set(String string,String keyRoot,String scale) {
-			chords.clear();
-			StringTokenizer toker = new StringTokenizer(string);
-			while (toker.hasMoreTokens()) {
-				addChord(toker.nextToken(),keyRoot,scale);
-			}
-			spaceChords();
-			setChanged();
-		}
+        }
 
-	}
+        @Override
+        public String toString() {
 
-	public class Chord 	implements Serializable {
-		String name;
-		private static final long serialVersionUID = 1L;
-		transient uk.org.toot.music.tonality.Chord chord;
-		transient int root;
-		transient Key key;
-		
-		int beats;
-		String scaleName;
-		String scaleRoot;
-		int [] chordInt;
-		
-		private Chord(Chord cloneMe) {
-			this.name = cloneMe.name;
-			this.root=cloneMe.root;
-			this.beats=cloneMe.beats;
-			this.chord=cloneMe.chord;
-			this.chordInt=cloneMe.chordInt;
-			this.scaleName=cloneMe.scaleName;
-			this.scaleRoot=cloneMe.scaleRoot;
-			this.key=cloneMe.key;
-		}
-		
-		private Chord(String name,String keyRoot,String scaleName) {
-			this.name=name;
-			this.scaleName=scaleName;
-			
-			Scale scale=Scales.getScale(scaleName);
-			int kr=Pitch.classValue(keyRoot);
-			key=new Key(kr,scale);
-			buildFromName();
-		}
-		
-		private void buildFromName() {
+            StringBuffer str = new StringBuffer();
 
-			root = Pitch.classValue(name);
-			
-			
-			String string=name;
-			
-			if (string.length() > 1) {
-				char c = string.charAt(1);
-				if (c == 'b' || c == '#') {
-					string = string.substring(2, string.length());
-				} else {
-					string = string.substring(1, string.length());
-				}
-			} else {
-				string = string.substring(1, string.length());
-			}
-			chord = uk.org.toot.music.tonality.Chords.withSymbol(string);
-			assert(chord != null);
+            for (Chord chord : chords) {
+                str.append(chord.toString() + " ");
+            }
+            return str.toString();
+        }
+
+        private void set(String string, String keyRoot, String scale) {
+            chords.clear();
+            StringTokenizer toker = new StringTokenizer(string);
+            while (toker.hasMoreTokens()) {
+                addChord(toker.nextToken(), keyRoot, scale);
+            }
+            spaceChords();
+            setChanged();
+        }
+
+    }
+
+    public class Chord implements Serializable {
+
+        String name;
+        private static final long serialVersionUID = 1L;
+        transient uk.org.toot.music.tonality.Chord chord;
+        transient int root;
+        transient Key key;
+
+        int beats;
+        String scaleName;
+        String scaleRoot;
+        int[] chordInt;
+
+        private Chord(Chord cloneMe) {
+            this.name = cloneMe.name;
+            this.root = cloneMe.root;
+            this.beats = cloneMe.beats;
+            this.chord = cloneMe.chord;
+            this.chordInt = cloneMe.chordInt;
+            this.scaleName = cloneMe.scaleName;
+            this.scaleRoot = cloneMe.scaleRoot;
+            this.key = cloneMe.key;
+        }
+
+        private Chord(String name, String keyRoot, String scaleName) {
+            this.name = name;
+            this.scaleName = scaleName;
+
+            Scale scale = Scales.getScale(scaleName);
+            int kr = Pitch.classValue(keyRoot);
+            key = new Key(kr, scale);
+            buildFromName();
+        }
+
+        private void buildFromName() {
+
+            root = Pitch.classValue(name);
+
+            String string = name;
+
+            if (string.length() > 1) {
+                char c = string.charAt(1);
+                if (c == 'b' || c == '#') {
+                    string = string.substring(2, string.length());
+                } else {
+                    string = string.substring(1, string.length());
+                }
+            } else {
+                string = string.substring(1, string.length());
+            }
+            chord = uk.org.toot.music.tonality.Chords.withSymbol(string);
+            assert (chord != null);
 //			chordInt=chord.getIntervals();
 //			assert(chordInt != null);
-		}
+        }
 
-		 private void readObject(java.io.ObjectInputStream in)
-		 	throws IOException, ClassNotFoundException {
-			 in.defaultReadObject();
-			 buildFromName();
-		}
-		 
-		 
-		private void setDuration(int beats) {
-			this.beats = beats;
-		}
+        private void readObject(java.io.ObjectInputStream in)
+                throws IOException, ClassNotFoundException {
+            in.defaultReadObject();
+            buildFromName();
+        }
 
-		public int getDuration() {
-			return beats;
-		}
+        private void setDuration(int beats) {
+            this.beats = beats;
+        }
 
-		public int getRoot() {
-			return root;
-		}
-		
-                @Override
-		public String toString() {
-			return name;
-		}
-		
-		public int getChordNoteAt(int i) {
-			return root+chord.getIntervals()[i%chordInt.length];
-		}
+        public int getDuration() {
+            return beats;
+        }
 
-		public Key getKey() {
-			return key;
-		}
+        public int getRoot() {
+            return root;
+        }
 
-	}
-
-	public void setbarAt(int index, String string) {
-		bars.get(index).set(string,keyRoot,scale);	
-		setChanged();
-		notifyObservers();
-	}
-	
-	public void setbarAt(int index, String string,String keyRoot,String scale) {
-		bars.get(index).set(string,keyRoot,scale);	
-	}
-
-	
         @Override
-	public String toString() {
-		StringBuffer buff=new StringBuffer();
-		for(Bar bar:bars) {
-			buff.append(bar.toString());
-			buff.append("|");
-		}
-		return buff.toString();		
-	}
+        public String toString() {
+            return name;
+        }
 
+        public int getChordNoteAt(int i) {
+            return root + chord.getIntervals()[i % chordInt.length];
+        }
 
-	public void setDefaultKey(String keyRoot, String scale) {
-		this.keyRoot=keyRoot;
-		this.scale=scale;
-		
-	}
+        public Key getKey() {
+            return key;
+        }
+    }
 
+    public void setbarAt(int index, String string) {
+        bars.get(index).set(string, keyRoot, scale);
+        setChanged();
+        notifyObservers();
+    }
 
+    public void setbarAt(int index, String string, String keyRoot, String scale) {
+        bars.get(index).set(string, keyRoot, scale);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buff = new StringBuilder();
+        for (Bar bar : bars) {
+            buff.append(bar.toString());
+            buff.append("|");
+        }
+        return buff.toString();
+    }
+
+    public void setDefaultKey(String keyRoot, String scale) {
+        this.keyRoot = keyRoot;
+        this.scale = scale;
+    }
 }

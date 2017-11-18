@@ -132,26 +132,24 @@ import uk.org.toot.misc.Tempo;
 
 /**
  * Use to load Frinika projects.
- * 
+ *
  * This class links together all components of a Frinika project, and provides
  * all operations and features - including a Frinika sequencer instance.
- * 
+ *
  * Information about Midi Devices - naming and how to reopen them is contained
  * using the MidiDeviceDescriptors.
- * 
+ *
  * Audio files are stored in a folder named audio which is created in the same
  * folder as where the project is. Thus a good convention is to have one folder
  * per project.
- * 
+ *
  * @author Peter Johan Salomonsen
  */
-public class ProjectContainer extends AbstractSequencerProjectContainer implements EditHistoryRecorder<Lane>,MidiConsumer,
-        Serializable,DynamicMixer {
+public class ProjectContainer extends AbstractSequencerProjectContainer implements EditHistoryRecorder<Lane>, MidiConsumer,
+        Serializable, DynamicMixer {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
+
     TootMixerSerializer mixerSerializer;
     ProjectLane projectLane;
     transient SoloManager soloManager;
@@ -199,7 +197,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * Used to map midiDevices to their descriptors
      */
     transient HashMap<MidiDevice, MidiDeviceDescriptor> midiDeviceDescriptorMap = new HashMap<MidiDevice, MidiDeviceDescriptor>();
-    TimeSignatureList timeSignitureList; 
+    TimeSignatureList timeSignitureList;
     /**
      * The resolution of the sequence. If you import a midi track they may have
      * a different resolution - and when saving to a project - the sequence
@@ -244,7 +242,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         renderer = new FrinikaRenderer(this);
         createSequencerPriorityListener();
 
-
         // This also creates a track for the Tempo Events.
         createSequence();
         System.out.println(sequence.getFrinikaTrackWrappers().size());
@@ -264,7 +261,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
          * MidiEvent tempoEvent = new MidiEvent(tempoMsg, 0);
          * ((FrinikaSequence)sequencer.getSequence()).getFrinikaTrackWrappers().get(0).add(tempoEvent);
          */
-
         postInit();
 
     }
@@ -294,7 +290,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Set the title of the song.
-     * 
+     *
      * @param t
      */
     public void setTitle(String t) {
@@ -302,7 +298,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return title of the song or file name if title is null
      */
     public String getTitle() {
@@ -325,10 +321,10 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 //    }
     /**
      * Redirects midi events used for controls
-     * 
+     *
      * If not consumed event is sent to midiReciever.
-     *  
-     * 
+     *
+     *
      * @param devInfo
      * @param arg0
      * @param arg1
@@ -476,8 +472,8 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 message(" No output devices found ");
             }
 
-        // This should only be done once.
-        // audioServer.start();
+            // This should only be done once.
+            // audioServer.start();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -489,7 +485,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Mixer the process output with the main mix
-     * 
+     *
      * @param process
      */
     @Override
@@ -500,7 +496,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * set up after objects have been created
      */
     void postInit() {
@@ -509,7 +505,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * set up default stuff before reading or construction of objects
      */
     void defaultInit() {
@@ -531,7 +527,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         dragList = new DragList(this);
         soloManager = new SoloManager(this);
 
-
         createMixer();
 
         midiDeviceRouter = new MidiDeviceRouter();
@@ -540,7 +535,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Create empty project
-     * 
+     *
      */
     public ProjectContainer() throws Exception {
         this(0);
@@ -564,7 +559,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * This will load an old Frinika project (pre 0.2.0) based on the
      * projectSettings interface
-     * 
+     *
      * @param projectSettings
      * @throws Exception
      */
@@ -601,14 +596,13 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         synthRack.loadSynthSetup(project.getSynthSettings());
 
         // create a copy
-        Vector<FrinikaTrackWrapper> origTracks = sequence.getFrinikaTrackWrappers();
-        Vector<FrinikaTrackWrapper> tracks = new Vector<>(
-                origTracks);
+        List<FrinikaTrackWrapper> origTracks = sequence.getFrinikaTrackWrappers();
+        List<FrinikaTrackWrapper> tracks = new ArrayList<>(origTracks);
 
         projectLane = new ProjectLane(this);
 
         // we are going to rebuild this
-        origTracks.removeAllElements();
+        origTracks.clear();
 
         for (FrinikaTrackWrapper ftw : tracks) {
             // Use the first MidiEvent in ftw to detect the channel used
@@ -645,29 +639,31 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Import a Sequence (e.g. obtained from a MidiFile) into a new project
-     * 
+     *
      * @param seq
      * @throws Exception
      */
     public ProjectContainer(Sequence seq) throws Exception {
-        this(seq, null,false);
+        this(seq, null, false);
     }
 
     public ProjectContainer(Sequence seq, MidiDevice midiDevice)
             throws Exception {
-        this(seq,midiDevice,false);
+        this(seq, midiDevice, false);
     }
+
     /**
      *
-     * @param seq           sequence
-     * @param midiDevice    assign tracks to mididevice.
-     * @param adjustPPQ     recalculate the ticks if sequence  PPQ is not the defualt.
+     * @param seq sequence
+     * @param midiDevice assign tracks to mididevice.
+     * @param adjustPPQ recalculate the ticks if sequence PPQ is not the
+     * defualt.
      *
      * @throws java.lang.Exception
      */
-    public ProjectContainer(Sequence seq, MidiDevice midiDevice,boolean adjustPPQ)
-           throws Exception {
-    
+    public ProjectContainer(Sequence seq, MidiDevice midiDevice, boolean adjustPPQ)
+            throws Exception {
+
         defaultInit();
         System.out.println(" LOADING MIDI SEQUENCE ");
 
@@ -695,7 +691,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 Logger.getLogger(ProjectContainer.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            sequence=seq1;
+            sequence = seq1;
         }
 
 //
@@ -715,27 +711,21 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 //                }
 //            }
 //        }
-
-
-
         sequencer.setSequence(sequence);
 
         // create a copy
-        Vector<FrinikaTrackWrapper> origTracks = sequence.getFrinikaTrackWrappers();
-        Vector<FrinikaTrackWrapper> tracks = new Vector<>(
-                origTracks);
-
+        List<FrinikaTrackWrapper> origTracks = sequence.getFrinikaTrackWrappers();
+        List<FrinikaTrackWrapper> tracks = new ArrayList<>(origTracks);
 
         projectLane = new ProjectLane(this);
 
         // we are going to rebuild this but leave in the first track 
-        int n=origTracks.size();
-        for (int i=n-1;i>0;i--) {
+        int n = origTracks.size();
+        for (int i = n - 1; i > 0; i--) {
             origTracks.remove(i);
         }
 
-      //  int count=0;
-
+        //  int count=0;
         for (FrinikaTrackWrapper ftw : tracks) {
 
             // Use the first MidiEvent in ftw to detect the channel used
@@ -763,7 +753,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                             System.out.println(" MULTIPLE PROG CHANGES !!!!!!");
                         }
                     }
-                // break;
+                    // break;
                 }
             }
 
@@ -836,10 +826,9 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                     }
                 }
 
-
             }
-            count=count+1;
 
+            count++;
         }
 
         try { // TODO find all tempos
@@ -1005,12 +994,12 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
     /**
      * Save project to a file
-     * 
+     *
      * @param file
      */
     public transient int compression_level = 0;
     transient private TimeUtils timeUtils;    // Keep a note of all open midi out devices
-    private static Vector<MidiDevice> midiOutList = new Vector<MidiDevice>();
+    private static List<MidiDevice> midiOutList = new ArrayList<MidiDevice>();
 
     public void saveProject(File file) throws IOException { // throw exception
         // so ProjectFrame
@@ -1054,7 +1043,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 try (FileOutputStream outStream = new FileOutputStream(file)) {
                     outStream.write(magic);
                     InputStream inStream = fis;
-                    
+
                     boolean eos = false;
                     SevenZip.Compression.LZMA.Encoder encoder = new SevenZip.Compression.LZMA.Encoder();
                     encoder.SetAlgorithm(2);
@@ -1100,28 +1089,30 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         }
         projectFile = file;
         editHistoryContainer.updateSavedPosition();
-    // } catch (FileNotFoundException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // } catch (IOException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
+        // } catch (FileNotFoundException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
 
-    /***********************************************************************
-     * // Saving in 0.1 series format try { ByteArrayOutputStream
-     * sequenceOutputStream = new ByteArrayOutputStream();
-     * MidiSystem.write(sequence, 1, sequenceOutputStream);
-     * 
-     * Project20050227 project = new Project20050227();
-     * project.setSequence(sequenceOutputStream.toByteArray()); MidiDevice
-     * firstDevice = sequencer.listMidiOutDevices().iterator() .next(); if
-     * (firstDevice instanceof SynthRack)
-     * project.setSynthSettings(((SynthRack) firstDevice) .getSynthSetup());
-     * ObjectOutputStream out = new ObjectOutputStream( new
-     * FileOutputStream(file)); out.writeObject(project); projectFile =
-     * file; } catch (Exception e) { e.printStackTrace(); }
-     **********************************************************************/
+        /**
+         * *********************************************************************
+         * // Saving in 0.1 series format try { ByteArrayOutputStream
+         * sequenceOutputStream = new ByteArrayOutputStream();
+         * MidiSystem.write(sequence, 1, sequenceOutputStream);
+         *
+         * Project20050227 project = new Project20050227();
+         * project.setSequence(sequenceOutputStream.toByteArray()); MidiDevice
+         * firstDevice = sequencer.listMidiOutDevices().iterator() .next(); if
+         * (firstDevice instanceof SynthRack)
+         * project.setSynthSettings(((SynthRack) firstDevice) .getSynthSetup());
+         * ObjectOutputStream out = new ObjectOutputStream( new
+         * FileOutputStream(file)); out.writeObject(project); projectFile =
+         * file; } catch (Exception e) { e.printStackTrace(); }
+         * ********************************************************************
+         */
     }
 
     /**
@@ -1144,7 +1135,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 //    }
     /**
      * Creates a AudioLane and adds it to the Lane collection
-     * 
+     *
      * @return
      */
     @Override
@@ -1174,7 +1165,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Creates a sequence based on the resolution defined in ticksPerQuarterNote
-     * 
+     *
      */
     @Override
     public void createSequence() {
@@ -1211,7 +1202,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * If this projectContainer was initialized by a project file -the return
      * the file
-     * 
+     *
      * @return
      */
     public File getProjectFile() {
@@ -1227,7 +1218,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return the Part selection container for this project.
      */
     @Override
@@ -1236,7 +1227,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return the Lane selection container for this project.
      */
     @Override
@@ -1245,7 +1236,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return the Midi selection container for this project.
      */
     @Override
@@ -1258,7 +1249,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return the Edit history container for this project.
      */
     @Override
@@ -1268,7 +1259,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Close the project
-     * 
+     *
      */
     @Override
     public void close() {
@@ -1307,10 +1298,10 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * Lanes can contain other lanes. A project is contained within a project
      * lane.
-     * 
+     *
      * @return top level Lane that containes all others.
      */
     @Override
@@ -1333,9 +1324,9 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * Set the tempo of the first event in the tempo list
-     * 
+     *
      * @param tempo
      */
     public void setTempoInBPM(float tempo) {
@@ -1363,8 +1354,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         // Store the used midi devices
 
         //        int mdIndex = 0;
- //        midiDeviceIndex = new HashMap<MidiDevice, Integer>();
-
+        //        midiDeviceIndex = new HashMap<MidiDevice, Integer>();
         /**
          * Use 0.3.0 format instead
          */
@@ -1383,22 +1373,21 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 //            System.out.println(midiDeviceDescriptorMap.get(midiDev).getProjectName() + "(" + midiDeviceDescriptorMap.get(midiDev).getMidiDeviceName() + ") has index " + mdIndex);
 //            midiDeviceIndex.put(midiDev, mdIndex++);
 //        }
-
         /**
          * Deprecated from 0.3.0
-         * 
+         *
          * synthSettings = new ArrayList<SynthSettings>(); externalMidiDevices =
          * new Vector<String>(); // Since SynthRack and external midi are
          * separate arrays - they have to be saved groupwise so that // the
          * midiDeviceIndexes are correct on reload (This is a fix of bugid
          * 1506823)
-         * 
+         *
          * for (MidiDevice midiDev : sequencer.listMidiOutDevices()) { if
          * (midiDev instanceof SynthRack) { ((SynthRack)
          * midiDev).setSaveReferencedData(saveReferencedData);
          * synthSettings.add(((SynthRack) midiDev).getSynthSetup());
          * midiDeviceIndex.put(midiDev, mdIndex++); } }
-         * 
+         *
          * for (MidiDevice midiDev : sequencer.listMidiOutDevices()) { if
          * (!(midiDev instanceof SynthRack)) {
          * externalMidiDevices.add(midiDev.getDeviceInfo().toString());
@@ -1414,11 +1403,12 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
-     * Note we don't rebuild the midirouter here because we want to wait untill all the controllers have been created by the GUI.
-     * 
-     * 
-     * 
+     *
+     * Note we don't rebuild the midirouter here because we want to wait untill
+     * all the controllers have been created by the GUI.
+     *
+     *
+     *
      * @param in
      * @throws java.lang.ClassNotFoundException
      * @throws java.io.IOException
@@ -1429,7 +1419,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         defaultInit();
 
         // --------------- Create a sequencer that we can load data into
-
         sequencer = new FrinikaSequencer();
         try {
             sequencer.open();
@@ -1444,21 +1433,20 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         // ------------ Now read the object. This will also generate
         // FrinikaTrackWrappers in the lanes
-
         in.defaultReadObject();
 
         createSequence();
         /**
-         * This is for backwards compatibility. The serialized form of
-         * a Frinika SynthRack is for older projects stored directly
-         * in the ProjectContainer in the synthSettings property.
-         * 
-         * As you can see below, when the "old" project is loaded
-         * the Frinka Synthrack is put into a MidiDeviceDescriptor,
-         * so that when saved next time it follows the new format.
-         * 
-         * In the future we might remove this code - and instruct users
-         * to convert old projects using an older version of Frinika
+         * This is for backwards compatibility. The serialized form of a Frinika
+         * SynthRack is for older projects stored directly in the
+         * ProjectContainer in the synthSettings property.
+         *
+         * As you can see below, when the "old" project is loaded the Frinka
+         * Synthrack is put into a MidiDeviceDescriptor, so that when saved next
+         * time it follows the new format.
+         *
+         * In the future we might remove this code - and instruct users to
+         * convert old projects using an older version of Frinika
          */
         if (synthSettings != null || externalMidiDevices != null) {
             // Make sure that the project doesn't contain both
@@ -1471,9 +1459,8 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             this.midiDeviceDescriptorMap = new HashMap<>();
 
             // ------------ Initialize soft synths
-
             for (SynthSettings synthSetup : synthSettings) {
-                SynthRack synthRack = new SynthRack(null);                
+                SynthRack synthRack = new SynthRack(null);
                 try {
                     MidiDevice midiDevice = new SynthWrapper(this, synthRack);
                     synthRack.loadSynthSetup(synthSetup);
@@ -1493,7 +1480,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             }
 
             // ---------- and the other ones
-
             if (externalMidiDevices != null) { // allow loading of previous
                 // versions
                 for (String name : externalMidiDevices) {
@@ -1535,7 +1521,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         if (tempoList == null) {
             tempoList = new TempoList(sequence.getResolution(), this);
             tempoList.add(0, tempo); // use the tempo from the old project to
-        // set first event
+            // set first event
         }
         tempoList.reco();
         sequencer.setTempoList(tempoList);
@@ -1586,7 +1572,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return piano roll quantization in ticks
      */
     @Override
@@ -1644,7 +1630,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         double tt = tick;
         if (isPartViewSnapQuantized) {
 
-
             double quant = partViewSnapQuantization;
             if (quant > 0.0) {
                 tt = (long) (tt / quant) * quant;
@@ -1654,7 +1639,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                 TimeSignatureEvent ev = getTimeSignatureList().getEventAtBeat((int) beat);
                 int nBar = (int) ((beat - ev.beat + ev.beatsPerBar / 2.0) / ev.beatsPerBar);
                 tt = (ev.beat + nBar * ev.beatsPerBar) * getTicksPerBeat();
-            // System.out.println(" STT -ve quant " + tt);
+                // System.out.println(" STT -ve quant " + tt);
             }
         }
         return (long) tt;
@@ -1675,18 +1660,18 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * DEBUGING --- NOT FOR PUBLIC USE
-     * 
+     *
      */
     public void validate() {
         validate(projectLane);
     }
 
     /**
-     * 
+     *
      * DEBUGING --- NOT FOR PUBLIC USE
-     * 
+     *
      * @param parent
      */
     public void validate(Lane parent) {
@@ -1722,7 +1707,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             //	if (part instanceof MidiPart) {
             //  		MidiPart midiPart = (MidiPart) part;
             endTick = Math.max(endTick, part.getEndTick());
-        //	}
+            //	}
         }
 
         for (Lane lane : parent.getChildren()) {
@@ -1731,15 +1716,15 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     }
 
-    public Vector<Lane> recordableLaneList() {
-        Vector<Lane> list = new Vector<>();
+    public List<Lane> recordableLaneList() {
+        List<Lane> list = new ArrayList<>();
 
         addRecordableLanes(list, projectLane);
 
         return list;
     }
 
-    private void addRecordableLanes(Vector<Lane> list, Lane parent) {
+    private void addRecordableLanes(List<Lane> list, Lane parent) {
         for (Lane lane : parent.getChildren()) {
             if (lane instanceof RecordableLane) {
                 list.add(lane);
@@ -1754,7 +1739,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
@@ -1788,11 +1773,11 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         file.mkdirs();
         audioDir = file;
-    //		
-    // File audioDir = new File(.getParentFile(), "audio");
-    // if (!audioDir.exists())
-    // audioDir.mkdir();
-    // return audioDir.toString();
+        //		
+        // File audioDir = new File(.getParentFile(), "audio");
+        // if (!audioDir.exists())
+        // audioDir.mkdir();
+        // return audioDir.toString();
 
     }
 
@@ -1801,7 +1786,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * sequencer, and a descriptor of how to reopen the mididevice from a saved
      * instance will be added. Extra information such as custom name and
      * soundbank info is also part of the descriptor.
-     * 
+     *
      * @param midiDev
      * @throws MidiUnavailableException
      */
@@ -1869,10 +1854,10 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     /**
      * Package private method used by descriptors to install MidiOutdevices.
      * Will create the neccesary mappings, and add the device to the sequencer
-     * 
+     *
      * You should not use this to add a new Midi device - use the public method
      * addMidiOutDevice for that
-     * 
+     *
      * @param descriptor
      * @throws MidiUnavailableException
      */
@@ -1882,7 +1867,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         this.midiDeviceDescriptorMap.put(descriptor.getMidiDevice(), descriptor);
         sequencer.addMidiOutDevice(descriptor.getMidiDevice());
         midiOutList.add(descriptor.getMidiDevice()); // PJL keep note of open
-    // devices
+        // devices
 
     }
 
@@ -1892,7 +1877,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         this.midiDeviceDescriptorMap.put(descriptor.getMidiDevice(), (MidiDeviceDescriptor) descriptor);
         sequencer.addMidiOutDevice(descriptor.getMidiDevice());
         midiOutList.add(descriptor.getMidiDevice()); // PJL keep note of open
-    // devices
+        // devices
 
     }
 
@@ -1902,7 +1887,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      */
     static public void closeAllMidiOutDevices() {
         for (MidiDevice dev : midiOutList) {
@@ -1913,7 +1898,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Get the midi device descriptor for the given midi device
-     * 
+     *
      * @param midiDevice
      * @return
      */
@@ -1924,7 +1909,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Remove a midiOutDevice from the project
-     * 
+     *
      * @param midiDevice
      */
     @Override
@@ -1962,98 +1947,100 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     // NBP Added  from ProjectFrame
     public String promptFile(String defaultFilename, String[][] suffices,
-                    boolean saveMode, boolean directoryMode) { // Jens
-            JFileChooser fc = new JFileChooser();
-            if (!directoryMode) {
-                    final boolean save = saveMode;
-                    // final String[][] suff = suffices;
-                    if (suffices != null) {
-                        for (String[] suffice : suffices) {
-                            final String suffix = suffice[0];
-                            final String description = suffice[1];
-                            // if (suffix == null) suffix = "*";
-                            // if (description == null) description = "";
-                            FileFilter ff = new FileFilter() {
-                                @Override
-                                public boolean accept(File file) {
-                                    if (file.isDirectory())
-                                        return true;
-                                    String name = file.getName();
-                                    return suffix.equals("*")
-                                            || name.endsWith("." + suffix)
-                                            || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
-                                }
-
-                                @Override
-                                public String getDescription() {
-                                    return "." + suffix + " - " + description;
-                                }
-                            };
-                            fc.addChoosableFileFilter(ff);
+            boolean saveMode, boolean directoryMode) { // Jens
+        JFileChooser fc = new JFileChooser();
+        if (!directoryMode) {
+            final boolean save = saveMode;
+            // final String[][] suff = suffices;
+            if (suffices != null) {
+                for (String[] suffice : suffices) {
+                    final String suffix = suffice[0];
+                    final String description = suffice[1];
+                    // if (suffix == null) suffix = "*";
+                    // if (description == null) description = "";
+                    FileFilter ff = new FileFilter() {
+                        @Override
+                        public boolean accept(File file) {
+                            if (file.isDirectory()) {
+                                return true;
+                            }
+                            String name = file.getName();
+                            return suffix.equals("*")
+                                    || name.endsWith("." + suffix)
+                                    || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
                         }
-                    }
-            } else { // directory mode
-                    fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            }
 
-            int r;
-            if (defaultFilename != null) {
-                    File file = new File(defaultFilename);
-                    fc.setSelectedFile(file);
+                        @Override
+                        public String getDescription() {
+                            return "." + suffix + " - " + description;
+                        }
+                    };
+                    fc.addChoosableFileFilter(ff);
+                }
             }
+        } else { // directory mode
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        }
+
+        int r;
+        if (defaultFilename != null) {
+            File file = new File(defaultFilename);
+            fc.setSelectedFile(file);
+        }
+        if (saveMode) {
+            r = fc.showSaveDialog(null);
+        } else {
+            r = fc.showOpenDialog(null);
+        }
+
+        if (r == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            String name = file.getName();
+            String extraSuffix = "";
+            if (name.indexOf('.') == -1) { // no suffix entered
+                if (suffices != null && suffices.length > 0) {
+                    extraSuffix = "." + suffices[0][0]; // use first one as
+                    // default
+                }
+            }
+            String filename = file.getAbsolutePath() + extraSuffix;
             if (saveMode) {
-                    r = fc.showSaveDialog(null);
-            } else {
-                    r = fc.showOpenDialog(null);
-            }
-
-            if (r == JFileChooser.APPROVE_OPTION) {
-                    File file = fc.getSelectedFile();
-                    String name = file.getName();
-                    String extraSuffix = "";
-                    if (name.indexOf('.') == -1) { // no suffix entered
-                            if (suffices != null && suffices.length > 0) {
-                                    extraSuffix = "." + suffices[0][0]; // use first one as
-                                    // default
-                            }
+                File fl = new File(filename);
+                if (fl.exists()) {
+                    if (!confirm("File " + filename
+                            + " already exists. Overwrite?")) {
+                        return null;
                     }
-                    String filename = file.getAbsolutePath() + extraSuffix;
-                    if (saveMode) {
-                            File fl = new File(filename);
-                            if (fl.exists()) {
-                                    if (!confirm("File " + filename
-                                                    + " already exists. Overwrite?")) {
-                                            return null;
-                                    }
-                            }
-                    }
-                    return filename;
-            } else {
-                    return null;
+                }
             }
+            return filename;
+        } else {
+            return null;
+        }
     }
 
     public String promptFile(String defaultFilename, String[][] suffices,
-                    boolean saveMode) {
-            return promptFile(defaultFilename, suffices, saveMode, false);
+            boolean saveMode) {
+        return promptFile(defaultFilename, suffices, saveMode, false);
     }
 
     public String promptFile(String defaultFilename, String[][] suffices) {
-            return promptFile(defaultFilename, suffices, false);
+        return promptFile(defaultFilename, suffices, false);
     }
 
     private static boolean fileDoesntExistAndDoesntEndWithAnySuffix(File file) {
-            if (file.exists())
-                    return false;
-            String name = file.getName();
-            return (name.indexOf('.') == -1);
+        if (file.exists()) {
+            return false;
+        }
+        String name = file.getName();
+        return (name.indexOf('.') == -1);
     }
-    
+
     public boolean confirm(String msg) { // Jens
-            int result = JOptionPane.showConfirmDialog(null, msg,
-                            "Frinika Question", JOptionPane.OK_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE); // NBP frame
-            return (result == JOptionPane.OK_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, msg,
+                "Frinika Question", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE); // NBP frame
+        return (result == JOptionPane.OK_OPTION);
     }
 
     @Override
@@ -2077,14 +2064,15 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     public String prompt(String msg, String initialValue) { // Jens
-            if (initialValue == null)
-                    initialValue = "";
-            String result = JOptionPane.showInputDialog(null, msg, initialValue); // NBP frame
-            return result;
+        if (initialValue == null) {
+            initialValue = "";
+        }
+        String result = JOptionPane.showInputDialog(null, msg, initialValue); // NBP frame
+        return result;
     }
 
     public String prompt(String msg) { // Jens
-            return prompt(msg, null);
+        return prompt(msg, null);
     }
 
     public SynthLane createSynthLane(MidiDeviceDescriptor desc) {
@@ -2165,16 +2153,16 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     /**
      * Creates a MidiLane and adds it to the Lane collection
-     * 
+     *
      * @return
      */
     @Override
     public MidiLane createMidiLane() {
         sequence.createTrack();
-        FrinikaTrackWrapper ftw = sequence.getFrinikaTrackWrappers().lastElement();
+        FrinikaTrackWrapper ftw = sequence.getFrinikaTrackWrappers().get(sequence.getFrinikaTrackWrappers().size() - 1);
         ftw.setMidiChannel(0);
         MidiLane lane = new MidiLane(ftw, this);
-    // Set channel 1 (0) as default MIDI channel
+        // Set channel 1 (0) as default MIDI channel
         // MidiLane lane = new MidiLane(ftw,this);
 
         add(lane);
@@ -2203,12 +2191,11 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     @Override
     public double tickAtMicros(double micros) {
 
-
         return tempoList.getTickAtTime(micros / 1000000.0);
 
-    // TODO Broken (move part)
-    //	return micros * (sequence.getResolution() * sequencer.getTempoInBPM())
-    //			/ (60.0 * 1000000.0);
+        // TODO Broken (move part)
+        //	return micros * (sequence.getResolution() * sequencer.getTempoInBPM())
+        //			/ (60.0 * 1000000.0);
     }
 
     /**
@@ -2219,14 +2206,14 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
         return 1000000.0 * tempoList.getTimeAtTick(tick);
 
-    // TODO Broken (move part)
+        // TODO Broken (move part)
 //		return (60.0 * 1000000.0 * tick)
 //				/ (sequence.getResolution() * sequencer.getTempoInBPM());
     }
 
     /**
      * Getter for the tempoList
-     * 
+     *
      * @return tempoList
      */
     @Override
@@ -2255,7 +2242,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * 
+     *
      * @return a TimeUtils for this project
      */
     @Override

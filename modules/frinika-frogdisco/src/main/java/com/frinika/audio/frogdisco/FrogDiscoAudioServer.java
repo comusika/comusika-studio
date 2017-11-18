@@ -53,17 +53,17 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
 
     private FrogDisco frogDisco;
     boolean running = false;
-    
+
     AudioBuffer audioOut;
-    
+
     ExecutorService underrunExec = Executors.newSingleThreadExecutor();
     ExecutorService workExec = Executors.newSingleThreadExecutor();
-    
+
     boolean isUnderrun = false;
-    
+
     public FrogDiscoAudioServer() {
         bufferFrames = 128;
-        
+
         try {
             FrogDiscoNativeLibInstaller.loadNativeLibs();
             createFrogDisco();
@@ -71,11 +71,11 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
             Logger.getLogger(FrogDiscoAudioServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void createFrogDisco() {
         frogDisco = new FrogDisco(2, bufferFrames, 44100.0, SampleFormat.UNINTERLEAVED_FLOAT, 4, this);
     }
-    
+
     @Override
     protected void startImpl() {
         running = true;
@@ -94,7 +94,7 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
 
     @Override
     public List<String> getAvailableOutputNames() {
-        return Arrays.asList(new String[] {"CoreAudio"});
+        return Arrays.asList(new String[]{"CoreAudio"});
     }
 
     @Override
@@ -103,7 +103,7 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
     }
 
     @Override
-    public IOAudioProcess openAudioOutput(String name, String label) throws Exception {  
+    public IOAudioProcess openAudioOutput(String name, String label) throws Exception {
         AudioLine line = new AudioLine() {
 
             @Override
@@ -123,10 +123,10 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
 
             @Override
             public int processAudio(AudioBuffer ab) {
-                if ( !ab.isRealTime() ) {
+                if (!ab.isRealTime()) {
                     return AUDIO_OK;
                 }
-                
+
                 audioOut = ab;
                 return AUDIO_OK;
             }
@@ -149,7 +149,6 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
         return super.createAudioBuffer(name); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
     @Override
     public IOAudioProcess openAudioInput(String string, String string1) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -167,7 +166,7 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
 
     @Override
     public float getSampleRate() {
-        return (float)frogDisco.getSampleRate();
+        return (float) frogDisco.getSampleRate();
     }
 
     @Override
@@ -182,7 +181,7 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
 
     @Override
     public int getTotalLatencyFrames() {
-        return getInputLatencyFrames()+getOutputLatencyFrames();
+        return getInputLatencyFrames() + getOutputLatencyFrames();
     }
 
     @Override
@@ -193,20 +192,20 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
     long expectedTime = 0;
     long callbackCount = 0;
     long startTime = 0;
-    
+
     private void handleUnderrun(final long underrun) {
         isUnderrun = true;
         running = false;
         underrunExec.submit(new Runnable() {
 
             @Override
-            public void run() {                        
-                System.out.println(underrun+" ms underrun. Restart audio."); 
+            public void run() {
+                System.out.println(underrun + " ms underrun. Restart audio.");
 
                 workExec.shutdownNow();
                 workExec = Executors.newSingleThreadExecutor();
 
-                expectedTime=0;
+                expectedTime = 0;
 
                 isUnderrun = false;
 
@@ -220,29 +219,30 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
             }
         });
     }
+
     @Override
     public void onCoreAudioFloatRenderCallback(FloatBuffer buffer) {
         try {
-            if(running && !isUnderrun) {
-                if(expectedTime==0) {
+            if (running && !isUnderrun) {
+                if (expectedTime == 0) {
                     startTime = System.currentTimeMillis();
                     expectedTime = startTime;
                 }
 
-                expectedTime = (long) (startTime+(callbackCount++)*
-                        1000.0*(frogDisco.getBlockSize()/frogDisco.getSampleRate()));
+                expectedTime = (long) (startTime + (callbackCount++)
+                        * 1000.0 * (frogDisco.getBlockSize() / frogDisco.getSampleRate()));
 
-                final long underrun = System.currentTimeMillis()-expectedTime;
+                final long underrun = System.currentTimeMillis() - expectedTime;
 
-                if(underrun>5) {                                    
+                if (underrun > 5) {
                     int len = buffer.capacity();
                     for (int i = 0; i < len; i++) {
-                        buffer.put(0);                        
-                    }      
-                    
+                        buffer.put(0);
+                    }
+
                     handleUnderrun(underrun);
                     return;
-                } else {       
+                } else {
                     Future f = workExec.submit(new Runnable() {
 
                         @Override
@@ -251,7 +251,7 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
                         }
                     });
                     try {
-                        f.get((long)(1000000.0*(frogDisco.getBlockSize()/frogDisco.getSampleRate())), TimeUnit.MICROSECONDS);
+                        f.get((long) (1000000.0 * (frogDisco.getBlockSize() / frogDisco.getSampleRate())), TimeUnit.MICROSECONDS);
                     } catch (InterruptedException | ExecutionException | TimeoutException ex) {
                         f.cancel(true);
                         handleUnderrun(-1);
@@ -261,27 +261,27 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
                 final int length = buffer.capacity();
                 final int channels = frogDisco.getNumOutputChannels();
 
-                if(audioOut!=null && audioOut.getSampleCount()==length/channels) {
+                if (audioOut != null && audioOut.getSampleCount() == length / channels) {
                     final int sampleCount = audioOut.getSampleCount();
-                    for(int c=0;c<channels;c++) {
+                    for (int c = 0; c < channels; c++) {
                         for (int i = 0; i < sampleCount; i++) {
-                            buffer.put(audioOut.getChannel(c)[i]);                        
+                            buffer.put(audioOut.getChannel(c)[i]);
                         }
                     }
                 } else {
                     int len = buffer.capacity();
                     for (int i = 0; i < len; i++) {
-                        buffer.put(0);                        
-                    }                                
+                        buffer.put(0);
+                    }
                 }
             } else {
                 int len = buffer.capacity();
                 for (int i = 0; i < len; i++) {
-                    buffer.put(0);                        
-                }       
+                    buffer.put(0);
+                }
             }
-        } catch(Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,"",e);
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "", e);
         }
     }
 
@@ -354,5 +354,4 @@ public class FrogDiscoAudioServer extends AbstractAudioServer implements CoreAud
     public String getConfigKey() {
         return "FrogDisco";
     }
-    
 }

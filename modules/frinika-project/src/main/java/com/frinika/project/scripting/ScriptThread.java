@@ -21,39 +21,38 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.scripting;
 
 import com.frinika.project.ProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 
 /**
- * Thread for running a script. This thread will mainly live inside the 
+ * Thread for running a script. This thread will mainly live inside the
  * Rhino-JavaScript engine.
- * 
+ *
  * @author Jens Gulden
  */
 class ScriptThread extends Thread {
-	
-	private FrinikaScript script;
-	private ProjectContainer project;
-	private ScriptingDialog dialog;
 
-	ScriptThread(FrinikaScript script, ProjectContainer project, ScriptingDialog dialog) {
-		super();
-		this.script = script;
-		this.project = project;
-		this.dialog = dialog;
-	}
-		
-        @Override
-	public void run() {
-		FrinikaScriptingEngine.runningScripts.put(script, this);
-		FrinikaScriptingEngine.notifyScriptListeners(script, script);
-		
-		Object result = FrinikaScriptingEngine.runScript(script, project, dialog);
-		
-		FrinikaScriptingEngine.notifyScriptListeners(script, result);
-		FrinikaScriptingEngine.runningScripts.remove(script);
-	}
+    private final FrinikaScript script;
+    private final ProjectContainer project;
+    private final ScriptingDialog dialog;
+
+    ScriptThread(FrinikaScript script, ProjectContainer project, ScriptingDialog dialog) {
+        super();
+        this.script = script;
+        this.project = project;
+        this.dialog = dialog;
+    }
+
+    @Override
+    public void run() {
+        FrinikaScriptingEngine.runningScripts.put(script, this);
+        FrinikaScriptingEngine.notifyScriptListeners(script, script);
+
+        Object result = FrinikaScriptingEngine.runScript(script, project, dialog);
+
+        FrinikaScriptingEngine.notifyScriptListeners(script, result);
+        FrinikaScriptingEngine.runningScripts.remove(script);
+    }
 }

@@ -25,7 +25,7 @@ package com.frinika.frame.action;
 
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.ProjectFileFilter;
@@ -35,48 +35,44 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 
 /**
- * Triggers an open project dialog based on no Frame. Used by FrinikaMain when starting up
- * @author peter
+ * Triggers an open project dialog based on no Frame. Used by FrinikaMain when
+ * starting up
  *
+ * @author peter
  */
-public class OpenProjectAction extends  AbstractAction {
-	private static final long serialVersionUID = 1L;	
-	private static JFileChooser chooser = new JFileChooser();
-	
-	static {
-		chooser.setDialogTitle(getMessage("project.menu.file.open_project.dialogtitle"));
-		chooser.setFileFilter(new ProjectFileFilter());		
-	}
-	
-	public static void setSelectedFile(File file)
-	{
-		chooser.setSelectedFile(file);
-	}
-	private ProjectFrame project;
+public class OpenProjectAction extends AbstractAction {
 
-	
+    private static final long serialVersionUID = 1L;
+    private static JFileChooser chooser = new JFileChooser();
 
-        @Override
-		public void actionPerformed(ActionEvent e) {
-			try {					
-				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					File newProject = chooser.getSelectedFile();
+    static {
+        chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.open_project.dialogtitle"));
+        chooser.setFileFilter(new ProjectFileFilter());
+    }
 
-					project=new FrinikaFrame(ProjectContainer
-							.loadProject(newProject));
-					FrinikaConfig.setLastProjectFilename(newProject
-							.getAbsolutePath());
-				}
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+    public static void setSelectedFile(File file) {
+        chooser.setSelectedFile(file);
+    }
+    private ProjectFrame project;
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File newProject = chooser.getSelectedFile();
 
-		public ProjectFrame getProjectFrame() {
-			return project;
-		}
-	}
+                project = new FrinikaFrame(ProjectContainer
+                        .loadProject(newProject));
+                FrinikaConfig.setLastProjectFilename(newProject
+                        .getAbsolutePath());
+            }
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
 
-
+    public ProjectFrame getProjectFrame() {
+        return project;
+    }
+}

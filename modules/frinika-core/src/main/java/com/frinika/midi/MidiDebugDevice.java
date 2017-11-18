@@ -1,7 +1,7 @@
 package com.frinika.midi;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.Receiver;
@@ -9,26 +9,26 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Transmitter;
 
 /**
- * 
+ *
  * Midi device that acts like a hub. Messages coming in are sent to all
- * recievers
- * 
+ * recievers.
+ * <pre>
  * MidiDebugDevice dev;
- * 
+ *
  * Transmitter t1,t2; Reciever r1;
- * 
+ *
  * dev.getReciever().addTransmitter(t1); dev.getReciever().addTransmitter(t2);
- * 
+ *
  * r1.addTransmitter(dev.getTransmitter());
- * 
- * 
+ * </pre>
+ *
  * @author pjl
  * @version 1.0
  */
 public class MidiDebugDevice implements MidiDevice {
 
-    List<Transmitter> trans = new Vector<>();
-    List<Receiver> recvs = new Vector<>();
+    List<Transmitter> trans = new ArrayList<>();
+    List<Receiver> recvs = new ArrayList<>();
 
     static class DeviceInfo extends MidiDevice.Info {
 
@@ -44,7 +44,6 @@ public class MidiDebugDevice implements MidiDevice {
         @Override
         public void close() {
             MidiDebugDevice.this.recvs.remove(this);
-
         }
 
         @Override
@@ -52,7 +51,6 @@ public class MidiDebugDevice implements MidiDevice {
             // byte a[] = mess.getMessage();
 
             // StringBuffer buff = new StringBuffer(" MESS: ");
-
             byte[] msgBytes = mess.getMessage();
             if (msgBytes[0] == -1 && msgBytes[1] == 0x51 && msgBytes[2] == 3) {
                 int mpq = ((msgBytes[3] & 0xff) << 16) | ((msgBytes[4] & 0xff) << 8) | (msgBytes[5] & 0xff);
@@ -105,8 +103,6 @@ public class MidiDebugDevice implements MidiDevice {
             }
         }
     }
-
-   
 
     class Trans implements Transmitter {
 
@@ -192,19 +188,18 @@ public class MidiDebugDevice implements MidiDevice {
     public boolean isOpen() {
         return this.isOpen;
     }
-    
-    
-     static public String eventToString(MidiMessage mess) {
-         
-         String ret=null;
-         
+
+    static public String eventToString(MidiMessage mess) {
+
+        String ret = null;
+
         byte[] msgBytes = mess.getMessage();
         if (msgBytes[0] == -1 && msgBytes[1] == 0x51 && msgBytes[2] == 3) {
             int mpq = ((msgBytes[3] & 0xff) << 16) | ((msgBytes[4] & 0xff) << 8) | (msgBytes[5] & 0xff);
             // sequencer
             // .setTempoInBPM((int) (60000000f / mpq));
             // PJL remove cast to int
-            ret="TMEPO " + (60000000f / mpq);
+            ret = "TMEPO " + (60000000f / mpq);
         }
 
         if (mess instanceof ShortMessage) {
@@ -212,15 +207,15 @@ public class MidiDebugDevice implements MidiDevice {
             ShortMessage shm = (ShortMessage) mess;
 
             switch (shm.getCommand()) {
-                
+
                 case ShortMessage.NOTE_ON:
                     return null;
-       
+
                 case ShortMessage.NOTE_OFF:
                     return null;
-       
+
                 case ShortMessage.CONTROL_CHANGE:
-                    ret="ControlChange :" + shm.getData1() + " " + shm.getData2();
+                    ret = "ControlChange :" + shm.getData1() + " " + shm.getData2();
 
                     break;
 
@@ -232,7 +227,7 @@ public class MidiDebugDevice implements MidiDevice {
 
                     short val = (short) ((high << 7) | low);
 
-                    ret=" Pitch Change = " + high + ":" + low + "  " + val;
+                    ret = " Pitch Change = " + high + ":" + low + "  " + val;
                     break;
 
                 default:
@@ -244,14 +239,12 @@ public class MidiDebugDevice implements MidiDevice {
                         int dat1 = shm.getData1();
                         int dat2 = shm.getData2();
 
-                        ret=" cmd:" + cmd + " chn:" + chn + " data:" + dat1 + " " + dat2;
+                        ret = " cmd:" + cmd + " chn:" + chn + " data:" + dat1 + " " + dat2;
 
                     }
             }
-
-
         }
-     
+
         return ret;
     }
 }

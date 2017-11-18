@@ -1,16 +1,7 @@
 rootProject.name = 'frinika-simphoney'
+
+apply from: '../modules-settings.gradle'
+
 include ":modules:frinika-core"
 include ":modules:frinika-audio"
 include ":modules:frinika-frame"
-
-def modifyPath(project) {
-    def rootProjectDir = rootProject.projectDir.parentFile.parent
-    project.children.each { p ->
-        p.projectDir = new File(rootProjectDir + p.projectDir.path.substring(rootProject.projectDir.path.length(), p.projectDir.path.length()))
-        modifyPath(p)
-    }
-}
-
-if (rootProject.path == ':') {
-    modifyPath(rootProject)
-}

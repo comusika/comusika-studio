@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.notation;
 
 import com.frinika.notation.model.ClefChange;
@@ -44,148 +43,147 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 public class NotationHeader extends JPanel implements MouseListener,
-AdjustmentListener {
+        AdjustmentListener {
 
-	private static final long serialVersionUID = 1L;
-	private int yScroll;
-	public NotationEditor notationEditor;
-	public NotationHeader(NotationEditor notationEditor, int timePanelHeight, int value) {
-		
-		this.notationEditor = notationEditor;
-		int width = 135;
-		
-		int yBot = 100;
-		setSize(new Dimension(width, yBot));		
-		setPreferredSize(new Dimension(width, yBot));
-		setMaximumSize(new Dimension(width, 20000));		
-		setBackground(Color.WHITE);
-		
-		addMouseListener(this);
-		enableEvents( AWTEvent.MOUSE_EVENT_MASK );
-	}
-	
-	public void setClef(int clef, int pos)
-	{
-		if(selectedlane != null)
-		{
-			
-			MidiPart head = selectedlane.getHeadPart();
-			
-			ClefChange clef_event = null;
-			
-			Iterator<MultiEvent> iter = head.getMultiEvents().iterator();
-			while (iter.hasNext()) {
-				MultiEvent event = iter.next();
-				if(event.getStartTick() > 0) break;
-				if(event instanceof ClefChange)
-				{
-					clef_event = (ClefChange)event;
-					break;
-				}
-			}
-			
-			if(clef_event == null)
-			{
-				clef_event = new ClefChange(head, 0);
-				head.add(clef_event);
-			}
-			
-			clef_event.clef_type = clef;
-			clef_event.clef_pos = pos;
-			clef_event.clef_octave = 0;
-			
-			notationEditor.repaintItems();
-			
-		}
-	}
-	
-	
-	MidiLane selectedlane = null;
-	
-	public void showPopup(MouseEvent event)
-	{
-		MidiLane lane = notationEditor.getLaneAtY(event.getY()-20+yScroll);
-		if(lane == null) return;
-		if(event.getX() > 45) return;
-		
-		selectedlane = lane;
-		
-		JPopupMenu popupmenu = new JPopupMenu();
-		JMenuItem menuitem = new JMenuItem("Treble Clef (G)");
-		menuitem.addActionListener(new ActionListener()
-				{
-                                        @Override
-					public void actionPerformed(ActionEvent e) {
-						setClef(NotationGraphics.CLEF_G, 2);
-					}
-				});
-		popupmenu.add(menuitem);
-		menuitem = new JMenuItem("Bass Clef (F)");
-		menuitem.addActionListener(new ActionListener()
-				{
-                                        @Override
-					public void actionPerformed(ActionEvent e) {
-						setClef(NotationGraphics.CLEF_F, 6);
-					}
-				});
-		popupmenu.add(menuitem);
-		menuitem = new JMenuItem("Alto Clef (C)");
-		menuitem.addActionListener(new ActionListener()
-				{
-                                        @Override
-					public void actionPerformed(ActionEvent e) {
-						setClef(NotationGraphics.CLEF_C, 4);
-					}
-				});
-		popupmenu.add(menuitem);
-		menuitem = new JMenuItem("Tenor Clef (C)");
-		menuitem.addActionListener(new ActionListener()
-				{
-                                        @Override
-					public void actionPerformed(ActionEvent e) {
-						setClef(NotationGraphics.CLEF_C, 6);
-					}
-				});
-		popupmenu.add(menuitem);
-		popupmenu.show(event.getComponent(), event.getX(), event.getY() );		
-	}
-	
-        @Override
-	public void processMouseEvent( MouseEvent event )
-	{
-		if( event.isPopupTrigger() )
-			showPopup(event);
-		super.processMouseEvent( event );
-	}	
-	
-        @Override
-	public void mouseClicked(MouseEvent event) {
-		showPopup(event);
-	}
-        @Override
-	public void mousePressed(MouseEvent e) {
-	}
-        @Override
-	public void mouseReleased(MouseEvent e) {
-	}
-        @Override
-	public void mouseEntered(MouseEvent e) {
-	}
-        @Override
-	public void mouseExited(MouseEvent e) {
-	}
-        @Override
-	public void paintComponent(Graphics g) {
-		//Thread.yield();
-		super.paintComponent(g);
-		notationEditor.paintHeader(g, yScroll);
-		
-	}	
-        @Override
-	public void adjustmentValueChanged(AdjustmentEvent e) {
-		yScroll = e.getValue();
-		repaint();
-		
-	}
+    private static final long serialVersionUID = 1L;
+    private int yScroll;
+    public NotationEditor notationEditor;
 
+    public NotationHeader(NotationEditor notationEditor, int timePanelHeight, int value) {
+
+        this.notationEditor = notationEditor;
+        int width = 135;
+
+        int yBot = 100;
+        setSize(new Dimension(width, yBot));
+        setPreferredSize(new Dimension(width, yBot));
+        setMaximumSize(new Dimension(width, 20000));
+        setBackground(Color.WHITE);
+
+        addMouseListener(this);
+        enableEvents(AWTEvent.MOUSE_EVENT_MASK);
+    }
+
+    public void setClef(int clef, int pos) {
+        if (selectedlane != null) {
+
+            MidiPart head = selectedlane.getHeadPart();
+
+            ClefChange clef_event = null;
+
+            Iterator<MultiEvent> iter = head.getMultiEvents().iterator();
+            while (iter.hasNext()) {
+                MultiEvent event = iter.next();
+                if (event.getStartTick() > 0) {
+                    break;
+                }
+                if (event instanceof ClefChange) {
+                    clef_event = (ClefChange) event;
+                    break;
+                }
+            }
+
+            if (clef_event == null) {
+                clef_event = new ClefChange(head, 0);
+                head.add(clef_event);
+            }
+
+            clef_event.clef_type = clef;
+            clef_event.clef_pos = pos;
+            clef_event.clef_octave = 0;
+
+            notationEditor.repaintItems();
+        }
+    }
+
+    MidiLane selectedlane = null;
+
+    public void showPopup(MouseEvent event) {
+        MidiLane lane = notationEditor.getLaneAtY(event.getY() - 20 + yScroll);
+        if (lane == null) {
+            return;
+        }
+        if (event.getX() > 45) {
+            return;
+        }
+
+        selectedlane = lane;
+
+        JPopupMenu popupmenu = new JPopupMenu();
+        JMenuItem menuitem = new JMenuItem("Treble Clef (G)");
+        menuitem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setClef(NotationGraphics.CLEF_G, 2);
+            }
+        });
+        popupmenu.add(menuitem);
+        menuitem = new JMenuItem("Bass Clef (F)");
+        menuitem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setClef(NotationGraphics.CLEF_F, 6);
+            }
+        });
+        popupmenu.add(menuitem);
+        menuitem = new JMenuItem("Alto Clef (C)");
+        menuitem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setClef(NotationGraphics.CLEF_C, 4);
+            }
+        });
+        popupmenu.add(menuitem);
+        menuitem = new JMenuItem("Tenor Clef (C)");
+        menuitem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setClef(NotationGraphics.CLEF_C, 6);
+            }
+        });
+        popupmenu.add(menuitem);
+        popupmenu.show(event.getComponent(), event.getX(), event.getY());
+    }
+
+    @Override
+    public void processMouseEvent(MouseEvent event) {
+        if (event.isPopupTrigger()) {
+            showPopup(event);
+        }
+        super.processMouseEvent(event);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent event) {
+        showPopup(event);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        //Thread.yield();
+        super.paintComponent(g);
+        notationEditor.paintHeader(g, yScroll);
+    }
+
+    @Override
+    public void adjustmentValueChanged(AdjustmentEvent e) {
+        yScroll = e.getValue();
+        repaint();
+    }
 }

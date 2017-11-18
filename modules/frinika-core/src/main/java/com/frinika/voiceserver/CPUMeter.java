@@ -40,45 +40,44 @@ public class CPUMeter extends JPanel implements Runnable {
     JavaSoundVoiceServer audioOutput;
 
     JLabel cpuTextLabel = new JLabel();
-	public CPUMeter(JavaSoundVoiceServer audioOutput)
-	{
+
+    public CPUMeter(JavaSoundVoiceServer audioOutput) {
         setLayout(new GridLayout());
         add(new JLabel("Cpu usage: "));
         add(cpuTextLabel);
-        
+
         this.audioOutput = audioOutput;
-		Thread thr = new Thread(this);
-		thr.start();
-	}
-	
-	public void setCpuPercent(int cpuPercent)
-	{
-		if(cpuPercent>this.cpuPercent)
-			this.cpuPercent = cpuPercent;
-	}
-		
+        Thread thr = new Thread(this);
+        thr.start();
+    }
+
+    public void setCpuPercent(int cpuPercent) {
+        if (cpuPercent > this.cpuPercent) {
+            this.cpuPercent = cpuPercent;
+        }
+    }
+
     int statCount = 0;
+
     @Override
-	public void run()
-	{
-		while(true)
-		{
-			try
-			{
-				Thread.sleep(400);
-			} catch(InterruptedException e) {}
-			
-			cpuTextLabel.setText(cpuPercent+" %");
-            if(cpuPercent>90)
+    public void run() {
+        while (true) {
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException e) {
+            }
+
+            cpuTextLabel.setText(cpuPercent + " %");
+            if (cpuPercent > 90) {
                 cpuTextLabel.setForeground(Color.RED);
-            else
+            } else {
                 cpuTextLabel.setForeground(Color.BLACK);
-			cpuPercent = 0;
-            
-            if((statCount++)%10==0)
-            {
+            }
+            cpuPercent = 0;
+
+            if ((statCount++) % 10 == 0) {
                 audioOutput.printStats();
             }
-		}
-	}
+        }
+    }
 }

@@ -1,10 +1,3 @@
-package com.frinika.codeexamples;
-
-import com.frinika.synth.SynthRack;
-import com.frinika.synth.synths.MySampler;
-import com.frinika.voiceserver.AudioContext;
-import java.io.File;
-
 /*
  * Created on Mar 8, 2006
  *
@@ -28,36 +21,41 @@ import java.io.File;
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.frinika.codeexamples;
+
+import com.frinika.synth.SynthRack;
+import com.frinika.synth.synths.MySampler;
+import com.frinika.voiceserver.AudioContext;
+import java.io.File;
 
 /**
- * Example of creating a standalone soft synth instance and connecting ot to a midi in device.
- * play a beat
- * 
+ * Example of creating a standalone soft synth instance and connecting ot to a
+ * midi in device. play a beat
+ *
  * @author pjl
  * @author Peter Johan Salomonsen
  */
 public class MidiInToSynthExample {
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-			
-		new AudioContext(); // Initialize the Audio system
-		
-		// Initialize a synth (MySampler)
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+
+        new AudioContext(); // Initialize the Audio system
+
+        // Initialize a synth (MySampler)
         SynthRack synthRack = new SynthRack(AudioContext.getDefaultAudioContext().getVoiceServer());
         MySampler sampler = new MySampler(synthRack);
-        synthRack.setSynth(0,sampler);
-        
+        synthRack.setSynth(0, sampler);
+
         /**
          * Open a drumkit soundfont DRUMS located at C3 D3 E3 and round about
          */
         sampler.getImporter().getSoundFont(new File("soundfonts/Club.SF2"));
         sampler.getImporter().getInstrument(0);
 
-  
         throw new Exception("FIXME");
 //    	MidiDeviceHandle  [] list= MidiHub.getMidiInHandles();
 // 
@@ -71,7 +69,5 @@ public class MidiInToSynthExample {
 //    	trans.setReceiver(synthRack.getReceiver());
 //    	
 //    	Thread.sleep(200);
-
-	}
-
+    }
 }

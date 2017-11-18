@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.gui.util;
 
 import java.awt.*;
@@ -30,114 +29,117 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
- * FontChooser by Noah w., modifications by Jens Gulden
- * Original from http://forum.java.sun.com/thread.jspa?forumID=57&threadID=195067.
+ * FontChooser by Noah w., modifications by Jens Gulden Original from
+ * http://forum.java.sun.com/thread.jspa?forumID=57&threadID=195067.
  */
 public class FontChooser extends JDialog {
-	String[] styleList = new String[] { "Plain", "Bold", "Italic", "Bold-Italic" };
 
-	String[] sizeList = new String[] { "3", "4", "5", "6", "7", "8", "9", "10",
-			"11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "22",
-			"24", "27", "30", "34", "39", "45", "51", "60" };
+    String[] styleList = new String[]{"Plain", "Bold", "Italic", "Bold-Italic"};
 
-	NwList StyleList;
+    String[] sizeList = new String[]{"3", "4", "5", "6", "7", "8", "9", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "22",
+        "24", "27", "30", "34", "39", "45", "51", "60"};
 
-	NwList FontList;
+    NwList StyleList;
 
-	NwList SizeList;
+    NwList FontList;
 
-	static JLabel Sample = new JLabel();
+    NwList SizeList;
 
-	boolean ob = false;
+    static JLabel Sample = new JLabel();
 
-	private FontChooser(Frame parent, boolean modal, Font font) {
-		super(parent, modal);
-		initAll();
-		setTitle("Font Chooser");
-		if (font == null)
-			font = Sample.getFont();
-		FontList.setSelectedItem(font.getName());
-		SizeList.setSelectedItem(font.getSize() + "");
-		StyleList.setSelectedItem(styleList[font.getStyle()]);
+    boolean ob = false;
 
-	}
+    private FontChooser(Frame parent, boolean modal, Font font) {
+        super(parent, modal);
+        initAll();
+        setTitle("Font Chooser");
+        if (font == null) {
+            font = Sample.getFont();
+        }
+        FontList.setSelectedItem(font.getName());
+        SizeList.setSelectedItem(font.getSize() + "");
+        StyleList.setSelectedItem(styleList[font.getStyle()]);
+    }
 
-	public static Font showDialog(Frame parent, String s, Font font) {
-		FontChooser fd = new FontChooser(parent, true, font);
-		if (s != null)
-			fd.setTitle(s);
-		fd.setVisible(true);
-		Font fo = null;
-		if (fd.ob)
-			fo = Sample.getFont();
-		fd.dispose();
-		return (fo);
-	}
+    public static Font showDialog(Frame parent, String s, Font font) {
+        FontChooser fd = new FontChooser(parent, true, font);
+        if (s != null) {
+            fd.setTitle(s);
+        }
+        fd.setVisible(true);
+        Font fo = null;
+        if (fd.ob) {
+            fo = Sample.getFont();
+        }
+        fd.dispose();
+        return (fo);
+    }
 
-	private void initAll() {
-		getContentPane().setLayout(null);
-		setBounds(150, 150, 425, 425);
-		addLists();
-		addButtons();
-		Sample.setBounds(10, 320, 415, 25);
-		Sample.setForeground(Color.black);
-		getContentPane().add(Sample);
-		addWindowListener(new WindowAdapter() {
-                        @Override
-			public void windowClosing(java.awt.event.WindowEvent e) {
-				setVisible(false);
-			}
-		});
-	}
+    private void initAll() {
+        getContentPane().setLayout(null);
+        setBounds(150, 150, 425, 425);
+        addLists();
+        addButtons();
+        Sample.setBounds(10, 320, 415, 25);
+        Sample.setForeground(Color.black);
+        getContentPane().add(Sample);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                setVisible(false);
+            }
+        });
+    }
 
-	private void addLists() {
-		FontList = new NwList(GraphicsEnvironment.getLocalGraphicsEnvironment()
-				.getAvailableFontFamilyNames());
-		StyleList = new NwList(styleList);
-		SizeList = new NwList(sizeList);
-		FontList.setBounds(10, 10, 260, 295);
-		StyleList.setBounds(280, 10, 80, 295);
-		SizeList.setBounds(370, 10, 40, 295);
-		getContentPane().add(FontList);
-		getContentPane().add(StyleList);
-		getContentPane().add(SizeList);
-	}
+    private void addLists() {
+        FontList = new NwList(GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getAvailableFontFamilyNames());
+        StyleList = new NwList(styleList);
+        SizeList = new NwList(sizeList);
+        FontList.setBounds(10, 10, 260, 295);
+        StyleList.setBounds(280, 10, 80, 295);
+        SizeList.setBounds(370, 10, 40, 295);
+        getContentPane().add(FontList);
+        getContentPane().add(StyleList);
+        getContentPane().add(SizeList);
+    }
 
-	private void addButtons() {
-		JButton ok = new JButton("Ok");
-		//ok.setMargin(new Insets(0, 0, 0, 0));
-		JButton ca = new JButton("Cancel");
-		//ca.setMargin(new Insets(0, 0, 0, 0));
-		ok.setBounds(260, 350, 70, 20);
-		//ok.setFont(new Font(" ", 1, 11));
-		ca.setBounds(340, 350, 70, 20);
-		//ca.setFont(new Font(" ", 1, 12));
-		getContentPane().add(ok);
-		getContentPane().add(ca);
-		getRootPane().setDefaultButton(ok);
-		ok.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				ob = true;
-			}
-		});
-		ca.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				ob = false;
-			}
-		});
-	}
+    private void addButtons() {
+        JButton ok = new JButton("Ok");
+        //ok.setMargin(new Insets(0, 0, 0, 0));
+        JButton ca = new JButton("Cancel");
+        //ca.setMargin(new Insets(0, 0, 0, 0));
+        ok.setBounds(260, 350, 70, 20);
+        //ok.setFont(new Font(" ", 1, 11));
+        ca.setBounds(340, 350, 70, 20);
+        //ca.setFont(new Font(" ", 1, 12));
+        getContentPane().add(ok);
+        getContentPane().add(ca);
+        getRootPane().setDefaultButton(ok);
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                ob = true;
+            }
+        });
+        ca.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                ob = false;
+            }
+        });
+    }
 
-	private void showSample() {
-		int g = 0;
-		try {
-			g = Integer.parseInt(SizeList.getSelectedValue());
-		} catch (NumberFormatException nfe) {
-		}
-		/*String st = StyleList.getSelectedValue();
+    private void showSample() {
+        int g = 0;
+        try {
+            g = Integer.parseInt(SizeList.getSelectedValue());
+        } catch (NumberFormatException nfe) {
+        }
+        /*String st = StyleList.getSelectedValue();
 		int s = Font.PLAIN;
 		if (st.equalsIgnoreCase("Bold"))
 			s = Font.BOLD;
@@ -145,69 +147,69 @@ public class FontChooser extends JDialog {
 			s = Font.ITALIC;
 		if (st.equalsIgnoreCase("Bold-Italic"))
 			s = Font.BOLD | Font.ITALIC;
-		*/
-		String st = StyleList.getSelectedValue();
-		int s = 0;
-		int i = 0;
-		for (String stl : styleList) {
-			if (stl.equalsIgnoreCase(st)) {
-				s = i;
-			}
-			i++;
-		}
-		Sample.setFont(new Font(FontList.getSelectedValue(), s, g));
-		Sample.setText("The quick brown fox jumped over the lazy dog.");
-	}
-	
-	// ////////////////////////////////////////////////////////////////////
-	public class NwList extends JPanel {
-		JList jl;
+         */
+        String st = StyleList.getSelectedValue();
+        int s = 0;
+        int i = 0;
+        for (String stl : styleList) {
+            if (stl.equalsIgnoreCase(st)) {
+                s = i;
+            }
+            i++;
+        }
+        Sample.setFont(new Font(FontList.getSelectedValue(), s, g));
+        Sample.setText("The quick brown fox jumped over the lazy dog.");
+    }
 
-		JScrollPane sp;
+    // ////////////////////////////////////////////////////////////////////
+    public class NwList extends JPanel {
 
-		JLabel jt;
+        JList jl;
 
-		String si = " ";
+        JScrollPane sp;
 
-		public NwList(String[] values) {
-			setLayout(null);
-			jl = new JList(values);
-			sp = new JScrollPane(jl);
-			jt = new JLabel();
-			jt.setBackground(Color.white);
-			jt.setForeground(Color.black);
-			jt.setOpaque(true);
-			jt.setBorder(new JTextField().getBorder());
-			jt.setFont(getFont());
-			jl.setBounds(0, 0, 100, 1000);
-			jl.setBackground(Color.white);
-			jl.addListSelectionListener(new ListSelectionListener() {
-                                @Override
-				public void valueChanged(ListSelectionEvent e) {
-					jt.setText((String) jl.getSelectedValue());
-					si = (String) jl.getSelectedValue();
-					showSample();
-				}
-			});
-			add(sp);
-			add(jt);
-		}
+        JLabel jt;
 
-		public String getSelectedValue() {
-			return (si);
-		}
+        String si = " ";
 
-		public void setSelectedItem(String s) {
-			jl.setSelectedValue(s, true);
-		}
-
+        public NwList(String[] values) {
+            setLayout(null);
+            jl = new JList(values);
+            sp = new JScrollPane(jl);
+            jt = new JLabel();
+            jt.setBackground(Color.white);
+            jt.setForeground(Color.black);
+            jt.setOpaque(true);
+            jt.setBorder(new JTextField().getBorder());
+            jt.setFont(getFont());
+            jl.setBounds(0, 0, 100, 1000);
+            jl.setBackground(Color.white);
+            jl.addListSelectionListener(new ListSelectionListener() {
                 @Override
-		public void setBounds(int x, int y, int w, int h) {
-			super.setBounds(x, y, w, h);
-			sp.setBounds(0, y + 12, w, h - 23);
-			sp.revalidate();
-			jt.setBounds(0, 0, w, 20);
-		}
+                public void valueChanged(ListSelectionEvent e) {
+                    jt.setText((String) jl.getSelectedValue());
+                    si = (String) jl.getSelectedValue();
+                    showSample();
+                }
+            });
+            add(sp);
+            add(jt);
+        }
 
-	}
+        public String getSelectedValue() {
+            return (si);
+        }
+
+        public void setSelectedItem(String s) {
+            jl.setSelectedValue(s, true);
+        }
+
+        @Override
+        public void setBounds(int x, int y, int w, int h) {
+            super.setBounds(x, y, w, h);
+            sp.setBounds(0, y + 12, w, h - 23);
+            sp.revalidate();
+            jt.setBounds(0, 0, w, 20);
+        }
+    }
 }

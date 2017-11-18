@@ -21,28 +21,26 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.gui;
 
 /**
- * This interface is intended to be used in combination with JPanels that get set
- * as content of a dialog and contain user-editable GUI elements.
- * If a Dialog's content panel is an OptionsEditor, then refresh() will be called
- * every time the dialog is shown, and update() will be called if the user
- * has pressed OK. 
- *  
+ * This interface is intended to be used in combination with JPanels that get
+ * set as content of a dialog and contain user-editable GUI elements. If a
+ * Dialog's content panel is an OptionsEditor, then refresh() will be called
+ * every time the dialog is shown, and update() will be called if the user has
+ * pressed OK.
+ *
  * @author Jens Gulden
  */
 public interface OptionsEditor {
 
-	/**
-	 * Refreshes the GUI so that it reflects the model's current state.
-	 */
-	public void refresh();
-	
-	/**
-	 * Updates the model so that it contains the values set by the user
-	 */
-	public void update();
-	
+    /**
+     * Refreshes the GUI so that it reflects the model's current state.
+     */
+    void refresh();
+
+    /**
+     * Updates the model so that it contains the values set by the user
+     */
+    void update();
 }

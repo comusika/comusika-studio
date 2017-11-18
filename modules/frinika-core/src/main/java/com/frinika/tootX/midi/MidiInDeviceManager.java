@@ -21,17 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/**
- * 
- *  PJL extended to allow routing of multiple input devices.
- *  Sends messages from all input devices with device Info to focus project. 
- * 
- * 
- */
 package com.frinika.tootX.midi;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiMessage;
@@ -39,10 +33,14 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 
+/**
+ * PJL extended to allow routing of multiple input devices. Sends messages from
+ * all input devices with device Info to focus project.
+ */
 public class MidiInDeviceManager {
 
     static boolean isOpen = false;
-    static Vector<DeviceReceiver> deviceReceivers = new Vector<DeviceReceiver>();
+    static List<DeviceReceiver> deviceReceivers = new ArrayList<DeviceReceiver>();
     static MidiConsumer project; // TODO make this an interface
 
     /**
@@ -87,7 +85,7 @@ public class MidiInDeviceManager {
             return;
         }
 
-        Vector<String> names = new Vector<>();
+        List<String> names = new ArrayList<>();
 
         for (String name : openMidiIn) { //FrinikaConfig.getMidiInDeviceList()) {
             names.add(name);
@@ -108,7 +106,7 @@ public class MidiInDeviceManager {
 
                             dev.open();
                             dev.getTransmitter().setReceiver(recv);
-                        // active_midiindevices.add(dev);
+                            // active_midiindevices.add(dev);
                         }
                     }
                 } catch (MidiUnavailableException e1) {
@@ -174,7 +172,7 @@ public class MidiInDeviceManager {
 //
 //
 //    }
-    static public Vector<DeviceReceiver> getOpenDeviceReceivers() {
+    static public List<DeviceReceiver> getOpenDeviceReceivers() {
         return deviceReceivers;
     }
 }

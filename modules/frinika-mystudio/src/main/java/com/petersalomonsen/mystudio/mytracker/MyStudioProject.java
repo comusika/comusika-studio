@@ -32,27 +32,31 @@ import java.io.Serializable;
  * @author Peter Johan Salomonsen
  *
  */
-public class MyStudioProject implements ProjectSettings,Serializable {
+public class MyStudioProject implements ProjectSettings, Serializable {
+
     public static final long serialVersionUID = -1339532546408332747l;
-    
+
     private byte[] sequence;
     private SynthSetup synthSetup;
-    
+
     @Override
     public byte[] getSequence() {
         // TODO Auto-generated method stub
         return sequence;
     }
+
     @Override
     public void setSequence(byte[] sequence) {
         this.sequence = sequence;
     }
+
     @Override
     public SynthSettings getSynthSettings() {
         return synthSetup;
     }
+
     @Override
     public void setSynthSettings(SynthSettings synthSettings) {
-        this.synthSetup = (SynthSetup)synthSettings;
+        this.synthSetup = (SynthSetup) synthSettings;
     }
 }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.gui;
 
 import java.awt.BorderLayout;
@@ -31,20 +30,18 @@ import javax.swing.JSeparator;
 
 public class ToolbarSeperator extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public ToolbarSeperator()
-	{
-		super();
-		setLayout(new BorderLayout());
-		JSeparator sep = new JSeparator(JSeparator.VERTICAL);
-		
-		setMinimumSize(sep.getMinimumSize());
-		setPreferredSize(sep.getPreferredSize());
-		setMaximumSize(new Dimension(2, 32000));		
-		sep.setForeground(getBackground().darker());
-		add(sep);
-		setOpaque(false);
-		
-	}
+    public ToolbarSeperator() {
+        super();
+        setLayout(new BorderLayout());
+        JSeparator sep = new JSeparator(JSeparator.VERTICAL);
+
+        setMinimumSize(sep.getMinimumSize());
+        setPreferredSize(sep.getPreferredSize());
+        setMaximumSize(new Dimension(2, 32000));
+        sep.setForeground(getBackground().darker());
+        add(sep);
+        setOpaque(false);
+    }
 }

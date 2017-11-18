@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.gui;
 
 /**
@@ -30,17 +29,14 @@ package com.frinika.gui;
  * @author Jens Gulden
  */
 public interface OptionsBinder extends OptionsEditor {
-	
 
-        @Override
-	public void refresh();
-	
+    @Override
+    void refresh();
 
-        @Override
-	public void update();
+    @Override
+    void update();
 
-	public void backup();
-	
-	public void restore();
+    void backup();
 
+    void restore();
 }

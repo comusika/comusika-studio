@@ -27,5 +27,4 @@ public class Ids {
 
     public static final int REVERB_MODULE = 1;
     public static final int ANALYSIS_MODULE = 2;
-
 }

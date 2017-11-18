@@ -29,19 +29,20 @@ import javax.sound.midi.ShortMessage;
 import uk.org.toot.control.Control;
 
 /**
- * 
- * Implements a MidiFilter. A Controls are associated
- * with events using a hastable.
- * 
+ *
+ * Implements a MidiFilter. A Controls are associated with events using a
+ * hastable.
+ *
  * Usage:
- * 
+ *
+ * <code>
  *   MidiEventRouter router = midiDeviceRouter.getROuter(dev.getDeviceInfo());
  *   router.setLearning(control);
- *   // use midi controller 
- * 
- * 
+ *   // use midi controller
+ * </code>
+ *
  * See for example MidiLearnFrame.
- * 
+ *
  * @author pjl
  */
 public class MidiEventRouter implements MidiFilter {
@@ -51,7 +52,7 @@ public class MidiEventRouter implements MidiFilter {
     HashMap<Control, Long> controlToHash;
     transient ShortMessage lastMessage = null;
     private Control focus;
-  //  private MidiDevice dev;
+    //  private MidiDevice dev;
 
     /**
      *
@@ -67,11 +68,9 @@ public class MidiEventRouter implements MidiFilter {
     }
 
     /**
-     * set mode to learning 
-     * listen to midi event 
-     * You then  call assignMapper()
-     * 
-     * @param focus  (control to be manipulated)
+     * set mode to learning listen to midi event You then call assignMapper()
+     *
+     * @param focus (control to be manipulated)
      */
     public void setLearning(Control focus) {
         this.focus = focus;
@@ -81,10 +80,10 @@ public class MidiEventRouter implements MidiFilter {
 
     /**
      * implements MidiFilter
-     * 
-     * @param mess   midimessage
-     * @param stamp  time stamp
-     * @return  true if the event was found in the map and used
+     *
+     * @param mess midimessage
+     * @param stamp time stamp
+     * @return true if the event was found in the map and used
      */
     @Override
     public boolean consume(MidiMessage mess, long stamp) {
@@ -113,14 +112,12 @@ public class MidiEventRouter implements MidiFilter {
             }
             mapper.send(smsg, stamp);
             return true;
-
         }
-       
     }
 
     /**
      * called when last message was the type you want to do the control.
-     * 
+     *
      */
     public void assignMapper() {
         if (lastMessage == null || focus == null) {
@@ -136,15 +133,11 @@ public class MidiEventRouter implements MidiFilter {
         }
         map.remove(newHash);
 
- //       System.out.println("Assign entry for MidiEventRouter:" + dev.getDeviceInfo());
-
-
+        //       System.out.println("Assign entry for MidiEventRouter:" + dev.getDeviceInfo());
         map.put(newHash, new ControlMapper(focus, lastMessage));
         controlToHash.put(focus, newHash);
 
-       learning=false;
-             
-
+        learning = false;
     }
 
     public void assignMapping(Long midiHash, Control contrl) {

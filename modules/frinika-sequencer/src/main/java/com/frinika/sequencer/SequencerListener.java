@@ -1,5 +1,3 @@
-package com.frinika.sequencer;
-
 /*
  * Created on Aug 13, 2006
  *
@@ -23,22 +21,23 @@ package com.frinika.sequencer;
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.frinika.sequencer;
 
 public interface SequencerListener {
-	/**
-	 * This event is sent on before sequencer start
-	 *
-	 */
-	void beforeStart();
-	/**
-	 * This event is sent on after sequencer start
-	 *
-	 */
-	void start();
-	/**
-	 * This event is sent on sequencer stop
-	 *
-	 */
-	void stop();
-	
+
+    /**
+     * This event is sent on before sequencer start.
+     */
+    void beforeStart();
+
+    /**
+     * This event is sent on after sequencer start.
+     */
+    void start();
+
+    /**
+     * This event is sent on sequencer stop.
+     */
+    void stop();
+
 }

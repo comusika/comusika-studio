@@ -21,42 +21,39 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.util.tweaks.gui;
 
 import com.frinika.util.tweaks.Tweakable;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class TweakerPanel extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	GridBagConstraints c;
+    GridBagConstraints c;
 
-	private int rows;
+    private int rows;
 
-	private int cols;
-	private int minWidth;
-	
-	public TweakerPanel(int rows, int cols) {
-		setLayout(new GridBagLayout());
-		this.rows = rows;
-		this.cols = cols;
-		c = new GridBagConstraints();
-		c.ipadx = 2;
-		c.ipady = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.weighty = 1.0;
-		c.gridx = 0;
-		c.gridy = 0;
-	}
+    private int cols;
+    private int minWidth;
 
-	
+    public TweakerPanel(int rows, int cols) {
+        setLayout(new GridBagLayout());
+        this.rows = rows;
+        this.cols = cols;
+        c = new GridBagConstraints();
+        c.ipadx = 2;
+        c.ipady = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.gridx = 0;
+        c.gridy = 0;
+    }
+
 //	public TweakerPanel(int rows, int cols,int minWidth) {
 //		setLayout(new GridBagLayout());
 //		this.rows = rows;
@@ -72,30 +69,31 @@ public class TweakerPanel extends JPanel {
 //		c.gridy = 0;
 //		this.minWidth=minWidth;
 //	}
+    // public void add(JComponent label, JComponent cntrl) {
+    // add(label, c);
+    // c.gridx++;
+    // add(cntrl, c);
+    // c.gridx++;
+    // }
+    //	
+    public void newRow() {
+        c.gridy++;
+        c.gridx = 0;
+    }
 
-	// public void add(JComponent label, JComponent cntrl) {
-	// add(label, c);
-	// c.gridx++;
-	// add(cntrl, c);
-	// c.gridx++;
-	// }
-	//	
+    public void addSpinTweaker(Tweakable tweak) {
+        add(new SpinTweakerPanel(tweak), c);
+        c.gridx++;
+        if (c.gridx >= cols) {
+            newRow();
+        }
+    }
 
-	public void newRow() {
-		c.gridy++;
-		c.gridx = 0;
-	}
-
-	public void addSpinTweaker(Tweakable tweak) {
-		add(new SpinTweakerPanel(tweak),c);
-		c.gridx++;
-		if (c.gridx >= cols) newRow();
-	}
-	
-	public  void addComponent(JComponent comp) {
-		add(comp,c);
-		c.gridx++;
-		if (c.gridx >= cols) newRow();
-	}
-
+    public void addComponent(JComponent comp) {
+        add(comp, c);
+        c.gridx++;
+        if (c.gridx >= cols) {
+            newRow();
+        }
+    }
 }

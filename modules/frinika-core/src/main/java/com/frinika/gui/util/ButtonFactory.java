@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  */
-
 package com.frinika.gui.util;
 
 import java.awt.event.ActionListener;
@@ -35,15 +34,17 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 /**
- * A toolkit class for creating graphical buttons. Images are png images retrieved from the icons folder
- *  
+ * A toolkit class for creating graphical buttons. Images are png images
+ * retrieved from the icons folder
+ *
  * @author P.J. Leonard
  * @author Peter Salomonsen
  */
 public class ButtonFactory {
-    
+
     /**
      * Make a toggle button
+     *
      * @param imageName - just the name, no folder or file extension information
      * @param actionCommand - action command string for the actionlistener
      * @param toolTipText
@@ -52,35 +53,37 @@ public class ButtonFactory {
      * @param panel
      * @return
      */
-	public static JToggleButton makeToggleButton(String imageName,
-			String actionCommand, String toolTipText, ActionListener listener,
-			ButtonGroup group, JPanel panel) {
+    public static JToggleButton makeToggleButton(String imageName,
+            String actionCommand, String toolTipText, ActionListener listener,
+            ButtonGroup group, JPanel panel) {
 
-		JToggleButton button;
+        JToggleButton button;
 
-		try {
-			button = new JToggleButton(new ImageIcon(ClassLoader
-					.getSystemResource("icons/" + imageName + ".png")));
-		} catch( Exception e) {
-			System.err.println(" Problem creating icon  icons/" + imageName + ".png" );
+        try {
+            button = new JToggleButton(new ImageIcon(ClassLoader
+                    .getSystemResource("icons/" + imageName + ".png")));
+        } catch (Exception e) {
+            System.err.println(" Problem creating icon  icons/" + imageName + ".png");
 
-			 button=new JToggleButton(imageName);
-			
-			
-		}
-		
-		button.setActionCommand(actionCommand);
-		button.setToolTipText(toolTipText);
-		if(listener!=null)
-		    button.addActionListener(listener);
-		if (group != null)
-			group.add(button);
-		panel.add(button);
-		return button;
-	}
+            button = new JToggleButton(imageName);
+
+        }
+
+        button.setActionCommand(actionCommand);
+        button.setToolTipText(toolTipText);
+        if (listener != null) {
+            button.addActionListener(listener);
+        }
+        if (group != null) {
+            group.add(button);
+        }
+        panel.add(button);
+        return button;
+    }
 
     /**
      * Make a press button
+     *
      * @param imageName - just the name, no folder or file extension information
      * @param actionCommand - action command string for the actionlistener
      * @param toolTipText
@@ -88,53 +91,50 @@ public class ButtonFactory {
      * @param panel
      * @return
      */
-	public static JButton makePressButton(String imageName, String actionCommand,
-			String toolTipText, ActionListener listener, JComponent panel) {
+    public static JButton makePressButton(String imageName, String actionCommand,
+            String toolTipText, ActionListener listener, JComponent panel) {
 
-		JButton button;
+        JButton button;
 
-		button = new JButton(new ImageIcon(ClassLoader
-				.getSystemResource("icons/" + imageName + ".png")));
-		button.setActionCommand(actionCommand);
-		button.setToolTipText(toolTipText);
-		if(listener!=null)
-		    button.addActionListener(listener);
-		panel.add(button);
-		return button;
+        button = new JButton(new ImageIcon(ClassLoader
+                .getSystemResource("icons/" + imageName + ".png")));
+        button.setActionCommand(actionCommand);
+        button.setToolTipText(toolTipText);
+        if (listener != null) {
+            button.addActionListener(listener);
+        }
+        panel.add(button);
+        return button;
+    }
 
-	}
+    public static JToggleButton makeToggleButton(String imageName, String actionCommand,
+            String toolTipText, ActionListener listener, JComponent panel) {
 
-	public static JToggleButton makeToggleButton(String imageName, String actionCommand,
-			String toolTipText, ActionListener listener, JComponent panel) {
+        JToggleButton button;
 
-		JToggleButton button;
+        try {
+            button = new JToggleButton(new ImageIcon(ClassLoader
+                    .getSystemResource("icons/" + imageName + ".png")));
+        } catch (Exception e) {
+            e.printStackTrace();
+            button = new JToggleButton(imageName);
+        }
 
-		try {
-		button = new JToggleButton(new ImageIcon(ClassLoader
-				.getSystemResource("icons/" + imageName + ".png")));
-		} catch(Exception e) {
-			e.printStackTrace();
-			button= new JToggleButton(imageName);
-		}
-		
-		button.setActionCommand(actionCommand);
-		button.setToolTipText(toolTipText);
-		if(listener!=null)
-		    button.addActionListener(listener);
-		panel.add(button);
-		return button;
+        button.setActionCommand(actionCommand);
+        button.setToolTipText(toolTipText);
+        if (listener != null) {
+            button.addActionListener(listener);
+        }
+        panel.add(button);
+        return button;
+    }
 
-	}
-	
-	public static JLabel makeIconLabel(String imageName) {
+    public static JLabel makeIconLabel(String imageName) {
 
-		JLabel button;
+        JLabel button;
 
-		button = new JLabel(new ImageIcon(ClassLoader
-				.getSystemResource("icons/" + imageName + ".png")));
-		return button;
-
-	}
-
-	
+        button = new JLabel(new ImageIcon(ClassLoader
+                .getSystemResource("icons/" + imageName + ".png")));
+        return button;
+    }
 }

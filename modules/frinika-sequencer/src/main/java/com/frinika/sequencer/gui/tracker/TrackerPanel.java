@@ -68,7 +68,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
-import java.util.Vector;
+import java.util.List;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
 import javax.swing.JButton;
@@ -833,7 +833,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
         Insets insets = new Insets(0, 0, 0, 0);
         follow.setMargin(insets);       
 
-        snapables = new Vector<>();
+        snapables = new ArrayList<>();
         snapables.add(new Snapable() {
 
             @Override
@@ -859,7 +859,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>,Song
 		add(toolbar, BorderLayout.NORTH);
 	}
 	
-    Vector<Snapable> snapables = null;
+    List<Snapable> snapables = null;
     JButton quantizeSet = null;		
 	
 

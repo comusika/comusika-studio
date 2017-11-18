@@ -17,19 +17,18 @@
  *  along with FrogDisco.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.synthbot.frogdisco;
 
 public enum SampleFormat {
-  /**
-   * An audio buffer format in which samples are 16-bit signed integers (i.e. a <code>short</code>,
-   * and channels are interleaved, e.g. [LRLRLRLR...].
-   */
-  INTERLEAVED_SHORT,
-  
-  /**
-   * An audio buffer formation in which samples are 32-bit signed floating point numbers,
-   * (i.e. a <code>float</code>), and channels are uninterleaved, e.g. [LLLL...RRRR...].
-   */
-  UNINTERLEAVED_FLOAT
+    /**
+     * An audio buffer format in which samples are 16-bit signed integers (i.e.
+     * a <code>short</code>, and channels are interleaved, e.g. [LRLRLRLR...].
+     */
+    INTERLEAVED_SHORT,
+    /**
+     * An audio buffer formation in which samples are 32-bit signed floating
+     * point numbers, (i.e. a <code>float</code>), and channels are
+     * uninterleaved, e.g. [LLLL...RRRR...].
+     */
+    UNINTERLEAVED_FLOAT
 }

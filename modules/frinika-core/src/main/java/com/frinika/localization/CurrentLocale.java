@@ -27,36 +27,34 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Global class for retrieving the Locale (Language translation) to be used globally
- * by Frinika. This will be configurable from a resource bundle - coming soon.
- * 
+ * Global class for retrieving the Locale (Language translation) to be used
+ * globally by Frinika. This will be configurable from a resource bundle -
+ * coming soon.
+ *
  * @author Peter Johan Salomonsen
  */
 public class CurrentLocale {
-    static ResourceBundle messages = ResourceBundle.getBundle("messages",Locale.getDefault()); 
-    static
-    {
-    	System.out.println("Using language: "+Locale.getDefault().getDisplayLanguage());
+
+    static ResourceBundle messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+
+    static {
+        System.out.println("Using language: " + Locale.getDefault().getDisplayLanguage());
     }
-    
-    public static final String getMessage(String key)
-    {
-        try
-        {
+
+    public static final String getMessage(String key) {
+        try {
             return messages.getString(key);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             return key;
         }
     }
-    
+
     /**
-     * Test locale
+     * Test locale.
+     *
      * @param args
      */
-    public static void main(String[] args)
-    {
-    	System.out.println("Using language: "+Locale.getDefault().getDisplayLanguage());
+    public static void main(String[] args) {
+        System.out.println("Using language: " + Locale.getDefault().getDisplayLanguage());
     }
 }

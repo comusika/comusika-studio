@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.scripting;
 
 import java.io.File;
@@ -31,85 +30,91 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Stores a script which can be executed by the FrinikaScriptEngine and 
+ * Stores a script which can be executed by the FrinikaScriptEngine and
  * loaded/saved by ScriptingDialog.
- * 
+ *
  * @see com.frinika.project.scripting.FrinikaScriptEngine
  * @see com.frinika.project.scripting.gui.ScriptingDialog
  * @author Jens Gulden
  */
 public class DefaultFrinikaScript implements FrinikaScript, Serializable, Comparable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	public static final String INITIAL_NAME = "untitled";
-	
-	int language = LANGUAGE_JAVASCRIPT;
-	//String name;
-	String source;
-	String filename; // additionally to interface FrinikaScript
-	
-        @Override
-	public int getLanguage() {
-		return language;
-	}
-	public void setLanguage(int language) {
-		this.language = language;
-	}
-        @Override
-	public String getName() {
-		//return name;
-		String filename = getFilename();
-		if (filename != null) {
-			int slashpos = filename.lastIndexOf(File.separatorChar);
-			return filename.substring(slashpos + 1);
-		} else {
-			return INITIAL_NAME;
-		}
-	}
-	/*public void setName(String name) {
+
+    private static final long serialVersionUID = 1L;
+
+    public static final String INITIAL_NAME = "untitled";
+
+    int language = LANGUAGE_JAVASCRIPT;
+    //String name;
+    String source;
+    String filename; // additionally to interface FrinikaScript
+
+    @Override
+    public int getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(int language) {
+        this.language = language;
+    }
+
+    @Override
+    public String getName() {
+        //return name;
+        String filename = getFilename();
+        if (filename != null) {
+            int slashpos = filename.lastIndexOf(File.separatorChar);
+            return filename.substring(slashpos + 1);
+        } else {
+            return INITIAL_NAME;
+        }
+    }
+
+    /*public void setName(String name) {
 		this.name = name;
 	}*/
-        @Override
-	public String getSource() {
-		return source;
-	}
-	public void setSource(String source) {
-		this.source = source;
-	}
-	public String getFilename() {
-		return filename;
-	}
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-	
-	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
-		in.defaultReadObject();
-		// read source from file (if it's still there, otherwise keep serialized string as source and mark dirty)
-		if (filename != null) {
-			File f = new File(filename);
-			if (f.exists()) {
-				try {
-					String s = FrinikaScriptingEngine.loadString(f);
-					this.source = s; // freshly read from file
-				} catch (IOException ioe) {
-					// nop
-				}
-			}
-		}
-	}
-	
-        @Override
-	public int compareTo(Object o) {
-		if (! (o instanceof FrinikaScript)) {
-			return 1;
-		} else {
-			return this.getName().compareTo(((FrinikaScript)o).getName());
-		}
-	}
-		
-	private void writeObject(ObjectOutputStream out) throws ClassNotFoundException, IOException {
-		out.defaultWriteObject();
-	}
+    @Override
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        // read source from file (if it's still there, otherwise keep serialized string as source and mark dirty)
+        if (filename != null) {
+            File f = new File(filename);
+            if (f.exists()) {
+                try {
+                    String s = FrinikaScriptingEngine.loadString(f);
+                    this.source = s; // freshly read from file
+                } catch (IOException ioe) {
+                    // nop
+                }
+            }
+        }
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof FrinikaScript)) {
+            return 1;
+        } else {
+            return this.getName().compareTo(((FrinikaScript) o).getName());
+        }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws ClassNotFoundException, IOException {
+        out.defaultWriteObject();
+    }
 }

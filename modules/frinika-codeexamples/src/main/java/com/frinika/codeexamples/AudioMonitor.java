@@ -11,54 +11,55 @@ import javax.sound.sampled.TargetDataLine;
 import javax.swing.JFrame;
 
 /**
- * Simple program that will just capture your audio input and monitor it to the output
+ * Simple program that will just capture your audio input and monitor it to the
+ * output
+ *
  * @author Peter Salomonsen
  *
  */
 public class AudioMonitor {
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-		VoiceServer voiceServer = new AudioContext().getVoiceServer();
-		
-                voiceServer.configureAudioOutput(new JFrame());
-		/**
-		 * JACK doesn't require any input line - provide your own line if not using jack
-		 */
-		final AudioInput input = new AudioInput(AudioSystem.getTargetDataLine(new AudioFormat((float) FrinikaConfig.sampleRate,16,2,true,true)),FrinikaConfig.sampleRate);
-		
-		input.start();
-		input.getLine().start();
-		
-		voiceServer.addTransmitter(new Voice() {
-			byte[] inBuffer = null;
-			@Override
-			public void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
-				if(inBuffer == null || inBuffer.length!=buffer.length*2)
-					inBuffer = new byte[buffer.length * 2];
-				
-				int numOfBytes = (endBufferPos-startBufferPos)*2;
-				
-				input.getLine().read(inBuffer,0,numOfBytes);
-				
-				TargetDataLine line = input.getLine();
-				
-				int n=0;
-				for(int i=startBufferPos;i<endBufferPos;i++)
-				{
-					short sample = (short)((0xff & inBuffer[n+1]) + ((0xff & inBuffer[n+0]) * 256));
-					buffer[i] = sample / 32768f;
-					n+=2;
-				}
-				
-			}
-			
-		});
-		// otherwise we terminate
-		Thread.sleep(100000);
-	}
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+        VoiceServer voiceServer = new AudioContext().getVoiceServer();
 
+        voiceServer.configureAudioOutput(new JFrame());
+        /**
+         * JACK doesn't require any input line - provide your own line if not
+         * using jack
+         */
+        final AudioInput input = new AudioInput(AudioSystem.getTargetDataLine(new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true)), FrinikaConfig.sampleRate);
+
+        input.start();
+        input.getLine().start();
+
+        voiceServer.addTransmitter(new Voice() {
+            byte[] inBuffer = null;
+
+            @Override
+            public void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
+                if (inBuffer == null || inBuffer.length != buffer.length * 2) {
+                    inBuffer = new byte[buffer.length * 2];
+                }
+
+                int numOfBytes = (endBufferPos - startBufferPos) * 2;
+
+                input.getLine().read(inBuffer, 0, numOfBytes);
+
+                TargetDataLine line = input.getLine();
+
+                int n = 0;
+                for (int i = startBufferPos; i < endBufferPos; i++) {
+                    short sample = (short) ((0xff & inBuffer[n + 1]) + ((0xff & inBuffer[n + 0]) * 256));
+                    buffer[i] = sample / 32768f;
+                    n += 2;
+                }
+            }
+        });
+        // otherwise we terminate
+        Thread.sleep(100000);
+    }
 }

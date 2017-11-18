@@ -23,35 +23,34 @@
  */
 package com.frinika.tootX.midi;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiMessage;
 
 /**
- * 
+ *
  * Allows routing of midievents from a particular device.
- * 
+ *
  * @author pjl
  */
-public class MidiDeviceRouter  {
-    
-    
-    Hashtable<MidiDevice.Info, MidiEventRouter> map;
+public class MidiDeviceRouter {
 
-  
+    Map<MidiDevice.Info, MidiEventRouter> map;
+
     public MidiDeviceRouter() {
-        map = new Hashtable<>();
+        map = new HashMap<>();
     }
 
     /**
-     * 
+     *
      * Returns or creates a new MidiEventRouter
-     * 
+     *
      * @param dev
-     * @return   MidiEventRouter associated with the dev
+     * @return MidiEventRouter associated with the dev
      */
-   public  MidiEventRouter getRouter(MidiDevice dev) {
+    public MidiEventRouter getRouter(MidiDevice dev) {
         if (dev == null) {
             return null;
         }
@@ -73,22 +72,21 @@ public class MidiDeviceRouter  {
         return router;
     }
 
-   /**
-    * 
-    * 
-    * @param devInfo
-    * @param mess 
-    * @param stamp
-    * @return
-    */
+    /**
+     *
+     *
+     * @param devInfo
+     * @param mess
+     * @param stamp
+     * @return
+     */
     public boolean consume(Info devInfo, MidiMessage mess, long stamp) {
-        MidiEventRouter cntrl=map.get(devInfo);
+        MidiEventRouter cntrl = map.get(devInfo);
         if (cntrl != null) {
-            if (cntrl.consume(mess, stamp)) return true;
+            if (cntrl.consume(mess, stamp)) {
+                return true;
+            }
         }
         return false;
     }
-    
-    
-    
 }

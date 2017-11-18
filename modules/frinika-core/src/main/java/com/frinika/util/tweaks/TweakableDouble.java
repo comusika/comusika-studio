@@ -23,51 +23,48 @@
  */
 package com.frinika.util.tweaks;
 
-import java.util.*;
+import java.util.Collection;
 
 public class TweakableDouble extends Tweakable {
 
-	/**
-	 * 
-	 * @param min
-	 * @param max
-	 * @param val
-	 * @param step
-	 * @param label
-	 */
-	public TweakableDouble(double min, double max, double val, double step,
-			String label) {
-		super(label, new Double(val), new Double(min), new Double(max),
-				new Double(step));
-	}
+    /**
+     *
+     * @param min
+     * @param max
+     * @param val
+     * @param step
+     * @param label
+     */
+    public TweakableDouble(double min, double max, double val, double step,
+            String label) {
+        super(label, new Double(val), new Double(min), new Double(max),
+                new Double(step));
+    }
 
-	/**
-	 * 
-	 * @param c
-	 * @param min
-	 * @param max
-	 * @param val
-	 * @param step
-	 * @param label
-	 */
-	public TweakableDouble(Collection<Tweakable> c, double min, double max, double val,
-			double step, String label) {
-		super(c, label, new Double(val), new Double(min), new Double(max),
-				new Double(step));
-	}
+    /**
+     *
+     * @param c
+     * @param min
+     * @param max
+     * @param val
+     * @param step
+     * @param label
+     */
+    public TweakableDouble(Collection<Tweakable> c, double min, double max, double val,
+            double step, String label) {
+        super(c, label, new Double(val), new Double(min), new Double(max),
+                new Double(step));
+    }
 
-	/**
-	 * 
-	 */
-        @Override
-	public void set(String s) {
-		try {
-			n = new Double(s);
-			setChanged();
-			notifyObservers();
-		} catch (NumberFormatException e) {
-		} // TODO
+    @Override
+    public void set(String s) {
+        try {
+            n = new Double(s);
+            setChanged();
+            notifyObservers();
+        } catch (NumberFormatException e) {
+        } // TODO
 
-	}
+    }
 
 }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.base;
 
 import com.frinika.tootX.MixerControlsMidiStreamSnapshotAutomation;
@@ -34,72 +33,54 @@ import java.io.Serializable;
 
 public class TootMixerSerializer implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// Do versioning the hard way
-	int       version;
-	AbstractProjectContainer project;
+    // Do versioning the hard way
+    int version;
+    AbstractProjectContainer project;
 
-	// transient MixerControls mixerControls;
-	
-	
-	 private TootMixerSerializer() {
-			
-	}
+    // transient MixerControls mixerControls;
+    private TootMixerSerializer() {
 
-	 public TootMixerSerializer(AbstractProjectContainer project) {
-			this.project=project;
-	 }
-	
-	
-	@SuppressWarnings("unchecked")
-	private void readObject(ObjectInputStream in)
-			throws ClassNotFoundException, IOException {
-		in.defaultReadObject();
+    }
+
+    public TootMixerSerializer(AbstractProjectContainer project) {
+        this.project = project;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(ObjectInputStream in)
+            throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
 //		System.out.println(" Mixer Save Version =" + version);
-		loadMixer(in);	
-	}
-	
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		version=1;
-		out.defaultWriteObject();
-		saveMixer(out);
-	
-	}
+        loadMixer(in);
+    }
 
-	
-	private void loadMixer(InputStream in) {
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        version = 1;
+        out.defaultWriteObject();
+        saveMixer(out);
+    }
 
-	
-	//	project.mixerControls = new MixerControls("Mixer");
-		MixerControlsMidiStreamSnapshotAutomation snapshotAutomation = new MixerControlsMidiStreamSnapshotAutomation(
-				project.getMixerControls());
+    private void loadMixer(InputStream in) {
 
-		snapshotAutomation.load(in);
+        //	project.mixerControls = new MixerControls("Mixer");
+        MixerControlsMidiStreamSnapshotAutomation snapshotAutomation = new MixerControlsMidiStreamSnapshotAutomation(
+                project.getMixerControls());
 
-	}
+        snapshotAutomation.load(in);
+    }
 
 //	void setMixerControls(MixerControls mixerControls) {
 //		this.mixerControls=mixerControls;
 //	}
-	
-	
-
 //	MixerControls getMixerControls() {
 //		return mixerControls;
 //	}
-	
-	
-	private void saveMixer(OutputStream out) {
-		MixerControlsMidiStreamSnapshotAutomation snapshotAutomation = new MixerControlsMidiStreamSnapshotAutomation(
-				project.getMixerControls());
-		
-		snapshotAutomation.store(out);
-	}
+    private void saveMixer(OutputStream out) {
+        MixerControlsMidiStreamSnapshotAutomation snapshotAutomation = new MixerControlsMidiStreamSnapshotAutomation(
+                project.getMixerControls());
 
-
-
+        snapshotAutomation.store(out);
+    }
 }

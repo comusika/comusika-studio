@@ -21,9 +21,9 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.settings;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
@@ -34,73 +34,74 @@ import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-
-
 public class SetupDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private boolean darkMode = true;
 
-	public static void main(String[] args)
-	{
-		new SetupDialog().setVisible(true);
-	}
-	
-	private static SetupDialog instance = null;
-	
-	public static void showSettings()
-	{
-		if(instance == null) instance = new SetupDialog();
-		instance.setAlwaysOnTop(true);
-		instance.setModal(false);
-		instance.setVisible(true);
-	}
-	
-	public static void showSettingsModal()
-	{
-		if(instance == null) instance = new SetupDialog();
-		instance.setAlwaysOnTop(false);
-		instance.setModal(true);
-		instance.setVisible(true);		
-	}
+    public static void main(String[] args) {
+        new SetupDialog().setVisible(true);
+    }
 
+    private static SetupDialog instance = null;
 
-	public SetupDialog()
-	{
-		super();
-		
-		setTitle("Audio Server Setup");
-		setUndecorated(true);
-	//	setBackground(Color.WHITE);	
-		// setForeground(Color.WHITE);	
+    public static void showSettings() {
+        if (instance == null) {
+            instance = new SetupDialog();
+        }
+        instance.setAlwaysOnTop(true);
+        instance.setModal(false);
+        instance.setVisible(true);
+    }
+
+    public static void showSettingsModal() {
+        if (instance == null) {
+            instance = new SetupDialog();
+        }
+        instance.setAlwaysOnTop(false);
+        instance.setModal(true);
+        instance.setVisible(true);
+    }
+
+    public SetupDialog() {
+        super();
+
+        setTitle("Audio Server Setup");
+        setUndecorated(true);
+        //	setBackground(Color.WHITE);	
+        // setForeground(Color.WHITE);	
 //		JTabbedPane tabPanel=new JTabbedPane();
 //		add(tabPanel);
-		JPanel panel=new InitialAudioServerPanel();
-	//	panel.setBackground(Color.WHITE);	
-		add(panel);
-	//	panel.setBorder(BorderFactory.createLineBorder(Color.black, 2)); //"Audio Server Setup"));
+        JPanel panel = new InitialAudioServerPanel();
+        //panel.setOpaque(false);
+        if (darkMode) {
+            panel.setBackground(Color.BLACK);
+        }
 
-		pack();
-		setSize(400, 180);		
-	    Rectangle windowSize ;
-	    Insets windowInsets;		
-		
-	    Toolkit toolkit = Toolkit.getDefaultToolkit();
-	    GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();	    
-	    if(gc == null) 
-	        gc = getGraphicsConfiguration();	    
-	    
-	    if(gc != null) {
-	    	windowSize = gc.getBounds();
-	    } else {
-	    	windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-	    }	   		
-		
-		Dimension size = getSize();		
-		Point parent_loc = getLocation();			
-		setLocation(parent_loc.x + windowSize.width/2 - (size.width/2),
-				    parent_loc.y + windowSize.height/2 - (size.height/2)+100);
-		
-	}
-	
+        add(panel);
+        //	panel.setBorder(BorderFactory.createLineBorder(Color.black, 2)); //"Audio Server Setup"));
+
+        pack();
+        setSize(400, 140);
+        Rectangle windowSize;
+        Insets windowInsets;
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+        if (gc == null) {
+            gc = getGraphicsConfiguration();
+        }
+
+        if (gc != null) {
+            windowSize = gc.getBounds();
+        } else {
+            windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
+        }
+
+        Dimension size = getSize();
+        Point parent_loc = getLocation();
+        setLocation(parent_loc.x + windowSize.width / 2 - (size.width / 2),
+                parent_loc.y + windowSize.height / 2 - (size.height / 2) + 120);
+    }
 }

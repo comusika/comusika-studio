@@ -21,48 +21,49 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer;
 
 import com.frinika.sequencer.model.ControllerEvent;
 import com.frinika.sequencer.model.NoteEvent;
 
 /**
- * 
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public abstract class MidiEventProcessor {
+
     long startTick;
     long endTick;
     boolean[] channels = new boolean[16];
-    
+
     public abstract void processNoteEvent(NoteEvent event);
+
     public abstract void processControllerEvent(ControllerEvent event);
 
     /**
      * Set channels that may pass through the filter
+     *
      * @param channels Array of integers containing channel numbers
      */
-    public void setChannels(int[] channels)
-    {
-        for(int n=0;n<16;n++)
+    public void setChannels(int[] channels) {
+        for (int n = 0; n < 16; n++) {
             this.channels[n] = false;
-        for(int channel : channels)
+        }
+        for (int channel : channels) {
             this.channels[channel] = true;
+        }
     }
 
-    public boolean canProcessChannel(int channel)
-    {
+    public boolean canProcessChannel(int channel) {
         return channels[channel];
     }
-    
+
     public long getStartTick() {
         return startTick;
     }
 
-    public void setStartTick(long startTick)
-    {
+    public void setStartTick(long startTick) {
         this.startTick = startTick;
     }
 
@@ -70,9 +71,7 @@ public abstract class MidiEventProcessor {
         return endTick;
     }
 
-    public void setEndTick(long endTick)
-    {
+    public void setEndTick(long endTick) {
         this.endTick = endTick;
     }
-
 }

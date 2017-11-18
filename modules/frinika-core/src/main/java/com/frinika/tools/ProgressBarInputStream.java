@@ -28,8 +28,9 @@ import java.io.InputStream;
 import javax.swing.JProgressBar;
 
 /**
- * Generic inputstream for updating a progressbar while reading. Use this between
- * an input stream reader and the inputstream to read.
+ * Generic inputstream for updating a progressbar while reading. Use this
+ * between an input stream reader and the inputstream to read.
+ *
  * @author Peter Johan Salomonsen
  *
  */
@@ -37,35 +38,32 @@ public class ProgressBarInputStream extends InputStream {
 
     JProgressBar progressBar;
     InputStream inputStream;
-    
+
     /**
-     * 
+     *
      * @param progressBar the progressbar to update
      * @param inputStream the inputstream to read
      */
-    public ProgressBarInputStream(JProgressBar progressBar, InputStream inputStream)
-    {
+    public ProgressBarInputStream(JProgressBar progressBar, InputStream inputStream) {
         this.progressBar = progressBar;
         this.inputStream = inputStream;
     }
 
     @Override
     public int read() throws IOException {
-        progressBar.setValue(progressBar.getMaximum()-inputStream.available());
-        return(inputStream.read());
+        progressBar.setValue(progressBar.getMaximum() - inputStream.available());
+        return (inputStream.read());
     }
 
-	@Override
-	public int read(byte[] b, int off, int len) throws IOException {
-        progressBar.setValue(progressBar.getMaximum()-inputStream.available());
-		return inputStream.read(b, off, len);
-	}
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        progressBar.setValue(progressBar.getMaximum() - inputStream.available());
+        return inputStream.read(b, off, len);
+    }
 
-	@Override
-	public int read(byte[] b) throws IOException {
-        progressBar.setValue(progressBar.getMaximum()-inputStream.available());
-		return inputStream.read(b);
-	}
-    
-    
+    @Override
+    public int read(byte[] b) throws IOException {
+        progressBar.setValue(progressBar.getMaximum() - inputStream.available());
+        return inputStream.read(b);
+    }
 }

@@ -32,44 +32,45 @@ import java.io.IOException;
 
 /**
  * Methods for getting access to a clipboard instance
- * 
- * Why shouldn't you call the getSystemClipboard() method 
- * directly? Because this method requires clipboardAccess priveleges, and in case
- * you want to make an applet of Frinika, you could modify this getClipboard method
- * to return a local clipboard rather than the system clipboard (In case you want to use
- * an unsigned applet)
- * 
+ *
+ * Why shouldn't you call the getSystemClipboard() method directly? Because this
+ * method requires clipboardAccess priveleges, and in case you want to make an
+ * applet of Frinika, you could modify this getClipboard method to return a
+ * local clipboard rather than the system clipboard (In case you want to use an
+ * unsigned applet)
+ *
  * @author Peter Johan Salomonsen
  */
 public class ClipboardAccess {
-    
+
     static Clipboard defaultClipboard = new Clipboard("Frinika");
-    
+
     /**
-     * Returns the currently active clipboard. 
+     * Returns the currently active clipboard.
+     *
      * @return
      */
-    public static Clipboard getClipboard()
-    {
-        
+    public static Clipboard getClipboard() {
+
 // Problem using systemClipboard on windows?
 //        return Toolkit.getDefaultToolkit().getSystemClipboard();
         return defaultClipboard;
     }
-    
+
     /**
-     * A simple test of putting an object on the clipboard and getting it back again.
+     * A simple test of putting an object on the clipboard and getting it back
+     * again.
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         getClipboard().setContents(new Transferable() {
 
             @Override
             public DataFlavor[] getTransferDataFlavors() {
-                
-                return new DataFlavor[] { DataFlavor.stringFlavor };
+
+                return new DataFlavor[]{DataFlavor.stringFlavor};
             }
 
             @Override
@@ -81,13 +82,15 @@ public class ClipboardAccess {
             public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
 
                 return "Hello world";
-            }},new ClipboardOwner() {
+            }
+        }, new ClipboardOwner() {
 
-                @Override
-                public void lostOwnership(Clipboard clipboard, Transferable contents) {
-                    System.out.println("Lost ownership");
-                    
-                }});
+            @Override
+            public void lostOwnership(Clipboard clipboard, Transferable contents) {
+                System.out.println("Lost ownership");
+
+            }
+        });
         System.out.println(getClipboard().getContents(null).getTransferData(DataFlavor.stringFlavor));
     }
 }

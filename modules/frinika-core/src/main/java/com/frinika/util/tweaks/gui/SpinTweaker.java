@@ -30,64 +30,52 @@ import javax.swing.event.*;
 
 public class SpinTweaker extends JSpinner implements ChangeListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	Tweakable t;
+    private static final long serialVersionUID = 1L;
+    Tweakable t;
 
-	//SpinnerNumberModel model;
+    //SpinnerNumberModel model;
+    public SpinTweaker(Tweakable t) {
+        super(new SpinnerNumberModel(t.getNumber(), t
+                .getMinimum(), t.getMaximum(), t.getStepSize()));
+        this.t = t;
 
-	public SpinTweaker(Tweakable t) {
-		super(new SpinnerNumberModel(t.getNumber(), t
-				.getMinimum(), t.getMaximum(), t.getStepSize()));
-		this.t = t;
+        addChangeListener(this);
 
-	
-		addChangeListener(this);
-		
-		
-		getEditor().addMouseListener(new MouseListener(){
+        getEditor().addMouseListener(new MouseListener() {
 
-                        @Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TODO Auto-generated method stub
 
-                        @Override
-			public void mouseEntered(MouseEvent e) {
-				System.out.println("N");
+            }
 
-				getEditor().requestFocusInWindow();
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                System.out.println("N");
 
-				// TODO Auto-generated method stub
-				
-			}
+                getEditor().requestFocusInWindow();
 
-                        @Override
-			public void mouseExited(MouseEvent e) {
-				System.out.println("X");
-				getEditor().getRootPane().requestFocusInWindow();
-				
-			}
+                // TODO Auto-generated method stub
+            }
 
-                        @Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void mouseExited(MouseEvent e) {
+                System.out.println("X");
+                getEditor().getRootPane().requestFocusInWindow();
+            }
 
-                        @Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
-		
-	}
-	
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
+
 //	public SpinTweaker(TweakerPanel p, Tweakable t) {
 //		this.t = t;
 //
@@ -103,11 +91,9 @@ public class SpinTweaker extends JSpinner implements ChangeListener {
 //
 //		p.add(new JLabel(t.getLabel()), spin);
 //	}
-
-        @Override
-	public void stateChanged(ChangeEvent e) {
-		
-		t.set(((SpinnerNumberModel)getModel()).getNumber());
-		getModel().setValue(t.getNumber());
-	}
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        t.set(((SpinnerNumberModel) getModel()).getNumber());
+        getModel().setValue(t.getNumber());
+    }
 }

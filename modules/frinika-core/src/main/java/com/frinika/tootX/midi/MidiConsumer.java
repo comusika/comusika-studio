@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.midi;
 
 import javax.sound.midi.MidiDevice.Info;
@@ -33,6 +32,5 @@ import javax.sound.midi.MidiMessage;
  */
 public interface MidiConsumer {
 
-    public void processMidiMessageFromDevice(Info devInfo, MidiMessage arg0, long arg1);
-
+    void processMidiMessageFromDevice(Info devInfo, MidiMessage arg0, long arg1);
 }

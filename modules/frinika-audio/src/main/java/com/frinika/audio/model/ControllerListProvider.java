@@ -22,10 +22,9 @@
  */
 package com.frinika.audio.model;
 
-import com.frinika.audio.gui.ListProvider;
+import java.util.List;
 
-public interface ControllerListProvider extends ListProvider {
+public interface ControllerListProvider {
 
-    @Override
-    Object[] getList();
+    List<Object> getList();
 }

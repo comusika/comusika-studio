@@ -29,21 +29,21 @@ import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 
 public class MidiInSetupAction extends AbstractAction {
-	
-    private static final long serialVersionUID = 1L;
-    JFrame frame;
-    
-	public MidiInSetupAction() {
-		super(getMessage("project.menu.settings.midiin"));	
-		frame=new JFrame();
-		frame.setContentPane(new MidiInDevicePanel());
-		frame.setTitle("Select MidiIn Devices");
-		frame.pack();
-	}
 
-	@SuppressWarnings("unchecked")
+    private static final long serialVersionUID = 1L;
+    private JFrame frame;
+
+    public MidiInSetupAction() {
+        super(getMessage("project.menu.settings.midiin"));
+        frame = new JFrame();
+        frame.setContentPane(new MidiInDevicePanel());
+        frame.setTitle("Select MidiIn Devices");
+        frame.pack();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public void actionPerformed(ActionEvent e) {
-		frame.setVisible(true);
-	}
+        frame.setVisible(true);
+    }
 }

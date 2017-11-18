@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.midi;
 
 import javax.sound.midi.MidiDevice;
@@ -29,32 +28,30 @@ import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.spi.MidiDeviceProvider;
 
 /**
- * 
- * A midi device for debuging  
- * 
- * @author pjl
+ * A midi device for debuging
  *
+ * @author pjl
  */
 public class MidiDebugDeviceProvider extends MidiDeviceProvider {
-	
-	static Info deviceInfo = new MidiDebugDevice.DeviceInfo();
-	Info infos[];
 
-	public MidiDebugDeviceProvider() {
-		infos= new Info[1];
-		infos[0]=deviceInfo;
-	}
-	
-        @Override
-	public Info[] getDeviceInfo() {
-		return infos;
-	}
-	
-        @Override
-	public MidiDevice getDevice(Info arg0) {
-		if(!(arg0 instanceof MidiDebugDevice.DeviceInfo)) return null;
-		return new MidiDebugDevice();
-	}
-	
+    static Info deviceInfo = new MidiDebugDevice.DeviceInfo();
+    Info infos[];
+
+    public MidiDebugDeviceProvider() {
+        infos = new Info[1];
+        infos[0] = deviceInfo;
+    }
+
+    @Override
+    public Info[] getDeviceInfo() {
+        return infos;
+    }
+
+    @Override
+    public MidiDevice getDevice(Info arg0) {
+        if (!(arg0 instanceof MidiDebugDevice.DeviceInfo)) {
+            return null;
+        }
+        return new MidiDebugDevice();
+    }
 }
-	

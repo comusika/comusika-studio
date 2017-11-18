@@ -44,51 +44,50 @@ import javax.swing.JProgressBar;
 
 /**
  * Dialog for export to wav, and monitoring progress
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class ExportWavDialog extends JDialog implements Runnable {
+
     private static final long serialVersionUID = 1L;
 
     JProgressBar progressBar;
     MyMidiRenderer midiRenderer;
-    
+
     ProjectContainer project;
     File file;
     javax.sound.sampled.AudioFileFormat.Type type;
-    
+
     int numberOfSamples;
-    
+
     public ExportWavDialog(JFrame frame,
-            ProjectContainer project, 
+            ProjectContainer project,
             javax.sound.sampled.AudioFileFormat.Type type,
             File file,
-            long startTick, 
-            long endTick)
-    {
-        super(frame,true);
-         
+            long startTick,
+            long endTick) {
+        super(frame, true);
+
         this.project = project;
         this.setResizable(false);
         this.setUndecorated(true);
-        try
-        {
-        	FrinikaAudioServer audioServer=FrinikaAudioSystem.getAudioServer();
-     
-           	project.getAudioServer().stop();
-            
-        	audioServer.setRealTime(false);
-      
-        	
-        	midiRenderer = new MyMidiRenderer(project.getMixer(),project.getSequencer(),startTick,(int)(endTick-startTick),project.getAudioServer().getSampleRate());
-            numberOfSamples = midiRenderer.available()/4;
-            progressBar = new JProgressBar(0,midiRenderer.available());
+        try {
+            FrinikaAudioServer audioServer = FrinikaAudioSystem.getAudioServer();
+
+            project.getAudioServer().stop();
+
+            audioServer.setRealTime(false);
+
+            midiRenderer = new MyMidiRenderer(project.getMixer(), project.getSequencer(), startTick, (int) (endTick - startTick), project.getAudioServer().getSampleRate());
+            numberOfSamples = midiRenderer.available() / 4;
+            progressBar = new JProgressBar(0, midiRenderer.available());
             progressBar.setStringPainted(true);
-            
-            setLayout(new GridLayout(0,1));
-            
-            JLabel lb = new JLabel("Exporting section to "+file.getName());
-            lb.setFont(new Font(lb.getFont().getName(),Font.BOLD,lb.getFont().getSize()*2));
+
+            setLayout(new GridLayout(0, 1));
+
+            JLabel lb = new JLabel("Exporting section to " + file.getName());
+            lb.setFont(new Font(lb.getFont().getName(), Font.BOLD, lb.getFont().getSize() * 2));
             add(lb);
             add(progressBar);
 
@@ -96,38 +95,36 @@ public class ExportWavDialog extends JDialog implements Runnable {
             this.type = type;
             Thread.sleep(100);
             new Thread(this).start();
-            
+
             this.setSize(getPreferredSize());
-            
+
             this.setLocationRelativeTo(frame);
             this.setVisible(true);
-        } catch(IOException | InterruptedException e) {}
+        } catch (IOException | InterruptedException e) {
+        }
     }
-    
+
     @Override
     public void run() {
-    	// Stop audio server
-    
+        // Stop audio server
 
-   
-    	try
-        {
-        	AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar,midiRenderer),new AudioFormat((float) FrinikaConfig.sampleRate,16,2,true,true),numberOfSamples);
+        try {
+            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
             sequencer.setRealtime(false);
             sequencer.start();
-            AudioSystem.write(ais,type,file);
+            AudioSystem.write(ais, type, file);
             sequencer.stop();
             sequencer.setRealtime(true);
             ExportWavDialog.this.dispose();
-        } catch(IOException e) {
-        	e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         // Restore output process (mixer) from project and restart audio server
-        
+
         project.getMixer().getMainBus().setOutputProcess(project.getOutputProcess());
-    	FrinikaAudioServer audioServer=FrinikaAudioSystem.getAudioServer();
-    	audioServer.setRealTime(true);
+        FrinikaAudioServer audioServer = FrinikaAudioSystem.getAudioServer();
+        audioServer.setRealTime(true);
         project.getAudioServer().start();
     }
 }

@@ -21,40 +21,37 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer;
 
 import javax.swing.SwingUtilities;
 
 public class SwingSongPositionListenerWrapper implements SongPositionListener {
-	
-	private class SongPositionListenerRunnable implements Runnable
-	{
-		long tick;
-                @Override
-		public void run()
-		{
-			listener.notifyTickPosition(tick);
-		}
-	}	
-	
-	SongPositionListener listener;
-	
-	public SwingSongPositionListenerWrapper(SongPositionListener listener)
-	{
-		this.listener = listener;
-	}
-	
-        @Override
-	public void notifyTickPosition(long tick) {
-		SongPositionListenerRunnable r = new SongPositionListenerRunnable();
-		r.tick = tick;
-		SwingUtilities.invokeLater(r);
-	}
+
+    private class SongPositionListenerRunnable implements Runnable {
+
+        long tick;
 
         @Override
-	public boolean requiresNotificationOnEachTick() {
-		return listener.requiresNotificationOnEachTick();
-	}
+        public void run() {
+            listener.notifyTickPosition(tick);
+        }
+    }
 
+    SongPositionListener listener;
+
+    public SwingSongPositionListenerWrapper(SongPositionListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void notifyTickPosition(long tick) {
+        SongPositionListenerRunnable r = new SongPositionListenerRunnable();
+        r.tick = tick;
+        SwingUtilities.invokeLater(r);
+    }
+
+    @Override
+    public boolean requiresNotificationOnEachTick() {
+        return listener.requiresNotificationOnEachTick();
+    }
 }

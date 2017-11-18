@@ -28,29 +28,29 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  * @author Peter Johan Salomonsen
- *
  */
 public class MyFileFilter extends FileFilter {
-		String extension;
-		String description;
-		
-		public MyFileFilter(String extension, String description)
-		{
-			this.extension = extension;
-			this.description = description;
-		}
-			
-                @Override
-		public boolean accept(File f) {
-				
-			if(f.getName().toLowerCase().indexOf(extension)>0 || f.isDirectory())
-				return true;
-			else
-				return false;
-		}
 
-                @Override
-		public String getDescription() {
-			return description;
-		}
+    String extension;
+    String description;
+
+    public MyFileFilter(String extension, String description) {
+        this.extension = extension;
+        this.description = description;
+    }
+
+    @Override
+    public boolean accept(File f) {
+
+        if (f.getName().toLowerCase().indexOf(extension) > 0 || f.isDirectory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
 }

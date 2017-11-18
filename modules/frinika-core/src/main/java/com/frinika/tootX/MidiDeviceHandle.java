@@ -21,36 +21,34 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-/**
- * 
- */
 package com.frinika.tootX;
 
 import javax.sound.midi.MidiDevice;
 
 /**
- *  Wrapper for a MidiDevice. Mainly to allow override toString() for GUI component construction.
- *  
+ * Wrapper for a MidiDevice. Mainly to allow override toString() for GUI
+ * component construction.
+ *
  * @author Paul
  *
  */
 public class MidiDeviceHandle {
-    
-	private MidiDevice dev;
-    
+
+    private final MidiDevice dev;
+
     public MidiDeviceHandle(MidiDevice dev) {
         this.dev = dev;
     }
 
     @Override
-	public String toString() {
+    public String toString() {
         if (this.dev == null) {
             return "NULL";
         }
         return this.dev.getDeviceInfo().toString();
     }
+
     public MidiDevice getMidiDevice() {
-    	return dev;
+        return dev;
     }
-    
 }

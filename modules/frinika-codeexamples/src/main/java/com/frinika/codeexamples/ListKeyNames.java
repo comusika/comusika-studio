@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.frinika.codeexamples;
 
 import java.io.File;
@@ -33,10 +29,9 @@ public class ListKeyNames {
                     Synthesizer dev = (Synthesizer) MidiSystem.getMidiDevice(inf);
                     dev.open();
 
-
                     //   String sf = "/home/pjl/frinika/soundfonts/Club.SF2";
-                  //  String sf = "/home/pjl/frinika/soundfonts/8MBGMSFX.SF2";
-                    String sf="/home/pjl/frinika/soundfonts/ChoriumRevA.SF2";
+                    //  String sf = "/home/pjl/frinika/soundfonts/8MBGMSFX.SF2";
+                    String sf = "/home/pjl/frinika/soundfonts/ChoriumRevA.SF2";
                     Soundbank sbk;
                     sbk = MidiSystem.getSoundbank(new File(sf));
                     dev.loadAllInstruments(sbk);
@@ -54,7 +49,6 @@ public class ListKeyNames {
                         if (getChannels != null) {
                             channels = (boolean[]) getChannels.invoke(ins, (Object[]) null);
 
-
                             if (channels[9]) {
                                 Method getKeys = ins.getClass().getMethod(
                                         "getKeys");
@@ -62,17 +56,15 @@ public class ListKeyNames {
                                     String[] keyNames = (String[]) getKeys.invoke(ins, (Object[]) null);
                                     int i = 0;
                                     for (String keyname : keyNames) {
-                                       if (keyname != null) System.out.println((i++) + ":" + keyname);
-
+                                        if (keyname != null) {
+                                            System.out.println((i++) + ":" + keyname);
+                                        }
                                     }
-
                                 }
                             }
-
                         }
                     }
                 }
-
             }
             System.out.println(" HIT cntrl-C ");
             Thread.sleep(100000);
@@ -83,7 +75,6 @@ public class ListKeyNames {
                 Logger.getLogger(ListKeyNames.class.getName()).log(Level.SEVERE, null, ex1);
             }
             ex.printStackTrace();
-
         }
     }
 }

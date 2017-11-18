@@ -4,27 +4,28 @@ import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test to test EditHistoryContainer
+ *
  * @author Peter Johan Salomonsen
  */
-public class EditHistoryContainerTest extends TestCase {
+public class EditHistoryContainerTest {
 
     MidiPart part;
     AbstractSequencerProjectContainer proj;
-    
-    @Override
+
+    @Before
     protected void setUp() throws Exception {
-        super.setUp();
-        
+
 //      Create the audio context
         //new AudioContext();
         // Create the project container
-        
         proj = new ProjectContainer();
-        
+
         // Create a lane
         com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();
 
@@ -32,11 +33,11 @@ public class EditHistoryContainerTest extends TestCase {
         part = new MidiPart(lane);
     }
 
-    public void testMultiEvents()
-    {    
+    @Test
+    public void testMultiEvents() {
         // Add note
-        
-        NoteEvent noteEvent = new NoteEvent(part, 0,60, 100, 0, 128);
+
+        NoteEvent noteEvent = new NoteEvent(part, 0, 60, 100, 0, 128);
         proj.getEditHistoryContainer().mark("add event");
         part.add(noteEvent);
         proj.getEditHistoryContainer().mark("change event");
@@ -45,36 +46,32 @@ public class EditHistoryContainerTest extends TestCase {
         part.add(noteEvent);
         proj.getEditHistoryContainer().mark("remove event");
         part.remove(noteEvent);
-        
+
         // Undo everything
-        
         proj.getEditHistoryContainer().undo();
-        assertEquals(noteEvent,part.getMultiEvents().first());
-        assertEquals(10,noteEvent.getVelocity());
+        Assert.assertEquals(noteEvent, part.getMultiEvents().first());
+        Assert.assertEquals(10, noteEvent.getVelocity());
         proj.getEditHistoryContainer().undo();
-        assertEquals(100,noteEvent.getVelocity());
+        Assert.assertEquals(100, noteEvent.getVelocity());
         proj.getEditHistoryContainer().undo();
-        assertEquals(0,part.getMultiEvents().size());
+        Assert.assertEquals(0, part.getMultiEvents().size());
 
         // Redo everything
-        
         proj.getEditHistoryContainer().redo();
-        assertEquals(100,noteEvent.getVelocity());
-        assertEquals(noteEvent,part.getMultiEvents().first());
+        Assert.assertEquals(100, noteEvent.getVelocity());
+        Assert.assertEquals(noteEvent, part.getMultiEvents().first());
         proj.getEditHistoryContainer().redo();
-        assertEquals(10,noteEvent.getVelocity());
+        Assert.assertEquals(10, noteEvent.getVelocity());
         proj.getEditHistoryContainer().redo();
-        assertEquals(0,part.getMultiEvents().size());
+        Assert.assertEquals(0, part.getMultiEvents().size());
 
         // Undo everything again
-        
         proj.getEditHistoryContainer().undo();
-        assertEquals(noteEvent,part.getMultiEvents().first());
-        assertEquals(10,noteEvent.getVelocity());
+        Assert.assertEquals(noteEvent, part.getMultiEvents().first());
+        Assert.assertEquals(10, noteEvent.getVelocity());
         proj.getEditHistoryContainer().undo();
-        assertEquals(100,noteEvent.getVelocity());
+        Assert.assertEquals(100, noteEvent.getVelocity());
         proj.getEditHistoryContainer().undo();
-        assertEquals(0,part.getMultiEvents().size());
-
+        Assert.assertEquals(0, part.getMultiEvents().size());
     }
 }

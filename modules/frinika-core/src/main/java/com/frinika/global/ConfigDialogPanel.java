@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.global;
 
 import com.frinika.base.FrinikaAudioSystem;
@@ -42,51 +41,49 @@ import javax.swing.JTextField;
  * Content panel for the global configuration dialog. This dialog includes all
  * gui-elements for the global options dialog.
  *
- * As a special thing, the gui-elements just need to be named appropriately
- * and be declared non-private, then bound to appropriate config-fields in 
- * FrinikaConfig. NO ACTIVE CODE FOR GETTING / SETTING options from
- * the Config class needs to be implemented, as this is done by 
- * DefaultOptionsBinder.
+ * As a special thing, the gui-elements just need to be named appropriately and
+ * be declared non-private, then bound to appropriate config-fields in
+ * FrinikaConfig. NO ACTIVE CODE FOR GETTING / SETTING options from the Config
+ * class needs to be implemented, as this is done by DefaultOptionsBinder.
  *
- * This has been initially created as a gui-form with Netbeans 5.5 GUI-builder, 
- * but as this is a shared class, this isn't likely to be kept. So feel free
- * to add code manually.
+ * This has been initially created as a gui-form with Netbeans 5.5 GUI-builder,
+ * but as this is a shared class, this isn't likely to be kept. So feel free to
+ * add code manually.
  *
  * Thank you I have started to add code manually PJL.
  *
  * @see DefaultOptionsBinder
  * @author Jens Gulden
- * 
- * 
+ *
+ *
  */
 public class ConfigDialogPanel extends JPanel {
-    
+
     private Frame frame;
     private PropertiesEditor audioPropertiesEditor;
-	private JLabel jLabelAudioDirectory;
-	JTextField textfieldAudioDirectory;
-	private JButton buttonPickAudioDirectory;
-	
-	private JLabel jLabelSoundFontDirectory;
-	JTextField textfieldSoundFontDirectory;
-	private JButton buttonPickSoundFontDirectory;
+    private JLabel jLabelAudioDirectory;
+    JTextField textfieldAudioDirectory;
+    private JButton buttonPickAudioDirectory;
 
-        private JLabel jLabelPatchNameDirectory;
-	JTextField textfieldPatchNameDirectory;
-	private JButton buttonPickPatchNameDirectory;
-        
-        private JLabel jLabelDefaultSoundFont;
-	JTextField textfieldDefaultSoundFont;
-	private JButton buttonPickDefaultSoundFont;
-    
-    /** Creates new form ConfigDialogPanel */
+    private JLabel jLabelSoundFontDirectory;
+    JTextField textfieldSoundFontDirectory;
+    private JButton buttonPickSoundFontDirectory;
+
+    private JLabel jLabelPatchNameDirectory;
+    JTextField textfieldPatchNameDirectory;
+    private JButton buttonPickPatchNameDirectory;
+
+    private JLabel jLabelDefaultSoundFont;
+    JTextField textfieldDefaultSoundFont;
+    private JButton buttonPickDefaultSoundFont;
+
     public ConfigDialogPanel(Frame frame) {
         this.frame = frame;
         initComponents();
         audioPropertiesEditor = new PropertiesEditor(FrinikaConfig.getProperties());
         audioPropertiesPanel.add(audioPropertiesEditor);
         //textfieldBufferSize.setMinimumSize(new Dimension(50, textfieldBufferSize.getMinimumSize().height));
-        
+
         // not implemented yet:
         audioPanel.remove(labelOutputDevice);
         audioPanel.remove(comboboxOutputDevice);
@@ -101,34 +98,36 @@ public class ConfigDialogPanel extends JPanel {
         audioPanel.remove(spinnerPriority);
         userInterfacePanel.remove(labelRedrawRate);
         userInterfacePanel.remove(comboboxRedrawRate);
-        
+
         refreshMidiInDevicesList();
- //       refreshAudioDevicesList();
+        //       refreshAudioDevicesList();
     }
-    
+
     private void refreshMidiInDevicesList() {
         final List<String> v = FrinikaConfig.getMidiInDeviceList();
         listInputDevices.setModel(new javax.swing.AbstractListModel() {
             @Override
-            public int getSize() { return v.size(); }
+            public int getSize() {
+                return v.size();
+            }
+
             @Override
-            public Object getElementAt(int i) { return v.get(i); }
+            public Object getElementAt(int i) {
+                return v.get(i);
+            }
         });
     }
-    
+
     private void refreshAudioDevicesList() {
         Collection<String> v = FrinikaConfig.getAvailableAudioDevices();
         String[] ss = new String[v.size()];
         int i = 0;
         for (String s : v) {
-        	ss[i++] = s;
+            ss[i++] = s;
         }
         comboboxOutputDevice.setModel(new DefaultComboBoxModel(ss));
     }
-    
- 
-   
-    
+
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -141,15 +140,15 @@ public class ConfigDialogPanel extends JPanel {
         comboboxSampleRate = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         spinnerBufferSize = new javax.swing.JSpinner();
-        
+
         // PJL
         jLabel3a = new javax.swing.JLabel();
         spinnerTicksPerQuarter = new javax.swing.JSpinner();
-        
+
         jLabel3b = new javax.swing.JLabel();
         spinnerSequencerPriority = new javax.swing.JSpinner();
         //
-        
+
         jLabel4 = new javax.swing.JLabel();
         labelChannels = new javax.swing.JLabel();
         comboboxChannels = new javax.swing.JComboBox();
@@ -196,28 +195,25 @@ public class ConfigDialogPanel extends JPanel {
         jLabel15 = new javax.swing.JLabel();
         textfieldScriptsDirectory = new javax.swing.JTextField();
         buttonPickScriptsDirectory = new javax.swing.JButton();
-        
+
         // PJL
         jLabelAudioDirectory = new javax.swing.JLabel();
         textfieldAudioDirectory = new javax.swing.JTextField();
         buttonPickAudioDirectory = new javax.swing.JButton();
-        
-        
+
         jLabelSoundFontDirectory = new javax.swing.JLabel();
         textfieldSoundFontDirectory = new javax.swing.JTextField();
         buttonPickSoundFontDirectory = new javax.swing.JButton();
 
-           jLabelPatchNameDirectory = new javax.swing.JLabel();
+        jLabelPatchNameDirectory = new javax.swing.JLabel();
         textfieldPatchNameDirectory = new javax.swing.JTextField();
         buttonPickPatchNameDirectory = new javax.swing.JButton();
-        
-        
+
         jLabelDefaultSoundFont = new javax.swing.JLabel();
         textfieldDefaultSoundFont = new javax.swing.JTextField();
         buttonPickDefaultSoundFont = new javax.swing.JButton();
         //----
-        
-        
+
         setLayout(new java.awt.BorderLayout());
 
         audioPanel.setLayout(new java.awt.GridBagLayout());
@@ -254,7 +250,7 @@ public class ConfigDialogPanel extends JPanel {
         audioPanel.add(jLabel2, gridBagConstraints);
 
         comboboxSampleRate.setEditable(true);
-        comboboxSampleRate.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "48000", "44100", "22050" }));
+        comboboxSampleRate.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"48000", "44100", "22050"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -270,9 +266,7 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         audioPanel.add(spinnerBufferSize, gridBagConstraints);
-        
-     
-        
+
         jLabel4.setText("msec");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -286,7 +280,7 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         audioPanel.add(labelChannels, gridBagConstraints);
 
-        comboboxChannels.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2 Stereo", "1 Mono" }));
+        comboboxChannels.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"2 Stereo", "1 Mono"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -310,7 +304,7 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         audioPanel.add(labelBits, gridBagConstraints);
 
-        comboboxBits.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "16", "24" }));
+        comboboxBits.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"16", "24"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -474,7 +468,7 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         midiPanel.add(buttonRemoveInputDevice, gridBagConstraints);
-        
+
         // PJL
         jLabel3a.setText("Default Ticks Per Beat:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -486,19 +480,19 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         midiPanel.add(spinnerTicksPerQuarter, gridBagConstraints);
-        
+
         //  
         jLabel3b.setText("Seqeuncer Priority:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx=0;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         midiPanel.add(jLabel3b, gridBagConstraints);
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
         spinnerSequencerPriority.setModel(new javax.swing.SpinnerNumberModel(0, 0, 60, 1));
         midiPanel.add(spinnerSequencerPriority, gridBagConstraints);
         // ---
-        
+
         tabbedPane.addTab("MIDI", midiPanel);
 
         userInterfacePanel.setLayout(new java.awt.GridBagLayout());
@@ -509,7 +503,7 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         userInterfacePanel.add(labelRedrawRate, gridBagConstraints);
 
-        comboboxRedrawRate.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Disable when playing", "1" }));
+        comboboxRedrawRate.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Disable when playing", "1"}));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -578,7 +572,6 @@ public class ConfigDialogPanel extends JPanel {
 
         tabbedPane.addTab("User Interface", userInterfacePanel);
 
-        
         // Directories panel ......................
         directoriesPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -589,7 +582,7 @@ public class ConfigDialogPanel extends JPanel {
 
         textfieldGroovePatternsDirectory.setText("~/frinika/groove-patterns/");
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         directoriesPanel.add(textfieldGroovePatternsDirectory, gridBagConstraints);
@@ -602,23 +595,23 @@ public class ConfigDialogPanel extends JPanel {
             }
         });
 
-        gridBagConstraints.gridx=2;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(buttonPickGroovePatternsDirectory, gridBagConstraints);
 
         //-----------------------------   SCRIPTS
         jLabel15.setText("JavaScript Storage Directory:");
-        gridBagConstraints.gridx=0;
-        gridBagConstraints.gridy=1;
-        
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(jLabel15, gridBagConstraints);
 
         textfieldScriptsDirectory.setText("~/frinika/scripts/");
 
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
 //gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -633,27 +626,26 @@ public class ConfigDialogPanel extends JPanel {
                 buttonPickScriptsDirectoryActionPerformed(evt);
             }
         });
-        
-        gridBagConstraints.gridx=2;
 
-       // gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+
+        // gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(buttonPickScriptsDirectory, gridBagConstraints);
-        
-        
+
         // PJL  AUDIO -----------------------------------------------------------------------------
         jLabelAudioDirectory.setText("Audio Storage Directory:");
-        gridBagConstraints.gridx=0;
-        gridBagConstraints.gridy=2;
-        
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(jLabelAudioDirectory, gridBagConstraints);
 
         textfieldAudioDirectory.setText("~/frinika/audio/");
         // gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
 
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -668,8 +660,8 @@ public class ConfigDialogPanel extends JPanel {
                 buttonPickAudioDirectoryActionPerformed(evt);
             }
         });
-        
-        gridBagConstraints.gridx=2;
+
+        gridBagConstraints.gridx = 2;
 
         //gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -677,10 +669,9 @@ public class ConfigDialogPanel extends JPanel {
         directoriesPanel.add(buttonPickAudioDirectory, gridBagConstraints);
 
         //---------------------- SOUND FONT
-        
         jLabelSoundFontDirectory.setText("Soundfont Storage Directory:");
-        gridBagConstraints.gridx=0;
-        gridBagConstraints.gridy=3;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
 
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
@@ -688,14 +679,13 @@ public class ConfigDialogPanel extends JPanel {
 
         textfieldSoundFontDirectory.setText("~/frinika/soundfont/");
         // gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
 
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         directoriesPanel.add(textfieldSoundFontDirectory, gridBagConstraints);
-
 
         buttonPickSoundFontDirectory.setText("Pick Directory...");
         buttonPickSoundFontDirectory.addActionListener(new java.awt.event.ActionListener() {
@@ -705,17 +695,16 @@ public class ConfigDialogPanel extends JPanel {
             }
         });
 
-         gridBagConstraints.gridx=2;
+        gridBagConstraints.gridx = 2;
 
         //gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(buttonPickSoundFontDirectory, gridBagConstraints);
 
-
         // -- PATCH NAME -------------------------------------------------------------------------------------------------------
         jLabelPatchNameDirectory.setText("PatchNames Directory:");
-        gridBagConstraints.gridx=0;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy++;
 
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -724,14 +713,13 @@ public class ConfigDialogPanel extends JPanel {
 
         textfieldPatchNameDirectory.setText("~/frinika/patchname/");
         // gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
 
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 0.5;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         directoriesPanel.add(textfieldPatchNameDirectory, gridBagConstraints);
-
 
         buttonPickPatchNameDirectory.setText("Pick Directory...");
         buttonPickPatchNameDirectory.addActionListener(new java.awt.event.ActionListener() {
@@ -741,27 +729,25 @@ public class ConfigDialogPanel extends JPanel {
             }
         });
 
-        gridBagConstraints.gridx=2;
+        gridBagConstraints.gridx = 2;
 
         //gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(buttonPickPatchNameDirectory, gridBagConstraints);
 
-
         // --- DEFAULT SOUND FONT DIR --------------------------------------------------------------
-
         jLabelDefaultSoundFont.setText("Default Soundfont:");
-        gridBagConstraints.gridx=0;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy++;
-        
+
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         directoriesPanel.add(jLabelDefaultSoundFont, gridBagConstraints);
 
         textfieldDefaultSoundFont.setText("~/frinika/soundfont/8MBGMSFX.SF2");
         // gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx=1;
+        gridBagConstraints.gridx = 1;
 
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -769,9 +755,6 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         directoriesPanel.add(textfieldDefaultSoundFont, gridBagConstraints);
 
-        
-        
-       
         buttonPickDefaultSoundFont.setText("Pick default Soundfont...");
         buttonPickDefaultSoundFont.addActionListener(new java.awt.event.ActionListener() {
             @Override
@@ -779,8 +762,8 @@ public class ConfigDialogPanel extends JPanel {
                 buttonPickDefaultSoundFontActionPerformed(evt);
             }
         });
-        
-        gridBagConstraints.gridx=2;
+
+        gridBagConstraints.gridx = 2;
 
         //gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -788,8 +771,6 @@ public class ConfigDialogPanel extends JPanel {
         directoriesPanel.add(buttonPickDefaultSoundFont, gridBagConstraints);
 
         //------------------------------------------------------------------------------------------------
-
-        
         tabbedPane.addTab("Directories", directoriesPanel);
 
         add(tabbedPane, java.awt.BorderLayout.CENTER);
@@ -810,11 +791,11 @@ public class ConfigDialogPanel extends JPanel {
         String[] a = new String[v.size()];
         int i = 0;
         for (String s : v) {
-        	a[i++] = s;
+            a[i++] = s;
         }
         String inDev = (String) JOptionPane.showInputDialog(null, "Select midi input device", "Input", JOptionPane.INFORMATION_MESSAGE, null, a, a[0]);
         if (inDev == null) {
-        	return;
+            return;
         }
         List<String> vv = FrinikaConfig.getMidiInDeviceList();
         vv.add(inDev);
@@ -833,10 +814,10 @@ public class ConfigDialogPanel extends JPanel {
         }
     }//GEN-LAST:event_buttonRemoveInputDeviceActionPerformed
 
-    
-    private void buttonPickAudioDirectoryActionPerformed(java.awt.event.ActionEvent evt) {                                                           
+    private void buttonPickAudioDirectoryActionPerformed(java.awt.event.ActionEvent evt) {
         FrinikaConfig.pickDirectory(frame, textfieldAudioDirectory);
     }
+
     private void buttonPickSoundFontDirectoryActionPerformed(java.awt.event.ActionEvent evt) {
         FrinikaConfig.pickDirectory(frame, textfieldSoundFontDirectory);
     }
@@ -845,7 +826,7 @@ public class ConfigDialogPanel extends JPanel {
         FrinikaConfig.pickFont(frame, textfieldDefaultSoundFont);
     }
 
-     private void buttonPickDefaultPatchNameActionDirectoryPerformed(java.awt.event.ActionEvent evt) {
+    private void buttonPickDefaultPatchNameActionDirectoryPerformed(java.awt.event.ActionEvent evt) {
         FrinikaConfig.pickDirectory(frame, textfieldPatchNameDirectory);
     }
 
@@ -861,8 +842,8 @@ public class ConfigDialogPanel extends JPanel {
     private void buttonPickFontTextLaneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPickFontTextLaneActionPerformed
         FrinikaConfig.pickFont(frame, textfieldFontTextLane);
     }//GEN-LAST:event_buttonPickFontTextLaneActionPerformed
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel audioPanel;
     private javax.swing.JPanel audioPropertiesPanel;
@@ -927,5 +908,5 @@ public class ConfigDialogPanel extends JPanel {
 
     public JTabbedPane getTabbedPane() {
         return tabbedPane;
-    }    
+    }
 }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.synth;
 
 import com.frinika.voiceserver.VoiceServer;
@@ -31,32 +30,33 @@ import javax.sound.midi.spi.MidiDeviceProvider;
 import javax.swing.JFrame;
 
 public class FrinikaSynthRackProvider extends MidiDeviceProvider {
-	
-	static Info deviceInfo = new SynthRack.SynthRackInfo();
-	Info infos[];
 
-	public FrinikaSynthRackProvider() {
-		infos= new Info[1];
-		infos[0]=deviceInfo;
-	}
-	
-        @Override
-	public Info[] getDeviceInfo() {
-		return infos;
-	}
-	
-        @Override
-	public MidiDevice getDevice(Info arg0) {
-		if(!(arg0 instanceof SynthRack.SynthRackInfo)) return null;
-		return new SynthRack(new VoiceServer(){
+    static Info deviceInfo = new SynthRack.SynthRackInfo();
+    Info infos[];
 
-			@Override
-			public void configureAudioOutput(JFrame frame) {
-				// TODO Auto-generated method stub
-				
-			}});
-		//return new SynthRack(FrinikaAudioSystem.getAudioServer(), null);
-	}
-	
+    public FrinikaSynthRackProvider() {
+        infos = new Info[1];
+        infos[0] = deviceInfo;
+    }
+
+    @Override
+    public Info[] getDeviceInfo() {
+        return infos;
+    }
+
+    @Override
+    public MidiDevice getDevice(Info arg0) {
+        if (!(arg0 instanceof SynthRack.SynthRackInfo)) {
+            return null;
+        }
+        return new SynthRack(new VoiceServer() {
+
+            @Override
+            public void configureAudioOutput(JFrame frame) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        //return new SynthRack(FrinikaAudioSystem.getAudioServer(), null);
+    }
 }
-	

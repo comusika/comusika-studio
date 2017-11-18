@@ -1,10 +1,3 @@
-package com.frinika.codeexamples;
-
-import com.frinika.synth.SynthRack;
-import com.frinika.synth.synths.Analogika;
-import com.frinika.voiceserver.AudioContext;
-import javax.sound.midi.ShortMessage;
-
 /*
  * Created on Mar 8, 2006
  *
@@ -28,40 +21,45 @@ import javax.sound.midi.ShortMessage;
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.frinika.codeexamples;
+
+import com.frinika.synth.SynthRack;
+import com.frinika.synth.synths.Analogika;
+import com.frinika.voiceserver.AudioContext;
+import javax.sound.midi.ShortMessage;
 
 /**
- * Example of creating a standalone soft synth instance and sending midi events to it directly
+ * Example of creating a standalone soft synth instance and sending midi events
+ * to it directly
+ *
  * @author Peter Johan Salomonsen
  */
 public class SendMidiToSynth {
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-			
-		new AudioContext(); // Initialize the Audio system
-		
-		// Load a project - we will use the instruments from an example project
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+
+        new AudioContext(); // Initialize the Audio system
+
+        // Load a project - we will use the instruments from an example project
         SynthRack synthRack = new SynthRack(AudioContext.getDefaultAudioContext().getVoiceServer());
-        synthRack.setSynth(0,new Analogika(synthRack));
+        synthRack.setSynth(0, new Analogika(synthRack));
 
-		
-		// Play notes 30-90
-		for(int n=30;n<90;n++)
-		{
-			ShortMessage shm = new ShortMessage();
-			shm.setMessage(ShortMessage.NOTE_ON,0,n,100);
-			synthRack.getReceiver().send(shm, -1);
-			
-			shm = new ShortMessage();
-			// Send Note OFF to previous note (NOTE_ON with vel 0)
-			shm.setMessage(ShortMessage.NOTE_ON,0,n-1,0);
-			synthRack.getReceiver().send(shm, -1);
+        // Play notes 30-90
+        for (int n = 30; n < 90; n++) {
+            ShortMessage shm = new ShortMessage();
+            shm.setMessage(ShortMessage.NOTE_ON, 0, n, 100);
+            synthRack.getReceiver().send(shm, -1);
 
-			Thread.sleep(1000);
-		};
-	}
+            shm = new ShortMessage();
+            // Send Note OFF to previous note (NOTE_ON with vel 0)
+            shm.setMessage(ShortMessage.NOTE_ON, 0, n - 1, 0);
+            synthRack.getReceiver().send(shm, -1);
 
+            Thread.sleep(1000);
+        };
+    }
 }

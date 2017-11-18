@@ -37,12 +37,13 @@ public class ProjectNewFileFilter extends FileFilter {
      */
     @Override
     public boolean accept(File f) {
-        if(f.getName().toLowerCase().indexOf(".frinika")>0 || 
-           f.getName().toLowerCase().indexOf(".mystudio")>0 ||
-                f.isDirectory())
+        if (f.getName().toLowerCase().indexOf(".frinika") > 0
+                || f.getName().toLowerCase().indexOf(".mystudio") > 0
+                || f.isDirectory()) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /* (non-Javadoc)
@@ -52,5 +53,4 @@ public class ProjectNewFileFilter extends FileFilter {
     public String getDescription() {
         return "Frinika project";
     }
-
 }

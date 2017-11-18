@@ -21,33 +21,27 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.util.tweaks;
+
 import java.util.*;
+
 public class TweakableInt extends Tweakable {
 
-
-
-    public TweakableInt(int min,int max,int val,String label) {
-	super(label,new Integer(val),new Integer(min),new Integer(max),new Integer(1));
+    public TweakableInt(int min, int max, int val, String label) {
+        super(label, new Integer(val), new Integer(min), new Integer(max), new Integer(1));
     }
 
-
-    public TweakableInt(Collection<Tweakable> c,int min,int max,int val,String label) {
-	super(c,label,new Integer(val),new Integer(min),new Integer(max),new Integer(1));
+    public TweakableInt(Collection<Tweakable> c, int min, int max, int val, String label) {
+        super(c, label, new Integer(val), new Integer(min), new Integer(max), new Integer(1));
     }
-
-
 
     @Override
-    public void   set(String s) {
-	try {
-	    n = new Integer(s);
-	    setChanged();
-		notifyObservers();
-	} catch(NumberFormatException e) {
-	} // TODO
-	
+    public void set(String s) {
+        try {
+            n = new Integer(s);
+            setChanged();
+            notifyObservers();
+        } catch (NumberFormatException e) {
+        } // TODO
     }
-
 }

@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2006 P.J.Leonard
@@ -45,38 +44,28 @@ public class MidiPlayer {
 
     public static void main(String args[]) throws Exception {
 
-
         FrinikaAudioSystem.getAudioServer();
         Synthesizer dev = null;
         for (MidiDevice.Info inf : MidiSystem.getMidiDeviceInfo()) {
             if (inf.getName().equals("Gervill")) {
                 dev = (Synthesizer) MidiSystem.getMidiDevice(inf);
-            //   dev.open();
+                //   dev.open();
             }
         }
 
-
         SynthWrapper sw = new SynthWrapper(null, dev);
-
-
 
         // String sf="GeneralUser GS 1.4.sf2";
         //String sf = "ChoriumRevA.SF2";
-
         // this needs to be after the project constructor (opens the device ?)
-     //   Soundbank sbk = MidiSystem.getSoundbank(
-     //           new File(FrinikaConfig.SOUNDFONT_DIRECTORY + "/" + sf));
+        //   Soundbank sbk = MidiSystem.getSoundbank(
+        //           new File(FrinikaConfig.SOUNDFONT_DIRECTORY + "/" + sf));
         // dev.open();
-     //   dev.loadAllInstruments(sbk);
+        //   dev.loadAllInstruments(sbk);
+        URL url = new URL("http://www.notz.com/music/jazz/midi/stolen.mid");
 
-
-        URL url=new URL("http://www.notz.com/music/jazz/midi/stolen.mid");
-
-       //  URL url = new URL("http://www.notz.com/music/jazz/midi/rndmdngt.mid");
-
+        //  URL url = new URL("http://www.notz.com/music/jazz/midi/rndmdngt.mid");
         //     File file = new File("/home/pjl/MIDI/www.alisdair.com/skylark.mid");
-
-
         System.out.println(" Load midi into a new project ");
         ProjectContainer proj = new ProjectContainer(MidiSystem.getSequence(url), null);
         proj.addMidiOutDevice(sw);
@@ -92,8 +81,6 @@ public class MidiPlayer {
             final long endTick = proj.getSequence().getTickLength();
 
             System.out.println(" End tick= " + endTick);
-
-
 
             proj.getAudioServer().start();
             proj.getSequencer().start();
@@ -119,7 +106,6 @@ public class MidiPlayer {
                 }
             });
         } else {
-            
             proj.getAudioServer().start();
             new FrinikaFrame(proj);
         }

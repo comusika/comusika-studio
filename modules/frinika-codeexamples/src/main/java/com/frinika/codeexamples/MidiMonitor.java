@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.codeexamples;
 
 import com.frinika.midi.MidiDebugDevice;
@@ -39,85 +38,79 @@ import javax.swing.SwingUtilities;
 
 public class MidiMonitor {
 
-	static MidiInDeviceSelectPanel inDeviceSelector;
-	static MidiOutDeviceSelectPanel outDeviceSelector;
-	static Receiver dbgIn;
-	static Receiver recv;
-	static Transmitter dbgOut;
-	static Transmitter trans;
-	static JPanel panel;
-	
-	public static void main(String args[]) {
-		
-		panel=new JPanel();
-		JFrame frame=new JFrame();
-		frame.setContentPane(panel);
-		frame.pack();
-		frame.setVisible(true);
-	
-		SwingUtilities.invokeLater(new Runnable(){
-                        @Override
-			public void run() {
-				MidiMonitor.run();	
-			}			
-		});
-	}
-	
-	static void run() {
-		MidiDevice d=new MidiDebugDevice();
-		
-		try {
-			dbgIn=d.getReceiver();
-			dbgOut=d.getTransmitter();
-		} catch (MidiUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		inDeviceSelector = new MidiInDeviceSelectPanel();
-		panel.add(inDeviceSelector);
-		
-		outDeviceSelector = new MidiOutDeviceSelectPanel();
-		panel.add(outDeviceSelector);
+    static MidiInDeviceSelectPanel inDeviceSelector;
+    static MidiOutDeviceSelectPanel outDeviceSelector;
+    static Receiver dbgIn;
+    static Receiver recv;
+    static Transmitter dbgOut;
+    static Transmitter trans;
+    static JPanel panel;
 
-		inDeviceSelector.addActionListener(new ActionListener() {
+    public static void main(String args[]) {
 
-                        @Override
-			public void actionPerformed(ActionEvent arg0) {
-				
-				MidiDevice dev =  inDeviceSelector.getSelected();
-				try {
-					dev.open();		
-					dev.getTransmitter().setReceiver(dbgIn);
-					
-				} catch (MidiUnavailableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+        panel = new JPanel();
+        JFrame frame = new JFrame();
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setVisible(true);
 
-		});
-		
-		
-		outDeviceSelector.addActionListener(new ActionListener() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MidiMonitor.run();
+            }
+        });
+    }
 
-                        @Override
-			public void actionPerformed(ActionEvent arg0) {
-				MidiDevice dev =  outDeviceSelector.getSelected();
-				try {
-					dev.open();		
-					dbgOut.setReceiver(dev.getReceiver());
-					
-				} catch (MidiUnavailableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+    static void run() {
+        MidiDevice d = new MidiDebugDevice();
 
-		});
-		
-		
-		
-	}
+        try {
+            dbgIn = d.getReceiver();
+            dbgOut = d.getTransmitter();
+        } catch (MidiUnavailableException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
 
+        inDeviceSelector = new MidiInDeviceSelectPanel();
+        panel.add(inDeviceSelector);
+
+        outDeviceSelector = new MidiOutDeviceSelectPanel();
+        panel.add(outDeviceSelector);
+
+        inDeviceSelector.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+
+                MidiDevice dev = inDeviceSelector.getSelected();
+                try {
+                    dev.open();
+                    dev.getTransmitter().setReceiver(dbgIn);
+
+                } catch (MidiUnavailableException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+        outDeviceSelector.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                MidiDevice dev = outDeviceSelector.getSelected();
+                try {
+                    dev.open();
+                    dbgOut.setReceiver(dev.getReceiver());
+
+                } catch (MidiUnavailableException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }

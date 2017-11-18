@@ -35,16 +35,17 @@ import java.io.ObjectInputStream;
 import javax.sound.midi.MidiSystem;
 
 /**
- * A test program for converting a Frinika single-track sequence into a multitrack sequence and playing it
+ * A test program for converting a Frinika single-track sequence into a
+ * multitrack sequence and playing it
+ *
  * @author Peter Johan Salomonsen
  */
 public class MultiTrackPlayTest {
 
-    public static void main(String[] args) throws Exception
-    {
+    public static void main(String[] args) throws Exception {
         ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File("/home/peter/mystudio/20050421_no_vox_quant.frinika")));
 
-        ProjectSettings project = (ProjectSettings)in.readObject();
+        ProjectSettings project = (ProjectSettings) in.readObject();
         ByteArrayInputStream sequenceInputStream = new ByteArrayInputStream(project.getSequence());
 
         FrinikaSequencer sequencer = new FrinikaSequencer();
@@ -58,7 +59,8 @@ public class MultiTrackPlayTest {
         sequencer.getTransmitter().setReceiver(synth.getReceiver());
         synth.loadSynthSetup(project.getSynthSettings());
         sequencer.start();
-        while(true)
+        while (true) {
             Thread.sleep(1);
+        }
     }
 }

@@ -21,29 +21,30 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.scripting;
 
 /**
  * Allows an object to get notified about start of scripts and exits of scripts.
- * 
+ *
  * @author Jens Gulden
  */
 public interface ScriptListener {
 
-	/**
-	 * Invoked when the specified script has started.
-	 * 
-	 * @param script script which just started to be executed by the script engine
-	 */
-	public void scriptStarted(FrinikaScript script);
-	
-	/**
-	 * Invoked when the specified script has exited.
-	 * 
-	 * @param script script which just exited from execution by the script engine
-	 * @param returnValue a returnValue of null indicates that the script exited with an error 
-	 */
-	public void scriptExited(FrinikaScript script, Object returnValue);
-	
+    /**
+     * Invoked when the specified script has started.
+     *
+     * @param script script which just started to be executed by the script
+     * engine
+     */
+    void scriptStarted(FrinikaScript script);
+
+    /**
+     * Invoked when the specified script has exited.
+     *
+     * @param script script which just exited from execution by the script
+     * engine
+     * @param returnValue a returnValue of null indicates that the script exited
+     * with an error
+     */
+    void scriptExited(FrinikaScript script, Object returnValue);
 }

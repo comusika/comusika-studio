@@ -23,6 +23,7 @@
  */
 package com.frinika;
 
+import com.bulenkov.darcula.DarculaLaf;
 import com.frinika.frame.WelcomeDialog;
 import com.frinika.project.dialog.SplashDialog;
 import com.frinika.global.FrinikaConfig;
@@ -148,11 +149,13 @@ public class FrinikaMain {
         String lcOSName = System.getProperty("os.name").toLowerCase();
 
         try {
-            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+//            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+            // Workaround for https://github.com/bulenkov/iconloader/issues/14
+            javax.swing.UIManager.getFont("Label.font");
+            UIManager.setLookAndFeel(new DarculaLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-
     }
 
     static class FrinikaExitHandler extends Thread {
@@ -186,7 +189,7 @@ public class FrinikaMain {
                 if (file.exists() && file.isFile()) { // yes, running from 1 jar
                     String osarch = System.getProperty("os.arch");
                     String osname = System.getProperty("os.name");
-                    String libPrefix = "lib/native/" + osarch + "/" + osname + "/";
+                    String libPrefix = "lib/" + osarch + "/" + osname + "/";
                     String tmp = System.getProperty("java.io.tmpdir");
                     File tmpdir = new File(tmp);
                     try {

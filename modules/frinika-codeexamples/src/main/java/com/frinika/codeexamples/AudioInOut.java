@@ -59,13 +59,13 @@ public class AudioInOut {
     private static AudioPeakMonitor peakIn;
     private static MeterPanel meterPanel;
     private static CycliclyBufferedAudio buffer;
-    private static int cacheSize=100000;
+    private static int cacheSize = 100000;
     private static CyclicBufferFFTAnalysisPanel fftpanel;
 
     public static void main(String args[]) throws Exception {
 
-        buffer=new CycliclyBufferedAudio(cacheSize,FrinikaConfig.sampleRate);
-        fftpanel=new CyclicBufferFFTAnalysisPanel(buffer);
+        buffer = new CycliclyBufferedAudio(cacheSize, FrinikaConfig.sampleRate);
+        fftpanel = new CyclicBufferFFTAnalysisPanel(buffer);
 
         audioServer = new MultiIOJavaSoundAudioServer();
 
@@ -127,9 +127,6 @@ public class AudioInOut {
             }
         });
         timer.start();
-
-
-
     }
 
     private static void updateMeters() {
@@ -139,12 +136,9 @@ public class AudioInOut {
         } else {
             meterPanel.updateMeter(val, Color.GREEN);
         }
-
     }
 
     public static void configure() {
-
-
 
         final JComponent ui = AudioServerUIServices.createServerUI(audioServer,
                 serverConfig);
@@ -166,7 +160,6 @@ public class AudioInOut {
         frame.setVisible(true);
     }
 }
-
 
 class MeterPanel extends JPanel {
 
@@ -190,7 +183,6 @@ class MeterPanel extends JPanel {
             color = col;
         }
         repaint();
-
     }
 
     @Override

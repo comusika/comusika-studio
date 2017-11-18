@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.chart;
 
 import java.awt.BorderLayout;
@@ -35,74 +34,72 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 public class ChartPanel extends JPanel implements Observer {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	int barsPerLine = 4;
+    private static final long serialVersionUID = 1L;
 
-	int chordsPerBar = 4;
+    int barsPerLine = 4;
 
-	int pad = 2;
+    int chordsPerBar = 4;
 
-	Chart chart;
+    int pad = 2;
 
-	public ChartPanel(Chart chart2) {
-		this.chart = chart2;
-		setBackground(Color.white);
+    Chart chart;
 
-		TableModel dataModel = new AbstractTableModel() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+    public ChartPanel(Chart chart2) {
+        this.chart = chart2;
+        setBackground(Color.WHITE);
 
-                        @Override
-			public int getColumnCount() {
-				return barsPerLine;
-			}
+        TableModel dataModel = new AbstractTableModel() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-                        @Override
-			public boolean isCellEditable(int row, int col) {
-				return true;
-			}
+            @Override
+            public int getColumnCount() {
+                return barsPerLine;
+            }
 
-                        @Override
-			public int getRowCount() {
-				return 1 + chart.getBars().size() / barsPerLine;
-			}
-			
-                        @Override
-			public void setValueAt(Object value, int row, int col) {
-				int index=row *barsPerLine + col;
-				int n=chart.getBars().size();
-				for (int i=n;i <= index ; i++) {
-					chart.appendBar();
-				}
-				chart.setbarAt(index,(String)value);				
-			}
-			
-                        @Override
-			public Object getValueAt(int row, int col) {
-				int index=row *barsPerLine + col;
-				if (index < chart.getBars().size()) {
-					return chart.getBars().get(row *barsPerLine + col).toString();
-				} else {
-					return "blank";
-					
-				}
-			}
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return true;
+            }
 
-		};
+            @Override
+            public int getRowCount() {
+                return 1 + chart.getBars().size() / barsPerLine;
+            }
 
-		setLayout(new BorderLayout());
-		JTable table = new JTable(dataModel);
-		//table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-		//table.setFillsViewportHeight(true);
-		JScrollPane scrollpane = new JScrollPane(table);
-		add(scrollpane,BorderLayout.CENTER);
-	}
+            @Override
+            public void setValueAt(Object value, int row, int col) {
+                int index = row * barsPerLine + col;
+                int n = chart.getBars().size();
+                for (int i = n; i <= index; i++) {
+                    chart.appendBar();
+                }
+                chart.setbarAt(index, (String) value);
+            }
+
+            @Override
+            public Object getValueAt(int row, int col) {
+                int index = row * barsPerLine + col;
+                if (index < chart.getBars().size()) {
+                    return chart.getBars().get(row * barsPerLine + col).toString();
+                } else {
+                    return "blank";
+
+                }
+            }
+
+        };
+
+        setLayout(new BorderLayout());
+        JTable table = new JTable(dataModel);
+        //table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        //table.setFillsViewportHeight(true);
+        JScrollPane scrollpane = new JScrollPane(table);
+        add(scrollpane, BorderLayout.CENTER);
+    }
 
 //	public void paintComponent(Graphics g) {
 //		super.paintComponent(g);
@@ -145,19 +142,17 @@ public class ChartPanel extends JPanel implements Observer {
 //	public void paintChord(Chord chord, Graphics2D g, int x, int height) {
 //		g.drawString(chord.name, x + pad, height - pad);
 //	}
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        repaint();
+    }
 
-        @Override
-	public void update(Observable arg0, Object arg1) {
-		repaint();
-	}
+    public void setChart(Chart chart2) {
+        this.chart = chart2;
+        repaint();
+    }
 
-	public void setChart(Chart chart2) {
-		this.chart=chart2;
-		repaint();
-	}
-
-	public Object getChart() {
-		return chart;
-	}
-
+    public Object getChart() {
+        return chart;
+    }
 }

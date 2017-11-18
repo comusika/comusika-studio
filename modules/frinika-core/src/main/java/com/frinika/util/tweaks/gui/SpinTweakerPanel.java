@@ -30,70 +30,66 @@ import javax.swing.event.*;
 
 public class SpinTweakerPanel extends JPanel implements ChangeListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	Tweakable t;
+    Tweakable t;
 
-	SpinnerNumberModel model;
+    SpinnerNumberModel model;
 
-	public SpinTweakerPanel(Tweakable t) {
-		this.t = t;
+    public SpinTweakerPanel(Tweakable t) {
+        this.t = t;
 
-		model = new SpinnerNumberModel(t.getNumber(), t
-				.getMinimum(), t.getMaximum(), t.getStepSize());
-		final JSpinner spin = new JSpinner(model);
-		// model = (SpinnerNumberModel)spin.getModel();
-		// model.setValue(t.getNumber());
-		// model.setMinimum((Comparable)t.getMinimum());
-		// model.setMaximum((Comparable)t.getMaximum());
+        model = new SpinnerNumberModel(t.getNumber(), t
+                .getMinimum(), t.getMaximum(), t.getStepSize());
+        final JSpinner spin = new JSpinner(model);
+        // model = (SpinnerNumberModel)spin.getModel();
+        // model.setValue(t.getNumber());
+        // model.setMinimum((Comparable)t.getMinimum());
+        // model.setMaximum((Comparable)t.getMaximum());
 
-		spin.addChangeListener(this);
-		add(new JLabel(t.getLabel()));
-		add(spin);
-		spin.getEditor().addMouseListener(new MouseListener(){
+        spin.addChangeListener(this);
+        add(new JLabel(t.getLabel()));
+        add(spin);
+        spin.getEditor().addMouseListener(new MouseListener() {
 
-                        @Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TODO Auto-generated method stub
 
-                        @Override
-			public void mouseEntered(MouseEvent e) {
-				System.out.println("N");
+            }
 
-				spin.getEditor().requestFocusInWindow();
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                System.out.println("N");
 
-				// TODO Auto-generated method stub
-				
-			}
+                spin.getEditor().requestFocusInWindow();
 
-                        @Override
-			public void mouseExited(MouseEvent e) {
-				System.out.println("X");
-				spin.getEditor().getRootPane().requestFocusInWindow();
-				
-			}
+                // TODO Auto-generated method stub
+            }
 
-                        @Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+            @Override
+            public void mouseExited(MouseEvent e) {
+                System.out.println("X");
+                spin.getEditor().getRootPane().requestFocusInWindow();
 
-                        @Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
-		
-	}
-	
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+
+    }
+
 //	public SpinTweaker(TweakerPanel p, Tweakable t) {
 //		this.t = t;
 //
@@ -109,10 +105,9 @@ public class SpinTweakerPanel extends JPanel implements ChangeListener {
 //
 //		p.add(new JLabel(t.getLabel()), spin);
 //	}
-
-        @Override
-	public void stateChanged(ChangeEvent e) {
-		t.set(model.getNumber());
-		model.setValue(t.getNumber());
-	}
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        t.set(model.getNumber());
+        model.setValue(t.getNumber());
+    }
 }

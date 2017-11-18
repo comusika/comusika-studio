@@ -21,13 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.pianoroll;
 
 import com.frinika.audio.gui.ListProvider;
-import static com.frinika.gui.util.ButtonFactory.makePressButton;
-import static com.frinika.gui.util.ButtonFactory.makeToggleButton;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.gui.util.ButtonFactory;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ItemPanel;
 import com.frinika.sequencer.gui.ItemRollToolBar;
 import com.frinika.sequencer.gui.ItemScrollPane;
@@ -47,295 +45,267 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 
 public class PianoControllerSplitPane extends ItemScrollPane implements
-		ComponentListener, SelectionListener<Lane> {
+        ComponentListener, SelectionListener<Lane> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	JSplitPane splitPane;
+    JSplitPane splitPane;
 
-	JPanel bot = new JPanel();
+    JPanel bot = new JPanel();
 
-	// PianoRollEditor pianoRollEditor;
-
-	ControllerView cntrlView;
+    // PianoRollEditor pianoRollEditor;
+    ControllerView cntrlView;
 
 //	ControllerHandle cntrls[];
+    private JPopupMenu cntrlPopup;
 
-	private JPopupMenu cntrlPopup;
+    PopupSelectorButton cntrlBut;
 
-	PopupSelectorButton cntrlBut;
+    AbstractSequencerProjectContainer project;
 
-	AbstractSequencerProjectContainer project;
+    PadPanel pianoHeader;
 
-	PadPanel pianoHeader;
+    @SuppressWarnings("serial")
+    public PianoControllerSplitPane(final AbstractSequencerProjectContainer project) {
 
-	@SuppressWarnings("serial")
-	public PianoControllerSplitPane(final AbstractSequencerProjectContainer project) {
+        this.project = project;
 
-		this.project = project;
+        // Create the main piano and contrller views using this as the
+        // scrollController
+        cntrlView = new ControllerView(project, this);
+        pianoRoll = new PianoRoll(project, this);
 
-		// Create the main piano and contrller views using this as the
-		// scrollController
-		cntrlView = new ControllerView(project, this);
-		pianoRoll = new PianoRoll(project, this);
+        // Create a toll bar and set the clients
+        List<ItemPanel> clients = new ArrayList<>();
+        clients.add(pianoRoll);
+        clients.add(cntrlView);
 
-		// Create a toll bar and set the clients
-		Vector<ItemPanel> clients = new Vector<>();
-		clients.add(pianoRoll);
-		clients.add(cntrlView);
-		
-		ItemRollToolBar toolBar = new ItemRollToolBar(clients, project);
+        ItemRollToolBar toolBar = new ItemRollToolBar(clients, project);
 
-		noteEditPanel = new MultiEventEditPanel(project);
-		project.getDragList().addFeedbackItemListener(noteEditPanel);
-		project.getEditHistoryContainer().addEditHistoryListener(noteEditPanel);
-		project.getMultiEventSelection().addSelectionListener(noteEditPanel);
-		toolBar.add(noteEditPanel);
-		Insets insets = new Insets(0, 0, 0, 0);
+        noteEditPanel = new MultiEventEditPanel(project);
+        project.getDragList().addFeedbackItemListener(noteEditPanel);
+        project.getEditHistoryContainer().addEditHistoryListener(noteEditPanel);
+        project.getMultiEventSelection().addSelectionListener(noteEditPanel);
+        toolBar.add(noteEditPanel);
+        Insets insets = new Insets(0, 0, 0, 0);
 
-		final PartSelectedAction wpl = new PartSelectedAction(project,
-				pianoRoll);
-		
-		makePressButton("viewpageleft", "warptopartleft",
-				getMessage("sequencer.pianoroll.warptopartleft_tip"), wpl,
-				toolBar.getZoomPanel()).setMargin(insets);
+        final PartSelectedAction wpl = new PartSelectedAction(project,
+                pianoRoll);
 
-		final JToggleButton bb=makeToggleButton("music_drumnote", "music_drumnote",
-				getMessage("sequencer.pianoroll.drumwrite_tip"), wpl,
-				toolBar.getToolsPanel());
-		
-		bb.setMargin(insets);
-				
-		bb.addActionListener(new ActionListener(){
+        ButtonFactory.makePressButton("viewpageleft", "warptopartleft",
+                CurrentLocale.getMessage("sequencer.pianoroll.warptopartleft_tip"), wpl,
+                toolBar.getZoomPanel()).setMargin(insets);
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				pianoRoll.setDrumWriteMode(bb.isSelected());					
-			}
-					
-		});
-		
-		
-		SelectionListener listener = new SelectionListener() {
+        final JToggleButton bb = ButtonFactory.makeToggleButton("music_drumnote", "music_drumnote",
+                CurrentLocale.getMessage("sequencer.pianoroll.drumwrite_tip"), wpl,
+                toolBar.getToolsPanel());
 
-			Part focusOld = null;
+        bb.setMargin(insets);
 
-			public void selectionCleared(SelectionContainer src) {
-				// TODO Auto-generated method stub
+        bb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pianoRoll.setDrumWriteMode(bb.isSelected());
+            }
+        });
 
-			}
+        SelectionListener listener = new SelectionListener() {
 
-			public void addedToSelection(SelectionContainer src,
-					Collection items) {
-				// TODO Auto-generated method stub
+            Part focusOld = null;
 
-			}
+            public void selectionCleared(SelectionContainer src) {
+                // TODO Auto-generated method stub
+            }
 
-			public void removedFromSelection(SelectionContainer src,
-					Collection items) {
-				// TODO Auto-generated method stub
+            public void addedToSelection(SelectionContainer src,
+                    Collection items) {
+                // TODO Auto-generated method stub
+            }
 
-			}
+            public void removedFromSelection(SelectionContainer src,
+                    Collection items) {
+                // TODO Auto-generated method stub
+            }
 
-                        @Override
-			public void selectionChanged(SelectionContainer src) {
-				// System.out.println(" PRSP select changed" );
-				Part newFocus = project.getPartSelection().getFocus();
-				if (focusOld == newFocus)
-					return;
+            @Override
+            public void selectionChanged(SelectionContainer src) {
+                // System.out.println(" PRSP select changed" );
+                Part newFocus = project.getPartSelection().getFocus();
+                if (focusOld == newFocus) {
+                    return;
+                }
 
-				if (newFocus != null)
-					wpl.actionPerformed(null);
-				focusOld = newFocus;
-			}
+                if (newFocus != null) {
+                    wpl.actionPerformed(null);
+                }
+                focusOld = newFocus;
+            }
+        };
 
-		};
-		
-		// TODO toggle this
-		project.getPartSelection().addSelectionListener(listener);
-		pianoRoll.setToolBar(toolBar);
-		cntrlView.setToolBar(toolBar);
+        // TODO toggle this
+        project.getPartSelection().addSelectionListener(listener);
+        pianoRoll.setToolBar(toolBar);
+        cntrlView.setToolBar(toolBar);
 
-		// TODO pianoRoll is the master view ?
-		setView(pianoRoll);
+        // TODO pianoRoll is the master view ?
+        setView(pianoRoll);
 
-		JPanel top = new JPanel(new BorderLayout());
-		top.setDoubleBuffered(false);
-		top.add(pianoRoll, BorderLayout.CENTER);
-		setToolBar(toolBar);
+        JPanel top = new JPanel(new BorderLayout());
+        top.setDoubleBuffered(false);
+        top.add(pianoRoll, BorderLayout.CENTER);
+        setToolBar(toolBar);
 
-		pianoHeader = new PadPanel(pianoRoll, Layout.timePanelHeight,
-				vertScroll.getValue());
-		
-		project.getPartSelection().addSelectionListener(pianoHeader);
-		top.add(pianoHeader, BorderLayout.WEST);
+        pianoHeader = new PadPanel(pianoRoll, Layout.timePanelHeight,
+                vertScroll.getValue());
 
-		bot.setLayout(null);
+        project.getPartSelection().addSelectionListener(pianoHeader);
+        top.add(pianoHeader, BorderLayout.WEST);
 
-		ListProvider resource = new ListProvider() {
+        bot.setLayout(null);
 
-                        @Override
-			public Object[] getList() {
-				Lane lane = project.getLaneSelection().getFocus();
-				if (lane instanceof MidiLane) {
-					return ((MidiLane) lane).getControllerList().getList();
-				}
-				return null;
-			}
+        ListProvider resource = new ListProvider() {
+            @Override
+            public Object[] getList() {
+                Lane lane = project.getLaneSelection().getFocus();
+                if (lane instanceof MidiLane) {
+                    return ((MidiLane) lane).getControllerList().getList().toArray();
+                }
+                return null;
+            }
+        };
 
-		};
+        PopupClient client = new PopupClient() {
+            @Override
+            public void fireSelected(PopupSelectorButton but, Object o, int pos) {
+                Lane lane = project.getLaneSelection().getFocus();
+                if (lane instanceof MidiLane) {
+                    cntrlView.setControllerType(((ControllerHandle) o));
+                }
+            }
+        };
 
-		PopupClient client = new PopupClient() {
+        cntrlBut = new PopupSelectorButton(resource, client);
 
-                        @Override
-			public void fireSelected(PopupSelectorButton but, Object o, int pos) {
-				Lane lane = project.getLaneSelection().getFocus();
-				if (lane instanceof MidiLane) {
-					cntrlView.setControllerType(((ControllerHandle) o));
-				}
-			}
-		};
+        cntrlBut.setBounds(0, 0, pianoHeader.getWidth(), 20);
 
-		cntrlBut = new PopupSelectorButton(resource, client);
+        bot.add(cntrlBut);
+        cntrlBut.setLocation(0, 0);
+        cntrlBut.setLayout(null);
+        cntrlBut.label.setBounds(0, 0, pianoHeader.getWidth(), 20);
+        cntrlBut.validate();
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        splitPane.setDoubleBuffered(false);
+        splitPane.add(top, JSplitPane.TOP);
+        bot.add(cntrlView);
 
-		cntrlBut.setBounds(0, 0,   pianoHeader.getWidth(), 20);
+        splitPane.setResizeWeight(.8);
+        splitPane.add(bot, JSplitPane.BOTTOM);
+        pianoRoll.addComponentListener(this);
+        bot.addComponentListener(this);
+        add(splitPane);
+        validate();
 
-		bot.add(cntrlBut);
-		cntrlBut.setLocation(0, 0);
-		cntrlBut.setLayout(null);
-		cntrlBut.label.setBounds(0, 0, pianoHeader.getWidth(), 20);
-		cntrlBut.validate();
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		splitPane.setDoubleBuffered(false);
-		splitPane.add(top, JSplitPane.TOP);
-		bot.add(cntrlView);
+        horizScroll.setModel(pianoRoll.getXRangeModel());
+        vertScroll.addAdjustmentListener(pianoHeader);
+        horizScroll.addAdjustmentListener(cntrlView);
 
-		splitPane.setResizeWeight(.8);
-		splitPane.add(bot, JSplitPane.BOTTOM);
-		pianoRoll.addComponentListener(this);
-		bot.addComponentListener(this);
-		add(splitPane);
-		validate();
+        vertScroll.setModel(pianoRoll.getYRangeModel());
 
-		horizScroll.setModel(pianoRoll.getXRangeModel());
-		vertScroll.addAdjustmentListener(pianoHeader);
-		horizScroll.addAdjustmentListener(cntrlView);
+        project.getLaneSelection().addSelectionListener(this);
+        rebuild();
+    }
 
-		vertScroll.setModel(pianoRoll.getYRangeModel());
+    @Override
+    protected void rebuild() {
+        int maxY = 128 * Layout.getNoteItemHeight();
+        pianoRoll.getYRangeModel().setMaximum(maxY);
 
-		project.getLaneSelection().addSelectionListener(this);
-		rebuild();
-	}
+        itemPanel.setDirty();
+        itemPanel.repaint();
+        pianoHeader.repaint();
+    }
 
-        @Override
-	protected void rebuild() {
-		int maxY = 128 * Layout.getNoteItemHeight();
-		pianoRoll.getYRangeModel().setMaximum(maxY);
-		
-		itemPanel.setDirty();
-		itemPanel.repaint();
-		pianoHeader.repaint();
-	}
+    public void rightButtonPressed(int x, int y) {
+        cntrlPopup.show(this, x, y);
+    }
 
-	/**
-	 * 
-	 */
-	public void rightButtonPressed(int x, int y) {
-		cntrlPopup.show(this, x, y);
-	}
+    /**
+     * detach all the listeners
+     */
+    public void dispose() {
+        pianoRoll.removeComponentListener(this);
+        bot.removeComponentListener(this);
+        project.getLaneSelection().removeSelectionListener(this);
+        project.getDragList().removeFeedbackItemListener(noteEditPanel);
+        project.getEditHistoryContainer().removeEditHistoryListener(
+                noteEditPanel);
+        project.getMultiEventSelection().removeSelectionListener(noteEditPanel);
+    }
 
-	/*
-	 * void setControllerPopUp(JPopupMenu cPop) {
-	 * 
-	 * 
-	 * cntrlPopupMenu = cPop; }
-	 */
+    @Override
+    public void componentResized(ComponentEvent e) {
+        Rectangle rect = pianoRoll.getBounds();
 
-	/**
-	 * detach all the listeners
-	 */
-	public void dispose() {
-		pianoRoll.removeComponentListener(this);
-		bot.removeComponentListener(this);
-		project.getLaneSelection().removeSelectionListener(this);
-		project.getDragList().removeFeedbackItemListener(noteEditPanel);
-		project.getEditHistoryContainer().removeEditHistoryListener(
-				noteEditPanel);
-		project.getMultiEventSelection().removeSelectionListener(noteEditPanel);
+        rect.height = bot.getHeight();
+        rect.y = 0;
+        cntrlView.setBounds(rect);
+        bot.validate();
+        bot.repaint();
+    }
 
-	}
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        // TODO Auto-generated method stub
+    }
 
-        @Override
-	public void componentResized(ComponentEvent e) {
-		Rectangle rect = pianoRoll.getBounds();
+    @Override
+    public void componentShown(ComponentEvent e) {
+        // TODO Auto-generated method stub
+    }
 
-		rect.height = bot.getHeight();
-		rect.y = 0;
-		cntrlView.setBounds(rect);
-		bot.validate();
-		bot.repaint();
-	}
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        // TODO Auto-generated method stub
+    }
 
-        @Override
-	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
+    public PianoRoll pianoRoll;
 
-	}
+    MultiEventEditPanel noteEditPanel;
 
-        @Override
-	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
+    public PianoRoll createPianoRoll(AbstractSequencerProjectContainer project) {
+        return pianoRoll;
+    }
 
-	}
+    @Override
+    public void selectionChanged(SelectionContainer<? extends Lane> src) {
+        Lane lane = src.getFocus();
+        if (lane instanceof MidiLane) {
+            cntrlView.setControllerType((ControllerHandle) ((MidiLane) lane)
+                    .getControllerList().getList().get(0));
+        }
+    }
 
-        @Override
-	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
+    public PianoRoll getPianoRoll() {
+        return pianoRoll;
+    }
 
-	}
+    public ControllerView getControllerView() {
+        return cntrlView;
+    }
 
-	public PianoRoll pianoRoll;
-
-	MultiEventEditPanel noteEditPanel;
-
-	public PianoRoll createPianoRoll(AbstractSequencerProjectContainer project) {
-		return pianoRoll;
-	}
-
-        @Override
-	public void selectionChanged(SelectionContainer<? extends Lane> src) {
-		Lane lane = src.getFocus();
-		if (lane instanceof MidiLane) {
-			cntrlView.setControllerType((ControllerHandle) ((MidiLane) lane)
-					.getControllerList().getList()[0]);
-		}
-
-	}
-
-	public PianoRoll getPianoRoll() {
-		return pianoRoll;
-	}
-
-	public ControllerView getControllerView() {
-		return cntrlView;
-	}
-
-	@Override
-	protected void vertZoom(int inc) {
-		Layout.noteHeightIndex += inc;
-		Layout.noteHeightIndex = Math.min(Layout.noteHeightIndex,Layout.noteItemHeights.length-1);
-		Layout.noteHeightIndex = Math.max(Layout.noteHeightIndex,0);				
-	}
-
+    @Override
+    protected void vertZoom(int inc) {
+        Layout.noteHeightIndex += inc;
+        Layout.noteHeightIndex = Math.min(Layout.noteHeightIndex, Layout.noteItemHeights.length - 1);
+        Layout.noteHeightIndex = Math.max(Layout.noteHeightIndex, 0);
+    }
 }

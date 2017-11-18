@@ -26,15 +26,13 @@ package com.frinika.sequencer.gui;
 import javax.swing.DefaultBoundedRangeModel;
 
 public class ExtendingRangeModel extends DefaultBoundedRangeModel {
-	
-        @Override
-	public void setValue(int val) {
-		
-		if (val >= getMaximum()) {
-			setMaximum(val+5);
-		}
-		
-		super.setValue(val);
-	}
 
+    @Override
+    public void setValue(int val) {
+        if (val >= getMaximum()) {
+            setMaximum(val + 5);
+        }
+
+        super.setValue(val);
+    }
 }

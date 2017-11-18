@@ -21,11 +21,9 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.util.math;
 
 public class MyMath {
-  
 
     static public double halfLifeToLambda(double halfLifeInTicks) {
         // N=halfLifeInTicks
@@ -33,9 +31,6 @@ public class MyMath {
         // N ln(decay)= ln(0.5)
         // decay = e^(ln(0.5)/N)
 
-        return Math.exp(Math.log(0.5)/halfLifeInTicks);
-
-
+        return Math.exp(Math.log(0.5) / halfLifeInTicks);
     }
-
 }

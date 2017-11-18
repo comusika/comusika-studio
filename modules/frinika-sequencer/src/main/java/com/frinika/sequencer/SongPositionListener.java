@@ -21,27 +21,31 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer;
 
 /**
- * Use this interface to implement any component that depend on the song position.
- * This could be a metronome, a graphical song position indicator etc.
+ * Use this interface to implement any component that depend on the song
+ * position. This could be a metronome, a graphical song position indicator etc.
+ *
  * @author Peter Johan Salomonsen
  */
 public interface SongPositionListener {
+
     /**
-     * This method is called each time a new tick is played by the sequencer. Note
-     * that this method should return as soon as possible (immediately).
+     * This method is called each time a new tick is played by the sequencer.
+     * Note that this method should return as soon as possible (immediately).
+     *
      * @param tick
      */
     void notifyTickPosition(long tick);
-    
+
     /**
-     * Your implementation should return true if your listener requires to be notified 
-     * for each and every tick. Otherwise (which is in most cases) return false. 
-     * WARNING: If you return true on this method, you MUST return absolutely immediately 
-     * everytime. Otherwise it may result in a halting song.
+     * Your implementation should return true if your listener requires to be
+     * notified for each and every tick. Otherwise (which is in most cases)
+     * return false. WARNING: If you return true on this method, you MUST return
+     * absolutely immediately everytime. Otherwise it may result in a halting
+     * song.
+     *
      * @return
      */
     boolean requiresNotificationOnEachTick();

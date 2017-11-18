@@ -21,46 +21,45 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.midi;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import uk.org.toot.control.Control;
 
 /**
- * 
- *  Associates controls with a string.
- * 
- *  Helps reconstructing midi to control mapping
- * 
+ *
+ * Associates controls with a string.
+ *
+ * Helps reconstructing midi to control mapping
+ *
  *
  * @author pjl
  */
 public class ControlResolver {
 
-    Hashtable<String,Control> map;
-    
+    Map<String, Control> map;
+
     public ControlResolver() {
-        map=new Hashtable<>();  
+        map = new HashMap<>();
     }
-    
+
     public Control resolve(String key) {
-      Control cntrl=map.get(key);
-      return cntrl;
+        Control cntrl = map.get(key);
+        return cntrl;
     }
 
     public void register(Control control) {
-        map.put(generateKey(control),control);
+        map.put(generateKey(control), control);
     }
-    
+
     String generateKey(Control control) {
-        String str=control.getName() + "_" + control.getId();
- 
+        String str = control.getName() + "_" + control.getId();
+
         if (control.getParent() != null) {
-            return generateKey(control.getParent())+":"+str;
+            return generateKey(control.getParent()) + ":" + str;
         }
-        
+
         return str;
     }
-    
 }

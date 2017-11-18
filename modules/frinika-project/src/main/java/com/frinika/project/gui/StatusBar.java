@@ -1,5 +1,4 @@
 /*
- *
  * Copyright (c) 2004-2008 Paul John Leonard
  * 
  * http://www.frinika.com
@@ -28,20 +27,19 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 /**
- *
  * @author pjl
  */
 public class StatusBar extends JPanel {
+
     private JLabel text;
 
     public StatusBar() {
         setLayout(new BorderLayout());
-        add(text=new JLabel("status bar"), BorderLayout.CENTER);
+        add(text = new JLabel("status bar"), BorderLayout.CENTER);
         setBorder(new BevelBorder(BevelBorder.LOWERED));
     }
 
     public void setMessage(String msg) {
         text.setText(msg);
     }
-
 }

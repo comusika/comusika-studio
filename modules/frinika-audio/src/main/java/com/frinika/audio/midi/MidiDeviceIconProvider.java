@@ -27,5 +27,5 @@ import javax.swing.Icon;
 
 public interface MidiDeviceIconProvider {
 
-    public Icon getIcon();
+    Icon getIcon();
 }

@@ -23,10 +23,10 @@
  */
 package com.frinika.model;
 
-
 /**
  * @author Peter Johan Salomonsen
  */
 public interface EditHistoryListener {
-    public void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries);
+
+    void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries);
 }

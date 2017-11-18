@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.notation.model;
 
 import com.frinika.model.EditHistoryRecordable;
@@ -30,18 +29,18 @@ import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NotationEvent;
 
 public class ClefChange extends NotationEvent {
-	
-	private static final long serialVersionUID = 1L;
-	
-	// Clef Presets (most common clefs)	
-	// Treble   :   clef_type = G,  clef_pos =  2,  clef_octave = 0
-	// Bass     :   clef_type = F,  clef_pos =  6,  clef_octave = 0
+
+    private static final long serialVersionUID = 1L;
+
+    // Clef Presets (most common clefs)	
+    // Treble   :   clef_type = G,  clef_pos =  2,  clef_octave = 0
+    // Bass     :   clef_type = F,  clef_pos =  6,  clef_octave = 0
     // Alto     :   clef_type = C,  clef_pos =  4,  clef_octave = 0
     // Tenor    :   clef_type = C,  clef_pos =  6,  clef_octave = 0
-	
-	//                            clef_pos = 10
-	//      / \      
-	//      |  |    ----------    clef_pos = 8
+    //
+    //                            clef_pos = 10
+    //      / \      
+    //      |  |    ----------    clef_pos = 8
     //      \ /
     //      /       ----------    clef_pos = 6
     //    /  |
@@ -50,24 +49,22 @@ public class ClefChange extends NotationEvent {
     // |  |  |  |   ----------    clef_pos = 2
     // |   \ |  | 
     //  \_____/     ----------    clef_pos = 0
-	//       |
-	//    \_/                     clef_pos  = -2
-	//
-	
-	public int clef_type = NotationGraphics.CLEF_G;
-	public int clef_pos  = 2;	
-	public int clef_octave = 0;    
+    //       |
+    //    \_/                     clef_pos  = -2
+    //
+    public int clef_type = NotationGraphics.CLEF_G;
+    public int clef_pos = 2;
+    public int clef_octave = 0;
 
-	public ClefChange(MidiPart part, long startTick) {
-		super(part, startTick);
-	}
-	
-        @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		ClefChange evt=(ClefChange)object;
-		this.clef_type = evt.clef_type;
-		this.clef_pos = evt.clef_pos;
-		this.clef_octave = evt.clef_octave;
-	}	
+    public ClefChange(MidiPart part, long startTick) {
+        super(part, startTick);
+    }
 
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
+        ClefChange evt = (ClefChange) object;
+        this.clef_type = evt.clef_type;
+        this.clef_pos = evt.clef_pos;
+        this.clef_octave = evt.clef_octave;
+    }
 }

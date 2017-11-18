@@ -21,43 +21,38 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 
-
 public class DragViewTool extends ToolAdapter {
 
-	
-	int x;
-	int y;
-	
-	public DragViewTool(Cursor cursor) {
-		super( cursor);
-	
-		// this.panel=panel;
-	}
+    int x;
+    int y;
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-		client=(ItemPanel)e.getSource();
-		x = e.getX();
-		y = e.getY();
-	}
+    public DragViewTool(Cursor cursor) {
+        super(cursor);
 
-        @Override
-	public void mouseDragged(MouseEvent e) {
-		//Rectangle visibleRect = client.getVisibleRect();
-	       
-		int dx=e.getX() -x;
-		int dy=e.getY() -y;
-		client.getScroller().scrollBy(-dx,-dy);
-	
-		x += dx;
-		y += dy;
+        // this.panel=panel;
+    }
 
-	}
-	
+    @Override
+    public void mousePressed(MouseEvent e) {
+        client = (ItemPanel) e.getSource();
+        x = e.getX();
+        y = e.getY();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        //Rectangle visibleRect = client.getVisibleRect();
+
+        int dx = e.getX() - x;
+        int dy = e.getY() - y;
+        client.getScroller().scrollBy(-dx, -dy);
+
+        x += dx;
+        y += dy;
+    }
 }

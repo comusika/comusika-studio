@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (c) 2006 P.J.Leonard
@@ -21,7 +20,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.tootX.midi;
 
 import uk.org.toot.swingui.controlui.ControlPanel;
@@ -30,10 +28,9 @@ import uk.org.toot.swingui.controlui.ControlPanel;
  *
  * @author pjl
  */
-public interface  MidiLearnIF {
+public interface MidiLearnIF {
 
-    public void setFocus(ControlPanel focus) ;
+    void setFocus(ControlPanel focus);
 
-    public void setVisible(boolean b) ;
- 
+    void setVisible(boolean b);
 }

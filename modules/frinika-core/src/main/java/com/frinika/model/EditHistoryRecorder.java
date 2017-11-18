@@ -24,18 +24,20 @@
 package com.frinika.model;
 
 /**
- * The EditHistoryRecorder interface should be implemented by classes that are able to
- * add and remove EditHistoryRecordables. Example is a part containing MultiEvents - or 
- * lane containing part.
- * 
+ * The EditHistoryRecorder interface should be implemented by classes that are
+ * able to add and remove EditHistoryRecordables. Example is a part containing
+ * MultiEvents - or lane containing part.
+ *
  * The EditHistoryContainer will call add/remove methods when undoing/redoing.
- * 
- * Based on the EditHistoryRecorder class type, one can also filter the EditHistoryContainer
- * for specific EditHistoryEntries.
- * 
+ *
+ * Based on the EditHistoryRecorder class type, one can also filter the
+ * EditHistoryContainer for specific EditHistoryEntries.
+ *
  * @author Peter Johan Salomonsen
  */
 public interface EditHistoryRecorder<T> {
-    public void add(T t);
-    public void remove(T t);
+
+    void add(T t);
+
+    void remove(T t);
 }
