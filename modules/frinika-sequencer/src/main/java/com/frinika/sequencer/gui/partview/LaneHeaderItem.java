@@ -28,8 +28,6 @@ import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -37,10 +35,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
-import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.plaf.metal.MetalButtonUI;
 
 /**
  * left of each lane has a laneheaderitem.
@@ -259,7 +256,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
         c.fill = GridBagConstraints.NONE;
 
         if (lane instanceof MidiLane) {
-            this.prerender = MyButtonFactory.createMyButton("P", Color.BLUE, defaultColor);
+            this.prerender = new MyButton("P", Color.BLUE, defaultColor);
             this.prerender.setMargin(insets);
             this.prerender.setToolTipText("Pre-render this voice");
             prerender.setFocusable(false);
@@ -281,7 +278,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
         }
 
         if (lane instanceof MidiLane) {
-            this.looped = MyButtonFactory.createMyButton("L", Color.YELLOW, defaultColor);
+            this.looped = new MyButton("L", Color.YELLOW, defaultColor);
             this.looped.setMargin(insets);
             this.looped.setToolTipText("Loop this voice");
             looped.setFocusable(false);
@@ -302,7 +299,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
         }
 
         if (lane instanceof RecordableLane) {
-            this.mute = MyButtonFactory.createMyButton("M", Color.ORANGE, defaultColor);
+            this.mute = new MyButton("M", Color.ORANGE, defaultColor);
             this.mute.setMargin(insets);
             this.mute.setToolTipText("Mute this voice");
             mute.setFocusable(false);
@@ -310,7 +307,6 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
                     RecordableLane rl = (RecordableLane) lane;
 //					rl.setMute(!rl.isMute());
                     soloManager.toggleMute(rl);
@@ -323,7 +319,7 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
                 }
             });
 
-            this.solo = MyButtonFactory.createMyButton("S", Color.GREEN, defaultColor);
+            this.solo = new MyButton("S", Color.GREEN, defaultColor);
             this.solo.setMargin(insets);
             this.solo.setToolTipText("Solo this voice");
             solo.setFocusable(false);
@@ -347,9 +343,9 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
             });
 
             if (lane instanceof SynthLane) {
-                this.record = MyButtonFactory.createMyButton("P", Color.BLUE, defaultColor);
+                this.record = new MyButton("P", Color.BLUE, defaultColor);
             } else {
-                this.record = MyButtonFactory.createMyButton("R", Color.RED, defaultColor);
+                this.record = new MyButton("R", Color.RED, defaultColor);
             }
 
             this.record.setMargin(insets);
@@ -540,14 +536,19 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
             this.onCol = onCol.brighter();
             this.userOnCol = onCol;
             this.defaultColor = defaultColor;
+            init();
+        }
 
-            /*
-         * setUI(new MetalButtonUI()); setBorderPainted(true);
-         * setContentAreaFilled(false); setOpaque(false); setBorder(
-         * BorderFactory.createCompoundBorder(
-         * BorderFactory.createLineBorder(Color.GRAY),
-         * BorderFactory.createEmptyBorder(2,2,2,2)));
-             */
+        private void init() {
+            setUI(new MetalButtonUI());
+            setBorderPainted(true);
+            setContentAreaFilled(false);
+            setOpaque(true);
+            setBorder(
+                    BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(Color.GRAY),
+                            BorderFactory.createEmptyBorder(2, 2, 2, 2))
+            );
         }
 
         void draw(boolean on) {
@@ -581,29 +582,5 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
 
     public Lane getLane() {
         return lane;
-    }
-
-    public static class MyButtonFactory {
-
-        private static PlasticXPLookAndFeel plasticLAF = null;
-
-        public static MyButton createMyButton(String text, Color color, Color defaultColor) {
-            if (plasticLAF == null) {
-                plasticLAF = new PlasticXPLookAndFeel();
-            }
-
-            try {
-                LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-                UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-                MyButton button = new MyButton(text, color, defaultColor);
-                UIManager.setLookAndFeel(lookAndFeel);
-
-                return button;
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(LaneHeaderItem.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            return new MyButton(text, color, defaultColor);
-        }
     }
 }
