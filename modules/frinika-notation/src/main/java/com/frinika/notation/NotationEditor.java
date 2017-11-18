@@ -23,7 +23,7 @@
  */
 package com.frinika.notation;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.model.EditHistoryListener;
@@ -75,6 +75,8 @@ import java.util.TreeSet;
 
 public class NotationEditor extends ItemPanel implements EditHistoryListener, EventFilter {
 
+    private boolean darkMode = true;
+
     public static void main(String[] args) {
 
         double tr;
@@ -101,7 +103,6 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
         ret = parseDurToNotationLength(tr);
         System.out.println(tr + " => " + ret[0] + " , " + ret[1] + " , "
                 + ret[2]);
-
     }
 
     private static double calcDottedDiffLen(int i) {
@@ -648,7 +649,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
         // RenderingHints.VALUE_FRACTIONALMETRICS_ON);
         // g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
         // RenderingHints.VALUE_STROKE_PURE);
-        g2.setColor(Color.WHITE);
+        g2.setColor(darkMode ? Color.GRAY : Color.WHITE);
         g2.fillRect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);// 0,
         // 40,
         // 2048,
@@ -862,8 +863,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
                     }
 
                     // Add phantom events for bar/measure seperation
-                    long m = 0;
-                    m = screenToTick(clip_min_x, false);
+                    long m = screenToTick(clip_min_x, false);
                     if (m < 0) {
                         m = 0;
                     }
@@ -1296,7 +1296,6 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
     @Override
     protected void paintImageImplLabel(Graphics2D graphics) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1388,7 +1387,6 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
         project.getMultiEventSelection().notifyListeners();
 
         newNote = null;
-
     }
 
     @Override
@@ -1442,7 +1440,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
         assert (pitch < 128);
 
         project.getEditHistoryContainer().mark(
-                getMessage("sequencer.pianoroll.add_note"));
+                CurrentLocale.getMessage("sequencer.pianoroll.add_note"));
         /*
 		 * if (drumWriteMode) { newNote = new NoteEvent((MidiPart) focusPart,
 		 * tick, pitch, velocity, channel, 0); } else {
@@ -1521,7 +1519,7 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
     @Override
     public void erase(Item it) {
         NoteEvent note = (NoteEvent) it;
-        editHistory.mark(getMessage("sequencer.pianoroll.erase_note"));
+        editHistory.mark(CurrentLocale.getMessage("sequencer.pianoroll.erase_note"));
         note.getPart().remove(note);
         editHistory.notifyEditHistoryListeners();
     }
@@ -1529,7 +1527,6 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
     @Override
     public void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries) {
         repaintItems();
-
     }
 
     @Override

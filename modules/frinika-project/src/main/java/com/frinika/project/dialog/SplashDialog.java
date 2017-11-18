@@ -55,6 +55,7 @@ import javax.swing.SwingConstants;
 
 public class SplashDialog extends JDialog {
 
+    private boolean darkMode = true;
     private static final long serialVersionUID = 1L;
 
     int sel = 0;
@@ -112,8 +113,8 @@ public class SplashDialog extends JDialog {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBackground(Color.WHITE);
-        Icon welcome = new javax.swing.ImageIcon(SplashDialog.class.getResource("/frinika.png"));
+        panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
+        Icon welcome = new javax.swing.ImageIcon(SplashDialog.class.getResource(darkMode ? "/frinika-dark.png" : "/frinika.png"));
         JLabel label = new JLabel(welcome);
         label.setHorizontalTextPosition(SwingConstants.CENTER);
         label.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -124,7 +125,7 @@ public class SplashDialog extends JDialog {
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         JPanel contentpane = new JPanel();
-        contentpane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        contentpane.setBorder(BorderFactory.createLineBorder(darkMode ? Color.WHITE : Color.BLACK, 2));
         contentpane.setLayout(new BorderLayout());
         contentpane.add(panel);
         setContentPane(contentpane);
@@ -218,7 +219,7 @@ public class SplashDialog extends JDialog {
             JLabel border_panel = new JLabel();
             border_panel.setLocation(0, 0);
             border_panel.setSize(getSize());
-            border_panel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+            border_panel.setBorder(BorderFactory.createLineBorder(darkMode ? Color.WHITE : Color.BLACK, 2));
             border_panel.setOpaque(false);
             getLayeredPane().add(border_panel, javax.swing.JLayeredPane.POPUP_LAYER);
             return;

@@ -42,6 +42,8 @@ import java.util.TreeMap;
 
 public class NotationGraphics {
 
+    private boolean darkMode = true;
+
     public class Note {
 
         public float x = 0.0f;

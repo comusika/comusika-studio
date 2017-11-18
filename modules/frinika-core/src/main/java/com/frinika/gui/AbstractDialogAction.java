@@ -24,7 +24,9 @@
 package com.frinika.gui;
 
 import com.frinika.base.AbstractProjectContainer;
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -48,7 +50,7 @@ public abstract class AbstractDialogAction extends AbstractAction {
 
     protected AbstractProjectContainer project;
     protected String actionId;
-    protected OptionsDialog dialog;
+    protected OptionsDialog optionsDialog;
     protected boolean canceled;
 
     public AbstractDialogAction(AbstractProjectContainer project, String actionId) {
@@ -60,17 +62,21 @@ public abstract class AbstractDialogAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         canceled = false;
-        perform(); // /might use clone().perform() to make thread-safe, but not necessary)
+        if (e.getSource() instanceof Component) {
+            perform((Component) e.getSource()); // /might use clone().perform() to make thread-safe, but not necessary)
+        } else {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 
     public void cancel() {
         canceled = true;
     }
 
-    public void perform() {
+    public void perform(Component parent) {
         performPrepare();
         if (!canceled) {
-            performDialog();
+            performDialog(parent);
             if (!canceled) {
                 performUndoable();
             }
@@ -88,9 +94,9 @@ public abstract class AbstractDialogAction extends AbstractAction {
      * otherwise it does nothing (for commands that are directly executed
      * without asking options.)
      */
-    protected void performDialog() {
+    protected void performDialog(Component parent) {
         // usually not overwritten by subclasses
-        OptionsDialog dialog = getDialog();
+        OptionsDialog dialog = getDialog(parent);
         if (dialog != null) {
             dialog.show();
         }
@@ -108,11 +114,11 @@ public abstract class AbstractDialogAction extends AbstractAction {
 
     abstract protected void performAction();
 
-    public OptionsDialog getDialog() {
-        if (this.dialog == null) {
-            this.dialog = createDialog(); // auto-create on first get (avoids confusion with constructor-execution-order)
+    public OptionsDialog getDialog(Component parent) {
+        if (this.optionsDialog == null) {
+            this.optionsDialog = createDialog(parent); // auto-create on first get (avoids confusion with constructor-execution-order)
         }
-        return this.dialog;
+        return this.optionsDialog;
     }
 
     /**
@@ -123,11 +129,11 @@ public abstract class AbstractDialogAction extends AbstractAction {
      *
      * @return
      */
-    protected OptionsDialog createDialog() {
+    protected OptionsDialog createDialog(Component parent) {
         JComponent content = createGUI();
         if (content != null) {
-            OptionsDialog d = new OptionsDialog(null, content, CurrentLocale.getMessage(actionId));
-            return d;
+            OptionsDialog dialog = new OptionsDialog(WindowUtils.getFrame(parent), content, CurrentLocale.getMessage(actionId));
+            return dialog;
         } else {
             return null;
         }
@@ -145,5 +151,4 @@ public abstract class AbstractDialogAction extends AbstractAction {
      * @return
      */
     abstract protected JComponent createGUI();
-
 }

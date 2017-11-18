@@ -45,6 +45,7 @@ import javax.swing.JPopupMenu;
 public class NotationHeader extends JPanel implements MouseListener,
         AdjustmentListener {
 
+    private boolean darkMode = true;
     private static final long serialVersionUID = 1L;
     private int yScroll;
     public NotationEditor notationEditor;
@@ -58,7 +59,7 @@ public class NotationHeader extends JPanel implements MouseListener,
         setSize(new Dimension(width, yBot));
         setPreferredSize(new Dimension(width, yBot));
         setMaximumSize(new Dimension(width, 20000));
-        setBackground(Color.WHITE);
+        setBackground(darkMode ? Color.GRAY : Color.WHITE);
 
         addMouseListener(this);
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);

@@ -81,8 +81,8 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
         // Create the main piano and contrller views using this as the
         // scrollController
-        cntrlView = new ControllerView(project, this);
         pianoRoll = new PianoRoll(project, this);
+        cntrlView = new ControllerView(project, this);
 
         // Create a toll bar and set the clients
         List<ItemPanel> clients = new ArrayList<>();

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.partview;
 
 import com.frinika.audio.gui.ListProvider;
@@ -37,92 +36,76 @@ import uk.org.toot.audio.core.AudioProcess;
 
 public class AudioLaneView extends LaneView {
 
-	
-	AudioProcess audioIn;
-	String name="null";
-	
-	public AudioLaneView(AudioLane lane) {
-		super(lane);
-		init();
-	}
+    AudioProcess audioIn;
+    String name = "null";
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public AudioLaneView(AudioLane lane) {
+        super(lane);
+        init();
+    }
 
-	
+    private static final long serialVersionUID = 1L;
 
-        @Override
-	protected void makeButtons() {
+    @Override
+    protected void makeButtons() {
 
-		JComponent but = createDeviceSelector();
-		add(but, gc);
-			gc.weighty = 1.0;
-			add(new Box.Filler(new Dimension(0, 0),
-					new Dimension(10000, 10000), new Dimension(10000, 10000)),
-					gc);
+        JComponent but = createDeviceSelector();
+        add(but, gc);
+        gc.weighty = 1.0;
+        add(new Box.Filler(new Dimension(0, 0),
+                new Dimension(10000, 10000), new Dimension(10000, 10000)),
+                gc);
 
+    }
 
-	}
+    PopupSelectorButton createDeviceSelector() {
+        audioIn = ((AudioLane) lane).getAudioInDevice();
 
-
-
-	PopupSelectorButton createDeviceSelector() {
-		audioIn = ((AudioLane) lane).getAudioInDevice();
-
-		// Device selector
-		// ------------------------------------------------------------------------------------
-
-		ListProvider resource = new ListProvider() {
-                        @Override
-			public Object[] getList() {
-				// TODO connections setup
+        // Device selector
+        // ------------------------------------------------------------------------------------
+        ListProvider resource = new ListProvider() {
+            @Override
+            public Object[] getList() {
+                // TODO connections setup
 //				Vector<AudioDeviceHandle> vec = AudioHub.getAudioInHandles();
 //				AudioDeviceHandle list[] = new AudioDeviceHandle[vec.size()];
 //				list=vec.toArray(list);
-				List<String> vec=FrinikaAudioSystem.getAudioServer().getAvailableInputNames();
-				String list[]=new String[vec.size()];
-				list=vec.toArray(list);
-				
-				
-			//	int ii=0;
-			//	for (AudioDeviceHandle h:vec) {
-			//		list[ii++]=h;
-			//	}
-				return list;
-			}
-		};
+                List<String> vec = FrinikaAudioSystem.getAudioServer().getAvailableInputNames();
+                String list[] = new String[vec.size()];
+                list = vec.toArray(list);
 
-	
-		
-		PopupClient client = new PopupClient() {
-                        @Override
-			public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
-				AudioProcess in;
-				try {
-					in=FrinikaAudioSystem.getAudioServer().openAudioInput((String)o, null);
-					((AudioLane)lane).setAudioInDevice(in);
-					name=(String)o;
-					if (in != audioIn)
-						init();
-				
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-		};
+                //	int ii=0;
+                //	for (AudioDeviceHandle h:vec) {
+                //		list[ii++]=h;
+                //	}
+                return list;
+            }
+        };
 
+        PopupClient client = new PopupClient() {
+            @Override
+            public void fireSelected(PopupSelectorButton but, Object o, int cnt) {
+                AudioProcess in;
+                try {
+                    in = FrinikaAudioSystem.getAudioServer().openAudioInput((String) o, null);
+                    ((AudioLane) lane).setAudioInDevice(in);
+                    name = (String) o;
+                    if (in != audioIn) {
+                        init();
+                    }
+
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        };
 
 //		if (audioIn != null)
 //			name = audioIn.toString();
 //		else
 //			name = "null";
-
-		return new PopupSelectorButton(resource, client, name);
-
-	}
-
+        return new PopupSelectorButton(resource, client, name);
+    }
 }

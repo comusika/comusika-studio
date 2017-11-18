@@ -25,6 +25,7 @@ package com.frinika.gui;
 
 import com.frinika.global.ProjectFrameIntf;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -47,66 +48,65 @@ import javax.swing.KeyStroke;
  */
 public class AbstractDialog extends JDialog {
 
-    protected ProjectFrameIntf frame;
+    protected Frame frame;
     protected boolean canceled;
 
     public AbstractDialog() throws HeadlessException {
         super();
-        init(null);
+        init();
     }
 
-    public AbstractDialog(ProjectFrameIntf owner) throws HeadlessException {
-        super(owner.getFrame());
-        init(owner);
+    public AbstractDialog(Frame frame) throws HeadlessException {
+        super(frame);
+        init();
     }
 
     public AbstractDialog(AbstractDialog owner) throws HeadlessException {
         super(owner);
-        init(owner.getProjectFrame());
+        init();
     }
 
-    public AbstractDialog(ProjectFrameIntf owner, boolean modal) throws HeadlessException {
-        super(owner.getFrame(), modal);
-        init(owner);
+    public AbstractDialog(Frame frame, boolean modal) throws HeadlessException {
+        super(frame, modal);
+        init();
     }
 
-    public AbstractDialog(ProjectFrameIntf owner, String title) throws HeadlessException {
-        super(owner.getFrame(), title);
-        init(owner);
+    public AbstractDialog(Frame frame, String title) throws HeadlessException {
+        super(frame, title);
+        init();
     }
 
     public AbstractDialog(AbstractDialog owner, boolean modal) throws HeadlessException {
         super(owner, modal);
-        init(owner.getProjectFrame());
+        init();
     }
 
     public AbstractDialog(AbstractDialog owner, String title) throws HeadlessException {
         super(owner, title);
-        init(owner.getProjectFrame());
+        init();
     }
 
-    public AbstractDialog(ProjectFrameIntf owner, String title, boolean modal) throws HeadlessException {
-        super(owner.getFrame(), title, modal);
-        init(owner);
+    public AbstractDialog(Frame frame, String title, boolean modal) throws HeadlessException {
+        super(frame, title, modal);
+        init();
     }
 
     public AbstractDialog(AbstractDialog owner, String title, boolean modal) throws HeadlessException {
         super(owner, title, modal);
-        init(owner.getProjectFrame());
+        init();
     }
 
-    public AbstractDialog(ProjectFrameIntf owner, String title, boolean modal, GraphicsConfiguration gc) {
-        super(owner.getFrame(), title, modal, gc);
-        init(owner);
+    public AbstractDialog(Frame frame, String title, boolean modal, GraphicsConfiguration gc) {
+        super(frame, title, modal, gc);
+        init();
     }
 
     public AbstractDialog(AbstractDialog owner, String title, boolean modal, GraphicsConfiguration gc) throws HeadlessException {
         super(owner, title, modal, gc);
-        init(owner.getProjectFrame());
+        init();
     }
 
-    private void init(ProjectFrameIntf frame) {
-        this.frame = frame;
+    private void init() {
         // close on esc:
         final String ESC_CANCEL = "esc-cancel";
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL);
@@ -142,7 +142,7 @@ public class AbstractDialog extends JDialog {
         this.hide();
     }
 
-    public ProjectFrameIntf getProjectFrame() {
+    public Frame getProjectFrame() {
         return frame;
     }
 

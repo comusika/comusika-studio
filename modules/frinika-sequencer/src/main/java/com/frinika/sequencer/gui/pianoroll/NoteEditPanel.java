@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.pianoroll;
 
 import com.frinika.sequencer.gui.LabelFieldEditor;
@@ -32,33 +31,29 @@ import javax.swing.JPanel;
 public class NoteEditPanel extends JPanel // *** class seems to be unused (? Jens) ***
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
+    LabelFieldEditor lab[];
 
-	LabelFieldEditor lab[];
+    NoteEventTableModel model;
 
-	NoteEventTableModel model;
+    public NoteEditPanel(int ticksPerbeat, AbstractSequencerProjectContainer project) {
+        //setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        model = new NoteEventTableModel(null, 1, ticksPerbeat);
+        //table = new JTable(tableModel);
 
-	public NoteEditPanel(int ticksPerbeat, AbstractSequencerProjectContainer project) {
-		//setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		model = new NoteEventTableModel(null, 1, ticksPerbeat);
-		//table = new JTable(tableModel);
-		
-		lab = new LabelFieldEditor[model.getColumnCount()];
-		
-		for (int i=0;i<model.getColumnCount();i++) {
-			add(lab[i]=new LabelFieldEditor(model,i, project));
-		}
-	//	setBackground(Color.BLUE);
-	}
+        lab = new LabelFieldEditor[model.getColumnCount()];
 
-	public void update(NoteEvent note) {
-		model.setNote(note);
-		for (int i=0;i<model.getColumnCount();i++) {
-			lab[i].update();
-		}
-	}
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            add(lab[i] = new LabelFieldEditor(model, i, project));
+        }
+        //	setBackground(Color.BLUE);
+    }
+
+    public void update(NoteEvent note) {
+        model.setNote(note);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            lab[i].update();
+        }
+    }
 }

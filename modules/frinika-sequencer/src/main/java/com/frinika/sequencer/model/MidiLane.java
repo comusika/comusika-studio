@@ -60,9 +60,6 @@ import rasmus.midi.provider.RasmusSynthesizer;
 
 public class MidiLane extends Lane implements RecordableLane {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 7079152267067539976L;
     static Icon iconNoteLane = new javax.swing.ImageIcon(
             RasmusSynthesizer.class.getResource("/icons/midilane.png"));

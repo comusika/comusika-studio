@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import java.awt.BorderLayout;
@@ -37,130 +36,128 @@ import javax.swing.JScrollBar;
 
 public abstract class ItemScrollPane extends JPanel implements AdjustmentListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// TODO think
-	protected ItemPanel itemPanel;
+    // TODO think
+    protected ItemPanel itemPanel;
 
-	protected JScrollBar horizScroll;
+    protected JScrollBar horizScroll;
 
-	public JScrollBar vertScroll;
-	// TODO make seperate class
-	JPanel vPanel;
-	JPanel buts;
-	JButton plus;
-	JButton minus;
-	
-	protected ItemScrollPane() {
-		super(false);
-		setLayout(new BorderLayout());
+    public JScrollBar vertScroll;
+    // TODO make seperate class
+    JPanel vPanel;
+    JPanel buts;
+    JButton plus;
+    JButton minus;
 
-		horizScroll = new JScrollBar(JScrollBar.HORIZONTAL);
-		add(horizScroll, BorderLayout.SOUTH);
-		horizScroll.addAdjustmentListener(this);
-		vertScroll = new JScrollBar(JScrollBar.VERTICAL);
-		
-		
-		vPanel=new JPanel();
-		vPanel.setLayout(new BorderLayout());
-		
-		
-		//------------------
-		buts=new JPanel();
-		buts.setLayout(new BorderLayout());
-		final JButton plus=new JButton("+");
-		buts.add(plus,BorderLayout.NORTH);
-		final JButton minus=new JButton("-");
-		buts.add(minus,BorderLayout.SOUTH);
-		Insets m=new Insets(0,0,0,0);
-		plus.setMargin(m);
-		minus.setMargin(m);
-		
-		ActionListener vzoom=new ActionListener() {		
-                        @Override
-			public void actionPerformed(ActionEvent e) {		
-				JButton but=(JButton)e.getSource();			
-				if (but == plus) {
-					vertZoom(+1);
-				} else {
-					vertZoom(-1);
-				}
-				rebuild();
-			}					
-		};
-		plus.addActionListener(vzoom);
-		minus.addActionListener(vzoom);
-		//-------------------
-		
-		vPanel.add(vertScroll,BorderLayout.CENTER);
-		vPanel.add(buts,BorderLayout.NORTH);
-		add(vPanel, BorderLayout.EAST);
-		vertScroll.addAdjustmentListener(this);
-	}
+    protected ItemScrollPane() {
+        super(false);
+        setLayout(new BorderLayout());
 
-	protected abstract void vertZoom(int inc);
-	
-	protected abstract void rebuild();
-	/*
+        horizScroll = new JScrollBar(JScrollBar.HORIZONTAL);
+        add(horizScroll, BorderLayout.SOUTH);
+        horizScroll.addAdjustmentListener(this);
+        vertScroll = new JScrollBar(JScrollBar.VERTICAL);
+
+        vPanel = new JPanel();
+        vPanel.setLayout(new BorderLayout());
+
+        //------------------
+        buts = new JPanel();
+        buts.setLayout(new BorderLayout());
+        final JButton plus = new JButton("+");
+        buts.add(plus, BorderLayout.NORTH);
+        final JButton minus = new JButton("-");
+        buts.add(minus, BorderLayout.SOUTH);
+        Insets m = new Insets(0, 0, 0, 0);
+        plus.setMargin(m);
+        minus.setMargin(m);
+
+        ActionListener vzoom = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton but = (JButton) e.getSource();
+                if (but == plus) {
+                    vertZoom(+1);
+                } else {
+                    vertZoom(-1);
+                }
+                rebuild();
+            }
+        };
+        plus.addActionListener(vzoom);
+        minus.addActionListener(vzoom);
+        //-------------------
+
+        vPanel.add(vertScroll, BorderLayout.CENTER);
+        vPanel.add(buts, BorderLayout.NORTH);
+        add(vPanel, BorderLayout.EAST);
+        vertScroll.addAdjustmentListener(this);
+    }
+
+    protected abstract void vertZoom(int inc);
+
+    protected abstract void rebuild();
+
+    /*
 	 * protected void addRowHeader(JPanel rowHeader) {
 	 * add(rowHeader,BorderLayout.WEST); }
-	 */
+     */
 
-	protected void setView(ItemPanel itemPanel) {
-		assert (itemPanel != null);
-		this.itemPanel = itemPanel;
-		// add(itemPanel, BorderLayout.CENTER);
-	}
+    protected void setView(ItemPanel itemPanel) {
+        assert (itemPanel != null);
+        this.itemPanel = itemPanel;
+        // add(itemPanel, BorderLayout.CENTER);
+    }
 
-	protected void setToolBar(JComponent tb) {
-		add(tb, BorderLayout.NORTH);
-	}
+    protected void setToolBar(JComponent tb) {
+        add(tb, BorderLayout.NORTH);
+    }
 
-        @Override
-	public void adjustmentValueChanged(AdjustmentEvent ev) {
-		if (itemPanel == null) return;
-		JScrollBar bar = (JScrollBar) (ev.getSource());
-		int val = ev.getValue();
+    @Override
+    public void adjustmentValueChanged(AdjustmentEvent ev) {
+        if (itemPanel == null) {
+            return;
+        }
+        JScrollBar bar = (JScrollBar) (ev.getSource());
+        int val = ev.getValue();
 
-		if (bar == horizScroll) {
-			itemPanel.setX(val);
-		
-		}
-		if (bar == vertScroll)
-			itemPanel.setY(ev.getValue());
-	}
+        if (bar == horizScroll) {
+            itemPanel.setX(val);
 
-	public void setX(int left) {
-	
+        }
+        if (bar == vertScroll) {
+            itemPanel.setY(ev.getValue());
+        }
+    }
 
-		horizScroll.setValue(left);
+    public void setX(int left) {
 
-	}
+        horizScroll.setValue(left);
 
-	public void scrollBy(int dx, int dy) {
-		
-		
-		itemPanel.itemViewRect.translate(dx, dy);
+    }
 
-		if (itemPanel.itemViewRect.x < 0)
-			itemPanel.itemViewRect.x = 0;
-		if (itemPanel.itemViewRect.y < 0)
-			itemPanel.itemViewRect.y = 0;
-		
-		if (horizScroll.getMaximum() < itemPanel.itemViewRect.x)
-			horizScroll.setMaximum(itemPanel.itemViewRect.x);
-	//	if (vertScroll.getMaximum() < itemPanel.itemViewRect.y)
-	//		vertScroll.setMaximum(itemPanel.itemViewRect.y);
-		
-		horizScroll.setValue(itemPanel.itemViewRect.x);
-		vertScroll.setValue(itemPanel.itemViewRect.y);
+    public void scrollBy(int dx, int dy) {
 
-		itemPanel.paintImages();
-		itemPanel.repaint();
+        itemPanel.itemViewRect.translate(dx, dy);
 
-	}
+        if (itemPanel.itemViewRect.x < 0) {
+            itemPanel.itemViewRect.x = 0;
+        }
+        if (itemPanel.itemViewRect.y < 0) {
+            itemPanel.itemViewRect.y = 0;
+        }
 
+        if (horizScroll.getMaximum() < itemPanel.itemViewRect.x) {
+            horizScroll.setMaximum(itemPanel.itemViewRect.x);
+        }
+        //	if (vertScroll.getMaximum() < itemPanel.itemViewRect.y)
+        //		vertScroll.setMaximum(itemPanel.itemViewRect.y);
+
+        horizScroll.setValue(itemPanel.itemViewRect.x);
+        vertScroll.setValue(itemPanel.itemViewRect.y);
+
+        itemPanel.paintImages();
+        itemPanel.repaint();
+    }
 }

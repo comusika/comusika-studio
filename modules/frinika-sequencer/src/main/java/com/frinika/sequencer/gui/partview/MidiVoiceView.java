@@ -164,16 +164,12 @@ public class MidiVoiceView extends LaneView {
         but = createPatchMapSelector();
         devP.add(but, gc);
 
-
         gc.anchor = GridBagConstraints.WEST;
 
         gc.gridx = 0; // Jens
         //	gc.gridwidth = 1; // Jens
 
-
         add(devP, gc);
-
-
 
         if (drumMapView) {
             MidiDevice dev = ((SynthWrapper) midiDev).getRealDevice();
@@ -191,7 +187,6 @@ public class MidiVoiceView extends LaneView {
         }
 
         /* Jens: */
-
         gc.insets.left = gc.insets.right = gc.insets.top = gc.insets.bottom = 5;
 
         final MidiPlayOptions opt = ((MidiLane) lane).getPlayOptions();
@@ -338,7 +333,6 @@ public class MidiVoiceView extends LaneView {
         });
 
         //gc.fill = GridBagConstraints.NONE;
-
         gc.gridx = 0;
         gc.gridy++;
         gc.anchor = GridBagConstraints.WEST;
@@ -410,7 +404,7 @@ public class MidiVoiceView extends LaneView {
                     quantizeDialogCache.put(lane, action);
                 }
                 action.q = opt.quantization; // directly modify 'our' QuantizeOptions
-                action.getDialog().show();
+                action.getDialog(MidiVoiceView.this).show();
                 quantizeIntervalTimeSelector.setTicks(opt.quantization.interval);
                 if (opt.quantization.intensity < 0) {
                     opt.quantization.intensity = 0; // de-quantization (negaive intensity) disabled for on-the-fly-mode
@@ -447,7 +441,6 @@ public class MidiVoiceView extends LaneView {
         gc.weighty = 1f;
 
         /* /Jens */
-
         boolean noPanel = midiDev == null || !(midiDev instanceof SynthWrapper);
 
         if (!noPanel) {
@@ -490,7 +483,7 @@ public class MidiVoiceView extends LaneView {
                     File file = chooser.getSelectedFile();
                     String patchMapName = file.getAbsolutePath();
                     ((MidiLane) lane).setPatchMapName(patchMapName);
-                    FrinikaConfig.PATCHNAME_DIRECTORY=chooser.getCurrentDirectory();
+                    FrinikaConfig.PATCHNAME_DIRECTORY = chooser.getCurrentDirectory();
                     init();
                 }
 
@@ -595,7 +588,6 @@ public class MidiVoiceView extends LaneView {
 
         // Channel selector
         // ----------------------------------------------------------------------------
-
         String chanStr;
         channel = ((MidiLane) lane).getMidiChannel();
         Object channelHandle = null;
@@ -637,7 +629,6 @@ public class MidiVoiceView extends LaneView {
 
         // Channel selector
         // ----------------------------------------------------------------------------
-
         System.out.println(" DMCS create ");
 
         MidiDevice target = mapper.getDefaultMidiDevice();
@@ -648,7 +639,6 @@ public class MidiVoiceView extends LaneView {
         if (channel > -1) {
             channelHandle = midiResource.getOutChannelList(target)[channel];
         }
-
 
         System.out.println(" DMCS create " + channel + "   " + channelHandle);
         if (channelHandle == null) {
@@ -685,7 +675,6 @@ public class MidiVoiceView extends LaneView {
 
         // Device selector
         // ------------------------------------------------------------------------------------
-
         ListProvider resource = new ListProvider() {
 
             @Override
@@ -749,12 +738,9 @@ public class MidiVoiceView extends LaneView {
 
     PopupSelectorButton createDrumMapperDeviceSelector() {
 
-
         //midiDev = ((MidiLane) lane).getMidiDevice();
-
         // Device selector
         // ------------------------------------------------------------------------------------
-
         ListProvider resource = new ListProvider() {
 
             @Override

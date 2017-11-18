@@ -62,6 +62,8 @@ import javax.swing.SwingConstants;
 
 public class AboutDialog extends JDialog {
 
+    private boolean darkMode = true;
+
     public static final char C = (char) 169; // The (C) Symbol
 
     public static final String MAIN_TITLE
@@ -151,10 +153,14 @@ public class AboutDialog extends JDialog {
         Component[] comps = co.getComponents();
         for (Component comp : comps) {
             if (comp instanceof JOptionPane) {
-                comp.setBackground(Color.WHITE);
+                if (!darkMode) {
+                    comp.setBackground(Color.WHITE);
+                }
             }
             if (comp instanceof JPanel) {
-                comp.setBackground(Color.WHITE);
+                if (!darkMode) {
+                    comp.setBackground(Color.WHITE);
+                }
             }
             if (comp instanceof Container) {
                 whitening((Container) comp);
@@ -215,8 +221,8 @@ public class AboutDialog extends JDialog {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBackground(Color.WHITE);
-        Icon welcome = new javax.swing.ImageIcon(AboutDialog.class.getResource("/frinika.png"));
+        panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
+        Icon welcome = new javax.swing.ImageIcon(AboutDialog.class.getResource(darkMode ? "/frinika-dark.png" : "/frinika.png"));
         JLabel label = new JLabel(welcome);
         label.setHorizontalTextPosition(SwingConstants.CENTER);
         label.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -232,8 +238,8 @@ public class AboutDialog extends JDialog {
         contentpane.add(panel);
         setContentPane(contentpane);
 
-        JPanel buttonpanel = new JPanel();
-        buttonpanel.setOpaque(false);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setOpaque(false);
 
         {
             JButton button = new JButton("License");
@@ -243,7 +249,7 @@ public class AboutDialog extends JDialog {
                     showLicense();
                 }
             });
-            buttonpanel.add(button);
+            buttonsPanel.add(button);
         }
 
         {
@@ -254,7 +260,7 @@ public class AboutDialog extends JDialog {
                     showCredits();
                 }
             });
-            buttonpanel.add(button);
+            buttonsPanel.add(button);
         }
 
         {
@@ -265,7 +271,7 @@ public class AboutDialog extends JDialog {
                     showSystemInfo();
                 }
             });
-            buttonpanel.add(button);
+            buttonsPanel.add(button);
         }
 
         {
@@ -278,10 +284,10 @@ public class AboutDialog extends JDialog {
             });
             button.setDefaultCapable(true);
             getRootPane().setDefaultButton(button);
-            buttonpanel.add(button);
+            buttonsPanel.add(button);
         }
 
-        panel.add(buttonpanel, BorderLayout.CENTER);
+        panel.add(buttonsPanel, BorderLayout.CENTER);
 
         JPanel copyrightpanel = new JPanel();
         copyrightpanel.setOpaque(false);

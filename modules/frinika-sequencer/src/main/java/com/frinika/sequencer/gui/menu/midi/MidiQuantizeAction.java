@@ -21,48 +21,48 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.gui.OptionsDialog;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.Quantization;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.JComponent;
 
 /**
  * Menu-action for quantizing selected MIDI notes.
- * 
+ *
  * @author Jens Gulden
  */
 public class MidiQuantizeAction extends AbstractMidiAction {
-	
-	public Quantization q = new Quantization();
-	
-	public MidiQuantizeAction(AbstractSequencerProjectContainer project) {
-		super(project, "sequencer.midi.quantize");
-	}
-	
-	@Override
-	protected OptionsDialog createDialog() {
-		OptionsDialog d = super.createDialog();
-		d.setRepackDelta(new Dimension(150, 20));
-		return d;
-	}
-	
-        @Override
-	protected JComponent createGUI() {
-		return new MidiQuantizeActionEditor(this);
-	}
-	
-        @Override
-	public void modifyNoteEvent(NoteEvent note) {
-		q.quantize(note);
-	}
-	
-        @Override
-        public AbstractSequencerProjectContainer getProject() {
-            return (AbstractSequencerProjectContainer) super.getProject();
-        }
+
+    public Quantization q = new Quantization();
+
+    public MidiQuantizeAction(AbstractSequencerProjectContainer project) {
+        super(project, "sequencer.midi.quantize");
+    }
+
+    @Override
+    protected OptionsDialog createDialog(Component parent) {
+        OptionsDialog dialog = super.createDialog(parent);
+        dialog.setRepackDelta(new Dimension(150, 20));
+        return dialog;
+    }
+
+    @Override
+    protected JComponent createGUI() {
+        return new MidiQuantizeActionEditor(this);
+    }
+
+    @Override
+    public void modifyNoteEvent(NoteEvent note) {
+        q.quantize(note);
+    }
+
+    @Override
+    public AbstractSequencerProjectContainer getProject() {
+        return (AbstractSequencerProjectContainer) super.getProject();
+    }
 }

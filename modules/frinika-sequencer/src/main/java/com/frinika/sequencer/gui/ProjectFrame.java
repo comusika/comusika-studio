@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.global.ProjectFrameIntf;
@@ -44,102 +43,103 @@ import javax.swing.JPopupMenu;
  */
 public interface ProjectFrame extends ProjectFrameIntf {
 
-	/**
-	 * File-filter for midi standard files. To be used with promptFile().
-	 * 
-	 * @see promptFile
-	 */
-	public final static String[][] FILE_FILTER_MIDIFILES = new String[][] { {
-			"mid", "Midi standard files" } };
+    /**
+     * File-filter for midi standard files. To be used with promptFile().
+     *
+     * @see promptFile
+     */
+    final static String[][] FILE_FILTER_MIDIFILES = new String[][]{{
+        "mid", "Midi standard files"}};
 
     // hack to stop exit when last frma is closed.
+    static boolean doNotQuit = false;
 
-    public static boolean doNotQuit=false;
+    MidiLearnIF getMidiLearnIF();
 
-    public MidiLearnIF getMidiLearnIF();
+    void resetViews();
 
-	public void resetViews();
+    @Override
+    void repaintViews();
 
-        @Override
-	public void repaintViews();
+    void repaintPartView();
 
-	public void repaintPartView();
+    void initViews();
 
-	public void initViews();
+    void addMidiDevices(JComponent menu, List<MidiDevice.Info> infos,
+            List<Icon> icons);
 
-	public void addMidiDevices(JComponent menu, List<MidiDevice.Info> infos,
-			List<Icon> icons);
+    void addMidiDevices(JComponent menu);
 
-	public void addMidiDevices(JComponent menu);
+    MidiDevice selectMidiDevice();
 
-	public MidiDevice selectMidiDevice();
+    void tryQuit();
 
-	public void tryQuit();
+    AbstractSequencerProjectContainer getProjectContainer();
 
-	public AbstractSequencerProjectContainer getProjectContainer();
+    /**
+     *
+     * @param string
+     * @deprecated
+     */
+    void infoMessage(String string);
 
-	/**
-	 * 
-	 * @param string
-	 * @deprecated
-	 */
-	public void infoMessage(String string);
+    MidiDevicesPanel getMidiDevicesPanel();
 
-	public MidiDevicesPanel getMidiDevicesPanel();
+    VoicePartViewSplitPane getVoicePartViewSplitPane();
 
-	public VoicePartViewSplitPane getVoicePartViewSplitPane();
+    void setStatusBarMessage(String msg);
 
-        public void setStatusBarMessage(String msg);
-        
-	public void message(String msg, int type);
+    void message(String msg, int type);
 
-	public void message(String msg);
+    void message(String msg);
 
-	public void error(String msg);
+    void error(String msg);
 
-	public void error(String msg, Throwable t);
+    void error(String msg, Throwable t);
 
-	public void error(Throwable t);
+    void error(Throwable t);
 
-	public boolean confirm(String msg);
+    boolean confirm(String msg);
 
-	public String prompt(String msg, String initialValue);
+    String prompt(String msg, String initialValue);
 
-	public String prompt(String msg);
+    String prompt(String msg);
 
-	public String promptFile(String defaultFilename, String[][] suffices,
-			boolean saveMode, boolean directoryMode);
+    String promptFile(String defaultFilename, String[][] suffices,
+            boolean saveMode, boolean directoryMode);
 
-	public String promptFile(String defaultFilename, String[][] suffices,
-			boolean saveMode);
+    String promptFile(String defaultFilename, String[][] suffices,
+            boolean saveMode);
 
-	public String promptFile(String defaultFilename, String[][] suffices);
+    String promptFile(String defaultFilename, String[][] suffices);
 
-	public void showRightButtonPartPopup(Component invoker, int x, int y);
+    void showRightButtonPartPopup(Component invoker, int x, int y);
 
-        /** Get swing frame if available */
-        @Override
-        public JFrame getFrame();
+    /**
+     * Get swing frame if available
+     */
+    @Override
+    JFrame getFrame();
 
-        public JPopupMenu getNewLaneMenu();
+    JPopupMenu getNewLaneMenu();
 
     /**
      * @return the trackerPanel
      */
-    public TrackerPanel getTrackerPanel();
+    TrackerPanel getTrackerPanel();
 
     /**
      * @return the pianoControllerPane
      */
-    public PianoControllerSplitPane getPianoControllerPane();
+    PianoControllerSplitPane getPianoControllerPane();
 
     /**
      * @return the notationPanel
      */
-    // NBP public NotationPanel getNotationPanel();
+    // NBP NotationPanel getNotationPanel();
 
     /**
      * @return the partViewEditor
      */
-    public VoicePartViewSplitPane getPartViewEditor();
+    VoicePartViewSplitPane getPartViewEditor();
 }

@@ -481,7 +481,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
         final OptionsEditor contentEditor = createPropertiesPanel(frame);
         final OptionsEditor backup = createPropertiesPanel(frame); // a second one which keeps initial values (and will not be displayed)
         backup.refresh();
-        OptionsDialog dialog = new OptionsDialog(frame, (JComponent) contentEditor, "Part Properties") {
+        OptionsDialog dialog = new OptionsDialog(frame.getFrame(), (JComponent) contentEditor, "Part Properties") {
 
             /**
              * Called when Ok is chosen.

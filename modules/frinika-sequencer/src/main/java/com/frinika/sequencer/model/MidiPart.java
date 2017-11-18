@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.gui.OptionsEditor;
@@ -48,311 +47,287 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 /**
- * Contains a List of MultiEvents.
- * Belongs to a lane.
- * 
- * @author Paul
+ * Contains a List of MultiEvents. Belongs to a lane.
  *
+ * @author Paul
  */
 public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
-	
+
     private static final long serialVersionUID = 1L;
 
     String name;
-	TreeSet<MultiEvent> multiEvents = new TreeSet<>();
-	Collection<CommitListener> commitListeners = null; // Jens
-	transient TreeSet<MultiEventEndTickComparable> multiEventEndTickComparables = new TreeSet<MultiEventEndTickComparable>();
-	
-	public MidiPart() {
-		
-	}
-    
+    TreeSet<MultiEvent> multiEvents = new TreeSet<>();
+    Collection<CommitListener> commitListeners = null; // Jens
+    transient TreeSet<MultiEventEndTickComparable> multiEventEndTickComparables = new TreeSet<MultiEventEndTickComparable>();
+
+    public MidiPart() {
+    }
+
     /**
-     *  Constructor for an MidiPart.
+     * Constructor for an MidiPart.
+     *
      * @param lane
      */
-    		
     public MidiPart(MidiLane lane) {
-    	super(lane);
-	}
-    
-  
-	
-	/**
-	 * Rebuild the bounds from the multievent startTicks
-	 *
-	 */
-	public void setBoundsFromEvents() {
-        if(multiEvents.size()>0)
-        {   
-        	setStartTick(multiEvents.first().getStartTick());
-             if(multiEventEndTickComparables.size()>0)
-                setEndTick(multiEventEndTickComparables.last().getMultiEvent().getEndTick());
-             else
-                 // This should really not happen - but happens for old projects with notes without end ticks (and imported midi files)
-                setEndTick(multiEvents.last().getStartTick());
-        } else {
-        	System.err.println(" Warning attempt to set bounds for an empty part");
-        	setStartTick(0);
-        	setEndTick(1);
-        }
-	}
-
-	/**
-	 * Import Midi events into a Part from a section of track.
-	 *
-	 * Notes with start ticks in the range and inserted and the end events will be found and added.
-	 * (So end events may be outside the bounds)
-	 *
-	 * @param startTickArg   start tick (inclusive)
-	 * @param endTickArg     end tick (exclusive)
-	 */
-	public void importFromMidiTrack(long startTickArg,long endTickArg) {
-        
-    	
-    	HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<>();
-        
-        FrinikaTrackWrapper track=((MidiLane) lane).getTrack();
-        
-        for(int n=0;n<track.size();n++)
-        {
-        	
-            MidiEvent event = track.get(n);
-
-            
-            // Check if note event
-            try
-            {
-                if(event.getMessage() instanceof ShortMessage)
-                {
-                    ShortMessage shm = (ShortMessage)event.getMessage();
-                    if(shm.getCommand() == ShortMessage.NOTE_ON || shm.getCommand() == ShortMessage.NOTE_OFF)
-                    {
-                        // Note off
-                        if(shm.getCommand() == ShortMessage.NOTE_OFF || shm.getData2()==0)
-                        {
-                        
-                        	// Generate a note event
-                            NoteEvent noteEvent = pendingNoteEvents.get(shm.getChannel() << 8 | shm.getData1());
-                            if (noteEvent == null) {
-                            	System.err.println("NoteOff event without start event, PLEASE FIX ME  in MidiPart ");
-                            	continue;
-                            }
-                            noteEvent.setEndEvent(event);
-                            pendingNoteEvents.remove(shm.getChannel() << 8 | shm.getData1());
-                            multiEvents.add(noteEvent);
-    
-                        } else {
-                            // Note on
-                           	if (event.getTick() >=startTickArg && event.getTick() < endTickArg){
-                                                   		pendingNoteEvents.put(shm.getChannel() << 8 | shm.getData1(),
-                                    new NoteEvent(this,event));
-                        	}
-                        }
-                    }
-                    else if(shm.getCommand() == ShortMessage.CONTROL_CHANGE)
-                    {
-                        if (event.getTick() >=startTickArg && event.getTick() < endTickArg)                            
-                            multiEvents.add(new ControllerEvent(this,event.getTick(),shm.getData1(),shm.getData2()));
-                    }
-                    else if(shm.getCommand() == ShortMessage.PITCH_BEND)
-                    {
-                        if (event.getTick() >=startTickArg && event.getTick() < endTickArg)
-                            multiEvents.add(new PitchBendEvent(this,event.getTick(),((shm.getData1()) | (shm.getData2() << 7)) & 0x7fff));
-                    } 
-                    else if(shm.getCommand() == ShortMessage.PROGRAM_CHANGE)
-                    {
-                        System.out.println(" Discarding program change event ");
-                    } 
-                    
-                    
-                    
-                    // TODO Sysex messages here
-                    if (event.getTick() >= endTickArg && pendingNoteEvents.size()==0) 
-                        break;
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        if (pendingNoteEvents.size() != 0 ) {
-        	System.err.println(" Some notes did not have a noteoff event ");
-        }
-        
-        for (MultiEvent e:multiEvents) {
-        	e.zombie=false;
-        	if (e instanceof NoteEvent) {
-        		((NoteEvent)e).validate();
-        		
-        	}
-        }
-        rebuildMultiEventEndTickComparables();
-        setBoundsFromEvents();
+        super(lane);
     }
-	
-	/**
-	 * Import Midi events into a Part from a section of track.
-	 *
-	 * Notes with start ticks in the range and inserted and the end events will be found and added.
-	 * (So end events may be outside the bounds)
-	 *
-	 * @param startTickArg   start tick (inclusive)
-	 * @param endTickArg     end tick (exclusive)
-	 */
-	public void importFromMidiTrack(Track track,long startTickArg,long endTickArg) {
-        
-    	
-    	HashMap<Integer,NoteEvent> pendingNoteEvents = new HashMap<>();
-        
-      //  FrinikaTrackWrapper track=((MidiLane) lane).getTrack();
-        
-        for(int n=0;n<track.size();n++)
-        {
-        	
-            MidiEvent event = track.get(n);
-
-            
-            // Check if note event
-            try
-            {
-                if(event.getMessage() instanceof ShortMessage)
-                {
-                    ShortMessage shm = (ShortMessage)event.getMessage();
-                    if(shm.getCommand() == ShortMessage.NOTE_ON || shm.getCommand() == ShortMessage.NOTE_OFF)
-                    {
-                        // Note off
-                        if(shm.getCommand() == ShortMessage.NOTE_OFF || shm.getData2()==0)
-                        {
-                        
-                        	// Generate a note event
-                            NoteEvent noteEvent = pendingNoteEvents.get(shm.getChannel() << 8 | shm.getData1());
-                            if (noteEvent == null) {
-                            	System.err.println("NoteOff event without start event, PLEASE FIX ME  in MidiPart ");
-                            	continue;
-                            }
-                            noteEvent.setEndEvent(event);
-                            pendingNoteEvents.remove(shm.getChannel() << 8 | shm.getData1());
-                            multiEvents.add(noteEvent);
-    
-                        } else {
-                            // Note on
-                           	if (event.getTick() >=startTickArg && event.getTick() < endTickArg){
-                                                   		pendingNoteEvents.put(shm.getChannel() << 8 | shm.getData1(),
-                                    new NoteEvent(this,event));
-                        	}
-                        }
-                    }
-                    else if(shm.getCommand() == ShortMessage.CONTROL_CHANGE)
-                    {
-                        if (event.getTick() >=startTickArg && event.getTick() < endTickArg)                            
-                            multiEvents.add(new ControllerEvent(this,event.getTick(),shm.getData1(),shm.getData2()));
-                    }
-                    else if(shm.getCommand() == ShortMessage.PITCH_BEND)
-                    {
-                        if (event.getTick() >=startTickArg && event.getTick() < endTickArg)
-                            multiEvents.add(new PitchBendEvent(this,event.getTick(),((shm.getData1()) | (shm.getData2() << 7)) & 0x7fff));
-                    } 
-                    // TODO Sysex messages here
-                    if (event.getTick() >= endTickArg && pendingNoteEvents.size()==0) 
-                        break;
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-        
-        if (pendingNoteEvents.size() != 0 ) {
-        	System.err.println(" Some notes did not have a noteoff event ");
-        }
-        
-        for (MultiEvent e:multiEvents) {
-        	e.zombie=false;
-        	if (e instanceof NoteEvent) {
-        		((NoteEvent)e).validate();
-        		
-        	}
-        }
-        rebuildMultiEventEndTickComparables();
-        setBoundsFromEvents();
-    }
-	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
     /**
-	 * Add a MultiEvent to the track.
-	 * The client is responsible for adjusting the Part bounds is need be.
-	 * 
-	 * @param ev
-	 * @return
-	 */
-	
+     *
+     */
+    public void setBoundsFromEvents() {
+        if (multiEvents.size() > 0) {
+            setStartTick(multiEvents.first().getStartTick());
+            if (multiEventEndTickComparables.size() > 0) {
+                setEndTick(multiEventEndTickComparables.last().getMultiEvent().getEndTick());
+            } else // This should really not happen - but happens for old projects with notes without end ticks (and imported midi files)
+            {
+                setEndTick(multiEvents.last().getStartTick());
+            }
+        } else {
+            System.err.println(" Warning attempt to set bounds for an empty part");
+            setStartTick(0);
+            setEndTick(1);
+        }
+    }
+
+    /**
+     * Import Midi events into a Part from a section of track.
+     *
+     * Notes with start ticks in the range and inserted and the end events will
+     * be found and added. (So end events may be outside the bounds)
+     *
+     * @param startTickArg start tick (inclusive)
+     * @param endTickArg end tick (exclusive)
+     */
+    public void importFromMidiTrack(long startTickArg, long endTickArg) {
+
+        HashMap<Integer, NoteEvent> pendingNoteEvents = new HashMap<>();
+
+        FrinikaTrackWrapper track = ((MidiLane) lane).getTrack();
+
+        for (int n = 0; n < track.size(); n++) {
+
+            MidiEvent event = track.get(n);
+
+            // Check if note event
+            try {
+                if (event.getMessage() instanceof ShortMessage) {
+                    ShortMessage shm = (ShortMessage) event.getMessage();
+                    if (shm.getCommand() == ShortMessage.NOTE_ON || shm.getCommand() == ShortMessage.NOTE_OFF) {
+                        // Note off
+                        if (shm.getCommand() == ShortMessage.NOTE_OFF || shm.getData2() == 0) {
+
+                            // Generate a note event
+                            NoteEvent noteEvent = pendingNoteEvents.get(shm.getChannel() << 8 | shm.getData1());
+                            if (noteEvent == null) {
+                                System.err.println("NoteOff event without start event, PLEASE FIX ME  in MidiPart ");
+                                continue;
+                            }
+                            noteEvent.setEndEvent(event);
+                            pendingNoteEvents.remove(shm.getChannel() << 8 | shm.getData1());
+                            multiEvents.add(noteEvent);
+
+                        } else {
+                            // Note on
+                            if (event.getTick() >= startTickArg && event.getTick() < endTickArg) {
+                                pendingNoteEvents.put(shm.getChannel() << 8 | shm.getData1(),
+                                        new NoteEvent(this, event));
+                            }
+                        }
+                    } else if (shm.getCommand() == ShortMessage.CONTROL_CHANGE) {
+                        if (event.getTick() >= startTickArg && event.getTick() < endTickArg) {
+                            multiEvents.add(new ControllerEvent(this, event.getTick(), shm.getData1(), shm.getData2()));
+                        }
+                    } else if (shm.getCommand() == ShortMessage.PITCH_BEND) {
+                        if (event.getTick() >= startTickArg && event.getTick() < endTickArg) {
+                            multiEvents.add(new PitchBendEvent(this, event.getTick(), ((shm.getData1()) | (shm.getData2() << 7)) & 0x7fff));
+                        }
+                    } else if (shm.getCommand() == ShortMessage.PROGRAM_CHANGE) {
+                        System.out.println(" Discarding program change event ");
+                    }
+
+                    // TODO Sysex messages here
+                    if (event.getTick() >= endTickArg && pendingNoteEvents.size() == 0) {
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (pendingNoteEvents.size() != 0) {
+            System.err.println(" Some notes did not have a noteoff event ");
+        }
+
+        for (MultiEvent e : multiEvents) {
+            e.zombie = false;
+            if (e instanceof NoteEvent) {
+                ((NoteEvent) e).validate();
+
+            }
+        }
+        rebuildMultiEventEndTickComparables();
+        setBoundsFromEvents();
+    }
+
+    /**
+     * Import Midi events into a Part from a section of track.
+     *
+     * Notes with start ticks in the range and inserted and the end events will
+     * be found and added. (So end events may be outside the bounds)
+     *
+     * @param startTickArg start tick (inclusive)
+     * @param endTickArg end tick (exclusive)
+     */
+    public void importFromMidiTrack(Track track, long startTickArg, long endTickArg) {
+
+        HashMap<Integer, NoteEvent> pendingNoteEvents = new HashMap<>();
+
+        //  FrinikaTrackWrapper track=((MidiLane) lane).getTrack();
+        for (int n = 0; n < track.size(); n++) {
+
+            MidiEvent event = track.get(n);
+
+            // Check if note event
+            try {
+                if (event.getMessage() instanceof ShortMessage) {
+                    ShortMessage shm = (ShortMessage) event.getMessage();
+                    if (shm.getCommand() == ShortMessage.NOTE_ON || shm.getCommand() == ShortMessage.NOTE_OFF) {
+                        // Note off
+                        if (shm.getCommand() == ShortMessage.NOTE_OFF || shm.getData2() == 0) {
+
+                            // Generate a note event
+                            NoteEvent noteEvent = pendingNoteEvents.get(shm.getChannel() << 8 | shm.getData1());
+                            if (noteEvent == null) {
+                                System.err.println("NoteOff event without start event, PLEASE FIX ME  in MidiPart ");
+                                continue;
+                            }
+                            noteEvent.setEndEvent(event);
+                            pendingNoteEvents.remove(shm.getChannel() << 8 | shm.getData1());
+                            multiEvents.add(noteEvent);
+
+                        } else {
+                            // Note on
+                            if (event.getTick() >= startTickArg && event.getTick() < endTickArg) {
+                                pendingNoteEvents.put(shm.getChannel() << 8 | shm.getData1(),
+                                        new NoteEvent(this, event));
+                            }
+                        }
+                    } else if (shm.getCommand() == ShortMessage.CONTROL_CHANGE) {
+                        if (event.getTick() >= startTickArg && event.getTick() < endTickArg) {
+                            multiEvents.add(new ControllerEvent(this, event.getTick(), shm.getData1(), shm.getData2()));
+                        }
+                    } else if (shm.getCommand() == ShortMessage.PITCH_BEND) {
+                        if (event.getTick() >= startTickArg && event.getTick() < endTickArg) {
+                            multiEvents.add(new PitchBendEvent(this, event.getTick(), ((shm.getData1()) | (shm.getData2() << 7)) & 0x7fff));
+                        }
+                    }
+                    // TODO Sysex messages here
+                    if (event.getTick() >= endTickArg && pendingNoteEvents.size() == 0) {
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (pendingNoteEvents.size() != 0) {
+            System.err.println(" Some notes did not have a noteoff event ");
+        }
+
+        for (MultiEvent e : multiEvents) {
+            e.zombie = false;
+            if (e instanceof NoteEvent) {
+                ((NoteEvent) e).validate();
+
+            }
+        }
+        rebuildMultiEventEndTickComparables();
+        setBoundsFromEvents();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Add a MultiEvent to the track. The client is responsible for adjusting
+     * the Part bounds is need be.
+     *
+     * @param ev
+     * @return
+     */
     @Override
-    public void add(MultiEvent ev)
-    { 
-    		ev.part = this;
+    public void add(MultiEvent ev) {
+        ev.part = this;
 
-    		ev.commitAdd();       
+        ev.commitAdd();
 
-    	   // TODO this should not be here ?
-           /* if (startTick > ev.getStartTick()) 
+        // TODO this should not be here ?
+        /* if (startTick > ev.getStartTick()) 
     			startTick = ev.getStartTick();
 
     		if (endTick < ev.getEndTick()) 
     			endTick = ev.getEndTick();
-					*/
-    
-    		multiEvents.add(ev);
-    		if(multiEventEndTickComparables != null)
+         */
+        multiEvents.add(ev);
+        if (multiEventEndTickComparables != null) {
             multiEventEndTickComparables.add(ev.getMultiEventEndTickComparable());
+        }
 
-            setChanged();
-    		if (lane != null) getEditHistoryContainer().push(this,EditHistoryRecordableAction.EDIT_HISTORY_TYPE_ADD, ev);
-    	//	System. out.println("added "+ev.toString());
+        setChanged();
+        if (lane != null) {
+            getEditHistoryContainer().push(this, EditHistoryRecordableAction.EDIT_HISTORY_TYPE_ADD, ev);
+        }
+        //	System. out.println("added "+ev.toString());
     }
-    
+
     /**
-	 * Remove a MultiEvent from the track
-	 * 
-	 * @param multiEvent
-	 * @return
-	 */
+     * Remove a MultiEvent from the track
+     *
+     * @param multiEvent
+     * @return
+     */
     @Override
-    public void remove(MultiEvent multiEvent)
-    {
+    public void remove(MultiEvent multiEvent) {
         multiEvent.commitRemove();
         multiEvents.remove(multiEvent);
-        if(multiEventEndTickComparables != null)
-        multiEventEndTickComparables.remove(multiEvent.getMultiEventEndTickComparable());
+        if (multiEventEndTickComparables != null) {
+            multiEventEndTickComparables.remove(multiEvent.getMultiEventEndTickComparable());
+        }
         lane.project.getMultiEventSelection().removeSelected(multiEvent);
         setChanged();
-        getEditHistoryContainer().push(this,EditHistoryRecordableAction.EDIT_HISTORY_TYPE_REMOVE, multiEvent);
-    //    System. out.println("removed "+multiEvent.toString());
+        getEditHistoryContainer().push(this, EditHistoryRecordableAction.EDIT_HISTORY_TYPE_REMOVE, multiEvent);
+        //    System. out.println("removed "+multiEvent.toString());
     }
 
-/*
+    /*
     protected void attachMultiEvents() {
       	if (multiEvents == null ) return;
           	for (MultiEvent e:multiEvents) {
     		e.commitAdd();
     	}
     }*/
-
     @Override
     public void commitEventsRemove() {
-      	if (multiEvents == null ) return;
-        
-    	for (MultiEvent e:multiEvents) {
-    		if (!e.isZombie()) e.commitRemove();
-    	}
+        if (multiEvents == null) {
+            return;
+        }
+
+        for (MultiEvent e : multiEvents) {
+            if (!e.isZombie()) {
+                e.commitRemove();
+            }
+        }
     }
-    
+
 //    /**
 //	 * Register updates on a MultiEvent
 //	 * 
@@ -363,126 +338,114 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 //       remove(multiEvent);
 //       add(multiEvent);
 //    }
-    
     /**
-	 * Returns the multievent array.
-	 * 
-	 * @return
-	 */
-    public SortedSet<MultiEvent> getMultiEvents()
-    {
+     * Returns the multievent array.
+     *
+     * @return
+     */
+    public SortedSet<MultiEvent> getMultiEvents() {
         return multiEvents;
     }
-    
+
     /**
-	 * Returns a subset of the multievent array including startTick excluding
-	 * endTick
-	 * 
-	 * @param startTick
-	 * @param endTick
-	 * @return
-	 */
-    public SortedSet<MultiEvent> getMultiEventSubset(long startTick, long endTick)
-    {
-        return multiEvents.subSet(new SubsetMultiEvent(startTick),new SubsetMultiEvent(endTick));
+     * Returns a subset of the multievent array including startTick excluding
+     * endTick
+     *
+     * @param startTick
+     * @param endTick
+     * @return
+     */
+    public SortedSet<MultiEvent> getMultiEventSubset(long startTick, long endTick) {
+        return multiEvents.subSet(new SubsetMultiEvent(startTick), new SubsetMultiEvent(endTick));
     }
 
-	public FrinikaTrackWrapper getTrack() {
-		return ((MidiLane) lane).getTrack();
-	}
+    public FrinikaTrackWrapper getTrack() {
+        return ((MidiLane) lane).getTrack();
+    }
 
-
- /*
-	 * public EditHistoryContainer getEditHistoryContainer() { return
-	 * track.getEditHistoryContainer(); }
-	 * 
-	 * public Sequence getSequence() { return track.getSequence(); }
-	 */
-	public int getMidiChannel() {
-		return getTrack().getMidiChannel();
-	}
-
-
+    /**
+     * public EditHistoryContainer getEditHistoryContainer() { return
+     * track.getEditHistoryContainer(); }
+     *
+     * public Sequence getSequence() { return track.getSequence(); }
+     */
+    public int getMidiChannel() {
+        return getTrack().getMidiChannel();
+    }
 
     public EditHistoryContainer getEditHistoryContainer() {
         return getLane().getProject().getEditHistoryContainer();
     }
 
-
     /**
-     * Make sure part is detached before calling this then reattach after
-     * This operation does not change the database rep so we do not call setChanged()
+     * Make sure part is detached before calling this then reattach after This
+     * operation does not change the database rep so we do not call setChanged()
      *
      */
-	@Override
-	protected void moveItemsBy(long deltaTick) {
-		Vector<MultiEvent> list=new Vector<>();
-		
-	
-		
-		for(MultiEvent ev:multiEvents) {	
-			list.add(ev);
-		}
-		
-		for (MultiEvent ev:list) {
-			long newTick = deltaTick+ev.getStartTick();
-			remove(ev);
-			ev.setStartTick(newTick);
-			add(ev);			
-		}
-		
-	
-	}
+    @Override
+    protected void moveItemsBy(long deltaTick) {
+        Vector<MultiEvent> list = new Vector<>();
+
+        for (MultiEvent ev : multiEvents) {
+            list.add(ev);
+        }
+
+        for (MultiEvent ev : list) {
+            long newTick = deltaTick + ev.getStartTick();
+            remove(ev);
+            ev.setStartTick(newTick);
+            add(ev);
+        }
+
+    }
 
     @Override
-	public void moveContentsBy(double dTick,Lane dstLane) {
-		
-		setStartTick (getStartTick() + dTick);
-		setEndTick(getEndTick() + dTick);
-		
-		commitEventsRemove();
-	
-		
-		if (dstLane != lane) {			
-			lane.getParts().remove(this);
-			dstLane.getParts().add(this);
-			lane=dstLane;
-		}
-		
-		for (MultiEvent ev : multiEvents) {
-			long newTick = (long)(dTick + ev.getStartTick());
-			ev.setStartTick(newTick);
-		}
+    public void moveContentsBy(double dTick, Lane dstLane) {
 
-		commitEventsAdd();
-		
-	}
-	
+        setStartTick(getStartTick() + dTick);
+        setEndTick(getEndTick() + dTick);
+
+        commitEventsRemove();
+
+        if (dstLane != lane) {
+            lane.getParts().remove(this);
+            dstLane.getParts().add(this);
+            lane = dstLane;
+        }
+
+        for (MultiEvent ev : multiEvents) {
+            long newTick = (long) (dTick + ev.getStartTick());
+            ev.setStartTick(newTick);
+        }
+
+        commitEventsAdd();
+
+    }
+
     @Override
     public void restoreFromClone(EditHistoryRecordable o) {
-    	MidiPart clone=(MidiPart)o;
-       	lane=clone.lane;
-    	setStartTick(clone.getStartTick());
-    	setEndTick(clone.getEndTick());
-    	
-    	// selection 
-    	selected=false; // clone.selected;     
+        MidiPart clone = (MidiPart) o;
+        lane = clone.lane;
+        setStartTick(clone.getStartTick());
+        setEndTick(clone.getEndTick());
+
+        // selection 
+        selected = false; // clone.selected;     
     }
-    
+
     @Override
     public Object clone() throws CloneNotSupportedException {
-    	Part clone=new MidiPart();
-       	clone.lane= lane;
-    	clone.setStartTick(getStartTick());
-    	clone.setEndTick(getEndTick());
-    	clone.selected = false;
-        
+        Part clone = new MidiPart();
+        clone.lane = lane;
+        clone.setStartTick(getStartTick());
+        clone.setEndTick(getEndTick());
+        clone.selected = false;
+
         // database history fields
         //clone.editParent=editParent;
         //clone.rootPart=rootPart;
         //clone.partResourceId=partResourceId;
-
-    	return clone;
+        return clone;
     }
 
     @Override
@@ -490,103 +453,99 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
      * Generate native MIDI event out of generic Frinika MultiEvents
      */
     public void commitEventsAdd() {
-    	if (multiEvents == null ) return;
-    //	System.out.println("Committing " + multiEvents.size() + " events");
-        for(MultiEvent multiEvent : multiEvents)  {
+        if (multiEvents == null) {
+            return;
+        }
+        //	System.out.println("Committing " + multiEvents.size() + " events");
+        for (MultiEvent multiEvent : multiEvents) {
 //        	long tick=multiEvent.getStartTick();
-                // PJS: Removed this if since this notes will be displayed but not played otherwise
-        	//if (tick >= getStartTick() && tick < getEndTick())
-                    multiEvent.commitAdd();
+            // PJS: Removed this if since this notes will be displayed but not played otherwise
+            //if (tick >= getStartTick() && tick < getEndTick())
+            multiEvent.commitAdd();
         }
     }
 
-    
-	@Override
-	public void copyBy(double deltaTick,Lane dst) {
-		
-		MidiPart part = new MidiPart((MidiLane)dst);
-		
-		
-		Collection<MultiEvent> events=getMultiEvents();
-
-		part.setStartTick(getStartTick()+deltaTick);
-		part.setEndTick(getEndTick()+deltaTick);
-
-		for (MultiEvent ev:events) {
-			try {
-				MultiEvent newEv=(MultiEvent)ev.clone();
-				double newTick = deltaTick+ev.getStartTick();
-				newEv.setStartTick((long)newTick);
-				part.add(newEv);
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-
-        part.rootPart=rootPart;
-        part.partResourceId=partResourceId;
-        part.editParent=editParent;
-		
-	}
-
-	
     @Override
-	public Selectable deepCopy(Selectable parent) {
-	
-		MidiPart clone;
-		
-		if (parent != null) {
-			clone = (MidiPart) ((MidiLane)parent).createPart();
-		}else {
-			clone=new MidiPart();
-		}
-		clone.setStartTick(getStartTick());
-		clone.setEndTick(getEndTick());
-		if (parent == null) {
-			clone.lane=lane;
-		}
-	    clone.name="Copy of "+name;
-	    clone.color=color;
-        clone.rootPart=this.rootPart;
-        clone.partResourceId=this.partResourceId;
-        clone.editParent=this.editParent;
-        
-		for (MultiEvent ev:multiEvents) {
-			clone.multiEvents.add((MultiEvent)ev.deepCopy(clone));
-		}
+    public void copyBy(double deltaTick, Lane dst) {
 
-		
-		return clone;
-	}
+        MidiPart part = new MidiPart((MidiLane) dst);
+
+        Collection<MultiEvent> events = getMultiEvents();
+
+        part.setStartTick(getStartTick() + deltaTick);
+        part.setEndTick(getEndTick() + deltaTick);
+
+        for (MultiEvent ev : events) {
+            try {
+                MultiEvent newEv = (MultiEvent) ev.clone();
+                double newTick = deltaTick + ev.getStartTick();
+                newEv.setStartTick((long) newTick);
+                part.add(newEv);
+            } catch (CloneNotSupportedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+
+        part.rootPart = rootPart;
+        part.partResourceId = partResourceId;
+        part.editParent = editParent;
+
+    }
 
     @Override
-	public void deepMove(long tick) {
-		
-		Collection<MultiEvent> events=getMultiEvents();
-		for (MultiEvent ev:events) {
-			ev.deepMove(tick);
-		}
-		
-		setStartTick(getStartTick()+tick);
-		setEndTick(getEndTick() +tick);	
-	}
-    
-	public void rebuildMultiEventEndTickComparables()
-    {
+    public Selectable deepCopy(Selectable parent) {
+
+        MidiPart clone;
+
+        if (parent != null) {
+            clone = (MidiPart) ((MidiLane) parent).createPart();
+        } else {
+            clone = new MidiPart();
+        }
+        clone.setStartTick(getStartTick());
+        clone.setEndTick(getEndTick());
+        if (parent == null) {
+            clone.lane = lane;
+        }
+        clone.name = "Copy of " + name;
+        clone.color = color;
+        clone.rootPart = this.rootPart;
+        clone.partResourceId = this.partResourceId;
+        clone.editParent = this.editParent;
+
+        for (MultiEvent ev : multiEvents) {
+            clone.multiEvents.add((MultiEvent) ev.deepCopy(clone));
+        }
+
+        return clone;
+    }
+
+    @Override
+    public void deepMove(long tick) {
+
+        Collection<MultiEvent> events = getMultiEvents();
+        for (MultiEvent ev : events) {
+            ev.deepMove(tick);
+        }
+
+        setStartTick(getStartTick() + tick);
+        setEndTick(getEndTick() + tick);
+    }
+
+    public void rebuildMultiEventEndTickComparables() {
         multiEventEndTickComparables = new TreeSet<>();
-        for(MultiEvent multiEvent : multiEvents)
-        {
+        for (MultiEvent multiEvent : multiEvents) {
             multiEventEndTickComparables.add(multiEvent.getMultiEventEndTickComparable());
         }
         //setBoundsFromEvents();
-        
+
     }
-	
-	/**
-	 * deprecated
-	 *//*
+
+    /**
+     * deprecated
+     *//*
 	public Rectangle getEventBounds() {
 		Rectangle rect=new Rectangle();
 		rect.x=(int) startTick;
@@ -607,36 +566,40 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 		// TODO Auto-generated method stub
 		return rect;
 	}
-*/
-	public int[] getPitchRange() {
-		
-		int low=128;
-		int high=0;
-		for(MultiEvent ev:multiEvents) {
-			if (!ev.isZombie() && (ev instanceof NoteEvent)){
-				int pit=((NoteEvent)ev).getNote();
-				if (pit > high) high=pit;
-				if (pit < low) low=pit;
-			}	
-		}
-		int [] ret={low,high};
-		return ret;
-		
-	}
-	
-	/**
-	 * Commit the MultiEvents as MidiEvents to a Sequencers Track event list.
-	 */
+     */
+    public int[] getPitchRange() {
+
+        int low = 128;
+        int high = 0;
+        for (MultiEvent ev : multiEvents) {
+            if (!ev.isZombie() && (ev instanceof NoteEvent)) {
+                int pit = ((NoteEvent) ev).getNote();
+                if (pit > high) {
+                    high = pit;
+                }
+                if (pit < low) {
+                    low = pit;
+                }
+            }
+        }
+        int[] ret = {low, high};
+        return ret;
+
+    }
+
+    /**
+     * Commit the MultiEvents as MidiEvents to a Sequencers Track event list.
+     */
     @Override
-	public void onLoad() {
-	//	System.out.println(" On load 1");
-		commitEventsAdd();
-	//	System.out.println(" On load 2");
+    public void onLoad() {
+        //	System.out.println(" On load 1");
+        commitEventsAdd();
+        //	System.out.println(" On load 2");
 
-		rebuildMultiEventEndTickComparables();
-	//	System.out.println(" On load 3");
+        rebuildMultiEventEndTickComparables();
+        //	System.out.println(" On load 3");
 
-	}
+    }
 
 //	@Override
 //	public void attach() {
@@ -649,141 +612,136 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
 //		// TODO Auto-generated method stub
 //		
 //	}
-		
     @Override
-	public void drawThumbNail(Graphics2D g, Rectangle rect,PartView panel) {
-		TempoList tl=lane.getProject().getTempoList();
-		
-		for (MultiEvent e : getMultiEvents()) {
-			double x = tl.getTimeAtTick(e.getStartTick());
-			if (e instanceof NoteEvent) {
-				double w = tl.getTimeAtTick(e.getEndTick());
-				int note = ((NoteEvent) e).getNote();
-				int y = (int) ((rect.y + (rect.height * (128 - note)) / 128.0));
-				if (e.isZombie())
-					g.setColor(Color.WHITE);
-				else
-					g.setColor(Color.BLACK);
+    public void drawThumbNail(Graphics2D g, Rectangle rect, PartView panel) {
+        TempoList tl = lane.getProject().getTempoList();
 
-				g.drawLine((int)panel.userToScreen(x), y, (int)panel.userToScreen(w), y);
-			}
-		}
+        for (MultiEvent e : getMultiEvents()) {
+            double x = tl.getTimeAtTick(e.getStartTick());
+            if (e instanceof NoteEvent) {
+                double w = tl.getTimeAtTick(e.getEndTick());
+                int note = ((NoteEvent) e).getNote();
+                int y = (int) ((rect.y + (rect.height * (128 - note)) / 128.0));
+                if (e.isZombie()) {
+                    g.setColor(Color.WHITE);
+                } else {
+                    g.setColor(Color.BLACK);
+                }
 
-	}
+                g.drawLine((int) panel.userToScreen(x), y, (int) panel.userToScreen(w), y);
+            }
+        }
+    }
 
-	public void addCommitListener(CommitListener l) {
-		if (commitListeners == null) { // auto-init
-			commitListeners = new HashSet<>();
-		}
-		commitListeners.add(l);
-	}
-	
-	public void removeCommitListener(CommitListener l) {
-		commitListeners.remove(l);
-	}
-	
-	void fireCommitAdd(MultiEvent event) {
-		if (commitListeners == null) return;
-		for (CommitListener l : commitListeners) {
-			l.commitAddPerformed(event);
-		}
-	}
-	
-	void fireCommitRemove(MultiEvent event) {
-		if (commitListeners == null) return;
-		for (CommitListener l : commitListeners) {
-			l.commitRemovePerformed(event);
-		}
-	}
-	
-	
-	// --- context menu ------------------------------------------------------
-	
-	/**
-	 * Fills the part's context menu with menu-items.
-	 *  
-	 * @param popup
-	 */
-	@Override
-	protected void initContextMenu(final ProjectFrame frame, JPopupMenu popup) {
-		
-		JMenuItem item = new JMenuItem(new RepeatAction(frame.getProjectContainer()));
-		//item.setText(item.getText()+"..."); // hack
-		item.setMnemonic(KeyEvent.VK_R);
-		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));		
-		popup.add(item);
-		
-		item = new JMenuItem(new SplitSelectedPartsAction(frame));
-		popup.add(item);
-		
-		super.initContextMenu(frame, popup);
-	}
+    public void addCommitListener(CommitListener l) {
+        if (commitListeners == null) { // auto-init
+            commitListeners = new HashSet<>();
+        }
+        commitListeners.add(l);
+    }
 
-	
-	// --- properties panel --------------------------------------------------
-	
-	/**
-	 * Create PropertiesPanel.
-	 * 
-	 * @param frame
-	 * @return
-	 */
-	@Override
-	protected OptionsEditor createPropertiesPanel(ProjectFrame frame) {
-		return new MidiPartPropertiesPanel(frame);
-	}
-	
-	// --- inner class ---
-	
-	/**
-	 * Instance returned via createProperitesPanel().
-	 * 
-	 * This is an example how type-specific Properties-Panels can be built.
-	 * Currently, this just inherits all defaults. 
-	 */
-	protected class MidiPartPropertiesPanel extends PropertiesPanel {
-		
-		/**
-		 * Constructor.
-		 * 
-		 * @param frame
-		 */
-		protected MidiPartPropertiesPanel(ProjectFrame frame) {
-			super(frame);
-		}
-		
-		/**
-		 * Fills the panel with gui elements for editing the part's properties.
-		 */
-		@Override
-		protected void initComponents() {
-			super.initComponents();
-			// do additional things here
-			
-			//GridBagConstraints gc = new GridBagConstraints();
-			//gc.gridwidth = GridBagConstraints.REMAINDER;
-			//this.add(new JLabel("MIDI-PART TEST"), gc);
-		}
+    public void removeCommitListener(CommitListener l) {
+        commitListeners.remove(l);
+    }
 
-		/**
-		 * Refreshes the GUI so that it reflects the model's current state.
-		 */
-		@Override
-		public void refresh() {
-			super.refresh();
-			// do additional things here
-		}
-		
-		/**
-		 * Updates the model so that it contains the values set by the user.
-		 */
-		@Override
-		public void update() {
-			super.update();
-			// do additional things here
-		}
-	}
+    void fireCommitAdd(MultiEvent event) {
+        if (commitListeners == null) {
+            return;
+        }
+        for (CommitListener l : commitListeners) {
+            l.commitAddPerformed(event);
+        }
+    }
 
-	
-		
+    void fireCommitRemove(MultiEvent event) {
+        if (commitListeners == null) {
+            return;
+        }
+        for (CommitListener l : commitListeners) {
+            l.commitRemovePerformed(event);
+        }
+    }
+
+    // --- context menu ------------------------------------------------------
+    /**
+     * Fills the part's context menu with menu-items.
+     *
+     * @param popup
+     */
+    @Override
+    protected void initContextMenu(final ProjectFrame frame, JPopupMenu popup) {
+
+        JMenuItem item = new JMenuItem(new RepeatAction(frame.getProjectContainer()));
+        //item.setText(item.getText()+"..."); // hack
+        item.setMnemonic(KeyEvent.VK_R);
+        item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
+        popup.add(item);
+
+        item = new JMenuItem(new SplitSelectedPartsAction(frame));
+        popup.add(item);
+
+        super.initContextMenu(frame, popup);
+    }
+
+    // --- properties panel --------------------------------------------------
+    /**
+     * Create PropertiesPanel.
+     *
+     * @param frame
+     * @return
+     */
+    @Override
+    protected OptionsEditor createPropertiesPanel(ProjectFrame frame) {
+        return new MidiPartPropertiesPanel(frame);
+    }
+
+    // --- inner class ---
+    /**
+     * Instance returned via createProperitesPanel().
+     *
+     * This is an example how type-specific Properties-Panels can be built.
+     * Currently, this just inherits all defaults.
+     */
+    protected class MidiPartPropertiesPanel extends PropertiesPanel {
+
+        /**
+         * Constructor.
+         *
+         * @param frame
+         */
+        protected MidiPartPropertiesPanel(ProjectFrame frame) {
+            super(frame);
+        }
+
+        /**
+         * Fills the panel with gui elements for editing the part's properties.
+         */
+        @Override
+        protected void initComponents() {
+            super.initComponents();
+            // do additional things here
+
+            //GridBagConstraints gc = new GridBagConstraints();
+            //gc.gridwidth = GridBagConstraints.REMAINDER;
+            //this.add(new JLabel("MIDI-PART TEST"), gc);
+        }
+
+        /**
+         * Refreshes the GUI so that it reflects the model's current state.
+         */
+        @Override
+        public void refresh() {
+            super.refresh();
+            // do additional things here
+        }
+
+        /**
+         * Updates the model so that it contains the values set by the user.
+         */
+        @Override
+        public void update() {
+            super.update();
+            // do additional things here
+        }
+    }
 }

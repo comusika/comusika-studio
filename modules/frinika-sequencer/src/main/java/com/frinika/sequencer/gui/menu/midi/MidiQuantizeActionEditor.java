@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.gui.AbstractDialog.MoreLessButtonListener;
@@ -44,7 +43,7 @@ import javax.swing.SwingConstants;
  * @author Jens Gulden
  */
 class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
-    
+
     private MidiQuantizeAction action;
     private int[] ticks;
     private MoreLessButtonListener moreLessButtonListener = null;
@@ -52,101 +51,103 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
     private SliderNumberEditable swingSlider;
     private SliderNumberEditable smudgeSlider;
     private SliderNumberEditable velocitySlider;
-    
-    /** Creates new form MidiQuantizeActionEditorPanel */
+
+    /**
+     * Creates new form MidiQuantizeActionEditorPanel
+     */
     public MidiQuantizeActionEditor(MidiQuantizeAction action) {
         super();
         this.action = action;
         initComponents();
-        
+
         intensitySlider = createSlider();
         intensitySliderPanel.add(intensitySlider);
-        
+
         swingSlider = createSlider();
         swingSliderPanel.add(swingSlider);
-        
+
         SliderNumberEditable slider = new SliderNumberEditable(50f, 0f, 100f, 1f, null, "%", SwingConstants.HORIZONTAL);
-    	slider.setMinorTickSpacing(5);
-    	slider.setMajorTickSpacing(25);
-    	slider.setPaintLabels(true);
-    	slider.setPaintTicks(true);
-    	slider.setPaintTrack(true);
+        slider.setMinorTickSpacing(5);
+        slider.setMajorTickSpacing(25);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setPaintTrack(true);
         smudgeSlider = slider;
         smudgeSliderPanel.add(smudgeSlider);
-        
+
         velocitySlider = createSlider();
         velocitySliderPanel.add(velocitySlider);
-        
+
         // TODO react on mnemonics for sliders (currently only displayed via labels)
-    	ticks = new int[TimeSelector.NOTE_LENGTH_FACTORS.length];
+        ticks = new int[TimeSelector.NOTE_LENGTH_FACTORS.length];
         for (int i = 0; i < TimeSelector.NOTE_LENGTH_FACTORS.length; i++) {
-            ticks[i] = (int)Math.round(action.getProject().getSequence().getResolution() * 4 * TimeSelector.NOTE_LENGTH_FACTORS[i]);
+            ticks[i] = (int) Math.round(action.getProject().getSequence().getResolution() * 4 * TimeSelector.NOTE_LENGTH_FACTORS[i]);
         }
         resolutionList.setListData(TimeSelector.NOTE_LENGTH_NAMES);
     }
-    
+
     private static SliderNumberEditable createSlider() {
         SliderNumberEditable slider = new SliderNumberEditable(0f, -100f, 100f, 1f, null, "%", SwingConstants.HORIZONTAL);
-    	slider.setMinorTickSpacing(10);
-    	slider.setMajorTickSpacing(50);
-    	slider.setPaintLabels(true);
-    	slider.setPaintTicks(true);
-    	slider.setPaintTrack(true);
-    	//slider.setSnapToTicks(true);
+        slider.setMinorTickSpacing(10);
+        slider.setMajorTickSpacing(50);
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setPaintTrack(true);
+        //slider.setSnapToTicks(true);
         return slider;
     }
-    
+
     @Override
     public void update() { // gui to model
-        action.q.interval = this.ticks[ resolutionList.getSelectedIndex() ];
-        action.q.intensity = (float)intensitySlider.getValue() / intensitySlider.getMaximum();
+        action.q.interval = this.ticks[resolutionList.getSelectedIndex()];
+        action.q.intensity = (float) intensitySlider.getValue() / intensitySlider.getMaximum();
         action.q.quantizeNoteStart = noteStartCheckBox.isSelected();
         action.q.quantizeNoteLength = noteLengthCheckBox.isSelected();
-        action.q.swing = (float)swingSlider.getValue() / 100;
+        action.q.swing = (float) swingSlider.getValue() / 100;
         boolean grooveQuantize = grooveQuantizeCheckBox.isSelected();
         Object o = groovePatternComboBox.getSelectedItem();
         if (grooveQuantize && (o instanceof GroovePattern)) { //&& (o != null) 
-        	action.q.groovePattern = (GroovePattern)o;
+            action.q.groovePattern = (GroovePattern) o;
         } else {
-        	action.q.groovePattern = null;
+            action.q.groovePattern = null;
         }
-        action.q.smudge = (float)smudgeSlider.getValue() / 100;
-        action.q.velocity = (float)velocitySlider.getValue() / 100;
+        action.q.smudge = (float) smudgeSlider.getValue() / 100;
+        action.q.velocity = (float) velocitySlider.getValue() / 100;
     }
-    
+
     @Override
     public void refresh() { // model to gui
-    	if (moreLessButtonListener == null) { // need to initialize after dialog is there
-    		moreLessButtonListener = action.getDialog().registerMoreLessButtonPanel(moreLessButton, morePanel);
-    	}
-    	
+        if (moreLessButtonListener == null) { // need to initialize after dialog is there
+            moreLessButtonListener = action.getDialog(this).registerMoreLessButtonPanel(moreLessButton, morePanel);
+        }
+
         int currentIndex = 4;
         for (int i = 0; i < TimeSelector.NOTE_LENGTH_FACTORS.length; i++) {
             if (ticks[i] == action.q.interval) {
                 currentIndex = i;
             }
         }
-        
+
         resolutionList.setSelectedIndex(currentIndex);
         resolutionList.ensureIndexIsVisible(currentIndex);
-    	
-        intensitySlider.setValue((int)(100 * action.q.intensity));
+
+        intensitySlider.setValue((int) (100 * action.q.intensity));
         noteStartCheckBox.setSelected(action.q.quantizeNoteStart);
         noteLengthCheckBox.setSelected(action.q.quantizeNoteLength);
-    	
-        swingSlider.setValue((int)(100 * action.q.swing));
-        
+
+        swingSlider.setValue((int) (100 * action.q.swing));
+
         refreshGroovePatternComboBox();
-        
-        grooveQuantizeCheckBox.setSelected( (action.q.groovePattern != null) );
-       	groovePatternComboBox.setSelectedItem( action.q.groovePattern );
-        
-        smudgeSlider.setValue((int)(100 * action.q.smudge));
-        velocitySlider.setValue((int)(100 * action.q.velocity));
-        
+
+        grooveQuantizeCheckBox.setSelected((action.q.groovePattern != null));
+        groovePatternComboBox.setSelectedItem(action.q.groovePattern);
+
+        smudgeSlider.setValue((int) (100 * action.q.smudge));
+        velocitySlider.setValue((int) (100 * action.q.velocity));
+
         grooveQuantizeCheckBoxStateChanged(null);
     }
-    
+
     private void refreshGroovePatternComboBox() {
         GroovePatternManager gpm = GroovePatternManager.getInstance();
         Vector items = new Vector(); // untyped: mixed String / GroovePattern
@@ -160,18 +161,18 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
         }
         groovePatternComboBox.setModel(new DefaultComboBoxModel(items));
     }
-    
+
     private void openGroovePatternManagerDialog() {
         throw new UnsupportedOperationException("Not supported yet.");
         // TODO
-    	/* GroovePatternManagerDialog.showDialog(action.getProjectFrame());
+        /* GroovePatternManagerDialog.showDialog(action.getProjectFrame());
     	refreshGroovePatternComboBox(); */
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -395,7 +396,7 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
         smudgeSlider.setEnabled(sel);
         velocitySlider.setEnabled(sel);
         smudgeLabel.setEnabled(sel);
-        velocityLabel.setEnabled(sel);        
+        velocityLabel.setEnabled(sel);
     }//GEN-LAST:event_grooveQuantizeCheckBoxStateChanged
 
     private void groovePatternManagerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groovePatternManagerButtonActionPerformed
@@ -403,7 +404,7 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
     }//GEN-LAST:event_groovePatternManagerButtonActionPerformed
 
     private void resolutionListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resolutionListValueChanged
-        action.q.interval = this.ticks[ resolutionList.getSelectedIndex() ];
+        action.q.interval = this.ticks[resolutionList.getSelectedIndex()];
     }//GEN-LAST:event_resolutionListValueChanged
 
     private void noteStartCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_noteStartCheckBoxStateChanged
@@ -413,8 +414,8 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
     private void noteLengthCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_noteLengthCheckBoxStateChanged
         action.q.quantizeNoteLength = noteLengthCheckBox.isSelected();
     }//GEN-LAST:event_noteLengthCheckBoxStateChanged
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox groovePatternComboBox;
     private javax.swing.JButton groovePatternManagerButton;
@@ -437,5 +438,5 @@ class MidiQuantizeActionEditor extends JPanel implements OptionsEditor {
     private javax.swing.JLabel velocityLabel;
     private javax.swing.JPanel velocitySliderPanel;
     // End of variables declaration//GEN-END:variables
-    
+
 }

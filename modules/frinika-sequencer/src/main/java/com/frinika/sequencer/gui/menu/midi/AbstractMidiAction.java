@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.base.AbstractProjectContainer;
@@ -40,122 +39,122 @@ import java.util.*;
 import javax.swing.JMenuItem;
 
 /**
- * Abstract superclass for menu-actions that modify currently selected MIDI 
- * data. 
- * 
+ * Abstract superclass for menu-actions that modify currently selected MIDI
+ * data.
+ *
  * @author Jens Gulden
  */
 abstract public class AbstractMidiAction extends AbstractDialogAction {
-	
-	protected Collection<MultiEvent> events;
-	protected long startTick;
-	protected long lastTick;
-	protected long endTick;
 
-	public AbstractMidiAction(AbstractSequencerProjectContainer project, String actionId) {
-		super(project, actionId);
-	}
-	
-        @Override
-	public void performPrepare() {
-		MidiSelection m = ((AbstractSequencerProjectContainer) project).getMidiSelection();
-		events = m.getSelected();
-		if ((events == null) || (events.isEmpty())) {
-			cancel();
-		}
-	}
+    protected Collection<MultiEvent> events;
+    protected long startTick;
+    protected long lastTick;
+    protected long endTick;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if( ! (java.awt.EventQueue.getCurrentEvent().getSource() instanceof JMenuItem) ) { // event does not originate from JMenuItem, but from KeyStroke
-			Object focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
-			if( ! ((focusOwner instanceof PartView) || (focusOwner instanceof PianoRoll)) ) { // otherwise any gui-element catching single-key strokes would invoke menu
-				return;
-			}
-		}
-		super.actionPerformed(e);
-	}
+    public AbstractMidiAction(AbstractSequencerProjectContainer project, String actionId) {
+        super(project, actionId);
+    }
 
-        @Override
-	protected void performAction() {
-		
-		// to modify the model, events must first be removed, later be re-added to the sequencer track
-		Collection<MultiEvent> clones = new ArrayList<>();
-		
-		try {
-			startTick = 0;
-			lastTick = 0;
-			endTick = 0;
-			for (MultiEvent ev : events) {
-				MultiEvent clone = (MultiEvent) (ev.clone());
-				clones.add(clone);
-				if ((startTick == 0) || (clone.getStartTick() < startTick)) {
-					startTick = clone.getStartTick();
-				}
-				if (clone.getStartTick() > lastTick) {
-					lastTick = clone.getStartTick();
-				}
-				if (clone.getEndTick() > endTick) {
-					endTick = clone.getEndTick();
-				}
-			}
-		} catch (CloneNotSupportedException cnse) {
-			cnse.printStackTrace();
-		}
-
-		modifyEvents(clones);
-		
-		Iterator<MultiEvent> clonesIterator = clones.iterator();
-		for (MultiEvent ev : events) {
-			//if (ev instanceof NoteEvent) {
-				ev.getPart().remove(ev);
-				ev.restoreFromClone(clonesIterator.next());
-				ev.getPart().add(ev);
-				//me.commitAdd();
-			//}
-		}
-	}				
-	
-	/**
-	 * May be overwritten by subclasses for more complex modifying operations,
-	 * otherwise by default this calls midifyNoteEvents with all selected NoteEvents.
-	 */
-	public void modifyEvents(Collection<MultiEvent> events) {
-		Collection<NoteEvent> notes = new ArrayList<>();
-		for (MultiEvent me : events) {
-			if (me instanceof NoteEvent) {
-				notes.add((NoteEvent)me);
-			}
-		}
-		modifyNoteEvents(notes);
-	}
-			
-	public void modifyNoteEvents(Collection<NoteEvent> events) {
-		for (NoteEvent note : events) {
-			modifyNoteEvent(note);
-		}
-	}
-			
-	public abstract void modifyNoteEvent(NoteEvent note);
-	
-	public MidiPart getMidiPart() {
-		if ((events != null) && (!events.isEmpty())) {
-			return events.iterator().next().getMidiPart();
-		} else {
-			return null;
-		}
-	}
-
-	public MidiLane getMidiLane() {
-		MidiPart part = getMidiPart();
-		if (part != null) {
-			return (MidiLane)part.getLane();
-		} else {
-			return null;
-		}
-	}
-        
-        public AbstractProjectContainer getProject() {
-            return project;
+    @Override
+    public void performPrepare() {
+        MidiSelection m = ((AbstractSequencerProjectContainer) project).getMidiSelection();
+        events = m.getSelected();
+        if ((events == null) || (events.isEmpty())) {
+            cancel();
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (!(java.awt.EventQueue.getCurrentEvent().getSource() instanceof JMenuItem)) { // event does not originate from JMenuItem, but from KeyStroke
+            Object focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
+            if (!((focusOwner instanceof PartView) || (focusOwner instanceof PianoRoll))) { // otherwise any gui-element catching single-key strokes would invoke menu
+                return;
+            }
+        }
+        super.actionPerformed(e);
+    }
+
+    @Override
+    protected void performAction() {
+        // to modify the model, events must first be removed, later be re-added to the sequencer track
+        Collection<MultiEvent> clones = new ArrayList<>();
+
+        try {
+            startTick = 0;
+            lastTick = 0;
+            endTick = 0;
+            for (MultiEvent ev : events) {
+                MultiEvent clone = (MultiEvent) (ev.clone());
+                clones.add(clone);
+                if ((startTick == 0) || (clone.getStartTick() < startTick)) {
+                    startTick = clone.getStartTick();
+                }
+                if (clone.getStartTick() > lastTick) {
+                    lastTick = clone.getStartTick();
+                }
+                if (clone.getEndTick() > endTick) {
+                    endTick = clone.getEndTick();
+                }
+            }
+        } catch (CloneNotSupportedException cnse) {
+            cnse.printStackTrace();
+        }
+
+        modifyEvents(clones);
+
+        Iterator<MultiEvent> clonesIterator = clones.iterator();
+        for (MultiEvent ev : events) {
+            //if (ev instanceof NoteEvent) {
+            ev.getPart().remove(ev);
+            ev.restoreFromClone(clonesIterator.next());
+            ev.getPart().add(ev);
+            //me.commitAdd();
+            //}
+        }
+    }
+
+    /**
+     * May be overwritten by subclasses for more complex modifying operations,
+     * otherwise by default this calls midifyNoteEvents with all selected
+     * NoteEvents.
+     */
+    public void modifyEvents(Collection<MultiEvent> events) {
+        Collection<NoteEvent> notes = new ArrayList<>();
+        for (MultiEvent me : events) {
+            if (me instanceof NoteEvent) {
+                notes.add((NoteEvent) me);
+            }
+        }
+        modifyNoteEvents(notes);
+    }
+
+    public void modifyNoteEvents(Collection<NoteEvent> events) {
+        for (NoteEvent note : events) {
+            modifyNoteEvent(note);
+        }
+    }
+
+    public abstract void modifyNoteEvent(NoteEvent note);
+
+    public MidiPart getMidiPart() {
+        if ((events != null) && (!events.isEmpty())) {
+            return events.iterator().next().getMidiPart();
+        } else {
+            return null;
+        }
+    }
+
+    public MidiLane getMidiLane() {
+        MidiPart part = getMidiPart();
+        if (part != null) {
+            return (MidiLane) part.getLane();
+        } else {
+            return null;
+        }
+    }
+
+    public AbstractProjectContainer getProject() {
+        return project;
+    }
 }
