@@ -5,7 +5,7 @@
      <beatsPerBar>4</beatsPerBar>
      <ticksPerBeat>4</ticksPerBeat>
   </structure>
-  <include>resources/soundhelix/Standard-HarmonyEngine.xml</include>
+  <include>resources/soundhelix-legacy/Standard-HarmonyEngine.xml</include>
   <arrangementEngine class="SimpleArrangementEngine">
     <track>
       <instrument>1</instrument>
