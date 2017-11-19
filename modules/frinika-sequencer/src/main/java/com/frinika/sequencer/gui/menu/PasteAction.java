@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.selection.SelectionContainer;
 import com.frinika.sequencer.gui.selection.SelectionFocusable;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
@@ -30,32 +30,29 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 public class PasteAction extends AbstractAction {
-	/**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
     private AbstractSequencerProjectContainer project;
 
-	public PasteAction(AbstractSequencerProjectContainer project) {
-		super(getMessage("sequencer.project.paste"));
-		this.project = project;
-	}
+    public PasteAction(AbstractSequencerProjectContainer project) {
+        super(CurrentLocale.getMessage("sequencer.project.paste"));
+        this.project = project;
+    }
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     @Override
     public void actionPerformed(ActionEvent e) {
 
-		project.getEditHistoryContainer().mark(
-				getMessage("sequencer.project.paste"));
+        project.getEditHistoryContainer().mark(
+                CurrentLocale.getMessage("sequencer.project.paste"));
 
         SelectionFocusable focus = project.getSelectionFocus();
-        if(focus instanceof SelectionContainer && ((SelectionContainer)focus).getSelectionStartTick()>-1)
-        {    // Used by the tracker to position the pasted data according to the focus row
-            SelectionContainer selectionContainer = (SelectionContainer)focus;
-            project.clipBoard().paste(selectionContainer.getSelectionStartTick(),selectionContainer.getSelectionLeftColumn(),true,project);
-        }
-        else
+        if (focus instanceof SelectionContainer && ((SelectionContainer) focus).getSelectionStartTick() > -1) {    // Used by the tracker to position the pasted data according to the focus row
+            SelectionContainer selectionContainer = (SelectionContainer) focus;
+            project.clipBoard().paste(selectionContainer.getSelectionStartTick(), selectionContainer.getSelectionLeftColumn(), true, project);
+        } else {
             project.clipBoard().paste(project);
-		project.getEditHistoryContainer().notifyEditHistoryListeners();
-	}
+        }
+        project.getEditHistoryContainer().notifyEditHistoryListeners();
+    }
 }

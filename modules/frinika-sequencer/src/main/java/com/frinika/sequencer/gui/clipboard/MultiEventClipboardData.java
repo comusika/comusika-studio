@@ -32,25 +32,25 @@ import java.util.Vector;
  * @author Peter Johan Salomonsen
  */
 public class MultiEventClipboardData implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     Vector<MultiEvent> multiEvents = new Vector<>();
     long referenceTick;
-    
+
     /**
-     * When inserted the referenceTick is subtracted from all startTicks in the multiEvents.
-     * A cloned copy of the multiEvents is kept in this object.
+     * When inserted the referenceTick is subtracted from all startTicks in the
+     * multiEvents. A cloned copy of the multiEvents is kept in this object.
+     *
      * @param referenceTick
      * @param multiEvents
      */
-    public MultiEventClipboardData(long referenceTick,Collection<MultiEvent> multiEvents)
-    {
+    public MultiEventClipboardData(long referenceTick, Collection<MultiEvent> multiEvents) {
         this.referenceTick = referenceTick;
-        for(MultiEvent multiEvent : multiEvents)
-        {
+        for (MultiEvent multiEvent : multiEvents) {
             try {
-                MultiEvent me = (MultiEvent)multiEvent.clone();
-                me.setStartTick(me.getStartTick()-referenceTick);
+                MultiEvent me = (MultiEvent) multiEvent.clone();
+                me.setStartTick(me.getStartTick() - referenceTick);
                 this.multiEvents.add(me);
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
@@ -63,12 +63,13 @@ public class MultiEventClipboardData implements Serializable {
      */
     public Collection<MultiEvent> getClonedMultiEvents() {
         Vector<MultiEvent> multiEvents = new Vector<>();
-        for(MultiEvent multiEvent : this.multiEvents)
+        for (MultiEvent multiEvent : this.multiEvents) {
             try {
-                multiEvents.add((MultiEvent)multiEvent.clone());
+                multiEvents.add((MultiEvent) multiEvent.clone());
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
+        }
         return multiEvents;
     }
 }

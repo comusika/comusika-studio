@@ -23,7 +23,6 @@
  */
 package com.frinika.sequencer.gui.pianoroll;
 
-
 import static com.frinika.localization.CurrentLocale.getMessage;
 import com.frinika.sequencer.gui.MyAbstractTableModel;
 import com.frinika.sequencer.gui.menu.midi.MidiStepRecordAction;
@@ -38,217 +37,221 @@ import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
  */
 public class MultiEventTableModel extends MyAbstractTableModel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static final String[] noteColumnNames = { "Time", "Note", "Vel", "Len" };
-	private static final String[] cntrlColumnNames = { "Time", "N.A.", "Value", "N.A." };
+    private static final String[] noteColumnNames = {"Time", "Note", "Vel", "Len"};
+    private static final String[] cntrlColumnNames = {"Time", "N.A.", "Value", "N.A."};
 
-	static final int COLUMN_TIME = 0; // Relative time to rows
+    static final int COLUMN_TIME = 0; // Relative time to rows
 
-	static final int COLUMN_NOTEORCC = 1;
+    static final int COLUMN_NOTEORCC = 1;
 
-	static final int COLUMN_VELORVAL = 2; // Velocity or CC value
+    static final int COLUMN_VELORVAL = 2; // Velocity or CC value
 
-	static final int COLUMN_LEN = 3; // Note length
+    static final int COLUMN_LEN = 3; // Note length
 
-	static final int COLUMNS = noteColumnNames.length;
+    static final int COLUMNS = noteColumnNames.length;
 
-	MultiEvent event;;
+    MultiEvent event;
 
-	long startTick;
+    long startTick;
 
-	int ticksPerBeat;
+    int ticksPerBeat;
 
-	int quantize;
-	TimeUtils time;
-	
-	public MultiEventTableModel(AbstractSequencerProjectContainer project,MultiEvent note, int quantize, int ticksPerBeat) {
-		this.event = note;
-		this.quantize = quantize;
-		this.ticksPerBeat = ticksPerBeat;
-		this.time = new TimeUtils(project);
-	}
+    int quantize;
+    TimeUtils time;
 
-	void setMultiEvent(MultiEvent ev) {
-		this.event = ev;
-	}
+    public MultiEventTableModel(AbstractSequencerProjectContainer project, MultiEvent note, int quantize, int ticksPerBeat) {
+        this.event = note;
+        this.quantize = quantize;
+        this.ticksPerBeat = ticksPerBeat;
+        this.time = new TimeUtils(project);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.TableModel#getRowCount()
-	 */
-        @Override
-	public int getRowCount() {
-		return 1;
-	}
+    void setMultiEvent(MultiEvent ev) {
+        this.event = ev;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
-	 */
-        @Override
-	public Class<?> getColumnClass(int columnIndex) {
+    /**
+     * (non-Javadoc)
+     *
+     * @see javax.swing.table.TableModel#getRowCount()
+     */
+    @Override
+    public int getRowCount() {
+        return 1;
+    }
 
-		switch (columnIndex) {
-		case COLUMN_TIME:
-			return Double.class;
-		case COLUMN_LEN:
-			return Double.class;
-		default:
-			return Integer.class;
-		}
-	}
+    /**
+     * (non-Javadoc)
+     *
+     * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+     */
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
-	 */
-        @Override
-	public String getColumnName(int column) {
-		if (event instanceof NoteEvent)
-		return (noteColumnNames[column]);
-		else 
-		return (cntrlColumnNames[column]);
-	}
+        switch (columnIndex) {
+            case COLUMN_TIME:
+                return Double.class;
+            case COLUMN_LEN:
+                return Double.class;
+            default:
+                return Integer.class;
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.TableModel#getColumnCount()
-	 */
-        @Override
-	public int getColumnCount() {
-		return (COLUMNS);
-	}
+    /**
+     * (non-Javadoc)
+     *
+     * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+     */
+    @Override
+    public String getColumnName(int column) {
+        if (event instanceof NoteEvent) {
+            return (noteColumnNames[column]);
+        } else {
+            return (cntrlColumnNames[column]);
+        }
+    }
 
-        @Override
-	public int getColumnWidth(int column) {
-		switch (column) {
-		case COLUMN_TIME:
-			return 8;
-		case COLUMN_NOTEORCC:
-			return 3;
-		case COLUMN_VELORVAL:
-			return 4;
-		case COLUMN_LEN:
-			return 7;
-		default:
-			return 10;
-		}
-	}
+    /**
+     * (non-Javadoc)
+     *
+     * @see javax.swing.table.TableModel#getColumnCount()
+     */
+    @Override
+    public int getColumnCount() {
+        return (COLUMNS);
+    }
 
-        @Override
-	public Object getValueAt(int row, int columnIndex) {
-		if (event == null ) return "null";
-		switch(columnIndex) {
-		case COLUMN_TIME:	
-			return time.tickToBarBeatTick(event.getStartTick());
-			// return (double) event.getStartTick() / ticksPerBeat;
-		case COLUMN_VELORVAL:
-			return event.getValueUI();
-		}
-		
-		if (event instanceof NoteEvent) return getNoteValueAt(row,columnIndex);
-		return null;
-	}
+    @Override
+    public int getColumnWidth(int column) {
+        switch (column) {
+            case COLUMN_TIME:
+                return 8;
+            case COLUMN_NOTEORCC:
+                return 3;
+            case COLUMN_VELORVAL:
+                return 4;
+            case COLUMN_LEN:
+                return 7;
+            default:
+                return 10;
+        }
+    }
 
+    @Override
+    public Object getValueAt(int row, int columnIndex) {
+        if (event == null) {
+            return "null";
+        }
+        switch (columnIndex) {
+            case COLUMN_TIME:
+                return time.tickToBarBeatTick(event.getStartTick());
+            // return (double) event.getStartTick() / ticksPerBeat;
+            case COLUMN_VELORVAL:
+                return event.getValueUI();
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.TableModel#getValueAt(int, int)
-	 */
-	public Object getNoteValueAt(int row, int columnIndex) {
-		NoteEvent ne=(NoteEvent)event;
-		if (event == null) {
-			System.out.println("NULL EVENT");
-			return null;
-		}
-		switch (columnIndex) {
+        if (event instanceof NoteEvent) {
+            return getNoteValueAt(row, columnIndex);
+        }
+        return null;
+    }
 
-		case COLUMN_NOTEORCC:
-			return ne.getNoteName();
-		case COLUMN_LEN:
-			return time.tickToBarBeatTick(ne.getDuration());
-		default:
-			return (null);
-		}
-	}
+    /**
+     * (non-Javadoc)
+     *
+     * @see javax.swing.table.TableModel#getValueAt(int, int)
+     */
+    public Object getNoteValueAt(int row, int columnIndex) {
+        NoteEvent ne = (NoteEvent) event;
+        if (event == null) {
+            System.out.println("NULL EVENT");
+            return null;
+        }
+        switch (columnIndex) {
 
-	@Override
-	public void setValueAt(final Object obj, final int row, int columnIndex) {
-		if (event == null)
-			return;
-		assert(obj instanceof String);
-		final String string=(String)obj;
-		
-		switch (columnIndex) {
-		case COLUMN_TIME:
-			final long newTick = time.barBeatTickToTick(string); //(long) (Double.parseDouble(string) * ticksPerBeat);
-			new MultiEventChangeRecorder(getMessage("sequencer.eventview.move"), event) {
-                                @Override
-				public void doChange(MultiEvent me) {
-					event.setStartTick(newTick);
-				}
-			};
-			break;
-		case COLUMN_VELORVAL:
-			new MultiEventChangeRecorder(getMessage("sequencer.eventview.adjust_velocity"), event) {
-                                @Override
-				public void doChange(MultiEvent event) {
-					event.setValueUI(Integer.parseInt(string));
-				}
-			};
+            case COLUMN_NOTEORCC:
+                return ne.getNoteName();
+            case COLUMN_LEN:
+                return time.tickToBarBeatTick(ne.getDuration());
+            default:
+                return (null);
+        }
+    }
 
-			break;
+    @Override
+    public void setValueAt(final Object obj, final int row, int columnIndex) {
+        if (event == null) {
+            return;
+        }
+        assert (obj instanceof String);
+        final String string = (String) obj;
 
-		case COLUMN_LEN:
-			if (!(event instanceof NoteEvent)) return;
-			NoteEvent me = (NoteEvent)event;
+        switch (columnIndex) {
+            case COLUMN_TIME:
+                final long newTick = time.barBeatTickToTick(string); //(long) (Double.parseDouble(string) * ticksPerBeat);
+                new MultiEventChangeRecorder(getMessage("sequencer.eventview.move"), event) {
+                    @Override
+                    public void doChange(MultiEvent me) {
+                        event.setStartTick(newTick);
+                    }
+                };
+                break;
+            case COLUMN_VELORVAL:
+                new MultiEventChangeRecorder(getMessage("sequencer.eventview.adjust_velocity"), event) {
+                    @Override
+                    public void doChange(MultiEvent event) {
+                        event.setValueUI(Integer.parseInt(string));
+                    }
+                };
 
-			new MultiEventChangeRecorder(getMessage("sequencer.change_duration"), me) {
-                                @Override
-				public void doChange(MultiEvent e) {
-	//				((NoteEvent)e).setDuration((long) (Double.parseDouble(string) * ticksPerBeat));
-					
-					((NoteEvent)e).setDuration((long) (time.barBeatTickToTick(string)));
-					
-				}
-			};
-			break;
-			
-		case COLUMN_NOTEORCC: // was this missing or intentionally left out? (Jens)
-			if (!(event instanceof NoteEvent)) return;
-			me = (NoteEvent)event;
+                break;
 
-			new MultiEventChangeRecorder(getMessage("sequencer.eventview.adjust_pitch"), me) {
-                                @Override
-				public void doChange(MultiEvent e) {
-					((NoteEvent)e).setNote(MidiStepRecordAction.parseNote(string));
-				}
-			};
-			break;
-			
-		}
+            case COLUMN_LEN:
+                if (!(event instanceof NoteEvent)) {
+                    return;
+                }
+                NoteEvent me = (NoteEvent) event;
 
-		//  System.out.println(string + " " + row);
+                new MultiEventChangeRecorder(getMessage("sequencer.change_duration"), me) {
+                    @Override
+                    public void doChange(MultiEvent e) {
+                        //				((NoteEvent)e).setDuration((long) (Double.parseDouble(string) * ticksPerBeat));
 
-	}
+                        ((NoteEvent) e).setDuration((long) (time.barBeatTickToTick(string)));
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
-	 */
-        @Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return true;
-	}
+                    }
+                };
+                break;
 
+            case COLUMN_NOTEORCC: // was this missing or intentionally left out? (Jens)
+                if (!(event instanceof NoteEvent)) {
+                    return;
+                }
+                me = (NoteEvent) event;
+
+                new MultiEventChangeRecorder(getMessage("sequencer.eventview.adjust_pitch"), me) {
+                    @Override
+                    public void doChange(MultiEvent e) {
+                        ((NoteEvent) e).setNote(MidiStepRecordAction.parseNote(string));
+                    }
+                };
+                break;
+
+        }
+
+        //  System.out.println(string + " " + row);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+     */
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
 }

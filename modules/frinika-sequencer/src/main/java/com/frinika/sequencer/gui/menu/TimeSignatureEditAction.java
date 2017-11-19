@@ -38,108 +38,107 @@ import javax.swing.table.TableModel;
 
 public class TimeSignatureEditAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	private ProjectFrame project;
+    private TimeSignatureList list;
 
-	private TimeSignatureList list;
+    public TimeSignatureEditAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.edit_timesignature"), AbstractSequencerProjectContainer
+                .getIconResource("timesig.png"));
+        this.project = project;
+        this.list = project.getProjectContainer().getTimeSignatureList();
+    }
 
-	public TimeSignatureEditAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.edit_timesignature"), AbstractSequencerProjectContainer
-				.getIconResource("timesig.png"));
-		this.project = project;
-		this.list = project.getProjectContainer().getTimeSignatureList();
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-		SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
 
-                @Override
-			public void run() {
+                JFrame frame = new JFrame();
+                TableModel dataModel = new AbstractTableModel() {
 
-				JFrame frame = new JFrame();
-				TableModel dataModel = new AbstractTableModel() {
+                    int bar;
+                    int nBeat;
 
-					int bar;
-					int nBeat;
+                    @Override
+                    public int getColumnCount() {
+                        return 2;
+                    }
 
-                        @Override
-					public int getColumnCount() {
-						return 2;
-					}
+                    @Override
+                    public int getRowCount() {
+                        list.reco();
+                        return list.getList().size() + 1;
+                    }
 
-                        @Override
-					public int getRowCount() {
-						list.reco();
-						return list.getList().size()+1;
-					}
+                    @Override
+                    public Object getValueAt(int row, int col) {
+                        if (row >= list.getList().size()) {
+                            return "";
+                        }
+                        TimeSignatureEvent ev = list.getList().elementAt(row);
+                        if (col == 0) {
+                            return ev.bar;
+                        } else {
+                            return ev.beatsPerBar;
+                        }
+                    }
 
-                        @Override
-					public Object getValueAt(int row, int col) {
-						if (row >= list.getList().size()) return "";
-						TimeSignatureEvent ev = list.getList().elementAt(row);
-						if (col == 0)
-							return ev.bar;
-						else
-							return ev.beatsPerBar;
-					}
+                    @Override
+                    public boolean isCellEditable(int row, int col) {
+                        return true;
+                    }
 
-                        @Override
-					public boolean isCellEditable(int row, int col) {
-						return true;
-					}
+                    @Override
+                    public void setValueAt(Object value, int row, int col) {
+                        boolean newE = row >= list.getList().size();
 
-                        @Override
-					public void setValueAt(Object value, int row, int col) {
-						boolean newE = row >= list.getList().size();
+                        TimeSignatureEvent ev = null;
+                        if (!newE) {
+                            ev = list.getList().elementAt(row);
+                        } else {
+                            ev = list.getList().elementAt(list.getList().size() - 1);
+                        }
 
-						TimeSignatureEvent ev=null;
-						if (!newE) {
-							ev = list.getList().elementAt(row);
-						} else {
-							ev = list.getList().elementAt(list.getList().size()-1);
-						}
-						
-						bar = ev.bar;
-						nBeat = ev.beatsPerBar;
-							
-						
-						try {
-							if (col == 0) {
-								bar = Integer.parseInt((String) value);
-			
-							} else {
-								nBeat = Integer.parseInt((String) value);
-							}
-							if (!newE )	list.remove(ev.bar);
-							list.add(bar, nBeat);
-							list.reco();
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
-						}
-						fireTableDataChanged();
-					}
+                        bar = ev.bar;
+                        nBeat = ev.beatsPerBar;
 
-				};
-				JTable table = new JTable(dataModel);
-				table.getColumnModel().getColumn(0).setWidth(50);
-				table.getColumnModel().getColumn(1).setWidth(15);
-				table.getColumnModel().getColumn(0).setHeaderValue("BAR");
-				table.getColumnModel().getColumn(1).setHeaderValue("BEATS");
-				
-				JScrollPane scrollpane = new JScrollPane(table);
-				frame.setContentPane(scrollpane);
-				frame.setTitle("Time signitures");
-				frame.pack();
-				frame.setVisible(true);
-			}
-		});
+                        try {
+                            if (col == 0) {
+                                bar = Integer.parseInt((String) value);
 
-	}
+                            } else {
+                                nBeat = Integer.parseInt((String) value);
+                            }
+                            if (!newE) {
+                                list.remove(ev.bar);
+                            }
+                            list.add(bar, nBeat);
+                            list.reco();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                        fireTableDataChanged();
+                    }
+
+                };
+                JTable table = new JTable(dataModel);
+                table.getColumnModel().getColumn(0).setWidth(50);
+                table.getColumnModel().getColumn(1).setWidth(15);
+                table.getColumnModel().getColumn(0).setHeaderValue("BAR");
+                table.getColumnModel().getColumn(1).setHeaderValue("BEATS");
+
+                JScrollPane scrollpane = new JScrollPane(table);
+                frame.setContentPane(scrollpane);
+                frame.setTitle("Time signitures");
+                frame.pack();
+                frame.setVisible(true);
+            }
+        });
+    }
 }

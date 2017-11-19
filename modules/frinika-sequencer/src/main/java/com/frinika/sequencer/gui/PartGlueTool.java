@@ -21,36 +21,33 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
-
 
 import com.frinika.sequencer.gui.partview.PartView;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-public class PartGlueTool extends ToolAdapter  implements EditTool {
+public class PartGlueTool extends ToolAdapter implements EditTool {
 
-	boolean dragging = false;
-	private Point deltaDrag;
+    boolean dragging = false;
+    private Point deltaDrag;
 
-	public PartGlueTool(Cursor c) {
-		super(c);
+    public PartGlueTool(Cursor c) {
+        super(c);
+    }
 
-	}
+    @Override
+    public void mousePressed(MouseEvent e) {
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-		
-		client=(ItemPanel)e.getSource();
-		/**
-		 * In the time line then set the time cursor
-		 */
-	
-		if (client.isTimeLineEvent(e)) return;
-	
-	
+        client = (ItemPanel) e.getSource();
+        /**
+         * In the time line then set the time cursor
+         */
+
+        if (client.isTimeLineEvent(e)) {
+            return;
+        }
 
 //		// Detect right button
 //		if (e.getButton() == MouseEvent.BUTTON3) {
@@ -58,35 +55,29 @@ public class PartGlueTool extends ToolAdapter  implements EditTool {
 //			return;
 //		}
 //	
+        boolean shift = e.isShiftDown();
 
-		boolean shift = e.isShiftDown();
+        client.setControlState(e.isControlDown());
 
-		client.setControlState(e.isControlDown());
-		
-		Point p = new Point(e.getX(), e.getY());
+        Point p = new Point(e.getX(), e.getY());
 
-		client.map(p);
+        client.map(p);
 
-		Item item = client.itemAt(p);
+        Item item = client.itemAt(p);
 
-		if (item != null) {
-			((PartView)client).gluePart(item);
-		}
+        if (item != null) {
+            ((PartView) client).gluePart(item);
+        }
 
-		
-		// TODO is this needed the notifies should do it ?
-		// client.repaintItems();
-	}
+        // TODO is this needed the notifies should do it ?
+        // client.repaintItems();
+    }
 
-        @Override
-	public void mouseDragged(MouseEvent e) {
-	}
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
 
-        @Override
-	public void mouseReleased(MouseEvent e) {
-
-	}
-
-	
-	
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
 }

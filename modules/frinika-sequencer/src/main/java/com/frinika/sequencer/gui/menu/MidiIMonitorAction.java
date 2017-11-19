@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.priority.Priority;
 import java.awt.event.ActionEvent;
 import javax.sound.midi.MidiDevice;
@@ -36,71 +36,69 @@ import javax.swing.JFrame;
 
 public class MidiIMonitorAction extends AbstractAction {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	JFrame frame;
-	boolean first=true;
-	public MidiIMonitorAction() {
-		super(getMessage("project.menu.debug.midi_test"));
-	}
+    JFrame frame;
+    boolean first = true;
 
-	@SuppressWarnings("unchecked")
-        @Override
-	public void actionPerformed(ActionEvent e) {
-		MidiDevice in = null;
-                // FIXME 
-                // MidiInDeviceManager.getMidiInDevice();
-		try {
-			in.open();
-			Transmitter t = in.getTransmitter();
-			t.setReceiver(new Receiver() {
-				long tLast = 0;
-				double dtRef=2000.0/96.0;
-				double dtMax=0.0;
-				long cnt=0;
-                    @Override
-				public void close() {
-					// TODO Auto-generated method stub
-				}
+    public MidiIMonitorAction() {
+        super(CurrentLocale.getMessage("project.menu.debug.midi_test"));
+    }
 
-                    @Override
-				public void send(MidiMessage message, long timeStamp) {
-					
-					if (first) {
-						Priority.setPriorityFIFO(90);
-						first=false;
-					}
-					switch (message.getStatus()) {
-					case ShortMessage.TIMING_CLOCK:
-						
-						long t = System.nanoTime();
-						double dt=(t-tLast)/1e6;
-						tLast = t;
-						dt=dt-dtRef;
-						
-						if (Math.abs(dt) > dtMax) {
-							dtMax=Math.abs(dt);
-						}
-						
-						if ((cnt--)==0) {
-							System.out.println(String.format("%5.5f mS ",dtMax));
-							dtMax=0.0;
-							cnt=50;
-							Priority.display();
-						}
-						break;
+    @SuppressWarnings("unchecked")
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        MidiDevice in = null;
+        // FIXME 
+        // MidiInDeviceManager.getMidiInDevice();
+        try {
+            in.open();
+            Transmitter t = in.getTransmitter();
+            t.setReceiver(new Receiver() {
+                long tLast = 0;
+                double dtRef = 2000.0 / 96.0;
+                double dtMax = 0.0;
+                long cnt = 0;
 
-					default:
+                @Override
+                public void close() {
+                    // TODO Auto-generated method stub
+                }
 
-					}
+                @Override
+                public void send(MidiMessage message, long timeStamp) {
 
-				}
+                    if (first) {
+                        Priority.setPriorityFIFO(90);
+                        first = false;
+                    }
+                    switch (message.getStatus()) {
+                        case ShortMessage.TIMING_CLOCK:
 
-			});
-		} catch (MidiUnavailableException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+                            long t = System.nanoTime();
+                            double dt = (t - tLast) / 1e6;
+                            tLast = t;
+                            dt = dt - dtRef;
 
-	}
+                            if (Math.abs(dt) > dtMax) {
+                                dtMax = Math.abs(dt);
+                            }
+
+                            if ((cnt--) == 0) {
+                                System.out.println(String.format("%5.5f mS ", dtMax));
+                                dtMax = 0.0;
+                                cnt = 50;
+                                Priority.display();
+                            }
+                            break;
+
+                        default:
+                    }
+                }
+            });
+        } catch (MidiUnavailableException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
 }

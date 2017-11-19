@@ -18,10 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Frinika; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-
-
+ */
 package com.frinika.sequencer.gui.menu;
 
 import static com.frinika.localization.CurrentLocale.getMessage;
@@ -30,34 +27,28 @@ import com.frinika.sequencer.model.Lane;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
-
 public class CollaspLaneAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public CollaspLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.collasp_lane"));
-		this.project=project;		
-	}
-	
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		Lane root = this.project.getProjectContainer().getProjectLane();
-		visit(root);
-	}
-	
-	void visit(Lane root) {
-		
-		root.setHeight(1);
-		
-		for (Lane child:root.getChildren()) {
-			visit(child);
-		}
-	
-	}
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
+
+    public CollaspLaneAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.collasp_lane"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        Lane root = this.project.getProjectContainer().getProjectLane();
+        visit(root);
+    }
+
+    void visit(Lane root) {
+
+        root.setHeight(1);
+
+        for (Lane child : root.getChildren()) {
+            visit(child);
+        }
+    }
 }

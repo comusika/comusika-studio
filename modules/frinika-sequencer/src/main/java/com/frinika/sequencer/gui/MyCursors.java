@@ -24,86 +24,77 @@ package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.ImageIcon;
 
 public class MyCursors {
-	static Cursor pencil;
 
-	static Cursor eraser;
+    private static Map<CursorType, Cursor> cursors = null;
 
-	static Cursor move;
+    public static Cursor getCursor(CursorType cursorType) {
+        if (cursors == null) {
+            init();
+        }
 
-	static Cursor glue;
+        return cursors.get(cursorType);
+    }
 
-	static boolean inited = false;
+    private static void init() {
+        cursors = new HashMap<>();
+        for (CursorType cursorType : CursorType.values()) {
+            cursors.put(cursorType, createCursor(cursorType));
+        }
+    }
 
-	static Cursor cursorFromName(String name) {
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Dimension dim = tk.getBestCursorSize(16, 16);
-		ImageIcon icon = null;
+    private static Cursor createCursor(CursorType cursorType) {
+        Toolkit toolKit = Toolkit.getDefaultToolkit();
+        Dimension dimension = toolKit.getBestCursorSize(16, 16);
+        ImageIcon icon = null;
 
-		try {
-			if (dim.getWidth() == 16) {
-				icon = new ImageIcon(ClassLoader.getSystemResource("icons/"
-						+ name + ".png"));
-			} else if (dim.getWidth() == 32) {
-				icon = new ImageIcon(ClassLoader.getSystemResource("icons/"
-						+ name + "32.png"));
-			} else {
-				try {
-					throw new Exception(
-							" System does not support 16x16 or 32x32 custom cursors (SOB) ");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			if (name.equals("move")) {
-				return tk.createCustomCursor(icon.getImage(), new Point(8, 8),
-						name);
-			} else {
-				return tk.createCustomCursor(icon.getImage(), new Point(0, icon
-						.getIconHeight() - 1), name);
+        try {
+            switch ((int) dimension.width) {
+                case 16:
+                    icon = new ImageIcon(ClassLoader.getSystemResource("icons/"
+                            + cursorType.imageName + ".png"));
+                    break;
+                case 32:
+                    icon = new ImageIcon(ClassLoader.getSystemResource("icons/"
+                            + cursorType.imageName + "32.png"));
+                    break;
+            }
 
-			}
-		} catch (HeadlessException | IndexOutOfBoundsException e) {
-			System.out.println("name was " + name );
-			e.printStackTrace();
-		}
-		return null;
-		
-	}
+            if (icon == null) {
+                throw new Exception("System does not support 16x16 or 32x32 custom cursors (SOB)");
+            }
 
-	static void init() {		
-		pencil = cursorFromName("pencil");
-		eraser = cursorFromName("eraser");
-		move = cursorFromName("hand");
-		glue = cursorFromName("glue");
-		inited = true;
-	}
+            if (cursorType == CursorType.MOVE) {
+                return toolKit.createCustomCursor(icon.getImage(), new Point(8, 8),
+                        cursorType.imageName);
+            } else {
+                return toolKit.createCustomCursor(icon.getImage(), new Point(0, icon
+                        .getIconHeight() - 1), cursorType.imageName);
+            }
+        } catch (Exception e) {
+            System.out.println("Unable to create cursor: " + cursorType.name());
+            e.printStackTrace();
+        }
 
-	public static Cursor getCursor(String name) {
-		if (!inited)
-			init();
-		if (name.equals("pencil"))
-			return pencil;
-		if (name.equals("eraser"))
-			return eraser;
-		if (name.equals("move"))
-			return move;
-		if (name.equals("glue"))
-			return glue;
-		
-		try {
-			throw new Exception(" unknown name ");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public enum CursorType {
+        PENCIL("pencil"),
+        ERASER("eraser"),
+        MOVE("hand"),
+        GLUE("glue");
 
+        private final String imageName;
+
+        private CursorType(String imageName) {
+            this.imageName = imageName;
+        }
+    }
 }

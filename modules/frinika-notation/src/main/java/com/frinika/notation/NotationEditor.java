@@ -37,6 +37,7 @@ import com.frinika.sequencer.gui.Item;
 import com.frinika.sequencer.gui.ItemPanel;
 import com.frinika.sequencer.gui.ItemScrollPane;
 import com.frinika.sequencer.gui.MyCursors;
+import com.frinika.sequencer.gui.MyCursors.CursorType;
 import com.frinika.sequencer.gui.RectZoomTool;
 import com.frinika.sequencer.gui.SelectTool;
 import com.frinika.sequencer.gui.WriteTool;
@@ -276,11 +277,10 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
         selectTool = new SelectTool(c);
         rectZoomTool = new RectZoomTool(c);
 
-        // drumWriteTool = new WriteTool(MyCursors.getCursor("pencil"));
-        writeTool = new WriteTool(MyCursors.getCursor("pencil"));
-        eraseTool = new EraseTool(MyCursors.getCursor("eraser"));
-        dragViewTool = new DragViewTool(MyCursors.getCursor("move"));
-
+        // drumWriteTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
+        writeTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
+        eraseTool = new EraseTool(MyCursors.getCursor(CursorType.ERASER));
+        dragViewTool = new DragViewTool(MyCursors.getCursor(CursorType.MOVE));
     }
 
     public NotationHeader header;
@@ -1452,7 +1452,6 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
         feedBack(newNote);
         project.getDragList().notifyFeedbackItemListeners(newNote);
         repaintItems();
-
     }
 
     public int screenToPitch(MidiLane lane, int y) {
@@ -1492,7 +1491,6 @@ public class NotationEditor extends ItemPanel implements EditHistoryListener, Ev
     @Override
     public void rightButtonPressedOnItem(int x, int y) {
         // TODO Auto-generated method stub
-
     }
 
     /**

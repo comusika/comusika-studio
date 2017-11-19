@@ -21,13 +21,12 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.global.FrinikaConfig;
 import com.frinika.gui.AbstractDialog;
 import com.frinika.gui.OptionsEditor;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.midi.MidiMessageListener;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.SwingSongPositionListenerWrapper;
@@ -49,8 +48,8 @@ import javax.swing.event.ChangeListener;
 
 /**
  * GUI-dialog of a MidiStepRecordAction.
- * 
- * Unlike other dialogs used in this package, this dialog is non-modal, thus 
+ *
+ * Unlike other dialogs used in this package, this dialog is non-modal, thus
  * once the dialog is opened, it remains 'floating' above the main window while
  * elements in the main-window remain editable.
  *
@@ -60,11 +59,11 @@ import javax.swing.event.ChangeListener;
  * @author Jens Gulden
  */
 public class MidiStepRecordActionDialog extends AbstractDialog implements OptionsEditor, SongPositionListener, SelectionListener, MidiMessageListener {
-    
+
     public final static long AUTO_RECORD_DELAY_INTERVAL = 1500; // ms after no new notes have been etered to commit an auto-record
     private final static Font BUFFER_TEXT_FIELD_FONT_NORMAL = new Font("DialogInput", Font.PLAIN, 12);
     private final static Font BUFFER_TEXT_FIELD_FONT_ITALICS = new Font("DialogInput", Font.ITALIC, 12);
-    
+
     private MidiStepRecordAction action;
     private AbstractSequencerProjectContainer project;
     private TimeSelector positionTimeSelector;
@@ -74,10 +73,9 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     private MidiLane monitoredLane = null; // reference for attaching this as MidiMessageListener
     private Collection<Integer> currentlyPressedNotes = new HashSet<>();
     private AutoRecordThread autoRecordThread = null;
-    
-    /** Creates new form MidiStepRecordActionDialog */
+
     public MidiStepRecordActionDialog(AbstractDialog dialog, AbstractSequencerProjectContainer project, MidiStepRecordAction action) {
-        super(dialog, getMessage("sequencer.midi.step_record"), false); // non-modal
+        super(dialog, CurrentLocale.getMessage("sequencer.midi.step_record"), false); // non-modal
         this.project = project;
         this.action = action;
         MidiInDeviceManager.open(FrinikaConfig.getMidiInDeviceList());
@@ -87,19 +85,19 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         stepTimeSelector.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-            	MidiStepRecordActionDialog.this.action.step = stepTimeSelector.getTicks();
+                MidiStepRecordActionDialog.this.action.step = stepTimeSelector.getTicks();
             }
         });
         positionTimeSelectorPanel.add(positionTimeSelector);
         stepPanel.add(stepTimeSelector);
-        
+
         bufferTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 setBufferDirty(true);
             }
         });
-        
+
         /*// close on esc:
         final String ESC_CANCEL = "esc-cancel";
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), ESC_CANCEL);
@@ -108,13 +106,12 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
                 close();
             }
         });*/
-        
         project.getSequencer().addSongPositionListener(new SwingSongPositionListenerWrapper(this));
-        
+
         project.getSequencer().addMidiMessageListener(this);
 
         project.getMidiSelection().addSelectionListener(this);
-        
+
         this.getRootPane().setDefaultButton(recordButton);
         pack();
         refresh();
@@ -129,33 +126,32 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         velocitySpinner.setValue(action.velocity);
         autoRecordCheckBox.setSelected(action.autoRecord);
         refreshAutoRecord();
-        
+
         // this MidiListener is for the vertical virtual keyboard of the pianoroll
-        
         refreshPart();
     }
-    
+
     private void refreshPart() {
         if (monitoredLane != null) {
             monitoredLane.removeMidiMessageListener(this);
         }
         action.part = project.getMidiSelection().getMidiPart();
         if (action.part != null) {
-            monitoredLane = (MidiLane)action.part.getLane();
+            monitoredLane = (MidiLane) action.part.getLane();
             if (monitoredLane != null) {
                 monitoredLane.addMidiMessageListener(this);
             }
         }
     }
-    
+
     @Override
     public void update() {
         action.step = stepTimeSelector.getTicks();
         action.position = positionTimeSelector.getTicks();
-        action.lengthDiff = (Integer)lengthDiffSpinner.getValue();
-        action.velocity = (Integer)velocitySpinner.getValue();
+        action.lengthDiff = (Integer) lengthDiffSpinner.getValue();
+        action.velocity = (Integer) velocitySpinner.getValue();
     }
-    
+
     @Override
     public void hide() {
         if (monitoredLane != null) {
@@ -163,97 +159,97 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         }
         super.hide();
     }
-    
+
     /**
      * Moves note from temporary buffer to track/lane.
      */
     void record() {
-    	//MidiPart part = frame.getProjectContainer().getMidiSelection().getMidiPart();
-    	refreshPart();
+        //MidiPart part = frame.getProjectContainer().getMidiSelection().getMidiPart();
+        refreshPart();
         String buffer = getBuffer();
         String actuallyRecorded = action.stepRecord(buffer);
         if (actuallyRecorded != null) {
-        	setBuffer(actuallyRecorded);
-        	setBufferDirty(false);
-        	currentlyPressedNotes.clear();
+            setBuffer(actuallyRecorded);
+            setBufferDirty(false);
+            currentlyPressedNotes.clear();
         }
     }
-    
+
     void clear() {
         setBuffer("");
     }
-    
+
     void undo() {
         project.getEditHistoryContainer().getUndoMenuItem().doClick();
     }
-    
+
     void close() {
         hide();
     }
-    
+
     /**
      * Implementation of MidiMessageListener.midiMessage()
      */
     @Override
     public void midiMessage(MidiMessage message) {
-    	if (message instanceof ShortMessage) {
-            ShortMessage shm = (ShortMessage)message;
+        if (message instanceof ShortMessage) {
+            ShortMessage shm = (ShortMessage) message;
             int cmd = shm.getCommand();
-            if ( cmd == ShortMessage.NOTE_ON || cmd == ShortMessage.NOTE_OFF ) {
+            if (cmd == ShortMessage.NOTE_ON || cmd == ShortMessage.NOTE_OFF) {
                 int velocity = shm.getData2();
-        	if ( (velocity != 0) && (cmd == ShortMessage.NOTE_ON) ) {
+                if ((velocity != 0) && (cmd == ShortMessage.NOTE_ON)) {
                     if (this.isVisible()) {
                         if (currentlyPressedNotes.isEmpty()) {
                             clear();
                         }
-        		int note = shm.getData1();
+                        int note = shm.getData1();
                         currentlyPressedNotes.add(note);
-        		this.addToBuffer(note);
-                        if ( action.autoRecord ) {
+                        this.addToBuffer(note);
+                        if (action.autoRecord) {
                             startAutoRecordInterval();
                         }
                     }
-        	} else {
+                } else {
                     if (this.isVisible()) {
-        		int note = shm.getData1();
+                        int note = shm.getData1();
                         currentlyPressedNotes.remove(note);
-                        if ( ! currentlyPressedNotes.isEmpty() ) {
+                        if (!currentlyPressedNotes.isEmpty()) {
                             this.removeFromBuffer(note); // last single one remains
                         }
                     }
-        	}
+                }
             }
-    	}
+        }
     }
-    
+
     @Override
     public void selectionChanged(SelectionContainer selection) {
-    	refreshPart(); // to replug input device if necessary
+        refreshPart(); // to replug input device if necessary
     }
-    
+
     @Override
     public void notifyTickPosition(long tick) {
         action.position = tick;
         positionTimeSelector.setTicks(tick);
     }
-    
+
     @Override
     public boolean requiresNotificationOnEachTick() {
         return false;
     }
-    
+
     public void setBuffer(String s) {
         setBufferDirty(true);
         bufferTextField.setText(s);
     }
-    
+
     public String getBuffer() {
         return bufferTextField.getText();
     }
-    
+
     public void addToBuffer(String s) {
         String buffer = getBuffer();
-        if ( !buffer.toLowerCase().contains(s.toLowerCase()) ) { // not yet there
+        if (!buffer.toLowerCase().contains(s.toLowerCase())) { // not yet there
             if (buffer.length() > 0) {
                 buffer += " ";
             }
@@ -261,29 +257,31 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
             setBuffer(buffer);
         }
     }
-    
+
     public void removeFromBuffer(String s) {
         String buffer = getBuffer() + " ";
         s = s + " ";
-        int i = buffer.toLowerCase().indexOf( s.toLowerCase() );
-        if ( i != -1 ) {
+        int i = buffer.toLowerCase().indexOf(s.toLowerCase());
+        if (i != -1) {
             buffer = buffer.substring(0, i) + buffer.substring(i + s.length());
             setBuffer(buffer.trim());
         }
     }
-    
+
     public void addToBuffer(int note) {
-    	addToBuffer( MidiStepRecordAction.formatNote(note) );
+        addToBuffer(MidiStepRecordAction.formatNote(note));
     }
-    
+
     public void removeFromBuffer(int note) {
-    	removeFromBuffer( MidiStepRecordAction.formatNote(note) );
+        removeFromBuffer(MidiStepRecordAction.formatNote(note));
     }
-    
+
     private void setBufferDirty(boolean dirty) {
-        if ( dirty == this.bufferDirty ) return;
+        if (dirty == this.bufferDirty) {
+            return;
+        }
         this.bufferDirty = dirty;
-        if ( dirty ) {
+        if (dirty) {
             bufferTextField.setFont(BUFFER_TEXT_FIELD_FONT_NORMAL);
         } else { // not dirty: italic font signalizes 'committed'
             bufferTextField.setFont(BUFFER_TEXT_FIELD_FONT_ITALICS);
@@ -291,19 +289,18 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         }
         bufferTextField.repaint();
     }
-    
+
     /*private void clear() {
         
     }*/
-    
     private void refreshAutoRecord() {
         action.autoRecord = autoRecordCheckBox.isSelected();
-        if ( action.autoRecord && this.bufferDirty ) {
+        if (action.autoRecord && this.bufferDirty) {
             record(); // initial one right at the time when checkbox set
         }
         //recordButton.setEnabled( ! autoRecord );
     }
-    
+
     private synchronized void startAutoRecordInterval() {
         // wait a second, if no new notes, then auto-record
         long now = System.currentTimeMillis();
@@ -316,24 +313,23 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
             autoRecordThread.endTime = end;
         }
     }
-    
+
     private synchronized void stopAutoRecordInterval() {
         autoRecordThread = null;
     }
-    
+
     // --- inner class ---
-    
     private class AutoRecordThread extends Thread {
-        
+
         long endTime;
-        
+
         @Override
         public void run() {
             try {
-                while ( (autoRecordThread == this) && (System.currentTimeMillis() < endTime) ) { // endTime might get increased while looping
+                while ((autoRecordThread == this) && (System.currentTimeMillis() < endTime)) { // endTime might get increased while looping
                     Thread.sleep(50);
                 }
-                
+
                 if (autoRecordThread == this) { // not stopped?
                     recordButton.doClick(); // do auto-record
                 }
@@ -344,13 +340,13 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
             stopAutoRecordInterval();
             // Thread exit
         }
-        
+
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -545,7 +541,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     private void autoRecordCheckBoxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_autoRecordCheckBoxStateChanged
         refreshAutoRecord();
     }//GEN-LAST:event_autoRecordCheckBoxStateChanged
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox autoRecordCheckBox;
     private javax.swing.JTextField bufferTextField;
@@ -564,5 +560,5 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
     private javax.swing.JButton undoButton;
     private javax.swing.JSpinner velocitySpinner;
     // End of variables declaration//GEN-END:variables
-    
+
 }

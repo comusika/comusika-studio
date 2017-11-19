@@ -25,7 +25,7 @@ package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.gui.OptionsDialog;
 import com.frinika.gui.util.WindowUtils;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.TimeFormat;
 import com.frinika.sequencer.gui.TimeSelector;
 import com.frinika.sequencer.model.ControllerEvent;
@@ -173,7 +173,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     @Override
     protected OptionsDialog createDialog(Component parent) {
         Frame frame = WindowUtils.getFrame(parent);
-        OptionsDialog dialog = new OptionsDialog(frame, createGUI(), getMessage(actionId)) {
+        OptionsDialog dialog = new OptionsDialog(frame, createGUI(), CurrentLocale.getMessage(actionId)) {
             @Override
             public void repack() {
                 // nop
@@ -326,7 +326,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     class Linear extends AbstractCyclicControllerFunction {
 
         Linear() {
-            super(getMessage("sequencer.midi.controllerfunction.linear"));
+            super(CurrentLocale.getMessage("sequencer.midi.controllerfunction.linear"));
         }
 
         @Override
@@ -348,7 +348,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     class Triangle extends AbstractCyclicControllerFunction {
 
         Triangle() {
-            super(getMessage("sequencer.midi.controllerfunction.triangle"));
+            super(CurrentLocale.getMessage("sequencer.midi.controllerfunction.triangle"));
         }
 
         @Override
@@ -377,7 +377,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     class Saw extends AbstractCyclicControllerFunction {
 
         Saw() {
-            super(getMessage("sequencer.midi.controllerfunction.saw"));
+            super(CurrentLocale.getMessage("sequencer.midi.controllerfunction.saw"));
         }
 
         @Override
@@ -397,7 +397,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     class Sine extends AbstractCyclicControllerFunction {
 
         Sine() {
-            super(getMessage("sequencer.midi.controllerfunction.sine"));
+            super(CurrentLocale.getMessage("sequencer.midi.controllerfunction.sine"));
         }
 
         @Override
@@ -420,7 +420,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     class Square extends AbstractCyclicControllerFunction {
 
         Square() {
-            super(getMessage("sequencer.midi.controllerfunction.square"));
+            super(CurrentLocale.getMessage("sequencer.midi.controllerfunction.square"));
         }
 
         @Override

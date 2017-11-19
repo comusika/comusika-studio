@@ -29,6 +29,7 @@ import java.awt.datatransfer.DataFlavor;
  * @author Peter Johan Salomonsen
  */
 public class MultiEventDataFlavor extends DataFlavor {
+
     private static final long serialVersionUID = 1L;
 
     @Override

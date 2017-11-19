@@ -33,175 +33,175 @@ import com.frinika.sequencer.model.NoteEvent;
  */
 public class NoteEventTableModel extends MyAbstractTableModel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static final String[] ColumnNames = { "Time", "Note", "Vel", "Len" };
+    private static final String[] ColumnNames = {"Time", "Note", "Vel", "Len"};
 
-	static final int COLUMN_TIME = 0; // Relative time to rows
+    static final int COLUMN_TIME = 0; // Relative time to rows
 
-	static final int COLUMN_NOTEORCC = 1;
+    static final int COLUMN_NOTEORCC = 1;
 
-	static final int COLUMN_VELORVAL = 2; // Velocity or CC value
+    static final int COLUMN_VELORVAL = 2; // Velocity or CC value
 
-	static final int COLUMN_LEN = 3; // Note length
+    static final int COLUMN_LEN = 3; // Note length
 
-	static final int COLUMNS = ColumnNames.length;
+    static final int COLUMNS = ColumnNames.length;
 
-	NoteEvent note;;
+    NoteEvent note;
+    ;
 
 	long startTick;
 
-	int ticksPerBeat;
+    int ticksPerBeat;
 
-	int quantize;
+    int quantize;
 
-	public NoteEventTableModel(NoteEvent note, int quantize, int ticksPerBeat) {
-		this.note = note;
-		this.quantize = quantize;
-		this.ticksPerBeat = ticksPerBeat;
-	}
+    public NoteEventTableModel(NoteEvent note, int quantize, int ticksPerBeat) {
+        this.note = note;
+        this.quantize = quantize;
+        this.ticksPerBeat = ticksPerBeat;
+    }
 
-	void setNote(NoteEvent note) {
-		this.note = note;
-	}
+    void setNote(NoteEvent note) {
+        this.note = note;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.TableModel#getRowCount()
-	 */
-        @Override
-	public int getRowCount() {
-		return 1;
-	}
+     */
+    @Override
+    public int getRowCount() {
+        return 1;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
-	 */
-        @Override
-	public Class<?> getColumnClass(int columnIndex) {
+     */
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
 
-		switch (columnIndex) {
-		case COLUMN_TIME:
-			return Double.class;
-		case COLUMN_LEN:
-			return Double.class;
-		default:
-			return Integer.class;
-		}
-	}
+        switch (columnIndex) {
+            case COLUMN_TIME:
+                return Double.class;
+            case COLUMN_LEN:
+                return Double.class;
+            default:
+                return Integer.class;
+        }
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
-	 */
-        @Override
-	public String getColumnName(int column) {
-		return (ColumnNames[column]);
-	}
+     */
+    @Override
+    public String getColumnName(int column) {
+        return (ColumnNames[column]);
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.TableModel#getColumnCount()
-	 */
-        @Override
-	public int getColumnCount() {
-		return (COLUMNS);
-	}
+     */
+    @Override
+    public int getColumnCount() {
+        return (COLUMNS);
+    }
 
-        @Override
-	public int getColumnWidth(int column) {
-		switch (column) {
-		case COLUMN_TIME:
-			return 4;
-		case COLUMN_NOTEORCC:
-			return 3;
-		case COLUMN_VELORVAL:
-			return 2;
-		case COLUMN_LEN:
-			return 4;
-		default:
-			return 10;
-		}
-	}
+    @Override
+    public int getColumnWidth(int column) {
+        switch (column) {
+            case COLUMN_TIME:
+                return 4;
+            case COLUMN_NOTEORCC:
+                return 3;
+            case COLUMN_VELORVAL:
+                return 2;
+            case COLUMN_LEN:
+                return 4;
+            default:
+                return 10;
+        }
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
-	 */
-        @Override
-	public Object getValueAt(int row, int columnIndex) {
-		if (note == null)
-			return null;
-		switch (columnIndex) {
-		case COLUMN_TIME:
-			return (double) note.getStartTick() / ticksPerBeat;
-		case COLUMN_NOTEORCC:
-			return note.getNoteName();
-		case COLUMN_VELORVAL:
-			return note.getVelocity();
-		case COLUMN_LEN:
-			return (double) note.getDuration() / ticksPerBeat;
-		default:
-			return (null);
-		}
-	}
+     */
+    @Override
+    public Object getValueAt(int row, int columnIndex) {
+        if (note == null) {
+            return null;
+        }
+        switch (columnIndex) {
+            case COLUMN_TIME:
+                return (double) note.getStartTick() / ticksPerBeat;
+            case COLUMN_NOTEORCC:
+                return note.getNoteName();
+            case COLUMN_VELORVAL:
+                return note.getVelocity();
+            case COLUMN_LEN:
+                return (double) note.getDuration() / ticksPerBeat;
+            default:
+                return (null);
+        }
+    }
 
-	@Override
-	public void setValueAt(final Object value, final int row, int columnIndex) {
-		if (note == null)
-			return;
-		NoteEvent me = note;
-		switch (columnIndex) {
-		case COLUMN_TIME:
-			final long newTick = (long) ((Double) value * ticksPerBeat);
-			new MultiEventChangeRecorder("move event", me) {
-                                @Override
-				public void doChange(MultiEvent me) {
-					note.setStartTick(newTick);
-				}
-			};
-			break;
-		case COLUMN_VELORVAL:
-			new MultiEventChangeRecorder("change velocity", me) {
-                                @Override
-				public void doChange(MultiEvent me) {
-					((NoteEvent) me).setVelocity(((Integer) value));
-				}
-			};
+    @Override
+    public void setValueAt(final Object value, final int row, int columnIndex) {
+        if (note == null) {
+            return;
+        }
+        NoteEvent me = note;
+        switch (columnIndex) {
+            case COLUMN_TIME:
+                final long newTick = (long) ((Double) value * ticksPerBeat);
+                new MultiEventChangeRecorder("move event", me) {
+                    @Override
+                    public void doChange(MultiEvent me) {
+                        note.setStartTick(newTick);
+                    }
+                };
+                break;
+            case COLUMN_VELORVAL:
+                new MultiEventChangeRecorder("change velocity", me) {
+                    @Override
+                    public void doChange(MultiEvent me) {
+                        ((NoteEvent) me).setVelocity(((Integer) value));
+                    }
+                };
 
-			break;
+                break;
 
-		case COLUMN_LEN:
-			new MultiEventChangeRecorder("change duration", me) {
-                                @Override
-				public void doChange(MultiEvent me) {
-					note.setDuration((long) ((Double) value * ticksPerBeat));
-				}
-			};
-			break;
-		}
+            case COLUMN_LEN:
+                new MultiEventChangeRecorder("change duration", me) {
+                    @Override
+                    public void doChange(MultiEvent me) {
+                        note.setDuration((long) ((Double) value * ticksPerBeat));
+                    }
+                };
+                break;
+        }
 
-		System.out.println(value + " " + row);
+        System.out.println(value + " " + row);
 
-	}
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
-	 */
-        @Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return true;
-	}
+     */
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
 
 }

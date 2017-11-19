@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.MidiFileFilter;
 import java.awt.HeadlessException;
@@ -38,41 +38,39 @@ import javax.swing.JFileChooser;
 
 public class ImportMidiToLaneAction extends AbstractAction {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private ProjectFrame project;
+    private ProjectFrame project;
 
-	public ImportMidiToLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.import_midi_to_lanes"));
-		this.project = project;
-	}
+    public ImportMidiToLaneAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.import_midi_to_lanes"));
+        this.project = project;
+    }
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		
-		File midiFile=null;
-		try {
-			JFileChooser chooser = new JFileChooser();
-			chooser
-					.setDialogTitle(getMessage("project.menu.file.import_midi"));
-			chooser.setFileFilter(new MidiFileFilter());
-			if (midiFile != null)
-				chooser.setSelectedFile(midiFile);
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        File midiFile = null;
+        try {
+            JFileChooser chooser = new JFileChooser();
+            chooser
+                    .setDialogTitle(CurrentLocale.getMessage("project.menu.file.import_midi"));
+            chooser.setFileFilter(new MidiFileFilter());
+            if (midiFile != null) {
+                chooser.setSelectedFile(midiFile);
+            }
 
-			if (chooser.showOpenDialog(project.getFrame()) == JFileChooser.APPROVE_OPTION) {
-				File newMidiFile = chooser.getSelectedFile();
-				
-				MidiDevice mididdevice = project.selectMidiDevice();
+            if (chooser.showOpenDialog(project.getFrame()) == JFileChooser.APPROVE_OPTION) {
+                File newMidiFile = chooser.getSelectedFile();
 
-				project.getProjectContainer().createMidiLanesFromSequence(MidiSystem.getSequence(newMidiFile), mididdevice);
-				
-				midiFile = newMidiFile;
-			}
-			;
-		} catch (HeadlessException | IOException | InvalidMidiDataException ex) {
-			ex.printStackTrace();
-		}
-	
-	}
+                MidiDevice mididdevice = project.selectMidiDevice();
 
+                project.getProjectContainer().createMidiLanesFromSequence(MidiSystem.getSequence(newMidiFile), mididdevice);
+
+                midiFile = newMidiFile;
+            }
+            ;
+        } catch (HeadlessException | IOException | InvalidMidiDataException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

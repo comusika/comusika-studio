@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.MidiLane;
@@ -35,67 +35,62 @@ import javax.swing.AbstractAction;
 
 public class SplitLaneAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public SplitLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.split_lane"));
-		this.project=project;		
-	}
-	
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		//project.
-		Lane lane=project.getProjectContainer().getLaneSelection().getFocus();
-		if (lane == null) {
-			project.infoMessage("Please select a Lane before Spliting!");
-			return;
-		}
-		
-		List<Part> parts = lane.getParts();
-		if (parts.isEmpty()) {
-			project.infoMessage("Lane is empty!");
-			return;
-		}
-		
-		if (parts.size() != 1 ){
-			project.infoMessage("Lane must only contain 1 part!");
-			return;			
-		}
-		
-		Part part = parts.get(0);
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-		if (! (part instanceof MidiPart)) {
-			project.infoMessage("Please select  MidiLane!");
-			return;			
-		}
-		
-        project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.split_lane"));	
-		
-		MidiPart mPart=(MidiPart)part;
-		
-		MidiPart newPart = new MidiPart((MidiLane)lane);
-		long ticksPerBeat=project.getProjectContainer().getSequence().getResolution();
-		long gap=ticksPerBeat/2;
-		long lastTick=Long.MAX_VALUE;
-		long tStart=0;
-		for (MultiEvent ev: mPart.getMultiEvents()) {
-			long t1=ev.getStartTick();
-			if (t1-lastTick > gap ) {
-				tStart=t1;
-				newPart=new MidiPart((MidiLane)lane);
-			}
-			lastTick=ev.getEndTick();
-			newPart.add(ev);
-		}
-		
-		lane.remove(part);
+    public SplitLaneAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.split_lane"));
+        this.project = project;
+    }
 
-		project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        //project.
+        Lane lane = project.getProjectContainer().getLaneSelection().getFocus();
+        if (lane == null) {
+            project.infoMessage("Please select a Lane before Spliting!");
+            return;
+        }
 
+        List<Part> parts = lane.getParts();
+        if (parts.isEmpty()) {
+            project.infoMessage("Lane is empty!");
+            return;
+        }
+
+        if (parts.size() != 1) {
+            project.infoMessage("Lane must only contain 1 part!");
+            return;
+        }
+
+        Part part = parts.get(0);
+
+        if (!(part instanceof MidiPart)) {
+            project.infoMessage("Please select  MidiLane!");
+            return;
+        }
+
+        project.getProjectContainer().getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.split_lane"));
+
+        MidiPart mPart = (MidiPart) part;
+
+        MidiPart newPart = new MidiPart((MidiLane) lane);
+        long ticksPerBeat = project.getProjectContainer().getSequence().getResolution();
+        long gap = ticksPerBeat / 2;
+        long lastTick = Long.MAX_VALUE;
+        long tStart = 0;
+        for (MultiEvent ev : mPart.getMultiEvents()) {
+            long t1 = ev.getStartTick();
+            if (t1 - lastTick > gap) {
+                tStart = t1;
+                newPart = new MidiPart((MidiLane) lane);
+            }
+            lastTick = ev.getEndTick();
+            newPart.add(ev);
+        }
+
+        lane.remove(part);
+
+        project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
+    }
 }

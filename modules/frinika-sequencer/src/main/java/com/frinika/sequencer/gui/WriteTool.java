@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
@@ -30,79 +29,73 @@ import java.awt.event.MouseEvent;
 
 /**
  * Generic write tool. Calls the clients methods for press drag and release.
- * 
- * @author Paul
  *
+ * @author Paul
  */
-public class WriteTool extends ToolAdapter  implements EditTool {
+public class WriteTool extends ToolAdapter implements EditTool {
 
-	EraseTool erasetool;
-	
-	public WriteTool(Cursor c) {
-		super(c);
-		erasetool = new EraseTool(c);
-	//	this.pianoRoll=pianoRoll;
-	}
-	
-	int button = 0;
-        @Override
-	public void mousePressed(MouseEvent e) {
+    EraseTool erasetool;
 
-		button = e.getButton();
-		if(e.getButton() == 3)
-		{
-			erasetool.mousePressed(e);
-			return;
-		}
-		client=(ItemPanel)e.getSource();
-		
-		if (client.isTimeLineEvent(e)) return;
+    public WriteTool(Cursor c) {
+        super(c);
+        erasetool = new EraseTool(c);
+        //	this.pianoRoll=pianoRoll;
+    }
 
-		Point p = new Point(e.getX(),e.getY());
-		client.map(p);
-		client.writePressedAt(p);	
-		
-	}
-	
-        @Override
-	public void mouseDragged(MouseEvent e) {
+    int button = 0;
 
-		if(button == 3)
-		{
-			erasetool.mouseDragged(e);
-			return;
-		}
-		Point p = new Point(e.getX(),e.getY());
-		client.map(p);
-		Point d=client.scrollToContian(p);
-		client=(ItemPanel)e.getSource();
-		client.writeDraggedAt(p);		
-	}
-	
-	
-        @Override
-	public void mouseReleased(MouseEvent e) {
+    @Override
+    public void mousePressed(MouseEvent e) {
 
-		if(e.getButton() == 3)
-		{
-			erasetool.mouseReleased(e);
-			return;
-		}
-		Point p = new Point(e.getX(),e.getY());
-		client.map(p);
-		client=(ItemPanel)e.getSource();
-		client.writeReleasedAt(p);		
-		
-	}
-	
-        @Override
-	public void mouseClicked(MouseEvent e) { // Jens
-		if(e.getButton() == 3)
-		{
-			erasetool.mouseClicked(e);
-			return;
-		}
-		SelectTool.handleMouseClicked(e, this); // do the same as SelectTool (this allows editing text-parts by double-clicking also when the WriteTool is selected)
-	}
-	
+        button = e.getButton();
+        if (e.getButton() == 3) {
+            erasetool.mousePressed(e);
+            return;
+        }
+        client = (ItemPanel) e.getSource();
+
+        if (client.isTimeLineEvent(e)) {
+            return;
+        }
+
+        Point p = new Point(e.getX(), e.getY());
+        client.map(p);
+        client.writePressedAt(p);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+        if (button == 3) {
+            erasetool.mouseDragged(e);
+            return;
+        }
+        Point p = new Point(e.getX(), e.getY());
+        client.map(p);
+        Point d = client.scrollToContian(p);
+        client = (ItemPanel) e.getSource();
+        client.writeDraggedAt(p);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+        if (e.getButton() == 3) {
+            erasetool.mouseReleased(e);
+            return;
+        }
+        Point p = new Point(e.getX(), e.getY());
+        client.map(p);
+        client = (ItemPanel) e.getSource();
+        client.writeReleasedAt(p);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) { // Jens
+        if (e.getButton() == 3) {
+            erasetool.mouseClicked(e);
+            return;
+        }
+        SelectTool.handleMouseClicked(e, this); // do the same as SelectTool (this allows editing text-parts by double-clicking also when the WriteTool is selected)
+    }
 }

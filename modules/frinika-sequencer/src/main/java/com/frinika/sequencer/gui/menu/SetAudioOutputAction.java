@@ -24,7 +24,7 @@ package com.frinika.sequencer.gui.menu;
 
 import com.frinika.audio.toot.AudioInjector;
 import com.frinika.base.FrinikaAudioSystem;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -35,48 +35,45 @@ import uk.org.toot.audio.server.IOAudioProcess;
 
 public class SetAudioOutputAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public SetAudioOutputAction(ProjectFrame project) {
-		super(getMessage("project.menu.settings.set_audio_output"));
-	
-		this.project=project;		
-	}
-	
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-		AudioServer audioServer = FrinikaAudioSystem.getAudioServer();
-	
-		List<String> list = audioServer.getAvailableOutputNames();
+    public SetAudioOutputAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("project.menu.settings.set_audio_output"));
 
-		if (!list.isEmpty()) {
+        this.project = project;
+    }
 
-			Object a[] = new Object[list.size()];
-			a = list.toArray(a);
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
 
-			Object selectedValue = JOptionPane.showInputDialog(null,
-					getMessage("setup.select_audio_output"), "Output",
-					JOptionPane.INFORMATION_MESSAGE, null, a, a[0]);
+        AudioServer audioServer = FrinikaAudioSystem.getAudioServer();
 
-			try {
-				IOAudioProcess out=audioServer.openAudioOutput((String) selectedValue, "output");
-				if (out == null) return;
-				AudioInjector injector=project.getProjectContainer().getOutputProcess();
-				injector.setOutputProcess(out);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        List<String> list = audioServer.getAvailableOutputNames();
 
-		} else {
-			System.err.println(" No output devices found ");
-		}
+        if (!list.isEmpty()) {
 
-				
-	}	
+            Object a[] = new Object[list.size()];
+            a = list.toArray(a);
+
+            Object selectedValue = JOptionPane.showInputDialog(null,
+                    CurrentLocale.getMessage("setup.select_audio_output"), "Output",
+                    JOptionPane.INFORMATION_MESSAGE, null, a, a[0]);
+
+            try {
+                IOAudioProcess out = audioServer.openAudioOutput((String) selectedValue, "output");
+                if (out == null) {
+                    return;
+                }
+                AudioInjector injector = project.getProjectContainer().getOutputProcess();
+                injector.setOutputProcess(out);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        } else {
+            System.err.println(" No output devices found ");
+        }
+    }
 }

@@ -27,43 +27,43 @@ import com.frinika.sequencer.gui.selection.SelectionFocusable;
 import com.frinika.sequencer.model.Selectable;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 import javax.swing.AbstractAction;
 
 public class DeleteAction extends AbstractAction {
-	private static final long serialVersionUID = 1L;
 
-	private AbstractSequencerProjectContainer project;
-	
-	public DeleteAction(AbstractSequencerProjectContainer project) {
-		super(getMessage("sequencer.project.delete"));
-		this.project=project;		
-	}
+    private static final long serialVersionUID = 1L;
 
-        @Override
-	public void actionPerformed(ActionEvent e) {
-		
-		project.getEditHistoryContainer().mark(getMessage("sequencer.project.delete"));
-		SelectionFocusable focus = project.getSelectionFocus();
-		if (focus == null) {
-			System.out.println(" Please set the foucs ");	
-			return;
-		}
-		
-		Collection<Selectable> list=focus.getObjects();
-		if (list.size() == 0) {
-			System.out.println(" Please select something");
-			return;
-		}
-		
-	//	project.clipBoard().copy(list);
-		
-		Collection<Selectable> list2=new Vector<>(list);
-		for (Selectable it:list2) {
-			it.removeFromModel();
-		}
-		project.getSelectionFocus().clearSelection();
-		project.getEditHistoryContainer().notifyEditHistoryListeners();
-	}
+    private AbstractSequencerProjectContainer project;
+
+    public DeleteAction(AbstractSequencerProjectContainer project) {
+        super(getMessage("sequencer.project.delete"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        project.getEditHistoryContainer().mark(getMessage("sequencer.project.delete"));
+        SelectionFocusable focus = project.getSelectionFocus();
+        if (focus == null) {
+            System.out.println(" Please set the foucs ");
+            return;
+        }
+
+        Collection<Selectable> list = focus.getObjects();
+        if (list.isEmpty()) {
+            System.out.println(" Please select something");
+            return;
+        }
+
+        //	project.clipBoard().copy(list);
+        Collection<Selectable> list2 = new ArrayList<>(list);
+        for (Selectable it : list2) {
+            it.removeFromModel();
+        }
+        project.getSelectionFocus().clearSelection();
+        project.getEditHistoryContainer().notifyEditHistoryListeners();
+    }
 }

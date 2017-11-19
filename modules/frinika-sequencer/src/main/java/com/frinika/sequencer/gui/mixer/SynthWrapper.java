@@ -337,10 +337,8 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory, MidiDeviceI
                         Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-
             }
         }
-
     }
 
     /**
@@ -524,7 +522,6 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory, MidiDeviceI
                 e.printStackTrace();
             }
         }
-
     }
 
     /**
@@ -577,7 +574,6 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory, MidiDeviceI
     @Override
     public void open() throws MidiUnavailableException {
         midiDevice.open();
-
     }
 
     @Override

@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.TextLane;
 import java.awt.event.ActionEvent;
@@ -37,23 +37,21 @@ import javax.swing.AbstractAction;
  */
 public class CreateTextLaneAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private ProjectFrame project;
-	
-	public CreateTextLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.add_text_lane"));
-		this.project=project;		
-	}
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.add_text_lane"));
-		TextLane lane = project.getProjectContainer().createTextLane();
-		project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
-		//project.getProjectContainer().getLaneSelection().setSelected(lane);			
-		//project.getProjectContainer().getLaneSelection().notifyListeners();
-	}
+    private static final long serialVersionUID = 1L;
+
+    private ProjectFrame project;
+
+    public CreateTextLaneAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.add_text_lane"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        project.getProjectContainer().getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.add_text_lane"));
+        TextLane lane = project.getProjectContainer().createTextLane();
+        project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
+        //project.getProjectContainer().getLaneSelection().setSelected(lane);			
+        //project.getProjectContainer().getLaneSelection().notifyListeners();
+    }
 }

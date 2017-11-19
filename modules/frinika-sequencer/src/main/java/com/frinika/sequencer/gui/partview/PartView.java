@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.partview;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.model.EditHistoryListener;
@@ -38,6 +38,7 @@ import com.frinika.sequencer.gui.ItemRollToolBar;
 import com.frinika.sequencer.gui.ItemScrollPane;
 import com.frinika.sequencer.gui.Layout;
 import com.frinika.sequencer.gui.MyCursors;
+import com.frinika.sequencer.gui.MyCursors.CursorType;
 import com.frinika.sequencer.gui.PartGlueTool;
 import com.frinika.sequencer.gui.PartSplitTool;
 import com.frinika.sequencer.gui.ProjectFrame;
@@ -76,15 +77,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
- * 
  * Panel displaying the parts.
- * 
- * 
+ *
  * @author pjl
- * 
  */
 public class PartView extends ItemPanel implements SelectionListener<Part>,
         EditHistoryListener {
@@ -106,8 +106,8 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     private ProjectFrame frame;
 
     public PartView(ProjectFrame frame, ItemScrollPane scroller) {
-        super(frame.getProjectContainer(),scroller, true, true, 20.0, true);
-       project.getPartSelection().addSelectionListener(
+        super(frame.getProjectContainer(), scroller, true, true, 20.0, true);
+        project.getPartSelection().addSelectionListener(
                 this);
         this.frame = frame;
         this.tempoList = project.getTempoList();
@@ -133,8 +133,8 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
         if (project.getPartViewSnapQuantization() == 0) {
             project.setPartViewSnapQuantization(-1);
-        // this.ticksPerBeat*4);
-        // HACK PJL * frame.getProjectContainer().beatsPerBar);
+            // this.ticksPerBeat*4);
+            // HACK PJL * frame.getProjectContainer().beatsPerBar);
         }
         // this.ticksToScreen = .02;
 
@@ -178,7 +178,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         int dyDragged = p.y - this.yAnchor;
 
         // System.out.println(dxDragged + " " + dyDragged);
-
         double dt = dxDragged / userToScreen;
         double t = this.xAnchor / userToScreen;
 
@@ -206,7 +205,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         int dLane = dyDragged / Layout.getLaneHeightScale();
 
         // Lane lane=laneAt(p.y);
-
         // If no significant movement then return
         if (Math.abs(dtick) < 1e-10 && dLane == 0 && !altIsDown && this.dragMode != OVER_ENVELOPE_GAIN && this.dragMode != OVER_ENVELOPE_RIGHT && this.dragMode != OVER_ENVELOPE_LEFT) {
             return;
@@ -325,7 +323,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
     /**
      * Call this to start dragging with the reference point. See dragTo
-     * 
+     *
      * @param e
      */
     public void startDrag() {
@@ -343,7 +341,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
      */
     /**
      * Set all selectables in the rect to yes.
-     * 
+     *
      * @param yes
      * @param rect
      */
@@ -390,7 +388,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         int y1 = lane.getDisplayY();
         rectTmp.setBounds((int) x1, y1, (int) w, lane.getDisplayH());
         return rectTmp;
-    // return new Rectangle((int) x1, y1, (int) w, lane.getDisplayH());
+        // return new Rectangle((int) x1, y1, (int) w, lane.getDisplayH());
 
     }
 
@@ -406,7 +404,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void rightButtonPressedOnItem(int x, int y) {
@@ -466,7 +464,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
         if (lane instanceof MidiLane) {
             this.project.getEditHistoryContainer().mark(
-                    getMessage("sequencer.lane.add_part"));
+                    CurrentLocale.getMessage("sequencer.lane.add_part"));
             this.newPart = (MidiPart) lane.createPart(); // new
             // MidiPart((MidiLane)
             // lane);
@@ -487,7 +485,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
         } else if (lane instanceof TextLane) { // Jens
             this.project.getEditHistoryContainer().mark(
-                    getMessage("sequencer.lane.add_part"));
+                    CurrentLocale.getMessage("sequencer.lane.add_part"));
             long tick = screenToTickAbs(p.x, true);
             ((TextLane) lane).createNewTextPart(tick); // replace with gerenic
             // lane.createPart() ?
@@ -507,7 +505,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     /**
      * Find component the contains point x,y and set. first component found is
      * set (is this what we want ?) TODO multitrack thinking.
-     * 
+     *
      * @param x
      * @param y
      * @return
@@ -527,11 +525,10 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     }
 
     /**
-     * 
-     * @param virtualScreenRect
-     *            area of screen that needs to be painted
-     * 
-     * 
+     *
+     * @param virtualScreenRect area of screen that needs to be painted
+     *
+     *
      */
     @Override
     public synchronized void paintImageImpl(final Rectangle clipRect,
@@ -546,7 +543,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         int h = clipRect.height;
 
         // Draw vertical lines
-
         g.setColor(ColorScheme.partViewBackground);
         g.fill(clipRect);
 
@@ -590,7 +586,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
             double tt = project.getTempoList().getTimeAtTick(tick);
 
             // System.out.println(beat + " " + isBar + " "+ tick + " "+ tt);
-
             int x1 = (int) userToScreen(tt);
             g.drawLine(x1, y, x1, y + h);
 
@@ -606,18 +601,16 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         // while (y1 < y + h) { g.drawLine(x, y1, x + w, y1); p1 += 1; y1 =
         // laneToScreen(p1); }
         // //* /
-
         paintParts(g, clipRect);
 
     }
 
     /**
-     * 
+     *
      * Private method to paint the part images.
-     * 
-     * 
-     * @param g
-     *            graphic
+     *
+     *
+     * @param g graphic
      * @param pb
      */
     private synchronized void paintParts(Graphics2D g, Rectangle pb) {
@@ -625,7 +618,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         final int gap = 2;
 
         // System.out.println("Paint parts ");
-
         Part focus = this.project.getPartSelection().getFocus();
 
         for (Lane lane : this.laneHeader.visibleLanes) {
@@ -648,7 +640,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
                     if (pb != null && !pb.intersects(rect)) {
                         if (rect.x > pb.x + pb.width) {
                             lastX = -2; // last part is out of visible rect, mark as
-                        // don't look further, Jens
+                            // don't look further, Jens
                         }
                         continue;
                     }
@@ -782,14 +774,14 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         switch (this.dragMode) {
             case OVER_ITEM_MIDDLE:
                 if (!this.controlIsDown) {
-                    this.editHistory.mark(getMessage("sequencer.partview.drag_move_part"));
+                    this.editHistory.mark(CurrentLocale.getMessage("sequencer.partview.drag_move_part"));
                 } else {
-                    this.editHistory.mark(getMessage("sequencer.partview.drag_copy_part"));
+                    this.editHistory.mark(CurrentLocale.getMessage("sequencer.partview.drag_copy_part"));
                 }
                 break;
             case OVER_ITEM_RIGHT:
             case OVER_ITEM_LEFT:
-                this.editHistory.mark(getMessage("sequencer.partview.resize"));
+                this.editHistory.mark(CurrentLocale.getMessage("sequencer.partview.resize"));
                 break;
             case OVER_ENVELOPE_LEFT:
             case OVER_ENVELOPE_RIGHT:
@@ -801,7 +793,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         }
 
         // Collection<Part> selected = project.getPartSelection().getSelected();
-
         for (PartImage pi : this.dragList) {
             pi.drop();
         }
@@ -809,7 +800,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         this.dragList = null;
 
         this.project.getEditHistoryContainer().notifyEditHistoryListeners();
-    // repaintItems();
+        // repaintItems();
     }
 
     @Override
@@ -839,7 +830,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         private double startTimeDelta;
         public Color color;
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 1L;        // long length;
         int laneId;
@@ -853,7 +844,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
             // length = part.getDuration();
             this.laneId = laneId;
             this.part = part;
-        // print("Create");
+            // print("Create");
         }
 
         private void print(String txt) {
@@ -921,22 +912,22 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
                         try {
                             if (MidiPart.class.isInstance(part)) {
                                 ((MidiPart) this.part).rebuildMultiEventEndTickComparables(); // PJS:
-                            // Previously
-                            // was
-                            // .onLoad()
-                            // -
-                            // but
-                            // caused
-                            // that
-                            // the
-                            // original
-                            // events
-                            // where
-                            // inserted
-                            // into
-                            // the
-                            // ftw
-                            // twice
+                                // Previously
+                                // was
+                                // .onLoad()
+                                // -
+                                // but
+                                // caused
+                                // that
+                                // the
+                                // original
+                                // events
+                                // where
+                                // inserted
+                                // into
+                                // the
+                                // ftw
+                                // twice
                             } else {
                                 this.part.onLoad();
                             }
@@ -962,7 +953,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
         /**
          * Set the rectanlge for this PartImage
-         * 
+         *
          * @param pi
          */
         private void positionPartImage() {
@@ -981,7 +972,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
             y = y1;
             width = (int) w;
             height = lane.getDisplayH();
-        // System.out.println(pi);
+            // System.out.println(pi);
 
         }
     }
@@ -1058,11 +1049,11 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         this.selectTool = new SelectTool(c);
         this.rectZoomTool = new RectZoomTool(c);
 
-        this.writeTool = new WriteTool(MyCursors.getCursor("pencil"));
-        this.eraseTool = new EraseTool(MyCursors.getCursor("eraser"));
-        this.dragViewTool = new DragViewTool(MyCursors.getCursor("move"));
+        this.writeTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
+        this.eraseTool = new EraseTool(MyCursors.getCursor(CursorType.ERASER));
+        this.dragViewTool = new DragViewTool(MyCursors.getCursor(CursorType.MOVE));
         this.splitTool = new PartSplitTool(Cursor.getDefaultCursor());
-        this.glueTool = new PartGlueTool(MyCursors.getCursor("glue"));
+        this.glueTool = new PartGlueTool(MyCursors.getCursor(CursorType.GLUE));
 
     }
 
@@ -1100,7 +1091,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     public void setSnapQuantization(double quant) {
         this.project.setPartViewSnapQuantization(quant);
         repaintItems();
-
     }
 
     @Override
@@ -1116,7 +1106,6 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     @Override
     public void setFocus(Item item) {
         this.project.getPartSelection().setFocus((Part) item);
-
     }
 
     @Override
@@ -1133,7 +1122,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
     public void splitIsOver(Point p) {
         // System.out.println(" split is over " + p );
-        boolean quant=project.isPartViewSnapQuantized();
+        boolean quant = project.isPartViewSnapQuantized();
         long tick = screenToTickAbs(p.x, quant);
         if (this.splitTick == tick) {
             return;
@@ -1144,8 +1133,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 //				+ project.getTimeUtils().tickToBarBeatTick(tick));
         repaintItems();
 
-    // TODO Auto-generated method stub
-
+        // TODO Auto-generated method stub
     }
 
     public void splitAt(Point p) {
@@ -1153,7 +1141,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
         SplitPartAction act = new SplitPartAction(this.project,
                 screenToTickAbs(p.x, project.isPartViewSnapQuantized()));
         this.project.getEditHistoryContainer().mark(
-                getMessage("sequencer.partview.split.part"));
+                CurrentLocale.getMessage("sequencer.partview.split.part"));
         act.redo();
         this.project.getEditHistoryContainer().push(act);
         this.project.getEditHistoryContainer().notifyEditHistoryListeners();
@@ -1163,7 +1151,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     public void gluePart(Item item) {
         EditHistoryAction act = new GluePartEditAction((MidiPart) item);
         this.project.getEditHistoryContainer().mark(
-                getMessage("sequencer.partview.glue.part"));
+                CurrentLocale.getMessage("sequencer.partview.glue.part"));
         act.redo();
         this.project.getEditHistoryContainer().push(act);
         this.project.getEditHistoryContainer().notifyEditHistoryListeners();
@@ -1171,7 +1159,7 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
     }
 
     public void selectAll() {
-        Vector<Part> list = new Vector<>();
+        List<Part> list = new ArrayList<>();
         for (Lane lane : this.laneHeader.visibleLanes) {
             for (Part part : lane.getParts()) {
                 list.add(part);
@@ -1187,13 +1175,13 @@ public class PartView extends ItemPanel implements SelectionListener<Part>,
 
     }
 
-    @Override
     /**
      * Invoked by ItemPanel.setTimeLineEvent to set cursor based on a click on
      * the timeline
      */
+    @Override
     public void setTimeAtX(int x) {
-        boolean iQuant=project.isPartViewSnapQuantized();
+        boolean iQuant = project.isPartViewSnapQuantized();
         long tick = screenToTickAbs(x, iQuant);
         this.sequencer.setTickPosition(tick);
     }

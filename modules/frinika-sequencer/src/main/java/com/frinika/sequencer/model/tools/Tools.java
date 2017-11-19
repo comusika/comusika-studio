@@ -21,57 +21,57 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model.tools;
 
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tools {
 
-	public static Vector<MidiPart> splitParts(Vector<MidiPart> selected,
-			long ticksPerBeat) {
-		
-		Vector<MidiPart> newParts = new Vector<>();
+    public static List<MidiPart> splitParts(List<MidiPart> selected,
+            long ticksPerBeat) {
 
-		for (MidiPart part : selected) {
+        List<MidiPart> newParts = new ArrayList<>();
 
-			MidiLane lane = (MidiLane) part.getLane();
-			lane.remove(part);
+        for (MidiPart part : selected) {
 
-			MidiPart newPart = null; // new MidiPart((MidiLane) lane);
+            MidiLane lane = (MidiLane) part.getLane();
+            lane.remove(part);
 
-			long gap = ticksPerBeat * 2;
-			long lastTick = -1;
+            MidiPart newPart = null; // new MidiPart((MidiLane) lane);
 
-			newPart = new MidiPart((MidiLane) lane);
-			newParts.add(newPart);
+            long gap = ticksPerBeat * 2;
+            long lastTick = -1;
 
-			for (MultiEvent ev : part.getMultiEvents()) {
+            newPart = new MidiPart((MidiLane) lane);
+            newParts.add(newPart);
 
-				long t1 = ev.getStartTick();
-				if (lastTick == -1)
-					lastTick = ev.getEndTick();
+            for (MultiEvent ev : part.getMultiEvents()) {
 
-				if (t1 - lastTick > gap) {
-					newPart.setBoundsFromEvents();
-					newPart.commitEventsAdd();
-					newPart = new MidiPart((MidiLane) lane);
-					newParts.add(newPart);
-					lastTick = ev.getEndTick();
-				}
+                long t1 = ev.getStartTick();
+                if (lastTick == -1) {
+                    lastTick = ev.getEndTick();
+                }
 
-				newPart.add(ev);
-			}
-			if (newPart != null) {
-				newPart.setBoundsFromEvents();
-				newPart.commitEventsAdd();
-			}
+                if (t1 - lastTick > gap) {
+                    newPart.setBoundsFromEvents();
+                    newPart.commitEventsAdd();
+                    newPart = new MidiPart((MidiLane) lane);
+                    newParts.add(newPart);
+                    lastTick = ev.getEndTick();
+                }
 
-		}
-		return newParts;
-	}
+                newPart.add(ev);
+            }
+            if (newPart != null) {
+                newPart.setBoundsFromEvents();
+                newPart.commitEventsAdd();
+            }
 
+        }
+        return newParts;
+    }
 }

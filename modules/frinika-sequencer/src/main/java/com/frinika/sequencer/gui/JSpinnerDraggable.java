@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.global.FrinikaConfig;
@@ -38,89 +37,84 @@ import javax.swing.SpinnerModel;
 /**
  * A JSpinner, the value of which can also be edited by "dragging" the mouse
  * from the spinner, i.e. press the mouse button on the displayed number, and
- * then move the cursor (while keeping the button pressed) upwards or
- * downwards to change the value.
- * 
+ * then move the cursor (while keeping the button pressed) upwards or downwards
+ * to change the value.
+ *
  * @author Jens Gulden
  */
 public class JSpinnerDraggable extends JSpinner implements MouseMotionListener {
 
-	private static final long serialVersionUID = 1L;
-	
-	protected int drag = 0;
-	protected int keysTyped = 0;
-	protected Robot robot;
-	
-	/**
-	 * 
-	 */
-	public JSpinnerDraggable() {
-		super();
-		init();
-	}
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @param model
-	 */
-	public JSpinnerDraggable(SpinnerModel model) {
-		super(model);
-		init();
-	}
-	
-	private void init() {
-		try {
-			robot = new Robot();
-		} catch (AWTException awte) {
-			awte.printStackTrace();
-		}
-		JSpinner.DefaultEditor e = (JSpinner.DefaultEditor)this.getEditor();
-		JTextField field = e.getTextField();
-		MouseMotionListener[] listeners = field.getMouseMotionListeners();
-		for (MouseMotionListener l : listeners) {
-			field.removeMouseMotionListener(l);
-		}
-		field.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				drag = 0;
-				keysTyped = 0;
-			}
-		});
-		field.addMouseMotionListener(this);
-	}
-	
-	
+    protected int drag = 0;
+    protected int keysTyped = 0;
+    protected Robot robot;
 
-        @Override
-	public void mouseDragged(MouseEvent e) {
-		System.out.println(e.getY());
-		int y = e.getY();
-		int diff;
-		if (drag != 0) {
-			diff = y - drag;
-		} else {
-			diff = (y > 0) ? 1 : -1;
-			drag = y;
-		}
-		diff /= FrinikaConfig.MOUSE_NUMBER_DRAG_INTENSITY; // speed factor
-		while (keysTyped < diff) {
-			robot.keyPress(KeyEvent.VK_DOWN);			
-			robot.keyRelease(KeyEvent.VK_DOWN);			
-			keysTyped++;
-		}
-		while (keysTyped > diff) {
-			robot.keyPress(KeyEvent.VK_UP);			
-			robot.keyRelease(KeyEvent.VK_UP);			
-			keysTyped--;
-		}
-	}
+    public JSpinnerDraggable() {
+        super();
+        init();
+    }
 
-        @Override
-	public void mouseMoved(MouseEvent e) {
-		// nop
-	}
+    /**
+     * @param model
+     */
+    public JSpinnerDraggable(SpinnerModel model) {
+        super(model);
+        init();
+    }
 
-	/*public static void main(String[] args) {
+    private void init() {
+        try {
+            robot = new Robot();
+        } catch (AWTException awte) {
+            awte.printStackTrace();
+        }
+        JSpinner.DefaultEditor e = (JSpinner.DefaultEditor) this.getEditor();
+        JTextField field = e.getTextField();
+        MouseMotionListener[] listeners = field.getMouseMotionListeners();
+        for (MouseMotionListener l : listeners) {
+            field.removeMouseMotionListener(l);
+        }
+        field.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                drag = 0;
+                keysTyped = 0;
+            }
+        });
+        field.addMouseMotionListener(this);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        System.out.println(e.getY());
+        int y = e.getY();
+        int diff;
+        if (drag != 0) {
+            diff = y - drag;
+        } else {
+            diff = (y > 0) ? 1 : -1;
+            drag = y;
+        }
+        diff /= FrinikaConfig.MOUSE_NUMBER_DRAG_INTENSITY; // speed factor
+        while (keysTyped < diff) {
+            robot.keyPress(KeyEvent.VK_DOWN);
+            robot.keyRelease(KeyEvent.VK_DOWN);
+            keysTyped++;
+        }
+        while (keysTyped > diff) {
+            robot.keyPress(KeyEvent.VK_UP);
+            robot.keyRelease(KeyEvent.VK_UP);
+            keysTyped--;
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        // nop
+    }
+
+    /*public static void main(String[] args) {
 		JFrame frame = new JFrame("Test JSpinnerDraggable");
 		frame.setSize(200, 170);
 		frame.setLocation(200, 200);
@@ -135,5 +129,4 @@ public class JSpinnerDraggable extends JSpinner implements MouseMotionListener {
 
 		frame.show();
 	}*/
-
 }

@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.AudioPart;
 import com.frinika.sequencer.model.MidiLane;
@@ -35,60 +35,52 @@ import javax.swing.AbstractAction;
 
 public class AudioPartToMidiAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	private ProjectFrame project;
+    public AudioPartToMidiAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.audiopart_to_midi"));
+        this.project = project;
+    }
 
-	public AudioPartToMidiAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.audiopart_to_midi"));
-		this.project = project;
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                Part part = project.getProjectContainer()
+                        .getPartSelection().getFocus();
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
+                if (part == null || !(part instanceof AudioPart)) {
+                    return;
+                }
 
-		Thread t = new Thread() {
+                MidiPart midiPart = null;
+                try {
+                    midiPart = AudioPartToMidi.process((AudioPart) part);
+                    project
+                            .getProjectContainer()
+                            .getEditHistoryContainer()
+                            .mark(CurrentLocale.getMessage("sequencer.project.audiopart_to_midi"));
+                    MidiLane lane = project.getProjectContainer()
+                            .createMidiLane();
+                    lane.add(midiPart);
 
-                @Override
-			public void run() {
-				Part part = project.getProjectContainer()
-						.getPartSelection().getFocus();
+                    project.getProjectContainer()
+                            .getEditHistoryContainer()
+                            .notifyEditHistoryListeners();
+                    project.getProjectContainer().getPartSelection()
+                            .notifyListeners();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        };
 
-				if (part == null || !(part instanceof AudioPart))
-					return;
+        t.start();
 
-				MidiPart midiPart = null;
-				try {
-					midiPart = AudioPartToMidi.process((AudioPart) part);
-					project
-							.getProjectContainer()
-							.getEditHistoryContainer()
-							.mark(
-									getMessage("sequencer.project.audiopart_to_midi"));
-					MidiLane lane = project.getProjectContainer()
-							.createMidiLane();
-					lane.add(midiPart);
-
-					project.getProjectContainer()
-							.getEditHistoryContainer()
-							.notifyEditHistoryListeners();
-					project.getProjectContainer().getPartSelection()
-							.notifyListeners();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		
-		t.start();
-
-		
-		// TODO make a cancel button. 
-
-	}
+        // TODO make a cancel button. 
+    }
 }

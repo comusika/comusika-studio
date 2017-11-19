@@ -9,6 +9,8 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {
+    compile(project(':modules:frinika-audio-osx'))
+    compile(project(':modules:frinika-jack'))
     compile 'commons-logging:commons-logging:1.2'
     compile ':toot'
     compile ':TootAudioServers'

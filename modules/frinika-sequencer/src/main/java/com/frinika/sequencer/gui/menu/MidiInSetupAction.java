@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.MidiInDevicePanel;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -34,7 +34,7 @@ public class MidiInSetupAction extends AbstractAction {
     private JFrame frame;
 
     public MidiInSetupAction() {
-        super(getMessage("project.menu.settings.midiin"));
+        super(CurrentLocale.getMessage("project.menu.settings.midiin"));
         frame = new JFrame();
         frame.setContentPane(new MidiInDevicePanel());
         frame.setTitle("Select MidiIn Devices");

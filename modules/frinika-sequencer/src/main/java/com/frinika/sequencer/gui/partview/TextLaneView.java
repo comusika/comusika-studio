@@ -21,11 +21,10 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.partview;
 
 import com.frinika.global.Toolbox;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.sequencer.model.TextLane;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
@@ -38,119 +37,120 @@ import javax.swing.event.*;
 
 /**
  * Lane-view for text-lane.
- *  
+ *
  * @author Jens Gulden
  */
 public class TextLaneView extends LaneView implements ChangeListener {
-	
-	private static final long serialVersionUID = 1L;
 
-	public final static String DELIMITER = "\n\n---\n\n"; 
-	
-	private JEditorPane editor;
-	private AbstractSequencerProjectContainer project;
-	private String textBackup = null;
-	private boolean initialRefresh = true;
-	
-	public TextLaneView(TextLane lane, AbstractSequencerProjectContainer project) {
-		super(lane);
-		this.project = project;
-		init();
-		refreshFromTrack(); // with initialRefresh==true
-		lane.addChangeListener(this);
-	}
-	
-        @Override
-	public void stateChanged(ChangeEvent e) {
-		refreshFromTrack();
-	}
+    private static final long serialVersionUID = 1L;
 
-        @Override
-	protected void makeButtons() {
-		this.setLayout(new BorderLayout());
-		editor = new JEditorPane();
-		editor.addFocusListener(new FocusAdapter(){
-                @Override
-			public void focusGained(FocusEvent e) {
-				textBackup = getTextNormalized();
-			}
-                @Override
-			public void focusLost(FocusEvent e) {
-				final String text = getTextNormalized();
-				assert (textBackup != null); // rely on swing to always fire focusGained before focusLost
-				if (!text.equals(textBackup)) {
-					final String localTextBackup = textBackup; 
-					textBackup = text;
-					project.getEditHistoryContainer().mark(getMessage("sequencer.project.edit_text_lane"));
-					EditHistoryAction action = new EditHistoryAction() { // undo editing the whole text in textlaneview
-                            @Override
-						public void redo() {
-							editor.setText(text);
-							updateToTrack();
-						}
-						
-                            @Override
-						public void undo() {
-							editor.setText(localTextBackup);
-							updateToTrack();
-						}
-					};
-					action.redo(); // do it
-					project.getEditHistoryContainer().push(action);
-					project.getEditHistoryContainer().notifyEditHistoryListeners();
-				} else { // textBackup equals text in normalized version
-					editor.setText(text); // make sure normalized version is displayed
-				}
-			}
-		});
-		JScrollPane scrollPane = new JScrollPane(editor, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		this.add(scrollPane, BorderLayout.CENTER);
-	}
-	
-	public void refreshFromTrack() {
-		final String text = ((TextLane)lane).getAllText(DELIMITER);
-		if (initialRefresh) {
-			editor.setText(text);
-			initialRefresh = false;
-		} else {
-			final String oldtext = editor.getText().trim();
-			if (!oldtext.equals(text.trim())) {
-				project.getEditHistoryContainer().mark(getMessage("sequencer.project.edit_text_lane"));
-				EditHistoryAction action = new EditHistoryAction() { // undo editing an individual TextPart
-                                        @Override
-					public void redo() {
-						editor.setText(text);
-						updateToTrack();
-					}
-					
-                                        @Override
-					public void undo() {
-						editor.setText(oldtext);
-						updateToTrack();
-					}
-				};
-				action.redo(); // do it
-				project.getEditHistoryContainer().push(action);
-				project.getEditHistoryContainer().notifyEditHistoryListeners();
-			}
-		}
-	}
-	
-	public void updateToTrack() {
-		String text = editor.getText();
-		((TextLane)lane).setAllText(text, DELIMITER);
-		project.repaintPartView();
-	}
-	
-	protected String getTextNormalized() {
-		String s = editor.getText();
-		String delim = DELIMITER.trim(); // (without \n)
-		List<String> l = Toolbox.splitString(s, delim);
-		String t = Toolbox.joinStrings(l, DELIMITER);
-		return t;
-	}
-	
-	/*public void setActive(boolean active) {
+    public final static String DELIMITER = "\n\n---\n\n";
+
+    private JEditorPane editor;
+    private AbstractSequencerProjectContainer project;
+    private String textBackup = null;
+    private boolean initialRefresh = true;
+
+    public TextLaneView(TextLane lane, AbstractSequencerProjectContainer project) {
+        super(lane);
+        this.project = project;
+        init();
+        refreshFromTrack(); // with initialRefresh==true
+        lane.addChangeListener(this);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        refreshFromTrack();
+    }
+
+    @Override
+    protected void makeButtons() {
+        this.setLayout(new BorderLayout());
+        editor = new JEditorPane();
+        editor.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                textBackup = getTextNormalized();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                final String text = getTextNormalized();
+                assert (textBackup != null); // rely on swing to always fire focusGained before focusLost
+                if (!text.equals(textBackup)) {
+                    final String localTextBackup = textBackup;
+                    textBackup = text;
+                    project.getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.edit_text_lane"));
+                    EditHistoryAction action = new EditHistoryAction() { // undo editing the whole text in textlaneview
+                        @Override
+                        public void redo() {
+                            editor.setText(text);
+                            updateToTrack();
+                        }
+
+                        @Override
+                        public void undo() {
+                            editor.setText(localTextBackup);
+                            updateToTrack();
+                        }
+                    };
+                    action.redo(); // do it
+                    project.getEditHistoryContainer().push(action);
+                    project.getEditHistoryContainer().notifyEditHistoryListeners();
+                } else { // textBackup equals text in normalized version
+                    editor.setText(text); // make sure normalized version is displayed
+                }
+            }
+        });
+        JScrollPane scrollPane = new JScrollPane(editor, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void refreshFromTrack() {
+        final String text = ((TextLane) lane).getAllText(DELIMITER);
+        if (initialRefresh) {
+            editor.setText(text);
+            initialRefresh = false;
+        } else {
+            final String oldtext = editor.getText().trim();
+            if (!oldtext.equals(text.trim())) {
+                project.getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.edit_text_lane"));
+                EditHistoryAction action = new EditHistoryAction() { // undo editing an individual TextPart
+                    @Override
+                    public void redo() {
+                        editor.setText(text);
+                        updateToTrack();
+                    }
+
+                    @Override
+                    public void undo() {
+                        editor.setText(oldtext);
+                        updateToTrack();
+                    }
+                };
+                action.redo(); // do it
+                project.getEditHistoryContainer().push(action);
+                project.getEditHistoryContainer().notifyEditHistoryListeners();
+            }
+        }
+    }
+
+    public void updateToTrack() {
+        String text = editor.getText();
+        ((TextLane) lane).setAllText(text, DELIMITER);
+        project.repaintPartView();
+    }
+
+    protected String getTextNormalized() {
+        String s = editor.getText();
+        String delim = DELIMITER.trim(); // (without \n)
+        List<String> l = Toolbox.splitString(s, delim);
+        String t = Toolbox.joinStrings(l, DELIMITER);
+        return t;
+    }
+
+    /*public void setActive(boolean active) {
 		//editor.setEnabled(active);
 		editor.setEditable(active);
 		if (active) {

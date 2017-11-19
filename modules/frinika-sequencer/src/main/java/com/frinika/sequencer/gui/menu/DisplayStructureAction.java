@@ -22,33 +22,27 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 public class DisplayStructureAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	private ProjectFrame project;
+    public DisplayStructureAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.debug_display_structure"));
+        this.project = project;
+    }
 
-	public DisplayStructureAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.debug_display_structure"));
-		this.project = project;
-	}
-
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		// project.
-		String prefix = "*";
-		this.project.getProjectContainer().getProjectLane().displayStructure(prefix,
-				System.out);
-
-	}
-
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        // project.
+        String prefix = "*";
+        this.project.getProjectContainer().getProjectLane().displayStructure(prefix,
+                System.out);
+    }
 }

@@ -26,41 +26,29 @@ package com.frinika.synth;
 import com.frinika.audio.Decibel;
 
 /**
- * 
  * @author Peter Johan Salomonsen
- *
  */
 public class Pan {
+
     float leftLevel = 0;
     float rightLevel = 0;
-    
-    public Pan(final float position)
-    {
-        if(position == 0f)
+
+    public Pan(final float position) {
+        if (position == 0f) {
             leftLevel = 1f;
-        else if(position == 1f)
+        } else if (position == 1f) {
             rightLevel = 1f;
-        else
-        {
-            leftLevel = Decibel.getAmplitudeRatio(-(float)(-20f*Math.log10(Math.sqrt(1-position))));
-            rightLevel = Decibel.getAmplitudeRatio(-(float)(-20f*Math.log10(Math.sqrt(position))));
+        } else {
+            leftLevel = Decibel.getAmplitudeRatio(-(float) (-20f * Math.log10(Math.sqrt(1 - position))));
+            rightLevel = Decibel.getAmplitudeRatio(-(float) (-20f * Math.log10(Math.sqrt(position))));
         }
     }
 
-    /**
-     * @return Returns the leftLevel.
-     */
     public final float getLeftLevel() {
         return leftLevel;
     }
-    
 
-    /**
-     * @return Returns the rightLevel.
-     */
     public final float getRightLevel() {
         return rightLevel;
     }
-    
-
 }

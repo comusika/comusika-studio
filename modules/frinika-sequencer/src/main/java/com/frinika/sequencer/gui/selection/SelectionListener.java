@@ -21,40 +21,44 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.selection;
 
 import com.frinika.sequencer.model.Selectable;
 
 public interface SelectionListener<T extends Selectable> {
-	/* *//**
+
+    /* */
+    /**
      * Notification that the selection was cleared
      *
      *//*
     public void selectionCleared(SelectionContainer<T> src);
       
-    *//**
-     *  Notify that itemes were addded to the selection
-     *  
-     * @param parts   Added parts
-     * @deprecated  migrating to slectionChanged (may not work yet)
+     */
+    /**
+     * Notify that itemes were addded to the selection
+     *
+     * @param parts Added parts
+     * @deprecated migrating to slectionChanged (may not work yet)
      *//*
 
 	public void addedToSelection(SelectionContainer<? extends T> src,Collection<? extends T> items);
 
-	*//**
-     *  Notify that items were removed from the selection
-     *  
-     * @param parts  removed Added
+     */
+    /**
+     * Notify that items were removed from the selection
+     *
+     * @param parts removed Added
      * @deprecated migrating to slectionChanged (may not work yet)
      *//*
 
 	public void removedFromSelection(SelectionContainer<? extends T> src,Collection<? extends T> items);*/
 
-	/**
-	 * Notify observers that the slection has changed.
-	 * @param src
-	 */
-	public void selectionChanged(SelectionContainer<? extends T> src);
-	
+    /**
+     * Notify observers that the slection has changed.
+     *
+     * @param src
+     */
+    public void selectionChanged(SelectionContainer<? extends T> src);
+
 }

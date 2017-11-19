@@ -35,6 +35,7 @@ import com.frinika.sequencer.gui.Item;
 import com.frinika.sequencer.gui.ItemScrollPane;
 import com.frinika.sequencer.gui.Layout;
 import com.frinika.sequencer.gui.MyCursors;
+import com.frinika.sequencer.gui.MyCursors.CursorType;
 import com.frinika.sequencer.gui.RectZoomTool;
 import com.frinika.sequencer.gui.SelectTool;
 import com.frinika.sequencer.gui.WriteTool;
@@ -54,8 +55,10 @@ import java.awt.event.AdjustmentListener;
 import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 public class ControllerView extends PianoRollPanelAdapter implements AdjustmentListener {
@@ -1062,9 +1065,7 @@ public class ControllerView extends PianoRollPanelAdapter implements AdjustmentL
         @Override
         public void clear() {
             // TODO Auto-generated method stub
-
         }
-
     }
 
     /**
@@ -1175,9 +1176,9 @@ public class ControllerView extends PianoRollPanelAdapter implements AdjustmentL
         selectTool = new SelectTool(c);
         rectZoomTool = new RectZoomTool(c);
 
-        writeTool = new WriteTool(MyCursors.getCursor("pencil"));
-        eraseTool = new EraseTool(MyCursors.getCursor("eraser"));
-        dragViewTool = new DragViewTool(MyCursors.getCursor("move"));
+        writeTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
+        eraseTool = new EraseTool(MyCursors.getCursor(CursorType.ERASER));
+        dragViewTool = new DragViewTool(MyCursors.getCursor(CursorType.MOVE));
 
     }
 
@@ -1214,13 +1215,12 @@ public class ControllerView extends PianoRollPanelAdapter implements AdjustmentL
             return;
         }
 
-        Vector<MultiEvent> events = new Vector<>();
+        List<MultiEvent> events = new ArrayList<>();
         for (MultiEvent e : eventsInFocus) {
             events.add(e);
         }
 
         project.getMultiEventSelection().setSelected(events);
         project.getMultiEventSelection().notifyListeners();
-
     }
 }

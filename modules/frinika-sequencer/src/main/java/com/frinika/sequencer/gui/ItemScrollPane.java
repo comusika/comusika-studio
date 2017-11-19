@@ -103,7 +103,6 @@ public abstract class ItemScrollPane extends JPanel implements AdjustmentListene
 	 * protected void addRowHeader(JPanel rowHeader) {
 	 * add(rowHeader,BorderLayout.WEST); }
      */
-
     protected void setView(ItemPanel itemPanel) {
         assert (itemPanel != null);
         this.itemPanel = itemPanel;

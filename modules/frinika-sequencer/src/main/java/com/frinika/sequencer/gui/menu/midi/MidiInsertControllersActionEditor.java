@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.gui.OptionsDialog;
@@ -58,7 +57,7 @@ import javax.swing.event.ChangeListener;
  * @author Jens Gulden
  */
 public class MidiInsertControllersActionEditor extends JPanel implements OptionsEditor {
-    
+
     private MidiInsertControllersAction action;
     private AbstractSequencerProjectContainer project;
     private TimeSelector startTimeSelector;
@@ -67,8 +66,10 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
     private ControllerSelector controllerSelector;
     private Map<AbstractButton, MidiInsertControllersAction.ControllerFunction> functionButtons;
     private Map<MidiInsertControllersAction.ControllerFunction, JComponent> functions;
-    
-    /** Creates new form MidiInsertControllersActionEditor */
+
+    /**
+     * Creates new form MidiInsertControllersActionEditor
+     */
     public MidiInsertControllersActionEditor(AbstractSequencerProjectContainer project, MidiInsertControllersAction action) {
         super();
         this.project = project;
@@ -84,7 +85,7 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         controllerSelector.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	MidiInsertControllersActionEditor.this.action.controller = controllerSelector.getControllerType(); // must be passed directly on each change to allow Functions gui to react
+                MidiInsertControllersActionEditor.this.action.controller = controllerSelector.getControllerType(); // must be passed directly on each change to allow Functions gui to react
             }
         });
         controllerSelectorPanel.add(controllerSelector);
@@ -104,9 +105,9 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
             rb.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent e) {
-                    JRadioButton rb = (JRadioButton)e.getSource();
+                    JRadioButton rb = (JRadioButton) e.getSource();
                     if (rb.isSelected()) {
-                    	MidiInsertControllersAction.ControllerFunction f = functionButtons.get(rb);
+                        MidiInsertControllersAction.ControllerFunction f = functionButtons.get(rb);
                         JComponent gui = functions.get(f);
                         if (gui == null) {
                             gui = f.createGUI();
@@ -120,16 +121,16 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
                         functionOptionsPanel.add(gui);
                         Container parent = MidiInsertControllersActionEditor.this.getParent();
                         if (parent != null) {
-                        	functionOptionsPanel.validate();
-                        	((OptionsDialog)parent.getParent().getParent().getParent().getParent().getParent()).validate(); // hack, obviously
-                        	functionOptionsPanel.repaint();
+                            functionOptionsPanel.validate();
+                            ((OptionsDialog) parent.getParent().getParent().getParent().getParent().getParent()).validate(); // hack, obviously
+                            functionOptionsPanel.repaint();
                         }
                     }
                 }
             });
             functionsPanel.add(rb, gbc);
             JLabel label;
-            if ( icon != null) {
+            if (icon != null) {
                 label = new JLabel(icon);
             } else {
                 label = new JLabel(name);
@@ -139,26 +140,26 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         }
         functionsButtonGroup.getElements().nextElement().setSelected(true); // first one by default
     }
-    
+
     @Override
     public void refresh() {
-    	long start = project.getSequencer().getTickPosition();
+        long start = project.getSequencer().getTickPosition();
         startTimeSelector.setTicks(start);
         lengthTimeSelector.setTicks(action.length);
         resolutionTimeSelector.setTicks(action.resolution);
         MidiInsertControllersAction.ControllerFunction f = action.function;
         for (AbstractButton radiobutton : functionButtons.keySet()) {
-        	MidiInsertControllersAction.ControllerFunction ff = functionButtons.get(radiobutton);
+            MidiInsertControllersAction.ControllerFunction ff = functionButtons.get(radiobutton);
             if (ff == f) {
                 radiobutton.setSelected(true);
             }
         }
         MultiEvent first = action.events.iterator().next();
-        controllerSelector.setControllerList(((MidiLane)first.getMidiPart().getLane()).getControllerList());
+        controllerSelector.setControllerList(((MidiLane) first.getMidiPart().getLane()).getControllerList());
         controllerSelector.setControllerType(action.controller);
         controllerSelector.addPseudoController("(Note)", -1);
     }
-    
+
     @Override
     public void update() {
         action.start = startTimeSelector.getTicks();
@@ -166,16 +167,16 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         action.resolution = resolutionTimeSelector.getTicks();
         action.controller = controllerSelector.getControllerType();
         for (AbstractButton radiobutton : functionButtons.keySet()) {
-        	if (radiobutton.isSelected()) {
-                    action.function = functionButtons.get( radiobutton );
-        	}
+            if (radiobutton.isSelected()) {
+                action.function = functionButtons.get(radiobutton);
+            }
         }
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -279,8 +280,8 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
         add(functionOptionsPanel, gridBagConstraints);
 
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel controllerSelectorPanel;
     private javax.swing.JPanel functionOptionsPanel;
@@ -295,5 +296,5 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
     private javax.swing.JPanel resolutionTimeSelectorPanel;
     private javax.swing.JPanel startTimeSelectorPanel;
     // End of variables declaration//GEN-END:variables
-    
+
 }

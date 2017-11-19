@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.AudioPart;
@@ -40,7 +40,7 @@ public class ImportAudioAction extends AbstractAction {
     private ProjectFrame project;
 
     public ImportAudioAction(ProjectFrame project) {
-        super(getMessage("sequencer.project.import_audio"));
+        super(CurrentLocale.getMessage("sequencer.project.import_audio"));
         this.project = project;
     }
 
@@ -55,11 +55,10 @@ public class ImportAudioAction extends AbstractAction {
             allowMulti = true;  // false if lane is null
         }
 
-
         try {
 
             JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle(getMessage("project.menu.file.import_audio.dialogtitle"));
+            chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.import_audio.dialogtitle"));
             chooser.setFileFilter(new WavFileFilter());
 
             if (!allowMulti) {
@@ -84,12 +83,11 @@ public class ImportAudioAction extends AbstractAction {
 //
 //						public void run() {
 //	
-
                     for (File wavFile : wavFiles) {
                         System.out.println(" Importing:" + wavFile);
                         if (wavFile.exists()) {
                             project.getProjectContainer().getEditHistoryContainer().mark(
-                                    getMessage("sequencer.project.import_audio"));
+                                    CurrentLocale.getMessage("sequencer.project.import_audio"));
                             Lane lane1 = project.getProjectContainer().createAudioLane();
                             System.out.println(" created lane  ");
                             new AudioPart(lane1, wavFile, milliSecPos);
@@ -124,6 +122,5 @@ public class ImportAudioAction extends AbstractAction {
         }
 
         // TODO in here
-
     }
 }

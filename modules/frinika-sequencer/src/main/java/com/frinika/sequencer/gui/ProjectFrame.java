@@ -48,8 +48,9 @@ public interface ProjectFrame extends ProjectFrameIntf {
      *
      * @see promptFile
      */
-    final static String[][] FILE_FILTER_MIDIFILES = new String[][]{{
-        "mid", "Midi standard files"}};
+    final static String[][] FILE_FILTER_MIDIFILES = new String[][]{
+        {"mid", "Midi standard files"}
+    };
 
     // hack to stop exit when last frma is closed.
     static boolean doNotQuit = false;
@@ -137,7 +138,6 @@ public interface ProjectFrame extends ProjectFrameIntf {
      * @return the notationPanel
      */
     // NBP NotationPanel getNotationPanel();
-
     /**
      * @return the partViewEditor
      */

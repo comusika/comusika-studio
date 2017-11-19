@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 version = '0.1.0-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -95,7 +95,7 @@ dependencies {
     compile(project(':modules:frinika-notation'))
     compile(project(':modules:frinika-sequencer'))
     compile(project(':modules:frinika-project'))
-    compile(project(':modules:frinika-frogdisco'))
+    compile(project(':modules:frinika-audio-osx'))
     compile(project(':modules:frinika-rasmusdsp'))
     compile(project(':modules:frinika-mystudio'))
     compile 'com.apple:AppleJavaExtensions:1.4'
@@ -104,7 +104,6 @@ dependencies {
     compile ':iconloader'
 
     runtime ':FrinikaJVSTSynth'
-    runtime ':FrinikaVideoSynth'
     runtime ':FrinikaVorbisSPI'
     runtime ':gervill'
     runtime 'org.codehaus.groovy:groovy-all:2.0.1'

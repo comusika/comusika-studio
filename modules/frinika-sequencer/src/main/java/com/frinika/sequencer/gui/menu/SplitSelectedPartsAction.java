@@ -22,58 +22,52 @@
  */
 package com.frinika.sequencer.gui.menu;
 
+import com.frinika.localization.CurrentLocale;
 import static com.frinika.localization.CurrentLocale.getMessage;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.Part;
 import com.frinika.sequencer.model.tools.Tools;
 import java.awt.event.ActionEvent;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 
 public class SplitSelectedPartsAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	private ProjectFrame project;
+    public SplitSelectedPartsAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.split_parts"));
+        this.project = project;
+    }
 
-	public SplitSelectedPartsAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.split_parts"));
-		this.project = project;
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
+        //	JFrame frame=new JFrame();
+        List<MidiPart> parts = new ArrayList<>();
 
-		
-	//	JFrame frame=new JFrame();
-		
-		Vector<MidiPart> parts = new Vector<>();
+        for (Part part : project.getProjectContainer().getPartSelection()
+                .getSelected()) {
+            if (part instanceof MidiPart) {
+                parts.add((MidiPart) part);
+            }
+        }
 
-		for (Part part : project.getProjectContainer().getPartSelection()
-				.getSelected()) {
-			if (part instanceof MidiPart)
-				parts.add((MidiPart) part);
-		}
+        project.getProjectContainer().getEditHistoryContainer().mark(
+                CurrentLocale.getMessage("sequencer.project.split_lane"));
 
-		project.getProjectContainer().getEditHistoryContainer().mark(
-				getMessage("sequencer.project.split_lane"));
+        long ticksPerBeat = project.getProjectContainer().getSequence()
+                .getResolution();
 
-		long ticksPerBeat = project.getProjectContainer().getSequence()
-		.getResolution();
-		
-		Vector<MidiPart> newParts=Tools.splitParts(parts,ticksPerBeat);
+        List<MidiPart> newParts = Tools.splitParts(parts, ticksPerBeat);
 
-	
-		
-		project.getProjectContainer().getPartSelection().setSelected(newParts);
-		project.getProjectContainer().getEditHistoryContainer()
-				.notifyEditHistoryListeners();
-		project.getProjectContainer().getPartSelection().notifyListeners();
-		
-	}
+        project.getProjectContainer().getPartSelection().setSelected(newParts);
+        project.getProjectContainer().getEditHistoryContainer()
+                .notifyEditHistoryListeners();
+        project.getProjectContainer().getPartSelection().notifyListeners();
+    }
 }

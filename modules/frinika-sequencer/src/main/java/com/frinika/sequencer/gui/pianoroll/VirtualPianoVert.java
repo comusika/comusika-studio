@@ -23,7 +23,7 @@
  *
  */
 
-/*
+ /*
  * @(#)MidiSynth.java	1.15	99/12/03
  *
  * Copyright (c) 1999 Sun Microsystems, Inc. All Rights Reserved.
@@ -52,7 +52,6 @@
  * facility. Licensee represents and warrants that it will not use or
  * redistribute the Software for such purposes.
  */
-
 package com.frinika.sequencer.gui.pianoroll;
 
 import com.frinika.sequencer.gui.Layout;
@@ -76,396 +75,406 @@ import javax.sound.midi.ShortMessage;
 import javax.swing.JPanel;
 
 public class VirtualPianoVert extends JPanel implements MouseListener,
-		AdjustmentListener {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+        AdjustmentListener {
 
-	final int ON = 0, OFF = 1;
+    private static final long serialVersionUID = 1L;
 
-	final Color jfcBlue = new Color(204, 204, 255);
+    final int ON = 0, OFF = 1;
 
-	final Color pink = new Color(255, 175, 175);
+    final Color jfcBlue = new Color(204, 204, 255);
 
-	Vector<Key> blackKeys = new Vector<>();
+    final Color pink = new Color(255, 175, 175);
 
-	Key keys[] = new Key[128];
+    Vector<Key> blackKeys = new Vector<>();
 
-	Vector<Key> whiteKeys = new Vector<>();
+    Key keys[] = new Key[128];
 
-	Key prevKey;
+    Vector<Key> whiteKeys = new Vector<>();
 
-	int lastKeyPress = 0;
+    Key prevKey;
 
-	final int nNote = 128;
+    int lastKeyPress = 0;
 
-	final int nWhiteNote = (nNote / 12) * 7 + 5;
+    final int nNote = 128;
 
-	final int nOctave = nNote / 12 + 1;
+    final int nWhiteNote = (nNote / 12) * 7 + 5;
 
-	int whiteKeyWidth, blackKeyDepth = 20;
+    final int nOctave = nNote / 12 + 1;
 
-	int keyDepth = 30;
+    int whiteKeyWidth, blackKeyDepth = 20;
 
-	int blackWhiteGap;
+    int keyDepth = 30;
 
-	PianoRoll pianoRoll;
+    int blackWhiteGap;
 
-	int timePanelHeight;
+    PianoRoll pianoRoll;
 
-	private int yScroll;
+    int timePanelHeight;
 
-	int yBot;
+    private int yScroll;
 
-	int noteItemHeight;
+    int yBot;
 
-	public static class Config {
+    int noteItemHeight;
 
-		public Config(int keyDepth, int noteHeight, Receiver recv, MidiLane lane) {
-			this.noteHeight = noteHeight;
-			this.keyDepth = keyDepth;
-			this.recv = recv;
-			this.lane = lane;
-		}
+    public static class Config {
 
-		final int noteHeight;
+        public Config(int keyDepth, int noteHeight, Receiver recv, MidiLane lane) {
+            this.noteHeight = noteHeight;
+            this.keyDepth = keyDepth;
+            this.recv = recv;
+            this.lane = lane;
+        }
 
-		final int keyDepth;
+        final int noteHeight;
 
-		public Receiver recv;
+        final int keyDepth;
 
-		public MidiLane lane;
+        public Receiver recv;
 
-		public void setReceiver(Receiver recv2) {
-			recv = recv2;
-		}
-	}
+        public MidiLane lane;
 
-	Config config = null;
+        public void setReceiver(Receiver recv2) {
+            recv = recv2;
+        }
+    }
 
-	public VirtualPianoVert(Config config) {
-		super(false);
-		this.config = config;
-		this.pianoRoll = null;
-		this.timePanelHeight = 0;
-		this.yScroll = 0;
+    Config config = null;
 
-		resizeKeys();
+    public VirtualPianoVert(Config config) {
+        super(false);
+        this.config = config;
+        this.pianoRoll = null;
+        this.timePanelHeight = 0;
+        this.yScroll = 0;
 
-		addMouseListener(this);
-		setBackground(Color.ORANGE);
-	}
+        resizeKeys();
 
-	public VirtualPianoVert(PianoRoll pr, int yTop, int yScroll) {
-		super(false);
-		this.pianoRoll = pr;
-		this.timePanelHeight = yTop;
-		this.yScroll = yScroll;
+        addMouseListener(this);
+        setBackground(Color.ORANGE);
+    }
 
-		resizeKeys();
+    public VirtualPianoVert(PianoRoll pr, int yTop, int yScroll) {
+        super(false);
+        this.pianoRoll = pr;
+        this.timePanelHeight = yTop;
+        this.yScroll = yScroll;
 
-		addMouseListener(this);
-		setBackground(Color.ORANGE);
-	}
+        resizeKeys();
 
-	// public Dimension getPreferredSize() {
-	// return new Dimension(50,200);
-	// }
-	//	
-	// public Dimension getMinimumSize() {
-	// return new Dimension(50,200);
-	// }
+        addMouseListener(this);
+        setBackground(Color.ORANGE);
+    }
 
-	private void resizeKeys() {
+    // public Dimension getPreferredSize() {
+    // return new Dimension(50,200);
+    // }
+    //	
+    // public Dimension getMinimumSize() {
+    // return new Dimension(50,200);
+    // }
+    private void resizeKeys() {
 
-		blackKeys.clear();
-		whiteKeys.clear();
-		//keys.clear();
+        blackKeys.clear();
+        whiteKeys.clear();
+        //keys.clear();
 
-		if (config == null) {
-			noteItemHeight = Layout.getNoteItemHeight();
-		} else {
-			noteItemHeight = config.noteHeight;
-			keyDepth = config.keyDepth;
-		}
-		// setLayout(new BorderLayout());
-		this.whiteKeyWidth = (noteItemHeight * 12) / 7;
-		this.blackWhiteGap = whiteKeyWidth / 3;
+        if (config == null) {
+            noteItemHeight = Layout.getNoteItemHeight();
+        } else {
+            noteItemHeight = config.noteHeight;
+            keyDepth = config.keyDepth;
+        }
+        // setLayout(new BorderLayout());
+        this.whiteKeyWidth = (noteItemHeight * 12) / 7;
+        this.blackWhiteGap = whiteKeyWidth / 3;
 
-		int whiteIDs[] = { 0, 2, 4, 5, 7, 9, 11 };
+        int whiteIDs[] = {0, 2, 4, 5, 7, 9, 11};
 
-		// yBot = (((nWhiteNote +2) *
-		// whiteKeyWidth)/noteItemHeight)*noteItemHeight-whiteKeyWidth;
-		yBot = 129 * noteItemHeight - whiteKeyWidth;
-		
-		/// You will be the size I want  . . .  .
-		setSize(new Dimension(keyDepth, yBot));
-	//	setMinimumSize(new Dimension(keyDepth, yBot));
-		setPreferredSize(new Dimension(keyDepth, yBot));
-		setMaximumSize(new Dimension(keyDepth, 20000));
-		for (int i = 0, y = 0; i < nOctave; i++) {
-			for (int j = 0; j < 7; j++, y += whiteKeyWidth) {
-				int keyNum = i * 12 + whiteIDs[j];
-				if (keyNum >= nNote)
-					break;
-				whiteKeys.add(new Key(0, yBot - y, keyDepth, whiteKeyWidth,
-						keyNum));
-			}
-		}
+        // yBot = (((nWhiteNote +2) *
+        // whiteKeyWidth)/noteItemHeight)*noteItemHeight-whiteKeyWidth;
+        yBot = 129 * noteItemHeight - whiteKeyWidth;
 
-		int halfGap = blackWhiteGap / 2;
-		int yBot1 = yBot + 7 * whiteKeyWidth / 8;
-		int blackKeyWidth = 2 * whiteKeyWidth / 3;
-		for (int i = 0, y = 0; i < nOctave; i++, y += whiteKeyWidth) {
-			int keyNum = i * 12;
+        /// You will be the size I want  . . .  .
+        setSize(new Dimension(keyDepth, yBot));
+        //	setMinimumSize(new Dimension(keyDepth, yBot));
+        setPreferredSize(new Dimension(keyDepth, yBot));
+        setMaximumSize(new Dimension(keyDepth, 20000));
+        for (int i = 0, y = 0; i < nOctave; i++) {
+            for (int j = 0; j < 7; j++, y += whiteKeyWidth) {
+                int keyNum = i * 12 + whiteIDs[j];
+                if (keyNum >= nNote) {
+                    break;
+                }
+                whiteKeys.add(new Key(0, yBot - y, keyDepth, whiteKeyWidth,
+                        keyNum));
+            }
+        }
 
-			if (keyNum >= nNote - 1)
-				break;
-			blackKeys.add(new Key(0,
-					yBot1 - (y += whiteKeyWidth) - halfGap / 2, blackKeyDepth,
-					blackKeyWidth, keyNum + 1));
-			if (keyNum >= nNote - 3)
-				break;
-			blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - 3 * halfGap
-					/ 2, blackKeyDepth, blackKeyWidth, keyNum + 3));
-			if (keyNum >= nNote - 6)
-				break;
-			y += whiteKeyWidth;
-			blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - halfGap / 2
-					+ 1, blackKeyDepth, blackKeyWidth, keyNum + 6));
-			if (keyNum >= nNote - 8)
-				break;
-			blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - halfGap,
-					blackKeyDepth, blackKeyWidth, keyNum + 8));
-			if (keyNum >= nNote - 10)
-				break;
-			blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - 3 * halfGap
-					/ 2 - 1, blackKeyDepth, blackKeyWidth, keyNum + 10));
+        int halfGap = blackWhiteGap / 2;
+        int yBot1 = yBot + 7 * whiteKeyWidth / 8;
+        int blackKeyWidth = 2 * whiteKeyWidth / 3;
+        for (int i = 0, y = 0; i < nOctave; i++, y += whiteKeyWidth) {
+            int keyNum = i * 12;
 
-		}
-		for (Key key:blackKeys) {
-			keys[key.kNum]=key;
-		}
-		for (Key key:whiteKeys) {
-			keys[key.kNum]=key;
-		}
+            if (keyNum >= nNote - 1) {
+                break;
+            }
+            blackKeys.add(new Key(0,
+                    yBot1 - (y += whiteKeyWidth) - halfGap / 2, blackKeyDepth,
+                    blackKeyWidth, keyNum + 1));
+            if (keyNum >= nNote - 3) {
+                break;
+            }
+            blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - 3 * halfGap
+                    / 2, blackKeyDepth, blackKeyWidth, keyNum + 3));
+            if (keyNum >= nNote - 6) {
+                break;
+            }
+            y += whiteKeyWidth;
+            blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - halfGap / 2
+                    + 1, blackKeyDepth, blackKeyWidth, keyNum + 6));
+            if (keyNum >= nNote - 8) {
+                break;
+            }
+            blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - halfGap,
+                    blackKeyDepth, blackKeyWidth, keyNum + 8));
+            if (keyNum >= nNote - 10) {
+                break;
+            }
+            blackKeys.add(new Key(0, yBot1 - (y += whiteKeyWidth) - 3 * halfGap
+                    / 2 - 1, blackKeyDepth, blackKeyWidth, keyNum + 10));
 
-	}
+        }
+        for (Key key : blackKeys) {
+            keys[key.kNum] = key;
+        }
+        for (Key key : whiteKeys) {
+            keys[key.kNum] = key;
+        }
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-		prevKey = getKey(e.getPoint());
-		if (prevKey != null) {
-			prevKey.on();
-			repaint();
-		}
-	}
+    }
 
-        @Override
-	public void mouseReleased(MouseEvent e) {
-		if (prevKey != null) {
-			prevKey.off();
-			repaint();
-		}
-	}
+    @Override
+    public void mousePressed(MouseEvent e) {
+        prevKey = getKey(e.getPoint());
+        if (prevKey != null) {
+            prevKey.on();
+            repaint();
+        }
+    }
 
-        @Override
-	public void mouseExited(MouseEvent e) {
-		if (prevKey != null) {
-			prevKey.off();
-			repaint();
-			prevKey = null;
-		}
-	}
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (prevKey != null) {
+            prevKey.off();
+            repaint();
+        }
+    }
 
-        @Override
-	public void mouseClicked(MouseEvent e) {
-	}
+    @Override
+    public void mouseExited(MouseEvent e) {
+        if (prevKey != null) {
+            prevKey.off();
+            repaint();
+            prevKey = null;
+        }
+    }
 
-        @Override
-	public void mouseEntered(MouseEvent e) {
-	}
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
 
-	public Key getKey(Point point) {
-		point.translate(0, -timePanelHeight + yScroll);
-		for (Key key:blackKeys) {
-			if (key == null) continue;
-			if (key.contains(point)) {
-				return key;
-			}
-		}
-		for (Key key:whiteKeys) {
-			if (key == null) continue;
-			if (key.contains(point)) {
-				return key;
-			}
-		}
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
 
-		return null;
-	}
+    public Key getKey(Point point) {
+        point.translate(0, -timePanelHeight + yScroll);
+        for (Key key : blackKeys) {
+            if (key == null) {
+                continue;
+            }
+            if (key.contains(point)) {
+                return key;
+            }
+        }
+        for (Key key : whiteKeys) {
+            if (key == null) {
+                continue;
+            }
+            if (key.contains(point)) {
+                return key;
+            }
+        }
 
-        @Override
-	public void paintComponent(Graphics g) {
-		//Thread.yield();
-		super.paintComponent(g);
-		//Thread.yield();
+        return null;
+    }
 
-		if ((config == null && noteItemHeight != Layout.getNoteItemHeight())
-				|| (config != null && noteItemHeight != config.noteHeight))
-			resizeKeys();
+    @Override
+    public void paintComponent(Graphics g) {
+        //Thread.yield();
+        super.paintComponent(g);
+        //Thread.yield();
 
-		Graphics2D g2 = (Graphics2D) g;
+        if ((config == null && noteItemHeight != Layout.getNoteItemHeight())
+                || (config != null && noteItemHeight != config.noteHeight)) {
+            resizeKeys();
+        }
 
-		g2.translate(0, timePanelHeight - yScroll);
+        Graphics2D g2 = (Graphics2D) g;
 
-		g2.setColor(Color.PINK);
-		g2.fillRect(0, 0, keyDepth, yBot);
+        g2.translate(0, timePanelHeight - yScroll);
 
-		for (int i = 0; i < whiteKeys.size(); i++) {
-			Key key = (Key) whiteKeys.get(i);
-			if (key.isNoteOn() || (config != null && key.kNum == lastKeyPress) ) {
-				g2.setColor(jfcBlue);
-				g2.fill(key);
+        g2.setColor(Color.PINK);
+        g2.fillRect(0, 0, keyDepth, yBot);
 
-			}
-			g2.setColor(Color.black);
+        for (int i = 0; i < whiteKeys.size(); i++) {
+            Key key = (Key) whiteKeys.get(i);
+            if (key.isNoteOn() || (config != null && key.kNum == lastKeyPress)) {
+                g2.setColor(jfcBlue);
+                g2.fill(key);
 
-			g2.draw(key);
+            }
+            g2.setColor(Color.black);
 
-			if (key.kNum % 12 == 0) {
+            g2.draw(key);
+
+            if (key.kNum % 12 == 0) {
 //				g2.setColor(Color.red);
 //
 //				g2.fill(key);
 
-				g2.setColor(Color.BLACK);
-				g2.drawString(String.valueOf(key.kNum / 12), keyDepth-15, key.y + key.height-1);
-					
-				// g2.setPaintMode();
-			}
-		}
-		for (int i = 0; i < blackKeys.size(); i++) {
-			Key key = (Key) blackKeys.get(i);
-			if (key.isNoteOn()|| (config != null && key.kNum == lastKeyPress) ) {
-				g2.setColor(jfcBlue);
-				g2.fill(key);
-				g2.setColor(Color.black);
-				g2.draw(key);
-			} else {
-				g2.setColor(Color.black);
-				g2.fill(key);
-			}
+                g2.setColor(Color.BLACK);
+                g2.drawString(String.valueOf(key.kNum / 12), keyDepth - 15, key.y + key.height - 1);
 
-		}
+                // g2.setPaintMode();
+            }
+        }
+        for (int i = 0; i < blackKeys.size(); i++) {
+            Key key = (Key) blackKeys.get(i);
+            if (key.isNoteOn() || (config != null && key.kNum == lastKeyPress)) {
+                g2.setColor(jfcBlue);
+                g2.fill(key);
+                g2.setColor(Color.black);
+                g2.draw(key);
+            } else {
+                g2.setColor(Color.black);
+                g2.fill(key);
+            }
 
+        }
 
-		g2.translate(0, -(timePanelHeight - yScroll));
-		//Thread.yield();
+        g2.translate(0, -(timePanelHeight - yScroll));
+        //Thread.yield();
 
-	}
+    }
 
-	public class Key extends Rectangle {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+    public class Key extends Rectangle {
 
-		Receiver recv = null;
+        private static final long serialVersionUID = 1L;
 
-		int chan = 0;
+        Receiver recv = null;
 
-		int noteState = OFF;
+        int chan = 0;
 
-		int kNum;
+        int noteState = OFF;
 
-		public Key(int x, int y, int width, int height, int num) {
-			super(x, y, width, height);
-			kNum = num;
-		}
+        int kNum;
 
-		public boolean isNoteOn() {
-			return noteState == ON;
-		}
+        public Key(int x, int y, int width, int height, int num) {
+            super(x, y, width, height);
+            kNum = num;
+        }
 
-		public void on() {
-			setNoteState(ON);
-			if (config == null) {
-				if (pianoRoll == null)
-					return;
-				Part focusPart = pianoRoll.getProjectContainer()
-						.getPartSelection().getFocus();
-				if (focusPart == null || !(focusPart instanceof MidiPart ))
-					return;
-				MidiLane lane = ((MidiLane) (focusPart.getLane()));
-				recv = lane.getReceiver();
-				chan = lane.getMidiChannel();
-			} else {
-				recv = config.recv;
-				chan = config.lane.getMidiChannel();
-			}
+        public boolean isNoteOn() {
+            return noteState == ON;
+        }
 
-			if (recv == null)
-				return;
+        public void on() {
+            setNoteState(ON);
+            if (config == null) {
+                if (pianoRoll == null) {
+                    return;
+                }
+                Part focusPart = pianoRoll.getProjectContainer()
+                        .getPartSelection().getFocus();
+                if (focusPart == null || !(focusPart instanceof MidiPart)) {
+                    return;
+                }
+                MidiLane lane = ((MidiLane) (focusPart.getLane()));
+                recv = lane.getReceiver();
+                chan = lane.getMidiChannel();
+            } else {
+                recv = config.recv;
+                chan = config.lane.getMidiChannel();
+            }
 
-			ShortMessage shm = new ShortMessage();
-			try {
-				shm.setMessage(ShortMessage.NOTE_ON, chan, kNum, 100);
-			} catch (InvalidMidiDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// try {
-			recv.send(shm, -1);
-			// } catch (MidiUnavailableException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-		}
+            if (recv == null) {
+                return;
+            }
 
-		public void off() {
-			setNoteState(OFF);
-			// if (pianoRoll == null)
-			// return;
+            ShortMessage shm = new ShortMessage();
+            try {
+                shm.setMessage(ShortMessage.NOTE_ON, chan, kNum, 100);
+            } catch (InvalidMidiDataException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            // try {
+            recv.send(shm, -1);
+            // } catch (MidiUnavailableException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace();
+            // }
+        }
 
-			if (recv == null)
-				return;
-			ShortMessage shm = new ShortMessage();
+        public void off() {
+            setNoteState(OFF);
+            // if (pianoRoll == null)
+            // return;
 
-			try {
-				shm.setMessage(ShortMessage.NOTE_ON, chan, kNum, 0);
-			} catch (InvalidMidiDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// try {
-			recv.send(shm, -1);
-			// } catch (MidiUnavailableException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			recv = null;
-		}
+            if (recv == null) {
+                return;
+            }
+            ShortMessage shm = new ShortMessage();
 
-		public void setNoteState(int state) {
-			noteState = state;
-			if (state == ON)
-				lastKeyPress = kNum;
-		}
-	}// End class Key
+            try {
+                shm.setMessage(ShortMessage.NOTE_ON, chan, kNum, 0);
+            } catch (InvalidMidiDataException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            // try {
+            recv.send(shm, -1);
+            // } catch (MidiUnavailableException e) {
+            // TODO Auto-generated catch block
+            // e.printStackTrace();
+            // }
+            recv = null;
+        }
 
-        @Override
-	public void adjustmentValueChanged(AdjustmentEvent e) {
+        public void setNoteState(int state) {
+            noteState = state;
+            if (state == ON) {
+                lastKeyPress = kNum;
+            }
+        }
+    }// End class Key
 
-		yScroll = e.getValue();
-		repaint();
-	}
+    @Override
+    public void adjustmentValueChanged(AdjustmentEvent e) {
 
-	public int getLastKeytPress() {
+        yScroll = e.getValue();
+        repaint();
+    }
 
-		return lastKeyPress;
-	}
+    public int getLastKeytPress() {
 
-	public Key getKey(int i) {
-		return keys[i];
-	}
+        return lastKeyPress;
+    }
+
+    public Key getKey(int i) {
+        return keys[i];
+    }
 }

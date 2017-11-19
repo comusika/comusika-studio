@@ -21,20 +21,18 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.pianoroll;
 
 import com.frinika.sequencer.gui.Item;
 
 /**
- * 
- *  To observer a single item. 
- *  
- *  e.g. the NoteEditPanel
- * 
- * @author pjl
+ * To observe a single item.
  *
+ * e.g. the NoteEditPanel
+ *
+ * @author pjl
  */
 public interface FeedbackEventListener {
-	public void notifyFeedbackItemChanged(Item item);
+
+    void notifyFeedbackItemChanged(Item item);
 }

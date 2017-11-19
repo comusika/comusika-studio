@@ -32,66 +32,68 @@ import javax.swing.AbstractAction;
 
 /**
  *
- *  What to do when we select a part. e.g. position it for editing.
+ * What to do when we select a part. e.g. position it for editing.
  *
  * @author pjl
  */
 public class PartSelectedAction extends AbstractAction {
-	private static final long serialVersionUID = 1L;
 
-	AbstractSequencerProjectContainer project;
+    private static final long serialVersionUID = 1L;
 
-	static boolean ignoreWarp = false;
+    AbstractSequencerProjectContainer project;
 
-	ItemPanel panel;
+    static boolean ignoreWarp = false;
 
-	public PartSelectedAction(AbstractSequencerProjectContainer project, ItemPanel panel) {
+    ItemPanel panel;
 
-		this.panel = panel;
-		this.project = project;
-	}
+    public PartSelectedAction(AbstractSequencerProjectContainer project, ItemPanel panel) {
 
-        @Override
-	public void actionPerformed(ActionEvent e) {
+        this.panel = panel;
+        this.project = project;
+    }
 
-		// System.out.println("Warp to part left");
-		if (ignoreWarp)
-			return;
-		Part focus = project.getPartSelection().getFocus();
-		if (focus == null)
-			return;
-		// Rectangle rect = focus.getEventBounds();
-		long left = focus.getStartTick();
-		long tick1 = left - project.getSequence().getResolution(); // TODO this
-																	// is naff
-		if (tick1 < 0)
-			tick1 = 0;
-		double ticksToScreen = panel.userToScreen;
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-		int newVal = (int) (tick1 * ticksToScreen);
-		if (newVal < panel.getXRangeModel().getValue()
-				|| newVal > panel.getXRangeModel().getValue()
-						+ panel.getXRangeModel().getExtent()) {
-			panel.getXRangeModel().setValue((int) (tick1 * ticksToScreen));
-		}
+        // System.out.println("Warp to part left");
+        if (ignoreWarp) {
+            return;
+        }
+        Part focus = project.getPartSelection().getFocus();
+        if (focus == null) {
+            return;
+        }
+        // Rectangle rect = focus.getEventBounds();
+        long left = focus.getStartTick();
+        long tick1 = left - project.getSequence().getResolution(); // TODO this
+        // is naff
+        if (tick1 < 0) {
+            tick1 = 0;
+        }
+        double ticksToScreen = panel.userToScreen;
 
-		// setX((int)(tick1*ticksToScreen));
-		// setY((int)(pitchToScreen(rect.y+rect.height)));
+        int newVal = (int) (tick1 * ticksToScreen);
+        if (newVal < panel.getXRangeModel().getValue()
+                || newVal > panel.getXRangeModel().getValue()
+                + panel.getXRangeModel().getExtent()) {
+            panel.getXRangeModel().setValue((int) (tick1 * ticksToScreen));
+        }
 
-		if (focus instanceof MidiPart) {
-			int p[] = ((MidiPart) focus).getPitchRange();
+        // setX((int)(tick1*ticksToScreen));
+        // setY((int)(pitchToScreen(rect.y+rect.height)));
+        if (focus instanceof MidiPart) {
+            int p[] = ((MidiPart) focus).getPitchRange();
 
-			double midY = ((PianoRoll) panel).pitchToScreen((p[0] + p[1]) / 2);
-			int val = (int) (midY - panel.getYRangeModel().getExtent() * 0.5);
+            double midY = ((PianoRoll) panel).pitchToScreen((p[0] + p[1]) / 2);
+            int val = (int) (midY - panel.getYRangeModel().getExtent() * 0.5);
 
-			panel.getYRangeModel().setValue(val);
-			// panel.yRangeModel.setValue((int) ((PianoRoll) panel)
-			// .pitchToScreen(rect.y + rect.height));
+            panel.getYRangeModel().setValue(val);
+            // panel.yRangeModel.setValue((int) ((PianoRoll) panel)
+            // .pitchToScreen(rect.y + rect.height));
 
-		}
-		if (!project.getSequencer().isRunning()) {
-			project.getSequencer().setTickPosition(left);
-		}
-	}
-
+        }
+        if (!project.getSequencer().isRunning()) {
+            project.getSequencer().setTickPosition(left);
+        }
+    }
 }

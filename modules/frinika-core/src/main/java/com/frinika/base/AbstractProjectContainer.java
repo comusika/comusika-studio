@@ -47,7 +47,7 @@ import uk.org.toot.audio.mixer.MixerControls;
 public abstract class AbstractProjectContainer {
 
     // Modified listener for new/load/save events
-    private static List<FrinikaProjectChangeListener> changeListeners = new ArrayList<>();
+    private static final List<FrinikaProjectChangeListener> changeListeners = new ArrayList<>();
     private static AbstractProjectContainer mainProject;
 
     /**

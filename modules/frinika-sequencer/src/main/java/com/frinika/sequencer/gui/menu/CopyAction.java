@@ -32,39 +32,37 @@ import java.util.Collection;
 import javax.swing.AbstractAction;
 
 public class CopyAction extends AbstractAction {
-	private static final long serialVersionUID = 1L;
-    
-    private AbstractSequencerProjectContainer project;
-	
-	public CopyAction(AbstractSequencerProjectContainer project) {
-		super(getMessage("sequencer.project.copy"));
-		this.project=project;		
-	}
 
-	@SuppressWarnings("unchecked")
-        @Override
+    private static final long serialVersionUID = 1L;
+
+    private AbstractSequencerProjectContainer project;
+
+    public CopyAction(AbstractSequencerProjectContainer project) {
+        super(getMessage("sequencer.project.copy"));
+        this.project = project;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public void actionPerformed(ActionEvent e) {
-		
-		SelectionFocusable focus = project.getSelectionFocus();
-		if (focus == null) {
-			System.out.println(" Please set the foucs ");	
-			return;
-		}
-		
-		Collection<Selectable> list=focus.getObjects();
-		if (list.size() == 0) {
-			System.out.println(" Please select something");
-			return;
-		}
-		
-		if(focus instanceof SelectionContainer && ((SelectionContainer)focus).getSelectionStartTick()>-1)
-        {    // Used by the tracker to position the selected data according to the selected row
-            SelectionContainer selectionContainer = (SelectionContainer)focus;
-            project.clipBoard().copy(list,selectionContainer.getSelectionStartTick(),selectionContainer.getSelectionLeftColumn(),project);
+
+        SelectionFocusable focus = project.getSelectionFocus();
+        if (focus == null) {
+            System.out.println(" Please set the foucs ");
+            return;
         }
-        else
-            project.clipBoard().copy(list,project);
-		
-		
-	}
+
+        Collection<Selectable> list = focus.getObjects();
+        if (list.size() == 0) {
+            System.out.println(" Please select something");
+            return;
+        }
+
+        if (focus instanceof SelectionContainer && ((SelectionContainer) focus).getSelectionStartTick() > -1) {    // Used by the tracker to position the selected data according to the selected row
+            SelectionContainer selectionContainer = (SelectionContainer) focus;
+            project.clipBoard().copy(list, selectionContainer.getSelectionStartTick(), selectionContainer.getSelectionLeftColumn(), project);
+        } else {
+            project.clipBoard().copy(list, project);
+        }
+    }
 }

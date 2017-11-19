@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.audio.gui.VirtualKeyboard;
@@ -29,34 +28,34 @@ import javax.swing.JComboBox;
 
 /**
  * GUI element for selecting a MIDI-note from a drop-down-list.
- * 
+ *
  * @author Jens Gulden
  */
-public class NoteSelector extends JComboBox {
-	
-	private static String[] ITEMS;
+public class NoteSelector extends JComboBox<String> {
 
-	static { // class-initializer
-		ITEMS = new String[128];
-		for (int i = 0; i < 128; i++) {
-			ITEMS[i] = VirtualKeyboard.getNoteString(127 - i);
-		}
-	}
-	
-	public NoteSelector() {
-		super(ITEMS);
-	}
-	
-	public NoteSelector(int initialNote) {
-		this();
-		setNote(initialNote);
-	}
-	
-	public int getNote() {
-		return 127 - getSelectedIndex();
-	}
-	
-	public void setNote(int note) {
-		setSelectedIndex(127 - note);
-	}
+    private static String[] ITEMS;
+
+    static { // class-initializer
+        ITEMS = new String[128];
+        for (int i = 0; i < 128; i++) {
+            ITEMS[i] = VirtualKeyboard.getNoteString(127 - i);
+        }
+    }
+
+    public NoteSelector() {
+        super(ITEMS);
+    }
+
+    public NoteSelector(int initialNote) {
+        this();
+        setNote(initialNote);
+    }
+
+    public int getNote() {
+        return 127 - getSelectedIndex();
+    }
+
+    public void setNote(int note) {
+        setSelectedIndex(127 - note);
+    }
 }

@@ -33,43 +33,36 @@ import javax.swing.JFrame;
 
 public class AudioAnalysisAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	private ProjectFrame project;
+    public AudioAnalysisAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.audiopart_analysis"));
+        this.project = project;
+    }
 
-	public AudioAnalysisAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.audiopart_analysis"));
-		this.project = project;
-	}
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                Part part = project.getProjectContainer()
+                        .getPartSelection().getFocus();
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
+                if (part == null || !(part instanceof AudioPart)) {
+                    return;
+                }
 
-		Thread t = new Thread() {
+                JFrame frame = new AudioAnalysisFrame((AudioPart) part, project.getProjectContainer());
+                frame.setSize(1024, 800);
+                frame.setVisible(true);
 
-                @Override
-			public void run() {
-				Part part = project.getProjectContainer()
-						.getPartSelection().getFocus();
+            }
+        };
 
-				if (part == null || !(part instanceof AudioPart))
-					return;
-				
-				JFrame frame=new AudioAnalysisFrame((AudioPart)part,project.getProjectContainer());
-				frame.setSize(1024,800);
-				frame.setVisible(true);
-				
-			}
-		};
-		
-		t.start();
+        t.start();
 
-		
-		// TODO make a cancel button. 
-
-	}
+        // TODO make a cancel button. 
+    }
 }

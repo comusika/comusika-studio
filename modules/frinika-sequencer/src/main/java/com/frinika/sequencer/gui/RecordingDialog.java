@@ -25,74 +25,76 @@ package com.frinika.sequencer.gui;
 
 import com.frinika.sequencer.FrinikaSequencer;
 import java.awt.GridLayout;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 
 /**
- * Dialog for monitoring recording takes. Using this dialog you can do several takes using a loop - and then you'll be able to choose
- * the takes you want to insert into the track.
- * 
+ * Dialog for monitoring recording takes. Using this dialog you can do several
+ * takes using a loop - and then you'll be able to choose the takes you want to
+ * insert into the track.
+ *
  * @author Peter Johan Salomonsen
  */
-public class RecordingDialog extends JDialog
-{
+public class RecordingDialog extends JDialog {
+
     private static final long serialVersionUID = 1L;
 
-    Vector<Integer> recordingTakeNumbers = new Vector<>();
-    Vector<JToggleButton> recordingTakeTogglers = new Vector<>();
-    
+    List<Integer> recordingTakeNumbers = new ArrayList<>();
+    List<JToggleButton> recordingTakeTogglers = new ArrayList<>();
+
     int numberOfTakes = 1;
-   
+
     private FrinikaSequencer sequencer;
-    
+
     public RecordingDialog(JOptionPane recordingOptionPane, FrinikaSequencer sequencer) {
         super();
         this.sequencer = sequencer;
         sequencer.setRecordingTakeDialog(this);
         setContentPane(recordingOptionPane);
-        setLayout(new GridLayout(0,1));
+        setLayout(new GridLayout(0, 1));
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
         pack();
     }
 
-        
     public void notifyNewTake(int takeNo) {
         recordingTakeNumbers.add(takeNo);
-        JToggleButton recordingTakeToggler = new JToggleButton("Take "+(numberOfTakes++),true);
-        
-        if(recordingTakeTogglers.size()>0)
-            recordingTakeTogglers.get(recordingTakeTogglers.size()-1).setSelected(false);
-        
+        JToggleButton recordingTakeToggler = new JToggleButton("Take " + (numberOfTakes++), true);
+
+        if (recordingTakeTogglers.size() > 0) {
+            recordingTakeTogglers.get(recordingTakeTogglers.size() - 1).setSelected(false);
+        }
+
         recordingTakeTogglers.add(recordingTakeToggler);
         add(recordingTakeToggler);
         validate();
         pack();
     }
-    
+
     /**
      * Return the takes that are selected using the toggle buttons
+     *
      * @return
      */
     public int[] getDeployableTakes() {
-        Vector<Integer> deployableTakes = new Vector<>();
-        
-        for(int n = 0;n<recordingTakeTogglers.size();n++)
-        {
-            if(recordingTakeTogglers.get(n).isSelected())
+        List<Integer> deployableTakes = new ArrayList<>();
+
+        for (int n = 0; n < recordingTakeTogglers.size(); n++) {
+            if (recordingTakeTogglers.get(n).isSelected()) {
                 deployableTakes.add(recordingTakeNumbers.get(n));
-            
+            }
+
         }
-        
+
         int[] deployableTakesArr = new int[deployableTakes.size()];
-        
-        for(int n=0;n<deployableTakesArr.length;n++)
-        {
+
+        for (int n = 0; n < deployableTakesArr.length; n++) {
             deployableTakesArr[n] = deployableTakes.get(n);
         }
-        
+
         return deployableTakesArr;
     }
 }

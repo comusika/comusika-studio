@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.model.NoteEvent;
@@ -30,36 +29,35 @@ import javax.swing.JComponent;
 
 /**
  * Menu-action for time-stretching selected MIDI notes.
- * 
+ *
  * @author Jens Gulden
  */
 public class MidiTimeStretchAction extends AbstractMidiAction {
-	
-	double f = 2.0;
-	boolean starts = true;
-	boolean durations = true;
 
-	public MidiTimeStretchAction(AbstractSequencerProjectContainer project) {
-		super(project, "sequencer.midi.time_stretch");
-	}
+    double f = 2.0;
+    boolean starts = true;
+    boolean durations = true;
 
-	@Override
-	public void modifyNoteEvent(NoteEvent note) {
-		if (starts) {
-			long t = note.getStartTick() - this.startTick;
-			t = Math.round(t / f);
-			note.setStartTick(this.startTick + t);
-		}
-		if (durations) {
-			long d = note.getDuration();
-			d = Math.round(d / f);
-			note.setDuration(d);
-		}
-	}
+    public MidiTimeStretchAction(AbstractSequencerProjectContainer project) {
+        super(project, "sequencer.midi.time_stretch");
+    }
 
-	@Override
-	protected JComponent createGUI() {
-		return new MidiTimeStretchActionEditor(this);
-	}
+    @Override
+    public void modifyNoteEvent(NoteEvent note) {
+        if (starts) {
+            long t = note.getStartTick() - this.startTick;
+            t = Math.round(t / f);
+            note.setStartTick(this.startTick + t);
+        }
+        if (durations) {
+            long d = note.getDuration();
+            d = Math.round(d / f);
+            note.setDuration(d);
+        }
+    }
 
+    @Override
+    protected JComponent createGUI() {
+        return new MidiTimeStretchActionEditor(this);
+    }
 }

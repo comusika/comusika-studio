@@ -29,21 +29,18 @@ import javax.swing.AbstractAction;
 
 public class CreateAudioLaneAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public CreateAudioLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.add_audio_lane"));
-		this.project=project;		
-	}
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.menu.add_audio_lane"));
-		project.getProjectContainer().createAudioLane();
-		project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
-				
-	}	
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
+
+    public CreateAudioLaneAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.add_audio_lane"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.menu.add_audio_lane"));
+        project.getProjectContainer().createAudioLane();
+        project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
+    }
 }

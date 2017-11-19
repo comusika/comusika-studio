@@ -22,37 +22,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.frinika.sequencer.gui.tracker;
-import javax.swing.*;
 
+import javax.swing.DefaultCellEditor;
 
 /**
  * @author Peter Johan Salomonsen
  *
  */
-public class MultiEventCellEditor extends DefaultCellEditor
-{		
-	/**
-     * 
-     */
+public class MultiEventCellEditor extends DefaultCellEditor {
+
     private static final long serialVersionUID = 1L;
 
-    public MultiEventCellEditor(TrackerPanel trackerPanel)
-	{
-		super(new MultiEventCellComponent(trackerPanel));
-	}
-	
-	/* (non-Javadoc)
+    public MultiEventCellEditor(TrackerPanel trackerPanel) {
+        super(new MultiEventCellComponent(trackerPanel));
+    }
+
+    /* (non-Javadoc)
 	 * @see javax.swing.CellEditor#getCellEditorValue()
-	 */
+     */
     @Override
-	public Object getCellEditorValue() {
-		try
-		{
-			return ((MultiEventCellComponent)this.getComponent()).getEventValue();
-		}
-		catch(Exception e)
-		{
-			return "";
-		}
-	}	
+    public Object getCellEditorValue() {
+        try {
+            return ((MultiEventCellComponent) this.getComponent()).getEventValue();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

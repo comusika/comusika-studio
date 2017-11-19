@@ -1,3 +1,6 @@
 rootProject.name = 'frinika-core'
 
 apply from: '../modules-settings.gradle'
+
+include ":modules:frinika-audio-osx"
+include ":modules:frinika-jack"

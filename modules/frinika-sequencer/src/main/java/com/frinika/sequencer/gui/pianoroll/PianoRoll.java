@@ -35,6 +35,7 @@ import com.frinika.sequencer.gui.Item;
 import com.frinika.sequencer.gui.ItemScrollPane;
 import com.frinika.sequencer.gui.Layout;
 import com.frinika.sequencer.gui.MyCursors;
+import com.frinika.sequencer.gui.MyCursors.CursorType;
 import com.frinika.sequencer.gui.RectZoomTool;
 import com.frinika.sequencer.gui.SelectTool;
 import com.frinika.sequencer.gui.WriteTool;
@@ -57,6 +58,7 @@ import java.awt.Shape;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -1032,17 +1034,15 @@ public class PianoRoll extends PianoRollPanelAdapter {
         selectTool = new SelectTool(c);
         rectZoomTool = new RectZoomTool(c);
 
-        // drumWriteTool = new WriteTool(MyCursors.getCursor("pencil"));
-        writeTool = new WriteTool(MyCursors.getCursor("pencil"));
-        eraseTool = new EraseTool(MyCursors.getCursor("eraser"));
-        dragViewTool = new DragViewTool(MyCursors.getCursor("move"));
-
+        // drumWriteTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
+        writeTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
+        eraseTool = new EraseTool(MyCursors.getCursor(CursorType.ERASER));
+        dragViewTool = new DragViewTool(MyCursors.getCursor(CursorType.MOVE));
     }
 
     @Override
     protected void paintImageImplLabel(Graphics2D graphics) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1069,7 +1069,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
             return;
         }
 
-        Vector<MultiEvent> notes = new Vector<>();
+        List<MultiEvent> notes = new ArrayList<>();
         for (MultiEvent e : notesInFocus) {
             notes.add(e);
         }

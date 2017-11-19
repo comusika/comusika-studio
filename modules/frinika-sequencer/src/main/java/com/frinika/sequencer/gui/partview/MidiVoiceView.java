@@ -25,7 +25,7 @@ package com.frinika.sequencer.gui.partview;
 
 import com.frinika.audio.gui.ListProvider;
 import com.frinika.global.FrinikaConfig;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.MidiResource;
 import com.frinika.sequencer.gui.JSpinnerDraggable;
 import com.frinika.sequencer.gui.PopupClient;
@@ -464,7 +464,7 @@ public class MidiVoiceView extends LaneView {
 
     JComponent createPatchMapSelector() {
 
-        JButton but = new JButton(getMessage("midilane.properties.select_patchmap"));
+        JButton but = new JButton(CurrentLocale.getMessage("midilane.properties.select_patchmap"));
 
         but.addActionListener(new ActionListener() {
 
@@ -477,7 +477,7 @@ public class MidiVoiceView extends LaneView {
                 } else {
                     chooser = new JFileChooser(FrinikaConfig.PATCHNAME_DIRECTORY);
                 }
-                chooser.setDialogTitle(getMessage("midilane.properties.select_patchmap"));
+                chooser.setDialogTitle(CurrentLocale.getMessage("midilane.properties.select_patchmap"));
 
                 if (chooser.showOpenDialog(MidiVoiceView.this) == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
@@ -495,7 +495,6 @@ public class MidiVoiceView extends LaneView {
     }
 
     JComponent createVoiceTree() {
-
         MidiDevice midiDev1 = midiDev;
 
         if (mapper != null) {
@@ -783,7 +782,6 @@ public class MidiVoiceView extends LaneView {
         }
 
         return new PopupSelectorButton(resource, client, name);
-
     }
 
     private static String quantizeOptionsInfoString(Quantization options) {

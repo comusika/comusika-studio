@@ -21,12 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import javax.swing.table.AbstractTableModel;
 
-public abstract class MyAbstractTableModel extends AbstractTableModel  {
-	public abstract int getColumnWidth(int col);
+public abstract class MyAbstractTableModel extends AbstractTableModel {
 
+    public abstract int getColumnWidth(int col);
 }

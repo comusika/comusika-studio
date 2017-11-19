@@ -30,24 +30,21 @@ import javax.swing.AbstractAction;
 
 public class CreateMidiDrumLaneAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public CreateMidiDrumLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.add_midi_drum_lane"));
-		this.project=project;		
-	}
-	
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.add_midi_drum_lane"));
-		MidiLane lane=project.getProjectContainer().createMidiLane();
-		lane.setType(MidiLane.DRUM);
-		project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
-		project.getProjectContainer().getLaneSelection().setSelected(lane);			
-		project.getProjectContainer().getLaneSelection().notifyListeners();
-	}
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
+
+    public CreateMidiDrumLaneAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.add_midi_drum_lane"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.add_midi_drum_lane"));
+        MidiLane lane = project.getProjectContainer().createMidiLane();
+        lane.setType(MidiLane.DRUM);
+        project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
+        project.getProjectContainer().getLaneSelection().setSelected(lane);
+        project.getProjectContainer().getLaneSelection().notifyListeners();
+    }
 }

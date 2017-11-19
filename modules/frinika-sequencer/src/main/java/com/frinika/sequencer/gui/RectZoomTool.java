@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
@@ -31,34 +30,34 @@ import javax.swing.JComponent;
 
 public class RectZoomTool extends ToolAdapter {
 
-	public RectZoomTool(Cursor cursor) {
-		super( cursor);
-	}
+    public RectZoomTool(Cursor cursor) {
+        super(cursor);
+    }
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-		client=(ItemPanel)e.getSource();
-		((JComponent) client).setCursor(null);
-		client.zoomRect.mousePressed(e);
-		client.repaint();
-	}
+    @Override
+    public void mousePressed(MouseEvent e) {
+        client = (ItemPanel) e.getSource();
+        ((JComponent) client).setCursor(null);
+        client.zoomRect.mousePressed(e);
+        client.repaint();
+    }
 
-        @Override
-	public void mouseDragged(MouseEvent e) {
+    @Override
+    public void mouseDragged(MouseEvent e) {
 
-		Point p = new Point(e.getX(), e.getY());
-		client.map(p);
-		Point d=client.scrollToContian(p);
-	    client.zoomRect.translate(-d.x,-d.y);
+        Point p = new Point(e.getX(), e.getY());
+        client.map(p);
+        Point d = client.scrollToContian(p);
+        client.zoomRect.translate(-d.x, -d.y);
 
-		client.zoomRect.mouseDragged(e);
-		client.repaint(); 
-	}
+        client.zoomRect.mouseDragged(e);
+        client.repaint();
+    }
 
-        @Override
-	public void mouseReleased(MouseEvent e) {
-		client.zoomRect.mouseRelease(e);
-		client.zoomToRect(client.mapRect(client.zoomRect));
-		client.rectZoomFinished();
-	}
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        client.zoomRect.mouseRelease(e);
+        client.zoomToRect(client.mapRect(client.zoomRect));
+        client.rectZoomFinished();
+    }
 }

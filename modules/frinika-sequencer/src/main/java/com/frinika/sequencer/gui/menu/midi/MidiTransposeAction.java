@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.model.NoteEvent;
@@ -30,24 +29,24 @@ import javax.swing.JComponent;
 
 /**
  * Menu-action for transposing selected MIDI notes.
- * 
+ *
  * @author Jens Gulden
  */
 public class MidiTransposeAction extends AbstractMidiAction {
 
-	int transpose = 1;
-	
-	public MidiTransposeAction(AbstractSequencerProjectContainer project) {
-		super(project, "sequencer.midi.transpose");
-	}
+    int transpose = 1;
 
-        @Override
-	public void modifyNoteEvent(NoteEvent note) {
-		note.setNote( note.getNote() + transpose );
-	}
-			
-        @Override
-	protected JComponent createGUI() {
-		return new MidiTransposeActionEditor(this);
-	}
+    public MidiTransposeAction(AbstractSequencerProjectContainer project) {
+        super(project, "sequencer.midi.transpose");
+    }
+
+    @Override
+    public void modifyNoteEvent(NoteEvent note) {
+        note.setNote(note.getNote() + transpose);
+    }
+
+    @Override
+    protected JComponent createGUI() {
+        return new MidiTransposeActionEditor(this);
+    }
 }

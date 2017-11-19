@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.selection;
 
 import static com.frinika.localization.CurrentLocale.getMessage;
@@ -35,197 +34,186 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-
 /**
- * 
- *  The drag list is a copy of the multiEventSelection.
- * 
- *  The copy is created by calling startDrag
- *  
- *  The after calling startDrag the caller can
- *     modifying the items in the drag list (e.g. the pith start tick etc).
- *     use the notification methods in this class to inform the GUI of changes.
- * 
- *  There are two types of observer.
- *    DragEventListener is interested in changes to the drag list.
- *    FeedbackItemListener is interested in a single representive item.
- *    Tpically an element of the drag list (defined as a parameter to start drag)
- * 
- *  Calling endDrag(false) will cause the original selected events to be replaced by the dragList.
- *          endDrag(true) will leave the originals and add the dragList to the part.
- * 
- *  You can call directly invoke notifyFeedbackListeners(Item it) if you wish to  update the single item view listening 
- *  to the DragList.  (Any cleaner way to do this ?) 
- * 
+ *
+ * The drag list is a copy of the multiEventSelection.
+ *
+ * The copy is created by calling startDrag
+ *
+ * The after calling startDrag the caller can modifying the items in the drag
+ * list (e.g. the pith start tick etc). use the notification methods in this
+ * class to inform the GUI of changes.
+ *
+ * There are two types of observer. DragEventListener is interested in changes
+ * to the drag list. FeedbackItemListener is interested in a single representive
+ * item. Tpically an element of the drag list (defined as a parameter to start
+ * drag)
+ *
+ * Calling endDrag(false) will cause the original selected events to be replaced
+ * by the dragList. endDrag(true) will leave the originals and add the dragList
+ * to the part.
+ *
+ * You can call directly invoke notifyFeedbackListeners(Item it) if you wish to
+ * update the single item view listening to the DragList. (Any cleaner way to do
+ * this ?)
+ *
  * @author pjl
  *
  *
  */
 @SuppressWarnings("serial")
 public class DragList extends Vector<Item> {
-	
-	private AbstractSequencerProjectContainer project;
-	transient Vector<DragEventListener> dragEventListeners;
-	transient Vector<FeedbackEventListener> feedbackEventListeners;
-	private Item dragItem;
+
+    private AbstractSequencerProjectContainer project;
+    transient Vector<DragEventListener> dragEventListeners;
+    transient Vector<FeedbackEventListener> feedbackEventListeners;
+    private Item dragItem;
 
 //	MultiEvent referenceItem;
-	
-	public DragList(AbstractSequencerProjectContainer project) {
-		this.project=project;
-		dragEventListeners = new Vector<>();
-		feedbackEventListeners = new Vector<>();
-	}
+    public DragList(AbstractSequencerProjectContainer project) {
+        this.project = project;
+        dragEventListeners = new Vector<>();
+        feedbackEventListeners = new Vector<>();
+    }
 
-	
-	public void endDrag(boolean copy) {
+    public void endDrag(boolean copy) {
 
-		if (project.getMultiEventSelection().getSelected().isEmpty()) {
-			System.out
-					.println(" Selected list empty in pianoroll endDrag (why did you bother dragging nothing ?) ");
-			project.getDragList().clear();
-			return;
-		}
+        if (project.getMultiEventSelection().getSelected().isEmpty()) {
+            System.out
+                    .println(" Selected list empty in pianoroll endDrag (why did you bother dragging nothing ?) ");
+            project.getDragList().clear();
+            return;
+        }
 
-		if (!copy) {
-			project.getEditHistoryContainer().mark(getMessage("sequencer.pianoroll.drag_move_notes"));
-			Iterator<Item> iter = project.getDragList().iterator();
-			Vector<MultiEvent> list = new Vector<>(project
-					.getMultiEventSelection().getSelected());
-			for (MultiEvent ev : list) {
-				ev.getPart().remove(ev);
-				ev.restoreFromClone((MultiEvent)iter.next());
-				ev.getPart().add(ev);
-			}
-			assert (!iter.hasNext());
-			project.getMultiEventSelection().setSelected(list);
-			
-		} else {
-			project.getEditHistoryContainer().mark(getMessage("sequencer.pianoroll.drag_copy_notes"));
-			Iterator<Item> iter = project.getDragList().iterator();
-			for (MultiEvent ev : project.getMultiEventSelection().getSelected()) {
-				ev.getPart().add((MultiEvent)iter.next());
-			}
-			project.getMultiEventSelection().setSelected(
-					(Collection) project.getDragList());
+        if (!copy) {
+            project.getEditHistoryContainer().mark(getMessage("sequencer.pianoroll.drag_move_notes"));
+            Iterator<Item> iter = project.getDragList().iterator();
+            Vector<MultiEvent> list = new Vector<>(project
+                    .getMultiEventSelection().getSelected());
+            for (MultiEvent ev : list) {
+                ev.getPart().remove(ev);
+                ev.restoreFromClone((MultiEvent) iter.next());
+                ev.getPart().add(ev);
+            }
+            assert (!iter.hasNext());
+            project.getMultiEventSelection().setSelected(list);
 
-			assert (!iter.hasNext());
-		}
+        } else {
+            project.getEditHistoryContainer().mark(getMessage("sequencer.pianoroll.drag_copy_notes"));
+            Iterator<Item> iter = project.getDragList().iterator();
+            for (MultiEvent ev : project.getMultiEventSelection().getSelected()) {
+                ev.getPart().add((MultiEvent) iter.next());
+            }
+            project.getMultiEventSelection().setSelected(
+                    (Collection) project.getDragList());
 
-		project.getEditHistoryContainer().notifyEditHistoryListeners();
-		project.getMultiEventSelection().notifyListeners();
+            assert (!iter.hasNext());
+        }
 
-		clear();
-		notifyFeedbackItemListeners(project.getMultiEventSelection()
-				.getFocus());
-		notifyDragEventListeners();
-	}
-	
-	
-	public void endDragController() {
+        project.getEditHistoryContainer().notifyEditHistoryListeners();
+        project.getMultiEventSelection().notifyListeners();
 
+        clear();
+        notifyFeedbackItemListeners(project.getMultiEventSelection()
+                .getFocus());
+        notifyDragEventListeners();
+    }
 
-		// TODO localization
-	
+    public void endDragController() {
 
-		if (project.getMultiEventSelection().getSelected().isEmpty()) {
-			System.out
-					.println(" Selected list empty in controllerview endDrag (why did you bother dragging nothing ? ) ");
-			return;
-		}
-		
-		project.getEditHistoryContainer().mark("drag velocity");
-		// TODO may not want to delete these ? CNTRL DRAG
+        // TODO localization
+        if (project.getMultiEventSelection().getSelected().isEmpty()) {
+            System.out
+                    .println(" Selected list empty in controllerview endDrag (why did you bother dragging nothing ? ) ");
+            return;
+        }
 
-		Iterator<Item> iter = iterator();
-		Vector<MultiEvent> list =new Vector<>(project.getMultiEventSelection().getSelected());
-		for (MultiEvent ev : list) {
-			// if (!validEvent(ev)) continue;
-			ev.getPart().remove(ev);
-			ev.restoreFromClone((MultiEvent)iter.next());
-			ev.getPart().add(ev);
-		}
+        project.getEditHistoryContainer().mark("drag velocity");
+        // TODO may not want to delete these ? CNTRL DRAG
 
-		project.getEditHistoryContainer().notifyEditHistoryListeners();
+        Iterator<Item> iter = iterator();
+        Vector<MultiEvent> list = new Vector<>(project.getMultiEventSelection().getSelected());
+        for (MultiEvent ev : list) {
+            // if (!validEvent(ev)) continue;
+            ev.getPart().remove(ev);
+            ev.restoreFromClone((MultiEvent) iter.next());
+            ev.getPart().add(ev);
+        }
 
-		clear();
+        project.getEditHistoryContainer().notifyEditHistoryListeners();
 
-	}
+        clear();
 
-	/**
-	 * 
-	 * Start a drag.
-	 * 
-	 *
-	 * @param dragItem reference item for displaying feedback (the copy of this item in the draglist can be observered as it is being draged)
-	 *         getDragReferenceItem();
-	 *  
-	 */
-	public void startDrag(Item dragItemRef) {
+    }
 
-		// project.clearDragList();
-		
-	//	this.dragItem=dragItem;
-		Vector<Item> dragList = project.getDragList();
-		dragList.clear();
-		
-	//	referenceItem = null;
-		for (MultiEvent it : project.getMultiEventSelection().getSelected()) {
-			if (it instanceof NoteEvent) {
-				try {
-					NoteEvent dragNote = (NoteEvent) (it.clone());
-					dragList.add(dragNote);
+    /**
+     *
+     * Start a drag.
+     *
+     *
+     * @param dragItem reference item for displaying feedback (the copy of this
+     * item in the draglist can be observered as it is being draged)
+     * getDragReferenceItem();
+     *
+     */
+    public void startDrag(Item dragItemRef) {
 
-					if (it == dragItemRef) {
-						dragItem=dragNote;
-						notifyFeedbackItemListeners(dragNote);
-					}
+        // project.clearDragList();
+        //	this.dragItem=dragItem;
+        Vector<Item> dragList = project.getDragList();
+        dragList.clear();
 
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	
-	public void addDragEventListener(DragEventListener o) {
-		dragEventListeners.add(o);
+        //	referenceItem = null;
+        for (MultiEvent it : project.getMultiEventSelection().getSelected()) {
+            if (it instanceof NoteEvent) {
+                try {
+                    NoteEvent dragNote = (NoteEvent) (it.clone());
+                    dragList.add(dragNote);
 
-	}
+                    if (it == dragItemRef) {
+                        dragItem = dragNote;
+                        notifyFeedbackItemListeners(dragNote);
+                    }
 
-	public void removeDragEventListener(DragEventListener o) {
-		dragEventListeners.add(o);
-	}
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
+    public void addDragEventListener(DragEventListener o) {
+        dragEventListeners.add(o);
 
-	public void notifyDragEventListeners() {
-		for (DragEventListener l : dragEventListeners) {
-			l.update();
-		}	
-	}
-	
-	
-	public void addFeedbackItemListener(FeedbackEventListener o) {
-		feedbackEventListeners.add(o);
+    }
 
-	}
+    public void removeDragEventListener(DragEventListener o) {
+        dragEventListeners.add(o);
+    }
 
-	public void removeFeedbackItemListener(FeedbackEventListener o) {
-		feedbackEventListeners.add(o);
-	}
+    public void notifyDragEventListeners() {
+        for (DragEventListener l : dragEventListeners) {
+            l.update();
+        }
+    }
 
-	public void notifyFeedbackItemListeners(Item ev) {
-		for (FeedbackEventListener l : feedbackEventListeners) {
-			l.notifyFeedbackItemChanged(ev);
-		}
-	}
+    public void addFeedbackItemListener(FeedbackEventListener o) {
+        feedbackEventListeners.add(o);
+    }
 
-	public void notifyFeedbackItemListeners() {
-		for (FeedbackEventListener l : feedbackEventListeners) {
-			l.notifyFeedbackItemChanged(dragItem);
-		}
-	}
+    public void removeFeedbackItemListener(FeedbackEventListener o) {
+        feedbackEventListeners.add(o);
+    }
 
+    public void notifyFeedbackItemListeners(Item ev) {
+        for (FeedbackEventListener l : feedbackEventListeners) {
+            l.notifyFeedbackItemChanged(ev);
+        }
+    }
 
+    public void notifyFeedbackItemListeners() {
+        for (FeedbackEventListener l : feedbackEventListeners) {
+            l.notifyFeedbackItemChanged(dragItem);
+        }
+    }
 }

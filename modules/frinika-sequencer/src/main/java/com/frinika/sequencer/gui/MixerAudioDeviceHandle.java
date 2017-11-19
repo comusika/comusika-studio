@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.audio.gui.AudioDeviceHandle;
@@ -34,206 +33,205 @@ import uk.org.toot.audio.server.AudioServer;
 
 public class MixerAudioDeviceHandle implements AudioDeviceHandle {
 
+    private Mixer mixer;
 
-	private Mixer mixer;
+    private AudioFormat audioFormat;
 
-	private AudioFormat af;
+    private DataLine.Info info;
 
-	private DataLine.Info info;
+    private TargetDataLine line;
 
-	private TargetDataLine line;
+    private AudioServer server;
 
-	private AudioServer server;
+    private byte inBuffer[];
 
-	private byte inBuffer[];
-	
-	public MixerAudioDeviceHandle(Mixer mixer, AudioFormat af,
-			DataLine.Info info, AudioServer server) {
-		this.mixer = mixer;
-		this.af = af;
-		this.info = info;
-		this.line = null;
-		this.server = server;
-	
-	}
+    public MixerAudioDeviceHandle(Mixer mixer, AudioFormat af,
+            DataLine.Info info, AudioServer server) {
+        this.mixer = mixer;
+        this.audioFormat = af;
+        this.info = info;
+        this.line = null;
+        this.server = server;
 
-        @Override
-	public String toString() {
-		if (af.getChannels() == 1)
-			return mixer.getMixerInfo().getName() + " (MONO)"; // +
-																// af.toString();
-		else if (af.getChannels() == 2)
-			return mixer.getMixerInfo().getName() + " (STEREO)"; // +
-																	// af.toString();
-		else
-			return mixer.getMixerInfo().getName() + "channels="
-					+ af.getChannels(); // + af.toString();
-	}
+    }
 
-	/**
-	 *@deprecated To be rpelaced with COnnections
-	 */
-        @Override
-	public TargetDataLine getLine() { // DataLine.Info infoIn) {
-		try {
-			System.out.println(this + " **** " + af);
-			DataLine.Info infoIn = new DataLine.Info(TargetDataLine.class, af);
+    @Override
+    public String toString() {
+        if (audioFormat.getChannels() == 1) {
+            return mixer.getMixerInfo().getName() + " (MONO)"; // +
+        } // af.toString();
+        else if (audioFormat.getChannels() == 2) {
+            return mixer.getMixerInfo().getName() + " (STEREO)"; // +
+        } // af.toString();
+        else {
+            return mixer.getMixerInfo().getName() + "channels="
+                    + audioFormat.getChannels(); // + af.toString();
+        }
+    }
 
-			// lineIn =
-			// (TargetDataLine)AudioSystem.getMixer(mixers.get(0)).getLine(infoIn);
+    /**
+     * @deprecated To be rpelaced with COnnections
+     */
+    @Override
+    public TargetDataLine getLine() { // DataLine.Info infoIn) {
+        try {
+            System.out.println(this + " **** " + audioFormat);
+            DataLine.Info infoIn = new DataLine.Info(TargetDataLine.class, audioFormat);
 
-			line = (TargetDataLine) mixer.getLine(infoIn);
-		
+            // lineIn =
+            // (TargetDataLine)AudioSystem.getMixer(mixers.get(0)).getLine(infoIn);
+            line = (TargetDataLine) mixer.getLine(infoIn);
 
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+        } catch (LineUnavailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	
-	public void fillBuffers(int nFrame) {
+    public void fillBuffers(int nFrame) {
 
-		
-		// System.out.println(" Dev fill buffer ");
-		try {
+        // System.out.println(" Dev fill buffer ");
+        try {
 
+            // 2 channels out but 2 byte per in sample
+            int nByte = audioFormat.getChannels() * nFrame * 2;
 
-			// 2 channels out but 2 byte per in sample
-			int nByte = af.getChannels()*nFrame*2;
+            if (inBuffer == null || inBuffer.length != nByte) {
+                inBuffer = new byte[nByte];
+            }
 
-			if (inBuffer == null || inBuffer.length != nByte ) inBuffer=new byte[nByte];
-			
-			// TODO: Why would nByte be 0 anyway? This is a quick fix
-			if (line.available() >= nByte && nByte > 0) {
-			
-				int nread;
-				int cnt = 0;
+            // TODO: Why would nByte be 0 anyway? This is a quick fix
+            if (line.available() >= nByte && nByte > 0) {
 
-				/**
-				 * If we have glitches in the output, this means that there will
-				 * be more data in the input buffer than we are able to handle
-				 * in this fillBuffer session. Unless we compensate here by
-				 * skipping data from the input, the software monitoring would
-				 * have introduced an extra delay. However we don't want to skip
-				 * this data in the recording, so what we do is to put all this
-				 * samples in the recordbuffer, but skip to send them to the
-				 * preoscillator sample buffer.
-				 */
-				do {
-					nread = line.read(inBuffer, 0, nByte);
-					if (nread == 0)
-						System.out.println("active :" + line.isActive()
-								+ " available:" + line.available()
-								+ " nByte: " + nByte + " inBuffersize: "
-								+ inBuffer.length);
-			
-					
-					//inputFramesReadCount += nByte / 2 / af.getChannels();
+                int nread;
+                int cnt = 0;
 
-					cnt++;
+                /**
+                 * If we have glitches in the output, this means that there will
+                 * be more data in the input buffer than we are able to handle
+                 * in this fillBuffer session. Unless we compensate here by
+                 * skipping data from the input, the software monitoring would
+                 * have introduced an extra delay. However we don't want to skip
+                 * this data in the recording, so what we do is to put all this
+                 * samples in the recordbuffer, but skip to send them to the
+                 * preoscillator sample buffer.
+                 */
+                do {
+                    nread = line.read(inBuffer, 0, nByte);
+                    if (nread == 0) {
+                        System.out.println("active :" + line.isActive()
+                                + " available:" + line.available()
+                                + " nByte: " + nByte + " inBuffersize: "
+                                + inBuffer.length);
+                    }
 
-					for (int n = 0; n < nByte / 2; n++) {
-						short sample = (short) ((0xff & inBuffer[2 * n + 1]) + ((0xff & inBuffer[2 * n]) * 256));
-						float val = sample / 32768f;
-					}
-	
-				} while (line.available() > 2 * nByte);
+                    //inputFramesReadCount += nByte / 2 / af.getChannels();
+                    cnt++;
 
-				if (cnt != 1)
-					System.out.println(" COUNT WAS " + cnt);
-				
-			} else {
-				System.err.println(String.format(" GLITCH avail=%d actual=%d ",line.available(),nByte ));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * @deprecated   TO be replaced by Connections
-	 */
-        @Override
-	public TargetDataLine getOpenLine() {
-		if (isOpen())
-			return line;
-		// TODO Auto-generated method stub
-		try {
-			if (line == null)
-				line = (TargetDataLine) mixer.getLine(info);
-			line.open(af);
-			return line;
+                    for (int n = 0; n < nByte / 2; n++) {
+                        short sample = (short) ((0xff & inBuffer[2 * n + 1]) + ((0xff & inBuffer[2 * n]) * 256));
+                        float val = sample / 32768f;
+                    }
 
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+                } while (line.available() > 2 * nByte);
+
+                if (cnt != 1) {
+                    System.out.println(" COUNT WAS " + cnt);
+                }
+
+            } else {
+                System.err.println(String.format(" GLITCH avail=%d actual=%d ", line.available(), nByte));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @deprecated TO be replaced by Connections
+     */
+    @Override
+    public TargetDataLine getOpenLine() {
+        if (isOpen()) {
+            return line;
+        }
+        // TODO Auto-generated method stub
+        try {
+            if (line == null) {
+                line = (TargetDataLine) mixer.getLine(info);
+            }
+            line.open(audioFormat);
+            return line;
+
+        } catch (LineUnavailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 //	public void start() {
 //		line.flush();
 //		line.start();
 //		
 //	}
-	
-        @Override
-	public int getChannels() {
-		return af.getChannels();
-	}
+    @Override
+    public int getChannels() {
+        return audioFormat.getChannels();
+    }
 
-        @Override
-	public AudioFormat getFormat() {
-		return af;
-	}
+    @Override
+    public AudioFormat getFormat() {
+        return audioFormat;
+    }
 
-        @Override
-	public boolean isOpen() {
-		if (line == null)
-			return false;
-		return line.isOpen();
-	}
+    @Override
+    public boolean isOpen() {
+        if (line == null) {
+            return false;
+        }
+        return line.isOpen();
+    }
 
-	/**
-	 * open and start the line.
-	 */
-        @Override
-	public void open() {
+    /**
+     * open and start the line.
+     */
+    @Override
+    public void open() {
 
-		System.out.println(" Opening MixrerAudioDevice line");
-		if (isOpen())
-			return;
-		
-		try {
-			if (line == null)
-				line = (TargetDataLine) mixer.getLine(info);
+        System.out.println(" Opening MixrerAudioDevice line");
+        if (isOpen()) {
+            return;
+        }
 
-			
-			line.open(af);
-			System.out.println("  . . ..  Open");
+        try {
+            if (line == null) {
+                line = (TargetDataLine) mixer.getLine(info);
+            }
 
-			line.start();
-			System.out.println("  . . ..  Start  " + isOpen());
+            line.open(audioFormat);
+            System.out.println("  . . ..  Open");
 
-		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+            line.start();
+            System.out.println("  . . ..  Start  " + isOpen());
 
-        @Override
-	public void close() {
-		if (!isOpen())
-			return;
-		line.close();
-	}
+        } catch (LineUnavailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	public byte[] getBuffer() {
-		// TODO Auto-generated method stub
-		return inBuffer;
-	}
-	
+    @Override
+    public void close() {
+        if (!isOpen()) {
+            return;
+        }
+        line.close();
+    }
+
+    public byte[] getBuffer() {
+        // TODO Auto-generated method stub
+        return inBuffer;
+    }
 }

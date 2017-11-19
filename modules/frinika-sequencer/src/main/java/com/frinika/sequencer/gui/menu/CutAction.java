@@ -28,51 +28,52 @@ import com.frinika.sequencer.gui.selection.SelectionFocusable;
 import com.frinika.sequencer.model.Selectable;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.AbstractAction;
 
 public class CutAction extends AbstractAction {
-	private static final long serialVersionUID = 1L;
 
-	private AbstractSequencerProjectContainer project;
-	
-	public CutAction(AbstractSequencerProjectContainer project) {
-		super(getMessage("sequencer.project.cut"));
-		this.project=project;		
-	}
+    private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unchecked")
-        @Override
+    private AbstractSequencerProjectContainer project;
+
+    public CutAction(AbstractSequencerProjectContainer project) {
+        super(getMessage("sequencer.project.cut"));
+        this.project = project;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public void actionPerformed(ActionEvent e) {
-			
-		project.getEditHistoryContainer().mark(getMessage("sequencer.project.cut"));
-		SelectionFocusable focus = project.getSelectionFocus();
-		if (focus == null) {
-			System.out.println(" Please set the foucs ");	
-			return;
-		}
-		
-		Collection<Selectable> list=focus.getObjects();
-		if (list.size() == 0) {
-			System.out.println(" Please select something");
-			return;
-		}
-		
-        if(focus instanceof SelectionContainer && ((SelectionContainer)focus).getSelectionStartTick()>-1)
-        {    // Used by the tracker to position the selected data according to the selected row
-            SelectionContainer selectionContainer = (SelectionContainer)focus;
-            project.clipBoard().copy(list,selectionContainer.getSelectionStartTick(),selectionContainer.getSelectionLeftColumn(),project);
-        }
-        else
-            project.clipBoard().copy(list,project);
 
-        Vector<Selectable> list2=new Vector<>(list);
-		for (Selectable it:list2) {
-			it.removeFromModel();
-		}
-		
-	//	project.getSelectionFocus().clearSelection();
-		project.getEditHistoryContainer().notifyEditHistoryListeners();
-	}
+        project.getEditHistoryContainer().mark(getMessage("sequencer.project.cut"));
+        SelectionFocusable focus = project.getSelectionFocus();
+        if (focus == null) {
+            System.out.println(" Please set the foucs ");
+            return;
+        }
+
+        Collection<Selectable> list = focus.getObjects();
+        if (list.isEmpty()) {
+            System.out.println(" Please select something");
+            return;
+        }
+
+        if (focus instanceof SelectionContainer && ((SelectionContainer) focus).getSelectionStartTick() > -1) {    // Used by the tracker to position the selected data according to the selected row
+            SelectionContainer selectionContainer = (SelectionContainer) focus;
+            project.clipBoard().copy(list, selectionContainer.getSelectionStartTick(), selectionContainer.getSelectionLeftColumn(), project);
+        } else {
+            project.clipBoard().copy(list, project);
+        }
+
+        List<Selectable> list2 = new ArrayList<>(list);
+        for (Selectable it : list2) {
+            it.removeFromModel();
+        }
+
+        //	project.getSelectionFocus().clearSelection();
+        project.getEditHistoryContainer().notifyEditHistoryListeners();
+    }
 }

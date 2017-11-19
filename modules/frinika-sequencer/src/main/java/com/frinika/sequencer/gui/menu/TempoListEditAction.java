@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.gui.TimeSelector;
 import com.frinika.sequencer.model.tempo.TempoList;
@@ -43,180 +43,176 @@ import javax.swing.table.TableModel;
 
 public class TempoListEditAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	private ProjectFrame project;
+    private TempoList list;
 
-	private TempoList list;
+    private TimeUtils timeUtil;
 
-	private TimeUtils timeUtil;
+    public TempoListEditAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.edit_tempolist"), AbstractSequencerProjectContainer
+                .getIconResource("tempolist.png"));
+        this.project = project;
+        this.list = project.getProjectContainer().getTempoList();
+        this.timeUtil = project.getProjectContainer().getTimeUtils();
+    }
 
-	public TempoListEditAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.edit_tempolist"), AbstractSequencerProjectContainer
-				.getIconResource("tempolist.png"));
-		this.project = project;
-		this.list = project.getProjectContainer().getTempoList();
-		this.timeUtil = project.getProjectContainer().getTimeUtils();
-	}
+    JFrame frame;
 
-	JFrame frame;
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
+        SwingUtilities.invokeLater(new Runnable() {
 
-		SwingUtilities.invokeLater(new Runnable() {
+            @SuppressWarnings("serial")
+            @Override
+            public void run() {
 
-			@SuppressWarnings("serial")
-                @Override
-			public void run() {
+                if (frame == null) {
 
-				if (frame == null) {
+                    frame = new JFrame();
+                    TableModel dataModel = new AbstractTableModel() {
 
-					frame = new JFrame();
-					TableModel dataModel = new AbstractTableModel() {
+                        int tick;
 
-						int tick;
+                        double bpm;
 
-						double bpm;
-
-						TempoListListener listener = new TempoListListener() {
-
-                                @Override
-							public void notifyTempoListChange() {
-								fireTableDataChanged();
-							}
-
-						};
-
-						{
-							list.addTempoListListener(listener);
-						}
-
+                        TempoListListener listener = new TempoListListener() {
                             @Override
-						public int getColumnCount() {
-							return 3;
-						}
+                            public void notifyTempoListChange() {
+                                fireTableDataChanged();
+                            }
+                        };
 
-                            @Override
-						public int getRowCount() {
-							list.reco();
-							return list.size() + 1;
-						}
+                        {
+                            list.addTempoListListener(listener);
+                        }
 
-                            @Override
-						public Object getValueAt(int row, int col) {
-							if (row >= list.size())
-								return "";
-							TempoList.MyTempoEvent ev = list.elementAt(row);
-							if (col == 0)
-								return timeUtil.tickToBarBeatTick(ev.getTick());
-							else if (col == 1)
-								return ev.getTime();
-							else if (col == 2)
-								return ev.getBPM();
+                        @Override
+                        public int getColumnCount() {
+                            return 3;
+                        }
 
-							assert (false);
-							return "";
-						}
+                        @Override
+                        public int getRowCount() {
+                            list.reco();
+                            return list.size() + 1;
+                        }
 
-                            @Override
-						public boolean isCellEditable(int row, int col) {
-							if (row == 0 && col == 0)
-								return false;
-							return col == 0 || (col == 1 && row>0) || col == 2;
-						}
+                        @Override
+                        public Object getValueAt(int row, int col) {
+                            if (row >= list.size()) {
+                                return "";
+                            }
+                            TempoList.MyTempoEvent ev = list.elementAt(row);
+                            if (col == 0) {
+                                return timeUtil.tickToBarBeatTick(ev.getTick());
+                            } else if (col == 1) {
+                                return ev.getTime();
+                            } else if (col == 2) {
+                                return ev.getBPM();
+                            }
 
-                            @Override
-						public void setValueAt(Object value, int row, int col) {
-							boolean newE = row >= list.size();
+                            assert (false);
+                            return "";
+                        }
 
-							TempoList.MyTempoEvent ev = null;
-							if (!newE && col == 1 && row>0) {
-							    // This will alter the tempo of the row before
-							    ev = list.elementAt(row-1);
-							} else if (!newE) {
-								ev = list.elementAt(row);
-							} else {
-							    ev = list.elementAt(list.size() - 1);
-							}
+                        @Override
+                        public boolean isCellEditable(int row, int col) {
+                            if (row == 0 && col == 0) {
+                                return false;
+                            }
+                            return col == 0 || (col == 1 && row > 0) || col == 2;
+                        }
 
-							tick = (int) ev.getTick();
-							bpm = ev.getBPM();
+                        @Override
+                        public void setValueAt(Object value, int row, int col) {
+                            boolean newE = row >= list.size();
 
-							try {
-								if (col == 0) {
-									tick = (int) timeUtil
-											.barBeatTickToTick((String) value);
-								} else if(col==1 && row>0) {	
-								    double ticks = (list.elementAt(row).getTick()-ev.getTick());
-								    double beats = ticks / timeUtil.ticksPerBeat();
-								    double secs = (Double.parseDouble((String)value)-ev.getTime());
-								    
-								    bpm = beats*60.0/secs;								    
-								    //System.out.println(list.elementAt(row).getTick()+" "+ev.getTick()+" "+ticks+" "+beats+" "+secs+" "+bpm);
-								} else if (col == 2) {
-								    bpm = Double.parseDouble((String) value);
-								}
-								if (!newE)
-									list.remove(ev.getTick(), ev.getTick() + 1);
-								list.add(tick, bpm);
-								list.reco();
-								list.notifyListeners();
-							} catch (NumberFormatException e) {
-								e.printStackTrace();
-							}
-							fireTableDataChanged();
-						}
-					};
+                            TempoList.MyTempoEvent ev = null;
+                            if (!newE && col == 1 && row > 0) {
+                                // This will alter the tempo of the row before
+                                ev = list.elementAt(row - 1);
+                            } else if (!newE) {
+                                ev = list.elementAt(row);
+                            } else {
+                                ev = list.elementAt(list.size() - 1);
+                            }
 
-					JTable table = new JTable(dataModel);
-					table.getColumnModel().getColumn(0).setWidth(50);
-					table.getColumnModel().getColumn(1).setWidth(15);
-					table.getColumnModel().getColumn(2).setWidth(15);
+                            tick = (int) ev.getTick();
+                            bpm = ev.getBPM();
 
-					table.getColumnModel().getColumn(0).setHeaderValue(
-							"Bar.Beat:Tick");
-					table.getColumnModel().getColumn(1).setHeaderValue("Time");
-					table.getColumnModel().getColumn(2).setHeaderValue("BPM");
+                            try {
+                                if (col == 0) {
+                                    tick = (int) timeUtil
+                                            .barBeatTickToTick((String) value);
+                                } else if (col == 1 && row > 0) {
+                                    double ticks = (list.elementAt(row).getTick() - ev.getTick());
+                                    double beats = ticks / timeUtil.ticksPerBeat();
+                                    double secs = (Double.parseDouble((String) value) - ev.getTime());
 
-					class TimeCellEditor extends AbstractCellEditor implements
-							TableCellEditor {
+                                    bpm = beats * 60.0 / secs;
+                                    //System.out.println(list.elementAt(row).getTick()+" "+ev.getTick()+" "+ticks+" "+beats+" "+secs+" "+bpm);
+                                } else if (col == 2) {
+                                    bpm = Double.parseDouble((String) value);
+                                }
+                                if (!newE) {
+                                    list.remove(ev.getTick(), ev.getTick() + 1);
+                                }
+                                list.add(tick, bpm);
+                                list.reco();
+                                list.notifyListeners();
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                            fireTableDataChanged();
+                        }
+                    };
 
-						TimeSelector ts = new TimeSelector(project
-								.getProjectContainer());
+                    JTable table = new JTable(dataModel);
+                    table.getColumnModel().getColumn(0).setWidth(50);
+                    table.getColumnModel().getColumn(1).setWidth(15);
+                    table.getColumnModel().getColumn(2).setWidth(15);
 
-                            @Override
-						public Object getCellEditorValue() {
-							return ts.getString();
-						}
+                    table.getColumnModel().getColumn(0).setHeaderValue(
+                            "Bar.Beat:Tick");
+                    table.getColumnModel().getColumn(1).setHeaderValue("Time");
+                    table.getColumnModel().getColumn(2).setHeaderValue("BPM");
 
-						// Implement the one method defined by TableCellEditor.
-                            @Override
-						public Component getTableCellEditorComponent(
-								JTable table, Object value, boolean isSelected,
-								int row, int column) {
-							ts.setString((String) value);
-							return ts;
-						}
-					}
-					;
+                    class TimeCellEditor extends AbstractCellEditor implements
+                            TableCellEditor {
 
-					// nearly works but a bit messy
-					// table.getColumnModel().getColumn(0).setCellEditor(new
-					// TimeCellEditor());
+                        TimeSelector ts = new TimeSelector(project
+                                .getProjectContainer());
 
-					JScrollPane scrollpane = new JScrollPane(table);
-					frame.setContentPane(scrollpane);
-					frame.setTitle("Tempo List");
-					frame.pack();
-				}
-				frame.setVisible(true);
-			}
-		});
+                        @Override
+                        public Object getCellEditorValue() {
+                            return ts.getString();
+                        }
 
-	}
+                        // Implement the one method defined by TableCellEditor.
+                        @Override
+                        public Component getTableCellEditorComponent(
+                                JTable table, Object value, boolean isSelected,
+                                int row, int column) {
+                            ts.setString((String) value);
+                            return ts;
+                        }
+                    }
+                    ;
+
+                    // nearly works but a bit messy
+                    // table.getColumnModel().getColumn(0).setCellEditor(new
+                    // TimeCellEditor());
+                    JScrollPane scrollpane = new JScrollPane(table);
+                    frame.setContentPane(scrollpane);
+                    frame.setTitle("Tempo List");
+                    frame.pack();
+                }
+                frame.setVisible(true);
+            }
+        });
+    }
 }

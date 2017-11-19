@@ -21,10 +21,9 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.midi.groovepattern.gui.GroovePatternManagerDialog;
 import java.awt.event.ActionEvent;
@@ -32,21 +31,20 @@ import javax.swing.AbstractAction;
 
 /**
  * Opens the manager dialog for groove patterns.
- * 
+ *
  * @author Jens Gulden
  */
 public class GroovePatternManagerAction extends AbstractAction {
 
-	protected ProjectFrame frame;
+    protected ProjectFrame frame;
 
-	public GroovePatternManagerAction(ProjectFrame frame) {
-		super(getMessage("sequencer.midi.groovepattern.manager"));
-		this.frame = frame;
-	}
+    public GroovePatternManagerAction(ProjectFrame frame) {
+        super(CurrentLocale.getMessage("sequencer.midi.groovepattern.manager"));
+        this.frame = frame;
+    }
 
-        @Override
-	public void actionPerformed(ActionEvent e) {
-		GroovePatternManagerDialog.showDialog(frame);
-	}
-
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        GroovePatternManagerDialog.showDialog(frame);
+    }
 }

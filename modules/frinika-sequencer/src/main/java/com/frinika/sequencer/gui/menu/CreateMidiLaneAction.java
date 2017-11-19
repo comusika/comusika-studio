@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.MidiLane;
 import java.awt.event.ActionEvent;
@@ -30,22 +30,20 @@ import javax.swing.AbstractAction;
 
 public class CreateMidiLaneAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public CreateMidiLaneAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.add_midi_lane"));
-		this.project=project;		
-	}
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		project.getProjectContainer().getEditHistoryContainer().mark(getMessage("sequencer.project.add_midi_lane"));
-		MidiLane lane=project.getProjectContainer().createMidiLane();
-		project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
-		project.getProjectContainer().getLaneSelection().setSelected(lane);			
-		project.getProjectContainer().getLaneSelection().notifyListeners();
-	}
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
+
+    public CreateMidiLaneAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.add_midi_lane"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        project.getProjectContainer().getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.project.add_midi_lane"));
+        MidiLane lane = project.getProjectContainer().createMidiLane();
+        project.getProjectContainer().getEditHistoryContainer().notifyEditHistoryListeners();
+        project.getProjectContainer().getLaneSelection().setSelected(lane);
+        project.getProjectContainer().getLaneSelection().notifyListeners();
+    }
 }

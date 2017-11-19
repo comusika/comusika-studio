@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.gui.TimeFormat;
@@ -34,32 +33,32 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * Abstract superclass for menu-actions that modify currently selected MIDI 
- * data, using one single time-parameter. 
- * 
+ * Abstract superclass for menu-actions that modify currently selected MIDI
+ * data, using one single time-parameter.
+ *
  * @author Jens Gulden
  */
 abstract class AbstractTimeSelectorMidiActionEditor<T extends AbstractMidiAction> extends JPanel {
-	
-	protected T action;
 
-	AbstractTimeSelectorMidiActionEditor(AbstractSequencerProjectContainer project, T action) {
-		this.action = action;
-		this.setLayout(new GridBagLayout());
-		final TimeSelector ts = new TimeSelector(getLabel(), getTicks(), true, project, TimeFormat.BEAT_TICK);
-		ts.addChangeListener(new ChangeListener(){
-                        @Override
-			public void stateChanged(ChangeEvent e) {
-				setTicks(ts.getTicks());
-			}
-		});
-		this.add(ts, new GridBagConstraints());
-	}
-	
-	abstract protected String getLabel();
-	
-	abstract protected long getTicks();
-	
-	abstract protected void setTicks(long ticks);
-	
+    protected T action;
+
+    AbstractTimeSelectorMidiActionEditor(AbstractSequencerProjectContainer project, T action) {
+        this.action = action;
+        this.setLayout(new GridBagLayout());
+        final TimeSelector ts = new TimeSelector(getLabel(), getTicks(), true, project, TimeFormat.BEAT_TICK);
+        ts.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                setTicks(ts.getTicks());
+            }
+        });
+        this.add(ts, new GridBagConstraints());
+    }
+
+    abstract protected String getLabel();
+
+    abstract protected long getTicks();
+
+    abstract protected void setTicks(long ticks);
+
 }

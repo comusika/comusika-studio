@@ -38,14 +38,12 @@ import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-
-
 /**
  * Panel for setting edit/playing section range, and control looping
- * 
+ *
  * @author Peter Johan Salomonsen
  * @author Jens Gulden
- * 
+ *
  */
 /*
 public class LoopPanel extends JPanel {
@@ -167,22 +165,22 @@ public class LoopPanel extends JPanel {
 		});
 		add(loopButton);
 	}
-*/
-	/**
-	 * @return Returns the sectionLength.
-	 */
-	/*public int getSectionLength() {
+ */
+/**
+ * @return Returns the sectionLength.
+ */
+/*public int getSectionLength() {
 		return sectionLength;
 	}
-*/
-	/**
-	 * @return Returns the sectionStart.
-	 */
+ */
+/**
+ * @return Returns the sectionStart.
+ */
 /*	public int getSectionStart() {
 		return sectionStart;
 	}
-*/
-/*	public void previousPage() {
+ */
+ /*	public void previousPage() {
 		sectionStart -= sectionLength;
 		if (sectionStart < 0)
 			sectionStart = 0;
@@ -195,85 +193,83 @@ public class LoopPanel extends JPanel {
 		sectionStartTextField.setText(sectionStart + "");
 		// tracker.refreshTrackView();
 	}*/
-/*
+ /*
 }
-*/
-
+ */
 // Alternative implementation using 2 TimeSelectors, Jens:
-
 public class LoopPanel extends JPanel {
-	private static final long serialVersionUID = 1L;
 
-	AbstractSequencerProjectContainer project;
-	FrinikaSequencer sequencer;
+    private static final long serialVersionUID = 1L;
 
-	TimeSelector sectionStartTimeSelector;
-	TimeSelector sectionEndTimeSelector;
+    AbstractSequencerProjectContainer project;
+    FrinikaSequencer sequencer;
 
-	TimeUtils timeUtil;
-	
-	public LoopPanel(AbstractSequencerProjectContainer project) {
-		this.project = project;
-		this.sequencer = project.getSequencer();
-		timeUtil=new TimeUtils(project);
+    TimeSelector sectionStartTimeSelector;
+    TimeSelector sectionEndTimeSelector;
 
-		initComponents();
-		setText();
+    TimeUtils timeUtil;
 
-		sequencer.addSongPositionListener(new SwingSongPositionListenerWrapper(new SongPositionListener() {
+    public LoopPanel(AbstractSequencerProjectContainer project) {
+        this.project = project;
+        this.sequencer = project.getSequencer();
+        timeUtil = new TimeUtils(project);
 
-                        @Override
-			public void notifyTickPosition(long tick) {
-				setText();
-			}
+        initComponents();
+        setText();
 
-                        @Override
-			public boolean requiresNotificationOnEachTick() {
-				return false;
-			}
-		}));
-	}
+        sequencer.addSongPositionListener(new SwingSongPositionListenerWrapper(new SongPositionListener() {
 
-	void setText() {
-		sectionStartTimeSelector.setTicks(sequencer.getLoopStartPoint());
-		sectionEndTimeSelector.setTicks(sequencer.getLoopEndPoint());
-	}
-	
-	void initComponents() {		
-		sectionStartTimeSelector = new TimeSelector(getMessage("globaltoolbar.loop.start"), 0l, project, TimeFormat.BAR_BEAT_TICK);
-		sectionStartTimeSelector.addChangeListener(new ChangeListener() {
-                        @Override
-			public void stateChanged(ChangeEvent e) {
-				sequencer.setLoopStartPoint(sectionStartTimeSelector.getTicks());
-			}
-		});
-		add(sectionStartTimeSelector);
+            @Override
+            public void notifyTickPosition(long tick) {
+                setText();
+            }
 
-		sectionEndTimeSelector = new TimeSelector(getMessage("globaltoolbar.loop.end"), 0l, project, TimeFormat.BAR_BEAT_TICK);
-		sectionEndTimeSelector.addChangeListener(new ChangeListener() {
-                        @Override
-			public void stateChanged(ChangeEvent e) {
-				sequencer.setLoopEndPoint(sectionEndTimeSelector.getTicks());
-			}
-		});
-		add(sectionEndTimeSelector);
-		
-		final JToggleButton loopButton = new JToggleButton(new ImageIcon(
-				ClassLoader.getSystemResource("icons/loop.png")));
-                
-                loopButton.setSelected(sequencer.getLoopCount() != 0);
-                
-		loopButton.addItemListener(new ItemListener() {
-                        @Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-				} else {
-					sequencer.setLoopCount(0);
-				}
-			}
-		});
-		add(loopButton);
-	}
+            @Override
+            public boolean requiresNotificationOnEachTick() {
+                return false;
+            }
+        }));
+    }
+
+    void setText() {
+        sectionStartTimeSelector.setTicks(sequencer.getLoopStartPoint());
+        sectionEndTimeSelector.setTicks(sequencer.getLoopEndPoint());
+    }
+
+    void initComponents() {
+        sectionStartTimeSelector = new TimeSelector(getMessage("globaltoolbar.loop.start"), 0l, project, TimeFormat.BAR_BEAT_TICK);
+        sectionStartTimeSelector.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                sequencer.setLoopStartPoint(sectionStartTimeSelector.getTicks());
+            }
+        });
+        add(sectionStartTimeSelector);
+
+        sectionEndTimeSelector = new TimeSelector(getMessage("globaltoolbar.loop.end"), 0l, project, TimeFormat.BAR_BEAT_TICK);
+        sectionEndTimeSelector.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                sequencer.setLoopEndPoint(sectionEndTimeSelector.getTicks());
+            }
+        });
+        add(sectionEndTimeSelector);
+
+        final JToggleButton loopButton = new JToggleButton(new ImageIcon(
+                ClassLoader.getSystemResource("icons/loop.png")));
+
+        loopButton.setSelected(sequencer.getLoopCount() != 0);
+
+        loopButton.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    sequencer.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+                } else {
+                    sequencer.setLoopCount(0);
+                }
+            }
+        });
+        add(loopButton);
+    }
 }
-

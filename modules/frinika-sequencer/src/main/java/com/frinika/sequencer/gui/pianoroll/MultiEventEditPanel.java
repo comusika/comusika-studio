@@ -21,9 +21,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.pianoroll;
-
 
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryListener;
@@ -36,62 +34,60 @@ import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import javax.swing.JPanel;
 
 public class MultiEventEditPanel extends JPanel implements FeedbackEventListener,
-		EditHistoryListener, SelectionListener<MultiEvent> {
+        EditHistoryListener, SelectionListener<MultiEvent> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	LabelFieldEditor lab[];
+    LabelFieldEditor lab[];
 
-	MultiEventTableModel model;
+    MultiEventTableModel model;
 
-	AbstractSequencerProjectContainer project;
+    AbstractSequencerProjectContainer project;
 
-	MultiEvent event = null;
+    MultiEvent event = null;
 
-	public MultiEventEditPanel(AbstractSequencerProjectContainer project) {
-		this.project = project;
-		setOpaque(false);
-		int ticksPerBeat = project.getSequencer().getSequence().getResolution();
+    public MultiEventEditPanel(AbstractSequencerProjectContainer project) {
+        this.project = project;
+        setOpaque(false);
+        int ticksPerBeat = project.getSequencer().getSequence().getResolution();
 
-		// setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		model = new MultiEventTableModel(project,null, 1, ticksPerBeat);
-		// table = new JTable(tableModel);
+        // setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        model = new MultiEventTableModel(project, null, 1, ticksPerBeat);
+        // table = new JTable(tableModel);
 
-		lab = new LabelFieldEditor[model.getColumnCount()];
+        lab = new LabelFieldEditor[model.getColumnCount()];
 
-		for (int i = 0; i < model.getColumnCount(); i++) {
-			add(lab[i] = new LabelFieldEditor(model, i, project));
-			lab[i].setOpaque(false);
-		}
-		// setBackground(Color.BLUE);
-	}
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            add(lab[i] = new LabelFieldEditor(model, i, project));
+            lab[i].setOpaque(false);
+        }
+        // setBackground(Color.BLUE);
+    }
 
-        @Override
-	public void notifyFeedbackItemChanged(Item it) {
-		if (!(it instanceof MultiEvent)) return;
-		event = (MultiEvent)it;
-		model.setMultiEvent(event);
-		for (int i = 0; i < model.getColumnCount(); i++) {
-			lab[i].update();
-		}
-	}
+    @Override
+    public void notifyFeedbackItemChanged(Item it) {
+        if (!(it instanceof MultiEvent)) {
+            return;
+        }
+        event = (MultiEvent) it;
+        model.setMultiEvent(event);
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            lab[i].update();
+        }
+    }
 
-        @Override
-	public void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries) {
-		notifyFeedbackItemChanged(event);
-	}
+    @Override
+    public void fireSequenceDataChanged(EditHistoryAction[] edithistoryEntries) {
+        notifyFeedbackItemChanged(event);
+    }
 
-
-
-        @Override
-	public void selectionChanged(SelectionContainer<? extends MultiEvent> src) {
-		// TODO Auto-generated method stub
-		MultiEvent ev = project.getMultiEventSelection().getFocus();
-		if (event == ev)
-			return;
-		 notifyFeedbackItemChanged(ev);
-	}
+    @Override
+    public void selectionChanged(SelectionContainer<? extends MultiEvent> src) {
+        // TODO Auto-generated method stub
+        MultiEvent ev = project.getMultiEventSelection().getFocus();
+        if (event == ev) {
+            return;
+        }
+        notifyFeedbackItemChanged(ev);
+    }
 }

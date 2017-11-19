@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.model.NoteEvent;
@@ -31,47 +30,50 @@ import javax.swing.JComponent;
 
 /**
  * Menu-action for setting the velocity of selected MIDI notes.
- * 
+ *
  * @author Jens Gulden
  */
 public class MidiVelocityAction extends AbstractMidiAction {
-	
-	int startVelocity = 100;
-	int endVelocity = 100;
-	private long startTick;
-	private long endTick;
 
-	public MidiVelocityAction(AbstractSequencerProjectContainer project) {
-		super(project, "sequencer.midi.velocity");
-	}
+    int startVelocity = 100;
+    int endVelocity = 100;
+    private long startTick;
+    private long endTick;
 
-        @Override
-	public void modifyNoteEvents(Collection<NoteEvent> events) {
-		startTick = Long.MAX_VALUE;
-		endTick = Long.MIN_VALUE;
-		for (NoteEvent note : events) {
-			if (note.getStartTick() < startTick) {
-				startTick = note.getStartTick();
-			}
-			if (note.getStartTick() > endTick) {
-				endTick = note.getStartTick();
-			}
-		}
-		super.modifyNoteEvents(events);
-	}
-			
-	
-        @Override
-	protected JComponent createGUI() {
-		return new MidiVelocityActionEditor(this);
-	}
-	
-        @Override
-	public void modifyNoteEvent(NoteEvent note) {
-		int diff = endVelocity - startVelocity;
-		long dist = endTick - startTick;
-		int v = startVelocity + (int)Math.round(diff * ((double)(note.getStartTick() - startTick) / dist));
-		if (v < 1) v = 1; else if (v > 127) v = 127;
-		note.setVelocity(v);
-	}
+    public MidiVelocityAction(AbstractSequencerProjectContainer project) {
+        super(project, "sequencer.midi.velocity");
+    }
+
+    @Override
+    public void modifyNoteEvents(Collection<NoteEvent> events) {
+        startTick = Long.MAX_VALUE;
+        endTick = Long.MIN_VALUE;
+        for (NoteEvent note : events) {
+            if (note.getStartTick() < startTick) {
+                startTick = note.getStartTick();
+            }
+            if (note.getStartTick() > endTick) {
+                endTick = note.getStartTick();
+            }
+        }
+        super.modifyNoteEvents(events);
+    }
+
+    @Override
+    protected JComponent createGUI() {
+        return new MidiVelocityActionEditor(this);
+    }
+
+    @Override
+    public void modifyNoteEvent(NoteEvent note) {
+        int diff = endVelocity - startVelocity;
+        long dist = endTick - startTick;
+        int v = startVelocity + (int) Math.round(diff * ((double) (note.getStartTick() - startTick) / dist));
+        if (v < 1) {
+            v = 1;
+        } else if (v > 127) {
+            v = 127;
+        }
+        note.setVelocity(v);
+    }
 }

@@ -13,7 +13,6 @@ import com.frinika.sequencer.model.SoloManager;
 import com.frinika.sequencer.model.SynthLane;
 import com.frinika.sequencer.model.TextLane;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;

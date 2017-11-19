@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.partview;
 
 import com.frinika.sequencer.model.Lane;
@@ -35,59 +34,53 @@ import javax.swing.JPanel;
  */
 public class LaneView extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	GridBagConstraints gc;
+    GridBagConstraints gc;
 
-	Lane lane = null;
+    Lane lane = null;
 
-	public LaneView(Lane lane) {
-		
-		setLayout(new GridBagLayout());
+    public LaneView(Lane lane) {
 
-		this.lane = lane;
-	
-	}
+        setLayout(new GridBagLayout());
 
-	/**
-	 * gets called to reconstruct the GUI.
-	 * 
-	 */
-	void init() {
+        this.lane = lane;
+    }
 
-		removeAll();
+    /**
+     * gets called to reconstruct the GUI.
+     *
+     */
+    void init() {
 
-		gc = new GridBagConstraints();
-		gc.gridx = 0;
-		gc.gridy = GridBagConstraints.RELATIVE;
-		gc.ipady = 0;
-		gc.anchor = GridBagConstraints.NORTHWEST;
-		// gc.fill = GridBagConstraints.HORIZONTAL;
-		gc.weighty = 0.0;
-		gc.weightx = 1.0;
+        removeAll();
 
-		if (lane != null)  {
-			makeButtons();
-		}
-		validate();
-		repaint();
-	}
+        gc = new GridBagConstraints();
+        gc.gridx = 0;
+        gc.gridy = GridBagConstraints.RELATIVE;
+        gc.ipady = 0;
+        gc.anchor = GridBagConstraints.NORTHWEST;
+        // gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.weighty = 0.0;
+        gc.weightx = 1.0;
 
-	/**
-	 * defualt lane has no buttons. OVERRIDE please
-	 *
-	 */
-	protected void makeButtons() {
-		
-	}
-	
-        @Override
-	public Dimension getMinimumSize() {
-		return new Dimension(250, 0);
-	}
+        if (lane != null) {
+            makeButtons();
+        }
+        validate();
+        repaint();
+    }
 
+    /**
+     * default lane has no buttons. OVERRIDE please
+     *
+     */
+    protected void makeButtons() {
 
+    }
+
+    @Override
+    public Dimension getMinimumSize() {
+        return new Dimension(250, 0);
+    }
 }

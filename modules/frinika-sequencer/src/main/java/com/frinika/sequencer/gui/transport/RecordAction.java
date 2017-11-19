@@ -1,6 +1,6 @@
 package com.frinika.sequencer.gui.transport;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.gui.RecordingDialog;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
@@ -12,41 +12,36 @@ import javax.swing.JOptionPane;
 
 public class RecordAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private FrinikaSequencer sequencer;
-	private AbstractSequencerProjectContainer project;
-	
-	public RecordAction(AbstractSequencerProjectContainer project) {
-		super(getMessage("sequencer.project.record"));
-		this.sequencer=project.getSequencer();	
-		this.project=project;
-	}
-	
-	
-        @Override
+    private static final long serialVersionUID = 1L;
+    private FrinikaSequencer sequencer;
+    private AbstractSequencerProjectContainer project;
+
+    public RecordAction(AbstractSequencerProjectContainer project) {
+        super(CurrentLocale.getMessage("sequencer.project.record"));
+        this.sequencer = project.getSequencer();
+        this.project = project;
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        
-        final JOptionPane recordingOptionPane = new JOptionPane(getMessage("sequencer.recording.takes"));
-        
+
+        final JOptionPane recordingOptionPane = new JOptionPane(CurrentLocale.getMessage("sequencer.recording.takes"));
+
         //Frame to pop-up while recording to display each take
-        final RecordingDialog recordingDialog = new RecordingDialog(recordingOptionPane,sequencer);
+        final RecordingDialog recordingDialog = new RecordingDialog(recordingOptionPane, sequencer);
 
         recordingOptionPane.addPropertyChangeListener(new PropertyChangeListener() {
 
-                @Override
+            @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 String prop = evt.getPropertyName();
 
-                if (recordingDialog.isVisible() 
-                 && (evt.getSource() == recordingOptionPane)
-                 && (prop.equals(JOptionPane.VALUE_PROPERTY))) {                    
+                if (recordingDialog.isVisible()
+                        && (evt.getSource() == recordingOptionPane)
+                        && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
                     int[] deployableTakes = recordingDialog.getDeployableTakes();
-                    if(deployableTakes.length>0)
-                    {
-                        project.getEditHistoryContainer().mark(getMessage("recording"));
+                    if (deployableTakes.length > 0) {
+                        project.getEditHistoryContainer().mark(CurrentLocale.getMessage("recording"));
                         sequencer.deployTake(deployableTakes);
                         project.getEditHistoryContainer().notifyEditHistoryListeners();
                     }
@@ -54,9 +49,7 @@ public class RecordAction extends AbstractAction {
                 }
             }
         });
-        
-        
+
         sequencer.startRecording();
     }
-	
 }

@@ -21,9 +21,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.pianoroll;
-
 
 import com.frinika.sequencer.gui.ItemPanel;
 import com.frinika.sequencer.gui.selection.SelectionContainer;
@@ -32,23 +30,20 @@ import com.frinika.sequencer.model.Part;
 
 /**
  * Simple implementation that reconstructs all items.
- * 
+ *
  * @author pjl
- * 
  */
-
 public class ItemPanelPartListener implements SelectionListener<Part> {
 
-	ItemPanel itemPanel;
+    ItemPanel itemPanel;
 
-	public ItemPanelPartListener(ItemPanel pianoRoll) {
-		this.itemPanel = pianoRoll;
-	}
+    public ItemPanelPartListener(ItemPanel pianoRoll) {
+        this.itemPanel = pianoRoll;
+    }
 
-
-        @Override
-	public void selectionChanged(SelectionContainer<? extends Part> src) {
-		// TODO Auto-generated method stub
-		itemPanel.repaintItems();	
-	}
+    @Override
+    public void selectionChanged(SelectionContainer<? extends Part> src) {
+        // TODO Auto-generated method stub
+        itemPanel.repaintItems();
+    }
 }

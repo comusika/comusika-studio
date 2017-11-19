@@ -32,143 +32,138 @@ import javax.swing.Icon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+
 /**
  * Standard menu items for use in MultiEvent editors such as PianoRoll or
  * EventList
- * 
+ *
  * @author Peter Johan Salomonsen
  */
 public class CutPasteMenu extends JMenu {
-	private static final long serialVersionUID = 1L;
 
-	JMenuItem undoMenuItem = new JMenuItem();
+    private static final long serialVersionUID = 1L;
 
-	JMenuItem redoMenuItem = new JMenuItem();
+    JMenuItem undoMenuItem = new JMenuItem();
 
-	JMenuItem cutMenuItem;
+    JMenuItem redoMenuItem = new JMenuItem();
 
-	JMenuItem copyMenuItem;
+    JMenuItem cutMenuItem;
 
-	JMenuItem pasteMenuItem;
+    JMenuItem copyMenuItem;
 
-	JMenuItem deleteMenuItem;
-	
-	public static Icon getIconResource(String name)
-	{
-		return  new javax.swing.ImageIcon(ProjectFrame.class.getResource("/icons/" + name));
-	}	
+    JMenuItem pasteMenuItem;
 
-	public CutPasteMenu(final AbstractSequencerProjectContainer project) {
+    JMenuItem deleteMenuItem;
 
-		setText(getMessage("project.menu.edit"));
+    public static Icon getIconResource(String name) {
+        return new javax.swing.ImageIcon(ProjectFrame.class.getResource("/icons/" + name));
+    }
 
-		setMnemonic(KeyEvent.VK_E);
+    public CutPasteMenu(final AbstractSequencerProjectContainer project) {
 
-		JMenuItem item;
-		add(item=project.getEditHistoryContainer().getUndoMenuItem());
-		item.setIcon(getIconResource("undo.gif"));
-		add(item=project.getEditHistoryContainer().getRedoMenuItem());
-		item.setIcon(getIconResource("redo.gif"));
-		addSeparator();
+        setText(getMessage("project.menu.edit"));
 
-		cutMenuItem = new JMenuItem(new CutAction(project));
-		cutMenuItem.setIcon(getIconResource("cut.gif"));
-		cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		add(cutMenuItem);
+        setMnemonic(KeyEvent.VK_E);
 
-		copyMenuItem = new JMenuItem(new CopyAction(project));
-		copyMenuItem.setIcon(getIconResource("copy.gif"));
-		copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        JMenuItem item;
+        add(item = project.getEditHistoryContainer().getUndoMenuItem());
+        item.setIcon(getIconResource("undo.gif"));
+        add(item = project.getEditHistoryContainer().getRedoMenuItem());
+        item.setIcon(getIconResource("redo.gif"));
+        addSeparator();
 
-		add(copyMenuItem);
-		pasteMenuItem = new JMenuItem(new PasteAction(project));
-		pasteMenuItem.setIcon(getIconResource("paste.gif"));
-		pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        cutMenuItem = new JMenuItem(new CutAction(project));
+        cutMenuItem.setIcon(getIconResource("cut.gif"));
+        cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        add(cutMenuItem);
 
-		add(pasteMenuItem);
-		
-		addSeparator();		
-		
-		deleteMenuItem = new JMenuItem(new DeleteAction(project));
-		deleteMenuItem.setIcon(getIconResource("delete.gif"));
-		deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_DELETE, 0));
-		add(deleteMenuItem);
-		
+        copyMenuItem = new JMenuItem(new CopyAction(project));
+        copyMenuItem.setIcon(getIconResource("copy.gif"));
+        copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
-	}
+        add(copyMenuItem);
+        pasteMenuItem = new JMenuItem(new PasteAction(project));
+        pasteMenuItem.setIcon(getIconResource("paste.gif"));
+        pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
-	/**
-	 * 
-	 * @return Returns deleteMenuItem
-	 */
-	public JMenuItem getDeleteMenuItem() {
-		return deleteMenuItem;
-	}
+        add(pasteMenuItem);
 
-	/**
-	 * @return Returns the copyMenuItem.
-	 */
-	public JMenuItem getCopyMenuItem() {
-		return copyMenuItem;
-	}
+        addSeparator();
 
-	/**
-	 * @return Returns the cutMenuItem.
-	 */
-	public JMenuItem getCutMenuItem() {
-		return cutMenuItem;
-	}
+        deleteMenuItem = new JMenuItem(new DeleteAction(project));
+        deleteMenuItem.setIcon(getIconResource("delete.gif"));
+        deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_DELETE, 0));
+        add(deleteMenuItem);
 
-	/**
-	 * @return Returns the pasteMenuItem.
-	 */
-	public JMenuItem getPasteMenuItem() {
-		return pasteMenuItem;
-	}
+    }
 
-	/**
-	 * 
-	 * Keyboard events not to be handled by the table component - since they are
-	 * menu accelerators
-	 * 
-	 * @param ks
-	 * @return
-	 */
-	public static boolean isAccelerator(KeyStroke ks) {
-		return (ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				Toolkit .getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_UP,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-						Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
-				||
+    /**
+     *
+     * @return Returns deleteMenuItem
+     */
+    public JMenuItem getDeleteMenuItem() {
+        return deleteMenuItem;
+    }
 
-				ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0))
-				|| ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0)) || ks
-				.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0))
+    /**
+     * @return Returns the copyMenuItem.
+     */
+    public JMenuItem getCopyMenuItem() {
+        return copyMenuItem;
+    }
 
-		);
-	}
+    /**
+     * @return Returns the cutMenuItem.
+     */
+    public JMenuItem getCutMenuItem() {
+        return cutMenuItem;
+    }
+
+    /**
+     * @return Returns the pasteMenuItem.
+     */
+    public JMenuItem getPasteMenuItem() {
+        return pasteMenuItem;
+    }
+
+    /**
+     * Keyboard events not to be handled by the table component - since they are
+     * menu accelerators
+     *
+     * @param ks
+     * @return
+     */
+    public static boolean isAccelerator(KeyStroke ks) {
+        return (ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_UP,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_V,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
+                        Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0))
+                || ks.equals(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0)) || ks
+                .equals(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0)));
+    }
 }

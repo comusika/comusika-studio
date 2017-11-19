@@ -22,7 +22,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import java.awt.event.ActionEvent;
@@ -30,23 +30,18 @@ import javax.swing.AbstractAction;
 
 public class WarpToRightAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private FrinikaSequencer sequencer;
-	
-	public WarpToRightAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.warptoright"));
-		this.sequencer=project.getProjectContainer().getSequencer();	
-	//	putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(
-	//			KeyEvent.VK_SPACE,0));
-	}
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		sequencer.setTickPosition(sequencer.getLoopEndPoint());
-	}
-	
+    private static final long serialVersionUID = 1L;
+    private FrinikaSequencer sequencer;
 
-	
+    public WarpToRightAction(ProjectFrame project) {
+        super(CurrentLocale.getMessage("sequencer.project.warptoright"));
+        this.sequencer = project.getProjectContainer().getSequencer();
+        //	putValue(ACCELERATOR_KEY,KeyStroke.getKeyStroke(
+        //			KeyEvent.VK_SPACE,0));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        sequencer.setTickPosition(sequencer.getLoopEndPoint());
+    }
 }

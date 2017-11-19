@@ -21,13 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-
-/*
- * Mouse handler for the default state.
- * 
- */
-
 package com.frinika.sequencer.gui;
 
 import java.awt.Cursor;
@@ -38,115 +31,92 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- *  Default implementation for mouse tools for operations on Items in an ItemPanel. 
- * 
- * @author pjl
+ * Default implementation for mouse tools for operations on Items in an
+ * ItemPanel.
  *
+ * @author pjl
  */
-public class ToolAdapter implements MouseMotionListener, MouseListener ,KeyListener {
+public class ToolAdapter implements MouseMotionListener, MouseListener, KeyListener {
 
-	protected ItemPanel client;
-	
-	Cursor cursor;
-	boolean overCursor=false;
-	
-	/**
-	 * Should not be able to create unless subclassed
-	 * @param pianoRoll
-	 */
-	protected ToolAdapter(Cursor cursor) {
-		this.client = null;
-		this.cursor = cursor;
-	}
+    protected ItemPanel client;
 
-	
-        @Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    Cursor cursor;
+    boolean overCursor = false;
 
-        @Override
-	public void mouseMoved(MouseEvent e) {
-			
-	}
+    /**
+     * Should not be able to create unless subclassed
+     *
+     * @param pianoRoll
+     */
+    protected ToolAdapter(Cursor cursor) {
+        this.client = null;
+        this.cursor = cursor;
+    }
 
-        @Override
-	public void mouseClicked(MouseEvent e) {
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
 
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseMoved(MouseEvent e) {
+    }
 
-        @Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
 
-        @Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-	
-		
-	}
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
 
-        @Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
 
-	public void setDragPoint(int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
 
-	public void releaseDrag(int x, int y) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setDragPoint(int x, int y) {
+    }
 
-	/**
-	 *@deprecated
-	 */
-        @Override
-	public void keyTyped(KeyEvent e) {
-		System.out.println("   HELLO  1 ");
-		
-		if(e.getKeyCode()==KeyEvent.VK_DELETE) {
-		// TODO	client.deleteSelected();
-		}
-		// TODO Auto-generated method stub
-		
-	}
+    public void releaseDrag(int x, int y) {
+    }
 
-        @Override
-	public void keyPressed(KeyEvent e) {
-		
-	System.out.println("   HELLO   2");
-		// TODO Auto-generated method stub
-		
-	}
+    /**
+     * @deprecated
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+        System.out.println("   HELLO  1 ");
 
-        @Override
-	public void keyReleased(KeyEvent e) {
-		System.out.println("   HELLO   3");
-		// TODO Auto-generated method stub
-		
-	}
+        if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+            // TODO	client.deleteSelected();
+        }
+    }
 
-	public Cursor getCursor() {
-		// TODO Auto-generated method stub
-		return cursor;
-	}
-	
-/*	void setClient(ItemPanel client) {
-		this.client=client;
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("   HELLO   2");
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.println("   HELLO   3");
+        // TODO Auto-generated method stub
+    }
+
+    public Cursor getCursor() {
+        // TODO Auto-generated method stub
+        return cursor;
+    }
+
+    /*	void setClient(ItemPanel client) {
+		this.client = client;
 	}*/
 }

@@ -40,156 +40,151 @@ import java.util.Collection;
 /**
  * The MultiEventClip board uses the global clipboard with a MultiEvent
  * DataFlavor type.
- * 
+ *
  * @author Peter Johan Salomonsen
  */
 public class MultiEventClipboard {
 
-	double quantization = 1;
+    double quantization = 1;
 
-	private static final MultiEventClipboard defaultMultiEventClipboard = new MultiEventClipboard();
+    private static final MultiEventClipboard defaultMultiEventClipboard = new MultiEventClipboard();
 
-	/**
-	 * @return Returns the defaultMultiEventClipboard.
-	 */
-	public static MultiEventClipboard getDefaultMultiEventClipboard() {
-		return defaultMultiEventClipboard;
-	}
+    /**
+     * @return Returns the defaultMultiEventClipboard.
+     */
+    public static MultiEventClipboard getDefaultMultiEventClipboard() {
+        return defaultMultiEventClipboard;
+    }
 
-	/**
-	 * 
-	 * @param multiEvents
-	 * @param referenceTick
-	 */
-	public void copy(Collection<MultiEvent> multiEvents, long referenceTick) {
-		final MultiEventClipboardData multiEventClipBoardData = new MultiEventClipboardData(
-				referenceTick, multiEvents);
+    /**
+     *
+     * @param multiEvents
+     * @param referenceTick
+     */
+    public void copy(Collection<MultiEvent> multiEvents, long referenceTick) {
+        final MultiEventClipboardData multiEventClipBoardData = new MultiEventClipboardData(
+                referenceTick, multiEvents);
 
-		System.out.println(" CLIPBOARD COPY ");
-			getClipboard().setContents(new Transferable() {
+        System.out.println(" CLIPBOARD COPY ");
+        getClipboard().setContents(new Transferable() {
 
-                        @Override
-			public DataFlavor[] getTransferDataFlavors() {
-				return new DataFlavor[] { new MultiEventDataFlavor() };
-			}
+            @Override
+            public DataFlavor[] getTransferDataFlavors() {
+                return new DataFlavor[]{new MultiEventDataFlavor()};
+            }
 
-                        @Override
-			public boolean isDataFlavorSupported(DataFlavor flavor) {
-				return true;
-			}
+            @Override
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+                return true;
+            }
 
-                        @Override
-			public Object getTransferData(DataFlavor flavor)
-					throws UnsupportedFlavorException, IOException {
-				// TODO Auto-generated method stub
-				return multiEventClipBoardData;
-			}
-		}, new ClipboardOwner() {
+            @Override
+            public Object getTransferData(DataFlavor flavor)
+                    throws UnsupportedFlavorException, IOException {
+                // TODO Auto-generated method stub
+                return multiEventClipBoardData;
+            }
+        }, new ClipboardOwner() {
 
-                        @Override
-			public void lostOwnership(Clipboard clipboard, Transferable contents) {
+            @Override
+            public void lostOwnership(Clipboard clipboard, Transferable contents) {
 
-			}
-		});
-	}
+            }
+        });
+    }
 
-	/**
-	 * 
-	 * @param destinationGroup
-	 *            the destination MultiEvent group
-	 * @param destinationReferenceTick
-	 *            the destination reference tick
-	 */
-	private void pasteOrig(MidiPart destinationGroup,
-			long destinationReferenceTick) {
-		System.out.println(" CLIPBOARD PASTE ORIG ");
-		
-		try {
-			MultiEventClipboardData data = (MultiEventClipboardData) getClipboard()
-					.getContents(null).getTransferData(
-							new MultiEventDataFlavor());
-			destinationGroup.getEditHistoryContainer().mark(
-					getMessage("sequencer.menu.edit.lcase.paste"));
-            
+    /**
+     *
+     * @param destinationGroup the destination MultiEvent group
+     * @param destinationReferenceTick the destination reference tick
+     */
+    private void pasteOrig(MidiPart destinationGroup,
+            long destinationReferenceTick) {
+        System.out.println(" CLIPBOARD PASTE ORIG ");
+
+        try {
+            MultiEventClipboardData data = (MultiEventClipboardData) getClipboard()
+                    .getContents(null).getTransferData(
+                    new MultiEventDataFlavor());
+            destinationGroup.getEditHistoryContainer().mark(
+                    getMessage("sequencer.menu.edit.lcase.paste"));
+
             destinationGroup.getLane().getProject().getMultiEventSelection().clearSelection();
-            
+
             for (MultiEvent event : data.getClonedMultiEvents()) {
-				event.setStartTick(event.getStartTick()
-						+ destinationReferenceTick);
-				destinationGroup.add(event);
-				destinationGroup.getLane().getProject().getMultiEventSelection().addSelected(event);
-				destinationGroup.getLane().getProject().getMultiEventSelection().notifyListeners();
-			}
-			destinationGroup.getEditHistoryContainer()
-					.notifyEditHistoryListeners();
+                event.setStartTick(event.getStartTick()
+                        + destinationReferenceTick);
+                destinationGroup.add(event);
+                destinationGroup.getLane().getProject().getMultiEventSelection().addSelected(event);
+                destinationGroup.getLane().getProject().getMultiEventSelection().notifyListeners();
+            }
+            destinationGroup.getEditHistoryContainer()
+                    .notifyEditHistoryListeners();
 
-		} catch (UnsupportedFlavorException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+        } catch (UnsupportedFlavorException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param destinationTrack the destination track
+     * @param destinationReferenceTick the destination reference tick
+     */
+    public void paste(MidiPart destinationGroup, EditHistoryContainer history,
+            long destinationReferenceTick, FrinikaSequencer sequencer) {
+
+        if (sequencer == null || destinationGroup != null) {
+            pasteOrig(destinationGroup, destinationReferenceTick);
+            return;
+        }
+
+        try {
+            MultiEventClipboardData data = (MultiEventClipboardData) getClipboard()
+                    .getContents(null).getTransferData(
+                    new MultiEventDataFlavor());
+
+            long startTick = Long.MAX_VALUE;
+
+            for (MultiEvent event : data.getClonedMultiEvents()) {
+                long tickOn = event.getStartTick();
+                if (tickOn < startTick) {
+                    startTick = tickOn;
+
                 }
-	}
+            }
 
-	/**
-	 * 
-	 * @param destinationTrack
-	 *            the destination track
-	 * @param destinationReferenceTick
-	 *            the destination reference tick
-	 */
-	public void paste(MidiPart destinationGroup,EditHistoryContainer history,
-			long destinationReferenceTick, FrinikaSequencer sequencer) {
-	
-		if (sequencer == null || destinationGroup != null ) {
-			pasteOrig(destinationGroup, destinationReferenceTick);
-			return;
-		}
-	
+            long deltaTick = sequencer.getTickPosition() - startTick;
 
-		try {
-			MultiEventClipboardData data = (MultiEventClipboardData) getClipboard()
-					.getContents(null).getTransferData(
-							new MultiEventDataFlavor());
-	
-			long startTick = Long.MAX_VALUE;
+            destinationReferenceTick = (long) (Math.floor(deltaTick / quantization)
+                    * quantization);
 
-			for (MultiEvent event : data.getClonedMultiEvents()) {
-				long tickOn = event.getStartTick();
-				if (tickOn < startTick) {
-					startTick = tickOn;
+            history.mark(
+                    getMessage("sequencer.menu.edit.lcase.paste"));
 
-				}
-			}
-
-			long deltaTick = sequencer.getTickPosition() - startTick;
-
-			destinationReferenceTick = (long)( Math.floor(deltaTick / quantization)
-					* quantization);
-			
-			history.mark(
-							getMessage("sequencer.menu.edit.lcase.paste"));
-			
             // TODO: Wouldn't have to use iterator if the multiEvents was a list
             data.getClonedMultiEvents().iterator().next().getPart().getLane().getProject().getMultiEventSelection().clearSelection();
 
             for (MultiEvent event : data.getClonedMultiEvents()) {
-				event.setStartTick(event.getStartTick()
-						+ destinationReferenceTick);
-				event.getPart().add(event);
+                event.setStartTick(event.getStartTick()
+                        + destinationReferenceTick);
+                event.getPart().add(event);
                 event.getPart().getLane().getProject().getMultiEventSelection().addSelected(event);
-                assert(false); // FIXME ?
-				//destinationGroup.add(event);
-			}
-			
-			history.notifyEditHistoryListeners();
-		    // project.getMultiEventSelection().notifyListeners();
-			assert(false); // FIXME if no0t deprecated
-		} catch (UnsupportedFlavorException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-                }
-	}
+                assert (false); // FIXME ?
+                //destinationGroup.add(event);
+            }
 
-	public void setQuantization(double quantization) {
-		this.quantization = quantization;
-	}
+            history.notifyEditHistoryListeners();
+            // project.getMultiEventSelection().notifyListeners();
+            assert (false); // FIXME if no0t deprecated
+        } catch (UnsupportedFlavorException | IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void setQuantization(double quantization) {
+        this.quantization = quantization;
+    }
 }

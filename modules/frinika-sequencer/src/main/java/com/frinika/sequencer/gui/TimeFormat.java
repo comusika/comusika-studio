@@ -21,27 +21,25 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 /**
  * Time-formats for TickSpinner.
- * 
+ *
  * @see TickSpinner
  * @author Jens Gulden
  */
 public enum TimeFormat {
-	
-	BAR_BEAT_TICK ( 6 ),
-	BAR_BEAT ( 3 ),
-	BEAT_TICK ( 4 ),
-	BEAT ( 4 ),
-	NOTE_LENGTH ( 6 );
-	
-	public final int textFieldSize;
-	
-	private TimeFormat(int textFieldSize) {
-		this.textFieldSize = textFieldSize;
-	}
-	
+
+    BAR_BEAT_TICK(6),
+    BAR_BEAT(3),
+    BEAT_TICK(4),
+    BEAT(4),
+    NOTE_LENGTH(6);
+
+    public final int textFieldSize;
+
+    private TimeFormat(int textFieldSize) {
+        this.textFieldSize = textFieldSize;
+    }
 }

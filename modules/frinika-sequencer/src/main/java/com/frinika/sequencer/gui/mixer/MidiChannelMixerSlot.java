@@ -45,32 +45,37 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * A generic mixer slot for midichannels both for softsynths and external midi devices
+ * A generic mixer slot for midichannels both for softsynths and external midi
+ * devices
+ *
  * @author Peter Johan Salomonsen
  */
 public class MidiChannelMixerSlot extends JPanel {
+
     private static final long serialVersionUID = 1L;
 
     JSlider volSlider;
     JSlider panSlider;
     JTextField instrumentName = new JTextField("");
-            
-    public MidiChannelMixerSlot(final MidiDevice device, final MidiChannel midiChannel)
-    {        
-        setBorder(new LineBorder(Color.LIGHT_GRAY,1));
+
+    public MidiChannelMixerSlot(final MidiDevice device, final MidiChannel midiChannel) {
+        init(device, midiChannel);
+    }
+
+    private void init(final MidiDevice device, final MidiChannel midiChannel) {
+        setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
         setLayout(new GridBagLayout());
-        
+
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = GridBagConstraints.REMAINDER;
         gc.anchor = GridBagConstraints.CENTER;
         gc.fill = GridBagConstraints.HORIZONTAL;
-        
-        add(instrumentName,gc);
-        
-        if(midiChannel instanceof Synth)
-        {
-            instrumentName.setText(((Synth)midiChannel).getInstrumentName());
-            
+
+        add(instrumentName, gc);
+
+        if (midiChannel instanceof Synth) {
+            instrumentName.setText(((Synth) midiChannel).getInstrumentName());
+
             JButton showSynthGUIButton = new JButton("Edit");
             showSynthGUIButton.addMouseListener(new MouseAdapter() {
                 /* (non-Javadoc)
@@ -78,63 +83,65 @@ public class MidiChannelMixerSlot extends JPanel {
                  */
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    ((Synth)midiChannel).showGUI();
+                    ((Synth) midiChannel).showGUI();
                 }
-            } );
-            add(showSynthGUIButton,gc);
+            });
+            add(showSynthGUIButton, gc);
         }
-        
+
         JCheckBox muteCB = new JCheckBox("Mute");
         muteCB.addItemListener(new ItemListener() {
 
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange()==ItemEvent.SELECTED)
+                if (e.getStateChange() == ItemEvent.SELECTED) {
                     midiChannel.setMute(true);
-                else
+                } else {
                     midiChannel.setMute(false);
-            }});
-        
+                }
+            }
+        });
+
         gc.fill = GridBagConstraints.NONE;
-        add(muteCB,gc);
-        
-        volSlider = new JSlider(JSlider.VERTICAL,0,127,100);
+        add(muteCB, gc);
+
+        volSlider = new JSlider(JSlider.VERTICAL, 0, 127, 100);
         volSlider.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
-                midiChannel.controlChange(7,volSlider.getValue());
-            }});
+                midiChannel.controlChange(7, volSlider.getValue());
+            }
+        });
 
         gc.fill = GridBagConstraints.NONE;
-        add(new JLabel("Volume"),gc);
+        add(new JLabel("Volume"), gc);
         gc.weighty = 1.0;
         gc.fill = GridBagConstraints.VERTICAL;
 
-        add(volSlider,gc);
-        
-        panSlider = new JSlider(JSlider.HORIZONTAL,0,127,64);
+        add(volSlider, gc);
+
+        panSlider = new JSlider(JSlider.HORIZONTAL, 0, 127, 64);
         panSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                midiChannel.controlChange(10,panSlider.getValue());
-            }});
+                midiChannel.controlChange(10, panSlider.getValue());
+            }
+        });
 
         gc.weighty = 0.0;
         gc.fill = GridBagConstraints.NONE;
-        panSlider.setPreferredSize(new Dimension(panSlider.getPreferredSize().width/2,
-                panSlider.getPreferredSize().height) );
-        add(new JLabel("Pan"),gc);
-        add(panSlider,gc);
+        panSlider.setPreferredSize(new Dimension(panSlider.getPreferredSize().width / 2,
+                panSlider.getPreferredSize().height));
+        add(new JLabel("Pan"), gc);
+        add(panSlider, gc);
     }
-        
-    public void setVolume(int volume)
-    {
+
+    public void setVolume(int volume) {
         volSlider.setValue(volume);
     }
-    
-    public void setPan(int pan)
-    {
+
+    public void setPan(int pan) {
         panSlider.setValue(pan);
     }
 }

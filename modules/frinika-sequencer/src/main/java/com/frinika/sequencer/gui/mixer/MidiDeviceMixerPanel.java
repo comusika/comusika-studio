@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.mixer;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.project.SynthesizerDescriptorIntf;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.synth.importers.soundfont.SoundFontFileFilter;
@@ -51,99 +51,100 @@ import javax.swing.JPanel;
  * @author Peter Johan Salomonsen
  */
 public class MidiDeviceMixerPanel extends JPanel {
+
     private static final long serialVersionUID = 1L;
-    
+
     public MidiChannelMixerSlot[] mixerSlots = new MidiChannelMixerSlot[16];
-    
-    public MidiDeviceMixerPanel(final MidiDevicesPanel panel, final SynthWrapper synthWrapper)
-    {
+
+    public MidiDeviceMixerPanel(final MidiDevicesPanel panel, final SynthWrapper synthWrapper) {
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
-        
-        if(synthWrapper.getRealDevice() instanceof Synthesizer)
-        {
-        	JButton loadSoundbankButton = new JButton(getMessage("mididevices.loadsoundbank"));
-        	loadSoundbankButton.addMouseListener(new MouseAdapter() {
+
+        if (synthWrapper.getRealDevice() instanceof Synthesizer) {
+            JButton loadSoundbankButton = new JButton(CurrentLocale.getMessage("mididevices.loadsoundbank"));
+            loadSoundbankButton.addMouseListener(new MouseAdapter() {
                 /* (non-Javadoc)
                  * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
                  */
                 @Override
                 public void mouseClicked(MouseEvent e) {
-					try
-					{
-						JFileChooser chooser = new JFileChooser();
-						chooser.setDialogTitle("Open soundfont");
-						chooser.setFileFilter(new SoundFontFileFilter());
-						if(chooser.showOpenDialog(null)==
-							JFileChooser.APPROVE_OPTION) {
-							File soundFontFile = chooser.getSelectedFile();
-							Soundbank soundbank = synthWrapper.getSoundbank(soundFontFile);
-							synthWrapper.loadAllInstruments(soundbank);
-							System.out.println("Soundbank loaded");
-							((SynthesizerDescriptorIntf)panel.getProject().getMidiDeviceDescriptor(synthWrapper)).setSoundBankFileName(soundFontFile.getAbsolutePath());
-						};
-					} catch(HeadlessException | IOException | InvalidMidiDataException ex) { ex.printStackTrace(); }
+                    try {
+                        JFileChooser chooser = new JFileChooser();
+                        chooser.setDialogTitle("Open soundfont");
+                        chooser.setFileFilter(new SoundFontFileFilter());
+                        if (chooser.showOpenDialog(null)
+                                == JFileChooser.APPROVE_OPTION) {
+                            File soundFontFile = chooser.getSelectedFile();
+                            Soundbank soundbank = synthWrapper.getSoundbank(soundFontFile);
+                            synthWrapper.loadAllInstruments(soundbank);
+                            System.out.println("Soundbank loaded");
+                            ((SynthesizerDescriptorIntf) panel.getProject().getMidiDeviceDescriptor(synthWrapper)).setSoundBankFileName(soundFontFile.getAbsolutePath());
+                        };
+                    } catch (HeadlessException | IOException | InvalidMidiDataException ex) {
+                        ex.printStackTrace();
+                    }
                 }
-            } );
-            add(loadSoundbankButton,gc);
-            
+            });
+            add(loadSoundbankButton, gc);
+
             MidiDevice dev = synthWrapper.getRealDevice();
             try {
-				Method method = dev.getClass().getMethod("show");
-				
-	        	JButton showSettingsButton = new JButton(getMessage("mididevices.show"));
-	        	showSettingsButton.addMouseListener(new MouseAdapter() {
+                Method method = dev.getClass().getMethod("show");
+
+                JButton showSettingsButton = new JButton(CurrentLocale.getMessage("mididevices.show"));
+                showSettingsButton.addMouseListener(new MouseAdapter() {
                     @Override
-	                public void mouseClicked(MouseEvent e) {
-	                	
-	                	MidiDevice dev = synthWrapper.getRealDevice();
-	                	Method method;
-						try {
-							method = dev.getClass().getMethod("show");
-		                	method.invoke(dev);
-						} catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e1) {
-							e1.printStackTrace();
-						}
-	                }
-	            } );
-	            add(showSettingsButton,gc);				
-			} catch (SecurityException | NoSuchMethodException e1) {
-			}
+                    public void mouseClicked(MouseEvent e) {
+
+                        MidiDevice dev = synthWrapper.getRealDevice();
+                        Method method;
+                        try {
+                            method = dev.getClass().getMethod("show");
+                            method.invoke(dev);
+                        } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
+                add(showSettingsButton, gc);
+            } catch (SecurityException | NoSuchMethodException e1) {
+            }
         }
 
-
-        JButton renameDeviceButton = new JButton(getMessage("mididevices.rename"));
+        JButton renameDeviceButton = new JButton(CurrentLocale.getMessage("mididevices.rename"));
         renameDeviceButton.addActionListener(new ActionListener() {
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				String value = JOptionPane.showInputDialog(getMessage("mididevices.entername"));
-				if(value == null) return;
-				panel.getProject().getMidiDeviceDescriptor(synthWrapper).setProjectName(value);
-				panel.updateDeviceTabs();
-			}
-        	
-        });
-        add(renameDeviceButton,gc);
-        gc.gridwidth=GridBagConstraints.REMAINDER;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String value = JOptionPane.showInputDialog(CurrentLocale.getMessage("mididevices.entername"));
+                if (value == null) {
+                    return;
+                }
+                panel.getProject().getMidiDeviceDescriptor(synthWrapper).setProjectName(value);
+                panel.updateDeviceTabs();
+            }
 
-        JButton removeDeviceButton = new JButton(getMessage("mididevices.removedevice"));
+        });
+        add(renameDeviceButton, gc);
+        gc.gridwidth = GridBagConstraints.REMAINDER;
+
+        JButton removeDeviceButton = new JButton(CurrentLocale.getMessage("mididevices.removedevice"));
         removeDeviceButton.addActionListener(new ActionListener() {
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				panel.remove(synthWrapper);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel.remove(synthWrapper);
 
-			}});
-		add(removeDeviceButton,gc);
-		
-        gc.gridwidth=1;
+            }
+        });
+        add(removeDeviceButton, gc);
+
+        gc.gridwidth = 1;
         gc.fill = GridBagConstraints.VERTICAL;
-        gc.weighty=1.0;
-        for(int n=0;n<mixerSlots.length;n++)
-        {
-            mixerSlots[n] = new MidiChannelMixerSlot(synthWrapper,synthWrapper.getChannels()[n]);
-            add(mixerSlots[n],gc);
+        gc.weighty = 1.0;
+        for (int n = 0; n < mixerSlots.length; n++) {
+            mixerSlots[n] = new MidiChannelMixerSlot(synthWrapper, synthWrapper.getChannels()[n]);
+            add(mixerSlots[n], gc);
         }
         synthWrapper.gui = this;
     }

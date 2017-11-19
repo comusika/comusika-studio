@@ -23,5 +23,6 @@
 package com.frinika.sequencer.gui;
 
 public interface PopupClient {
-	void fireSelected(PopupSelectorButton but,Object o,int pos);
+
+    void fireSelected(PopupSelectorButton but, Object o, int pos);
 }

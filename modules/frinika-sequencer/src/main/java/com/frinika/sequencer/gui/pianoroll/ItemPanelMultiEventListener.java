@@ -21,25 +21,23 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-package com.frinika.sequencer.gui.pianoroll; 
+package com.frinika.sequencer.gui.pianoroll;
 
 import com.frinika.sequencer.gui.ItemPanel;
 import com.frinika.sequencer.gui.selection.SelectionContainer;
 import com.frinika.sequencer.gui.selection.SelectionListener;
 import com.frinika.sequencer.model.MultiEvent;
 
-public class ItemPanelMultiEventListener implements  SelectionListener<MultiEvent> {
-	
-	ItemPanel pianoRoll;
-	
-	public ItemPanelMultiEventListener(ItemPanel pianoRoll) {
-		this.pianoRoll=pianoRoll;
-	}
-	
-	
-        @Override
-	public void selectionChanged(SelectionContainer<? extends MultiEvent> src) {
-		pianoRoll.repaintItems();	
-	}
+public class ItemPanelMultiEventListener implements SelectionListener<MultiEvent> {
+
+    ItemPanel pianoRoll;
+
+    public ItemPanelMultiEventListener(ItemPanel pianoRoll) {
+        this.pianoRoll = pianoRoll;
+    }
+
+    @Override
+    public void selectionChanged(SelectionContainer<? extends MultiEvent> src) {
+        pianoRoll.repaintItems();
+    }
 }

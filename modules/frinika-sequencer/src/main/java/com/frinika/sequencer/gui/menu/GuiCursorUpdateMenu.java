@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.menu;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,89 +35,89 @@ import javax.swing.JRadioButtonMenuItem;
  * @author Peter Johan Salomonsen
  */
 public class GuiCursorUpdateMenu extends JMenu {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	private AbstractSequencerProjectContainer project;
+    private static final long serialVersionUID = 1L;
 
-	public GuiCursorUpdateMenu(final AbstractSequencerProjectContainer project) {
-		this.project = project;
+    private AbstractSequencerProjectContainer project;
 
-		int inc = project.getPixelsPerRedraw();
+    public GuiCursorUpdateMenu(final AbstractSequencerProjectContainer project) {
+        this.project = project;
 
-		setText(getMessage("sequencer.menu.settings.cursorinc"));
-		ButtonGroup buts = new ButtonGroup();
+        int inc = project.getPixelsPerRedraw();
 
-		JRadioButtonMenuItem item = new JRadioButtonMenuItem(
-				getMessage("sequencer.menu.settings.cursorinc.disable"));
-		buts.add(item);
-		add(item);
-		if (inc == -1)
-			item.setEnabled(true);
-		item.addActionListener(new ActionListener() {
+        setText(CurrentLocale.getMessage("sequencer.menu.settings.cursorinc"));
+        ButtonGroup buts = new ButtonGroup();
 
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				project.setPixelsPerRedraw(-1);
-			}
-		});
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(
+                CurrentLocale.getMessage("sequencer.menu.settings.cursorinc.disable"));
+        buts.add(item);
+        add(item);
+        if (inc == -1) {
+            item.setEnabled(true);
+        }
+        item.addActionListener(new ActionListener() {
 
-		item = new JRadioButtonMenuItem(
-				getMessage("sequencer.menu.settings.cursorinc.fine"));
-		buts.add(item);
-		add(item);
-		if (inc == 1) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                project.setPixelsPerRedraw(-1);
+            }
+        });
+
+        item = new JRadioButtonMenuItem(
+                CurrentLocale.getMessage("sequencer.menu.settings.cursorinc.fine"));
+        buts.add(item);
+        add(item);
+        if (inc == 1) {
 //			System.out.println(" Why won't you be set by me ? ");
-			item.setSelected(true);
-		}
-		item.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				project.setPixelsPerRedraw(1);
-			}
-		});
+            item.setSelected(true);
+        }
+        item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                project.setPixelsPerRedraw(1);
+            }
+        });
 
-		item = new JRadioButtonMenuItem(
-				getMessage("sequencer.menu.settings.cursorinc.medium"));
-		buts.add(item);
-		add(item);
-		if (inc == 2)
-			item.setEnabled(true);
-		item.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				project.setPixelsPerRedraw(2);
-			}
-		});
+        item = new JRadioButtonMenuItem(
+                CurrentLocale.getMessage("sequencer.menu.settings.cursorinc.medium"));
+        buts.add(item);
+        add(item);
+        if (inc == 2) {
+            item.setEnabled(true);
+        }
+        item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                project.setPixelsPerRedraw(2);
+            }
+        });
 
-		item = new JRadioButtonMenuItem(
-				getMessage("sequencer.menu.settings.cursorinc.coarse"));
-		buts.add(item);
-		add(item);
-		if (inc == 5)
-			item.setEnabled(true);
-		item.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				project.setPixelsPerRedraw(5);
-			}
-		});
+        item = new JRadioButtonMenuItem(
+                CurrentLocale.getMessage("sequencer.menu.settings.cursorinc.coarse"));
+        buts.add(item);
+        add(item);
+        if (inc == 5) {
+            item.setEnabled(true);
+        }
+        item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                project.setPixelsPerRedraw(5);
+            }
+        });
 
-		item = new JRadioButtonMenuItem(
-				getMessage("sequencer.menu.settings.cursorinc.verycoarse"));
-		buts.add(item);
-		add(item);
-		if (inc == 20)
-			item.setEnabled(true);
-		item.addActionListener(new ActionListener() {
-                        @Override
-			public void actionPerformed(ActionEvent e) {
-				project.setPixelsPerRedraw(20);
-			}
-		});
-
-	}
-
+        item = new JRadioButtonMenuItem(
+                CurrentLocale.getMessage("sequencer.menu.settings.cursorinc.verycoarse"));
+        buts.add(item);
+        add(item);
+        if (inc == 20) {
+            item.setEnabled(true);
+        }
+        item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                project.setPixelsPerRedraw(20);
+            }
+        });
+    }
 }

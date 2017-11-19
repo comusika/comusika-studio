@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.model.NoteEvent;
@@ -30,44 +29,46 @@ import javax.swing.JComponent;
 
 /**
  * Menu-action for shifting selected MIDI notes along the time-axis.
- * 
+ *
  * @author Jens Gulden
  */
 public class MidiShiftAction extends AbstractMidiAction {
 
-	long d;
+    long d;
 
-	public MidiShiftAction(AbstractSequencerProjectContainer project) {
-		super(project, "sequencer.midi.shift");
-	}
+    public MidiShiftAction(AbstractSequencerProjectContainer project) {
+        super(project, "sequencer.midi.shift");
+    }
 
-        @Override
-	protected JComponent createGUI() {
-		return new AbstractTimeSelectorMidiActionEditor<MidiShiftAction>((AbstractSequencerProjectContainer) project, this) {
+    @Override
+    protected JComponent createGUI() {
+        return new AbstractTimeSelectorMidiActionEditor<MidiShiftAction>((AbstractSequencerProjectContainer) project, this) {
 
-			@Override
-			protected String getLabel() {
-				return "Shift by";
-			}
+            @Override
+            protected String getLabel() {
+                return "Shift by";
+            }
 
-			@Override
-			protected long getTicks() {
-				return d;
-			}
+            @Override
+            protected long getTicks() {
+                return d;
+            }
 
-			@Override
-			protected void setTicks(long ticks) {
-				d = ticks;
-			}
-			
-		};
-	}
-	
-	@Override
-	public void modifyNoteEvent(NoteEvent note) {
-		long t = note.getStartTick();
-		t += d;
-		if (t < 0) t = 0;
-		note.setStartTick(t);
-	}
+            @Override
+            protected void setTicks(long ticks) {
+                d = ticks;
+            }
+
+        };
+    }
+
+    @Override
+    public void modifyNoteEvent(NoteEvent note) {
+        long t = note.getStartTick();
+        t += d;
+        if (t < 0) {
+            t = 0;
+        }
+        note.setStartTick(t);
+    }
 }

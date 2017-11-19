@@ -37,11 +37,12 @@ public class WavFileFilter extends FileFilter {
      */
     @Override
     public boolean accept(File f) {
-        if(f.getName().toLowerCase().indexOf(".wav")>0 || 
-                f.isDirectory())
+        if (f.getName().toLowerCase().indexOf(".wav") > 0
+                || f.isDirectory()) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /* (non-Javadoc)
@@ -51,5 +52,4 @@ public class WavFileFilter extends FileFilter {
     public String getDescription() {
         return "Audio file";
     }
-
 }

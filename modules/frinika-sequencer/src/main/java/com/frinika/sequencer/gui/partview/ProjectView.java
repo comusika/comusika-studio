@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui.partview;
 
 import com.frinika.sequencer.model.ProjectLane;
@@ -30,23 +29,20 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 
 public class ProjectView extends LaneView {
-	private static final long serialVersionUID = 1L;
-	
-	public ProjectView(ProjectLane lane) {
-		super(lane);
-		init();
-	}
-	
 
-        @Override
-	protected void makeButtons() {
-		add(new JLabel("PROJECT VIEW (TODO)"),gc);
-			gc.weighty = 1.0;
-			add(new Box.Filler(new Dimension(0, 0),
-					new Dimension(10000, 10000), new Dimension(10000, 10000)),
-					gc);
+    private static final long serialVersionUID = 1L;
 
-	}
+    public ProjectView(ProjectLane lane) {
+        super(lane);
+        init();
+    }
 
-
+    @Override
+    protected void makeButtons() {
+        add(new JLabel("PROJECT VIEW (TODO)"), gc);
+        gc.weighty = 1.0;
+        add(new Box.Filler(new Dimension(0, 0),
+                new Dimension(10000, 10000), new Dimension(10000, 10000)),
+                gc);
+    }
 }

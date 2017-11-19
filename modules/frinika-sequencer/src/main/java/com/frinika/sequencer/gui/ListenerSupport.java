@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import java.util.Collection;
@@ -29,30 +28,32 @@ import java.util.HashSet;
 
 /**
  * Helps handling listeners.
-
+ *
  * @author Jens Gulden
  */
 public abstract class ListenerSupport<L, E> {
-    
+
     Collection<L> l;
-    
-    /** Creates a new instance */
+
+    /**
+     * Creates a new instance
+     */
     public ListenerSupport() {
         l = new HashSet<>();
     }
-    
+
     public void addListener(L listener) {
         l.add(listener);
     }
-    
+
     public void removeListener(L listener) {
         l.remove(listener);
     }
-    
+
     public Collection<L> getListeners() {
         return l;
     }
-    
+
     /**
      * Fire event to all.
      */
@@ -61,7 +62,7 @@ public abstract class ListenerSupport<L, E> {
             notify(listener, e);
         }
     }
-    
+
     /**
      * Fire event to a single listener.
      */

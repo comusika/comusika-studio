@@ -30,21 +30,17 @@ import javax.swing.AbstractAction;
 
 public class ToggleShowVoiceViewAction extends AbstractAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private ProjectFrame project;
-	
-	public ToggleShowVoiceViewAction(ProjectFrame project) {
-		super(getMessage("sequencer.project.show_voice_view"));
-		this.project=project;		
-	}
-	
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		VoicePartViewSplitPane x=project.getVoicePartViewSplitPane();
-		x.toggleVoiceView();
+    private static final long serialVersionUID = 1L;
+    private ProjectFrame project;
 
-	}	
+    public ToggleShowVoiceViewAction(ProjectFrame project) {
+        super(getMessage("sequencer.project.show_voice_view"));
+        this.project = project;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        VoicePartViewSplitPane x = project.getVoicePartViewSplitPane();
+        x.toggleVoiceView();
+    }
 }

@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.gui;
 
 import com.frinika.sequencer.gui.partview.PartView;
@@ -29,73 +28,67 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-public class PartSplitTool extends ToolAdapter  implements EditTool {
+public class PartSplitTool extends ToolAdapter implements EditTool {
 
-	boolean dragging = false;
-	private Point deltaDrag;
+    boolean dragging = false;
+    private Point deltaDrag;
 
-	public PartSplitTool(Cursor c) {
-		super(c);
+    public PartSplitTool(Cursor c) {
+        super(c);
+    }
 
-	}
+    @Override
+    public void mousePressed(MouseEvent e) {
 
-        @Override
-	public void mousePressed(MouseEvent e) {
-		
-		client=(ItemPanel)e.getSource();
-		/**
-		 * In the time line then set the time cursor
-		 */
-	
-		if (client.isTimeLineEvent(e)) return;
-	
-	
+        client = (ItemPanel) e.getSource();
+        /**
+         * In the time line then set the time cursor
+         */
 
-		// Detect right button
+        if (client.isTimeLineEvent(e)) {
+            return;
+        }
+
+        // Detect right button
 //		if (e.getButton() == MouseEvent.BUTTON3) {
 //			client.rightButtonPressedOnItem();
 //			return;
 //		}
 //	
+        boolean shift = e.isShiftDown();
 
-		boolean shift = e.isShiftDown();
+        client.setControlState(e.isControlDown());
 
-		client.setControlState(e.isControlDown());
-		
-		Point p = new Point(e.getX(), e.getY());
+        Point p = new Point(e.getX(), e.getY());
 
-		client.map(p);
+        client.map(p);
 
+        ((PartView) client).splitAt(p);
 
-		((PartView)client).splitAt(p);
-		
-		
-		// TODO is this needed the notifies should do it ?
-		// client.repaintItems();
-	}
+        // TODO is this needed the notifies should do it ?
+        // client.repaintItems();
+    }
 
-        @Override
-	public void mouseDragged(MouseEvent e) {
-	}
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
 
-        @Override
-	public void mouseReleased(MouseEvent e) {
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
 
-	}
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        client = (ItemPanel) e.getSource();
 
-        @Override
-	public void mouseMoved(MouseEvent e) {
-		client=(ItemPanel)e.getSource();
-	
-		if (client.isTimeLineEvent(e)) return;
-		
-		Point p = new Point(e.getX(), e.getY());
+        if (client.isTimeLineEvent(e)) {
+            return;
+        }
 
-		client.map(p);
+        Point p = new Point(e.getX(), e.getY());
 
-		((PartView)client).splitIsOver(p);
-		
+        client.map(p);
 
-	}
-	
+        ((PartView) client).splitIsOver(p);
+    }
 }
