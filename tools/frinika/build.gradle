@@ -97,13 +97,13 @@ dependencies {
     compile(project(':modules:frinika-project'))
     compile(project(':modules:frinika-audio-osx'))
     compile(project(':modules:frinika-rasmusdsp'))
+    compile(project(':modules:frinika-frogdisco'))
     compile(project(':modules:frinika-mystudio'))
     compile 'com.apple:AppleJavaExtensions:1.4'
     compile 'com.jgoodies:looks:2.1.4'
     compile ':darcula'
     compile ':iconloader'
 
-    runtime ':FrinikaJVSTSynth'
     runtime ':FrinikaVorbisSPI'
     runtime ':gervill'
     runtime 'org.codehaus.groovy:groovy-all:2.0.1'

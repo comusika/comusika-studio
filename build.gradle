@@ -24,10 +24,14 @@ distributions {
             include 'license.txt'
             include 'changes.txt'
             include 'frinika-changes.txt'
-            from 'src/dist'
-            include 'readme.txt'
-            include 'frinika-studio.bat'
-            include 'frinika-studio.sh'
+            into('') {
+                from 'src/dist'
+                include '**'
+            }
+            into('resources') {
+                from 'tools/frinika/resources'
+                include 'soundhelix/**'
+            }
 
             from project(':tools:frinika').projectDir.absolutePath + '/build/launch4j'
             include "frinika-studio.exe"

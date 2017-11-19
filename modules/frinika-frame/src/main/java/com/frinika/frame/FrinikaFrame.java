@@ -70,6 +70,7 @@ import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.Part;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.sequencer.tools.BufferedPlayback;
+import com.frinika.soundhelix.FrinikaSoundHelixDialog;
 import com.frinika.tootX.gui.FrinikaMixerPanel;
 import com.frinika.tootX.gui.MidiLearnPanel;
 import com.frinika.tootX.midi.MidiInDeviceManager;
@@ -287,22 +288,18 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         evt.getWindow().dispose();
                     }
                 }
-
             }
 
             @Override
             public void windowClosed(WindowEvent arg0) {
-
             }
 
             @Override
             public void windowIconified(WindowEvent arg0) {
-
             }
 
             @Override
             public void windowDeiconified(WindowEvent arg0) {
-
             }
 
             @Override
@@ -335,13 +332,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                 @Override
                 public void componentHidden(ComponentEvent e) {
-
                 }
 
                 @Override
                 public void componentMoved(ComponentEvent e) {
                     info();
-
                 }
 
                 @Override
@@ -351,20 +346,15 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                 @Override
                 public void componentShown(ComponentEvent e) {
-                    // TODO Auto-generated method stub
-
                 }
 
                 void info() {
-
                     GraphicsConfiguration gc = FrinikaFrame.this
                             .getGraphicsConfiguration();
 
                     System.out.println(gc);
-
                     System.out.println(FrinikaFrame.this.getBounds());
                 }
-
             });
         }
 
@@ -652,9 +642,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
             @Override
             public void windowOpened(WindowEvent arg0) {
-                // System.out.println();
-                // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -671,17 +658,14 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
             @Override
             public void windowClosed(WindowEvent arg0) {
-
             }
 
             @Override
             public void windowIconified(WindowEvent arg0) {
-
             }
 
             @Override
             public void windowDeiconified(WindowEvent arg0) {
-
             }
 
             @Override
@@ -704,7 +688,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
             @Override
             public void windowDeactivated(WindowEvent arg0) {
-
             }
         });
 
@@ -714,13 +697,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                 @Override
                 public void componentHidden(ComponentEvent e) {
-
                 }
 
                 @Override
                 public void componentMoved(ComponentEvent e) {
                     info();
-
                 }
 
                 @Override
@@ -730,12 +711,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                 @Override
                 public void componentShown(ComponentEvent e) {
-                    // TODO Auto-generated method stub
-
                 }
 
                 void info() {
-
                     GraphicsConfiguration gc = FrinikaFrame.this
                             .getGraphicsConfiguration();
 
@@ -2569,6 +2547,18 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		 * 
 		 * toolsMenu.add(item);
          */
+        toolsMenu.addSeparator();
+
+        submenu = new JMenu("Generator");
+        item = new JMenuItem(new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                new FrinikaSoundHelixDialog(project, null, enabled).setVisible(true); // NBP NBPFrinikaFrame.this
+            }
+        });
+        item.setText("SoundHelix...");
+        submenu.add(item);
+        toolsMenu.add(submenu);
+
         return toolsMenu;
     }
 
