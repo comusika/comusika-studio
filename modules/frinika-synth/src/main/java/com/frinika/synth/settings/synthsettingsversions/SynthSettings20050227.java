@@ -30,11 +30,12 @@ import java.io.Serializable;
  * @author Peter Johan Salomonsen
  *
  */
-public class SynthSettings20050227 implements SynthSettings,Serializable
-{
+public class SynthSettings20050227 implements SynthSettings, Serializable {
+
     private static final long serialVersionUID = 1L;
     private String[] synthClassNames = new String[16];
     private Serializable[] synthSettings = new Serializable[16];
+
     /**
      * @return Returns the synthClassNames.
      */
@@ -42,6 +43,7 @@ public class SynthSettings20050227 implements SynthSettings,Serializable
     public String[] getSynthClassNames() {
         return synthClassNames;
     }
+
     /**
      * @param synthClassNames The synthClassNames to set.
      */
@@ -49,6 +51,7 @@ public class SynthSettings20050227 implements SynthSettings,Serializable
     public void setSynthClassNames(String[] synthClassNames) {
         this.synthClassNames = synthClassNames;
     }
+
     /**
      * @return Returns the synthSettings.
      */
@@ -56,6 +59,7 @@ public class SynthSettings20050227 implements SynthSettings,Serializable
     public Serializable[] getSynthSettings() {
         return synthSettings;
     }
+
     /**
      * @param synthSettings The synthSettings to set.
      */
@@ -63,9 +67,9 @@ public class SynthSettings20050227 implements SynthSettings,Serializable
     public void setSynthSettings(Serializable[] synthSettings) {
         this.synthSettings = synthSettings;
     }
-    
+
     @Override
-	public boolean hasProgramChangeEvent() {
-		return false;
-	}
+    public boolean hasProgramChangeEvent() {
+        return false;
+    }
 }

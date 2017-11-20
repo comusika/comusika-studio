@@ -28,83 +28,75 @@ import javax.swing.JFrame;
 /**
  * @author Peter Johan Salomonsen
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
  */
 public final class HiPass {
+
     float previousSample = 0;
     float cutOff = 0.1f;
 
     float dcLevel = 0f;
-    
-    public final void setCutOff(float cutOff)
-    {
+
+    public final void setCutOff(float cutOff) {
         this.cutOff = cutOff;
     }
-    
-    public final float filter(float sample)
-    {    
-        float newSample = sample-dcLevel;
-        if(newSample>cutOff)
-            dcLevel+=cutOff;
-        else if(newSample<-cutOff)
-            dcLevel-=cutOff;
-        else
+
+    public final float filter(float sample) {
+        float newSample = sample - dcLevel;
+        if (newSample > cutOff) {
+            dcLevel += cutOff;
+        } else if (newSample < -cutOff) {
+            dcLevel -= cutOff;
+        } else {
             dcLevel = sample;
-            
-        return(newSample);
+        }
+
+        return (newSample);
     }
-    
-    public static void main(String[] args)
-    {
-        
+
+    public static void main(String[] args) {
+
         final HiPass hiPass = new HiPass();
         hiPass.setCutOff(0.001f);
-        final JFrame frame = new JFrame()
-        {
+        final JFrame frame = new JFrame() {
             @Override
-            public void paint(java.awt.Graphics g)
-            {
-                g.clearRect(0,0,600,600);
+            public void paint(java.awt.Graphics g) {
+                g.clearRect(0, 0, 600, 600);
                 int prevX = 0;
                 int prevY = 300;
-                for(float n = 0;n<Math.PI*2;n+=0.01)
-                {
-                    float w1 = (float)Math.sin(n)*2;
-                    float w2 = (float)Math.sin(n*32)/4f;
-                    float w = hiPass.filter(w1+w2);
-                    int x = (int)((n/(Math.PI*2)) * 600f);
-                    int y = (int)(((w)*100f)+300);
-                    System.out.println(x+" "+y+" "+hiPass.cutOff);
-                    g.drawLine(prevX,prevY,x,y);
+                for (float n = 0; n < Math.PI * 2; n += 0.01) {
+                    float w1 = (float) Math.sin(n) * 2;
+                    float w2 = (float) Math.sin(n * 32) / 4f;
+                    float w = hiPass.filter(w1 + w2);
+                    int x = (int) ((n / (Math.PI * 2)) * 600f);
+                    int y = (int) (((w) * 100f) + 300);
+                    System.out.println(x + " " + y + " " + hiPass.cutOff);
+                    g.drawLine(prevX, prevY, x, y);
                     prevX = x;
                     prevY = y;
                 }
             }
         };
         frame.setVisible(true);
-        frame.setSize(600,600);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        new Thread()
-        {
+
+        new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 float cutOff = 0.0000f;
-                while(cutOff<0.5f)
-                {
+                while (cutOff < 0.5f) {
                     frame.repaint();
-                    cutOff+=0.0005;
+                    cutOff += 0.0005;
                     hiPass.setCutOff(cutOff);
-                    try
-                    {
+                    try {
                         Thread.sleep(500);
-                    } catch(InterruptedException e) {}
+                    } catch (InterruptedException e) {
+                    }
                 }
-                
+
             }
         }.start();
-        
     }
 }

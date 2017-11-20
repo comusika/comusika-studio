@@ -23,32 +23,30 @@
  */
 package com.frinika.synth.waveforms;
 
-
 /**
  * @author Peter Johan Salomonsen
  *
  */
 public class Sinus {
-    static final float[] sinus = new float[(int)(2 *Math.PI * 1000)];
-    static
-    {           
-        for(float n=0;n<sinus.length;n++)
-        {               
-            sinus[(int)n] = (float)Math.sin((n / (float)sinus.length) * Math.PI * 2.0); 
-        }       
+
+    static final float[] sinus = new float[(int) (2 * Math.PI * 1000)];
+
+    static {
+        for (float n = 0; n < sinus.length; n++) {
+            sinus[(int) n] = (float) Math.sin((n / (float) sinus.length) * Math.PI * 2.0);
+        }
     }
-    
-	public static final float getSin(float degree)
-	{
-		return(sinus[(int)((degree*1000) % sinus.length)]);
-	}
-	
-	public static void main(String[] args)
-	{
+
+    public static final float getSin(float degree) {
+        return (sinus[(int) ((degree * 1000) % sinus.length)]);
+    }
+
+    public static void main(String[] args) {
         long start = System.currentTimeMillis();
 
-        for(float n=0;n<12;n+=0.0001)
-			getSin(n);
-        System.out.println((System.currentTimeMillis()-start));
-	}
+        for (float n = 0; n < 12; n += 0.0001) {
+            getSin(n);
+        }
+        System.out.println((System.currentTimeMillis() - start));
+    }
 }

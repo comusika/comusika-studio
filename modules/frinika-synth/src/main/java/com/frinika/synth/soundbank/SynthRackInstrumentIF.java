@@ -21,10 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.synth.soundbank;
 
 public interface SynthRackInstrumentIF {
-    public String getInstrumentName();
-    public void setInstrumentName(String instrumentName);
+
+    String getInstrumentName();
+
+    void setInstrumentName(String instrumentName);
 }

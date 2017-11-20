@@ -28,13 +28,12 @@ package com.frinika.synth.envelope;
  *
  */
 public class TimeCent {
-    public static int milliSecsToTimeCents(int milliSecs)
-    {
-        return((int)(1200*(Math.log(milliSecs/1000.0)/Math.log(2))));
+
+    public static int milliSecsToTimeCents(int milliSecs) {
+        return ((int) (1200 * (Math.log(milliSecs / 1000.0) / Math.log(2))));
     }
-    
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         System.out.println(milliSecsToTimeCents(1));
     }
 }

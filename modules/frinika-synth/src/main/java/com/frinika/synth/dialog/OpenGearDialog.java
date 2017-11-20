@@ -31,43 +31,41 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 public class OpenGearDialog extends JDialog {
-private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     JProgressBar progressBar;
-    
-    public OpenGearDialog(JFrame frame)
-    {
-        super(frame,true);
-        
+
+    public OpenGearDialog(JFrame frame) {
+        super(frame, true);
+
         this.setResizable(false);
         this.setUndecorated(true);
-        try
-        {
-            
+        try {
+
             progressBar = new JProgressBar();
             progressBar.setIndeterminate(true);
             progressBar.setStringPainted(true);
-            setLayout(new GridLayout(0,1));
-            
+            setLayout(new GridLayout(0, 1));
+
             JLabel lb = new JLabel("Please wait while loading");
-            lb.setFont(new Font(lb.getFont().getName(),Font.BOLD,lb.getFont().getSize()*2));
+            lb.setFont(new Font(lb.getFont().getName(), Font.BOLD, lb.getFont().getSize() * 2));
             add(lb);
             add(progressBar);
-           
+
             this.setSize(getPreferredSize());
-            
+
             this.setLocationRelativeTo(frame);
-        } catch(Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
-    public void setProgress(int n,String name)
-    {
-        if(n==100)
+    public void setProgress(int n, String name) {
+        if (n == 100) {
             OpenGearDialog.this.dispose();
-        else
-        {
+        } else {
             progressBar.setValue(n);
             progressBar.setString(name);
         }
-    }    
+    }
 }

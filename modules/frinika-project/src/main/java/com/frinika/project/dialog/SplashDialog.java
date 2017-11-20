@@ -23,6 +23,7 @@
  */
 package com.frinika.project.dialog;
 
+import com.frinika.gui.util.WindowUtils;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -55,7 +56,7 @@ import javax.swing.SwingConstants;
 
 public class SplashDialog extends JDialog {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
     private static final long serialVersionUID = 1L;
 
     int sel = 0;

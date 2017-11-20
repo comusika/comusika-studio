@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.frinika.synth.importers.soundfont;
+
 import java.io.FileInputStream;
 
 /**
@@ -29,25 +30,24 @@ import java.io.FileInputStream;
  *
  */
 public class IGENChunk extends Chunk {
-	static int RECSIZE = 4;
-	int count;
-	
-	int[] sfGenOper;
-	int[] genAmount;
-	
-	public IGENChunk(FileInputStream fis) throws Exception
-	{
-		super(fis,"igen");
-	
-		count = length / RECSIZE;
-		
-		sfGenOper = new int[count];
-		genAmount = new int[count];
-		
-		for(int n = 0;n<count;n++)
-		{
-			sfGenOper[n] = readInt16();
-			genAmount[n] = readInt16();
-		}
-	}
+
+    static int RECSIZE = 4;
+    int count;
+
+    int[] sfGenOper;
+    int[] genAmount;
+
+    public IGENChunk(FileInputStream fis) throws Exception {
+        super(fis, "igen");
+
+        count = length / RECSIZE;
+
+        sfGenOper = new int[count];
+        genAmount = new int[count];
+
+        for (int n = 0; n < count; n++) {
+            sfGenOper[n] = readInt16();
+            genAmount[n] = readInt16();
+        }
+    }
 }

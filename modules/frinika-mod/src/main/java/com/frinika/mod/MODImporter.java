@@ -23,7 +23,7 @@
  */
 package com.frinika.mod;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.midi.message.TempoMessage;
@@ -108,7 +108,7 @@ public class MODImporter {
     public static void load(Component parent) {
         try {
             JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle(getMessage("project.menu.import_module"));
+            chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.import_module"));
             chooser.setFileFilter(new ModulesFileFilter());
 
             if (chooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {

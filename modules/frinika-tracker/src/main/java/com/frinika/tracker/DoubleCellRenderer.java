@@ -31,16 +31,18 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  */
 public class DoubleCellRenderer extends DefaultTableCellRenderer {
-	static DecimalFormat numberFormat = new DecimalFormat("0.00");
-	
-	/* (non-Javadoc)
+
+    static DecimalFormat numberFormat = new DecimalFormat("0.00");
+
+    /* (non-Javadoc)
 	 * @see javax.swing.JLabel#getText()
-	 */
-        @Override
-	public String getText() {
-		try
-		{
-			return(numberFormat.format(Double.parseDouble(super.getText())));
-		} catch(NumberFormatException e) { return(super.getText()); }
-	}
+     */
+    @Override
+    public String getText() {
+        try {
+            return (numberFormat.format(Double.parseDouble(super.getText())));
+        } catch (NumberFormatException e) {
+            return (super.getText());
+        }
+    }
 }

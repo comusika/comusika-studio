@@ -23,6 +23,7 @@
  */
 package com.frinika.swing;
 
+import com.frinika.gui.util.WindowUtils;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JDialog;
@@ -39,7 +40,7 @@ public class ProgressBarDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     JProgressBar progressBar;
 

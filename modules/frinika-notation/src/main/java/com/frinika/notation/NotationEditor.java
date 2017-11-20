@@ -23,6 +23,7 @@
  */
 package com.frinika.notation;
 
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryContainer;
@@ -76,7 +77,7 @@ import java.util.TreeSet;
 
 public class NotationEditor extends ItemPanel implements EditHistoryListener, EventFilter {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     public static void main(String[] args) {
 

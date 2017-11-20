@@ -179,6 +179,5 @@ public final class VolumeEnvelope {
         env.release();
         for(int n=0;n<50;n++)
             System.out.println(n+" "+env.getAttenuation()+" "+env.envelopeState);
-
     }
 }

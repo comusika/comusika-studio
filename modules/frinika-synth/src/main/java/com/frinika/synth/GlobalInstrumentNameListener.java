@@ -28,5 +28,6 @@ package com.frinika.synth;
  *
  */
 public interface GlobalInstrumentNameListener {
-    public void instrumentNameChange(int synthIndex,String instrumentName);
+
+    void instrumentNameChange(int synthIndex, String instrumentName);
 }

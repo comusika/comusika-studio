@@ -23,6 +23,7 @@
  */
 package com.frinika.notation;
 
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.notation.model.ClefChange;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
@@ -45,7 +46,7 @@ import javax.swing.JPopupMenu;
 public class NotationHeader extends JPanel implements MouseListener,
         AdjustmentListener {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
     private static final long serialVersionUID = 1L;
     private int yScroll;
     public NotationEditor notationEditor;

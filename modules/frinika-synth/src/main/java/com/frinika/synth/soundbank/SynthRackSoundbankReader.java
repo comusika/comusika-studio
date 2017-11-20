@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.synth.soundbank;
 
 import com.frinika.synth.Synth;
@@ -41,84 +40,73 @@ import javax.sound.midi.Soundbank;
 import javax.sound.midi.spi.SoundbankReader;
 
 /**
- * 
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class SynthRackSoundbankReader extends SoundbankReader {
 
-	@Override
-	public Soundbank getSoundbank(URL url) throws InvalidMidiDataException, IOException {
-		return getSoundbank(url.openStream());
-	}
+    @Override
+    public Soundbank getSoundbank(URL url) throws InvalidMidiDataException, IOException {
+        return getSoundbank(url.openStream());
+    }
 
-	@Override
-	public Soundbank getSoundbank(InputStream stream) throws InvalidMidiDataException, IOException {
-		ObjectInputStream in;
-		
-		try
-		{
-			in = new ObjectInputStream(stream);
-		}
-		catch(StreamCorruptedException e)
-		{
-			// Return null if stream isn't object stream.
-			return null;
-		}
-		
-		try {
-			SynthSettings setup = (SynthSettings)in.readObject();
-			SynthRackSoundbank soundbank = new SynthRackSoundbank();
-			Serializable[] settings = setup.getSynthSettings();
-			for(int index = 0;index<settings.length;index++)
-			{
-				if(settings[index]!=null)
-				{
-					String synthName = setup.getSynthClassNames()[index];
+    @Override
+    public Soundbank getSoundbank(InputStream stream) throws InvalidMidiDataException, IOException {
+        ObjectInputStream in;
 
-	                if(synthName==null)
-	                	break;
-	                
-	                // Handle older fileformats
-	                if(
-	                    synthName.equals("com.petersalomonsen.mystudio.mysynth.synths.SoundFont") ||
-	                    synthName.equals("com.petersalomonsen.mystudio.mysynth.synths.MySampler")
-	                        )
-	                    synthName = com.frinika.synth.synths.MySampler.class.getName();
-	                
-	                Synth synth;
-					try {
-						synth = (Synth)Class.forName(synthName).getConstructors()[0].newInstance(new Object[]{this});
-						synth.loadSettings(setup.getSynthSettings()[index]);
-						Patch patch = new Patch(0,index);
-						soundbank.createAndRegisterInstrument(patch, synth);
-					} catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			return soundbank;
-		} catch (ClassNotFoundException e) {
-			throw new InvalidMidiDataException(e.getMessage());
-		}
-		
-	}
+        try {
+            in = new ObjectInputStream(stream);
+        } catch (StreamCorruptedException e) {
+            // Return null if stream isn't object stream.
+            return null;
+        }
 
-	@Override
-	public Soundbank getSoundbank(File file) throws InvalidMidiDataException, IOException {
-		FileInputStream fis = new FileInputStream(file);
-		Soundbank sbk = null;
-		try
-		{
-			sbk = getSoundbank(fis);
-		}
-		finally
-		{
-			fis.close();
-		}
-		return sbk;
-		
-	}
+        try {
+            SynthSettings setup = (SynthSettings) in.readObject();
+            SynthRackSoundbank soundbank = new SynthRackSoundbank();
+            Serializable[] settings = setup.getSynthSettings();
+            for (int index = 0; index < settings.length; index++) {
+                if (settings[index] != null) {
+                    String synthName = setup.getSynthClassNames()[index];
 
+                    if (synthName == null) {
+                        break;
+                    }
+
+                    // Handle older fileformats
+                    if (synthName.equals("com.petersalomonsen.mystudio.mysynth.synths.SoundFont")
+                            || synthName.equals("com.petersalomonsen.mystudio.mysynth.synths.MySampler")) {
+                        synthName = com.frinika.synth.synths.MySampler.class.getName();
+                    }
+
+                    Synth synth;
+                    try {
+                        synth = (Synth) Class.forName(synthName).getConstructors()[0].newInstance(new Object[]{this});
+                        synth.loadSettings(setup.getSynthSettings()[index]);
+                        Patch patch = new Patch(0, index);
+                        soundbank.createAndRegisterInstrument(patch, synth);
+                    } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | SecurityException | InvocationTargetException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return soundbank;
+        } catch (ClassNotFoundException e) {
+            throw new InvalidMidiDataException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Soundbank getSoundbank(File file) throws InvalidMidiDataException, IOException {
+        FileInputStream fis = new FileInputStream(file);
+        Soundbank sbk = null;
+        try {
+            sbk = getSoundbank(fis);
+        } finally {
+            fis.close();
+        }
+        return sbk;
+    }
 }

@@ -23,6 +23,7 @@
  */
 package com.frinika.notation;
 
+import com.frinika.gui.util.WindowUtils;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -42,7 +43,7 @@ import java.util.TreeMap;
 
 public class NotationGraphics {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     public class Note {
 

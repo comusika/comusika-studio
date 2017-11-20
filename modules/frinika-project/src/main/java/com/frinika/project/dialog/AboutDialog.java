@@ -23,6 +23,7 @@
  */
 package com.frinika.project.dialog;
 
+import com.frinika.gui.util.WindowUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -62,7 +63,7 @@ import javax.swing.SwingConstants;
 
 public class AboutDialog extends JDialog {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     public static final char C = (char) 169; // The (C) Symbol
 

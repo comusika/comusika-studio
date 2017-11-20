@@ -30,26 +30,24 @@ import java.io.FileInputStream;
  *
  */
 public class IBAGChunk extends Chunk {
-	static int RECSIZE = 4;
-	
-	int[] instGenNdx;
-	int[] instModNdx;
-	int count;
-	
-	public IBAGChunk(FileInputStream fis) throws Exception
-	{
-		super(fis,"ibag");
-	
-		count = length / RECSIZE;
 
-		instGenNdx = new int[count];
-		instModNdx = new int[count];
-		
-		for(int n = 0;n<count;n++)
-		{
-			instGenNdx[n] = readInt16();
-			instModNdx[n] = readInt16();
-		}
-	}
+    static int RECSIZE = 4;
+
+    int[] instGenNdx;
+    int[] instModNdx;
+    int count;
+
+    public IBAGChunk(FileInputStream fis) throws Exception {
+        super(fis, "ibag");
+
+        count = length / RECSIZE;
+
+        instGenNdx = new int[count];
+        instModNdx = new int[count];
+
+        for (int n = 0; n < count; n++) {
+            instGenNdx[n] = readInt16();
+            instModNdx[n] = readInt16();
+        }
+    }
 }
-

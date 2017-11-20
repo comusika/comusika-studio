@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.synth.soundbank;
 
 import com.frinika.synth.Synth;
@@ -30,26 +29,25 @@ import javax.sound.midi.Patch;
 
 public class SynthRackInstrument extends Instrument {
 
-	Synth synth;
-	
-	protected SynthRackInstrument(SynthRackSoundbank soundbank, Synth synth,Patch patch) {
-		super(soundbank, patch, null,null);
-		this.synth = synth;
-	}
+    Synth synth;
 
-	@Override
-	public Object getData() {
-		return (SynthRackInstrumentIF)synth.getSettings();
-	}
-	
-	@Override
-	public String getName() {
-		return ((SynthRackInstrumentIF)synth.getSettings()).getInstrumentName();
-	}
-	
-	@Override
-	public Class<?> getDataClass() {
-		return synth.getSettings().getClass();
-	}
-	
+    protected SynthRackInstrument(SynthRackSoundbank soundbank, Synth synth, Patch patch) {
+        super(soundbank, patch, null, null);
+        this.synth = synth;
+    }
+
+    @Override
+    public Object getData() {
+        return (SynthRackInstrumentIF) synth.getSettings();
+    }
+
+    @Override
+    public String getName() {
+        return ((SynthRackInstrumentIF) synth.getSettings()).getInstrumentName();
+    }
+
+    @Override
+    public Class<?> getDataClass() {
+        return synth.getSettings().getClass();
+    }
 }

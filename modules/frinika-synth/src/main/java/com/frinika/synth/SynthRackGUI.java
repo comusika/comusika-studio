@@ -29,19 +29,20 @@ import javax.swing.*;
 
 /**
  * The Graphical User Interface for the generic synth container
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class SynthRackGUI extends JPanel {
+
     private static final long serialVersionUID = 1L;
 
     SynthRack ms;
     SynthMixerSlot[] synthStrips;
     OpenGearDialog openGearDialog = null;
     JFrame frame;
-    
-    public SynthRackGUI(JFrame frame, SynthRack ms)
-    {
+
+    public SynthRackGUI(JFrame frame, SynthRack ms) {
         this.frame = frame;
         this.ms = ms;
         ms.gui = this;
@@ -52,36 +53,34 @@ public class SynthRackGUI extends JPanel {
 
     /**
      * This method initializes this
-     * 
+     *
      * @return void
      */
     private void initialize() {
         setLayout(new GridBagLayout());
 
         GridBagConstraints gc = new GridBagConstraints();
-        
-        for(int n=0;n<synthStrips.length;n++)
-        {
-                synthStrips[n]=new SynthMixerSlot(this,gc,ms,n);
-        }        
+
+        for (int n = 0; n < synthStrips.length; n++) {
+            synthStrips[n] = new SynthMixerSlot(this, gc, ms, n);
+        }
     }
 
-    public void initLoadSynthSetupProgress(Thread loadingThread)
-    {
+    public void initLoadSynthSetupProgress(Thread loadingThread) {
         openGearDialog = new OpenGearDialog(frame);
         loadingThread.start();
-        openGearDialog.setProgress(0,"");
+        openGearDialog.setProgress(0, "");
         openGearDialog.setVisible(true);
     }
-    
+
     public void notifyLoadSynthSetupProgress(int progress, String synthName) {
-        openGearDialog.setProgress(progress,synthName);
-        if(progress==100)
+        openGearDialog.setProgress(progress, synthName);
+        if (progress == 100) {
             openGearDialog = null;
+        }
     }
-    
-    public static void main(String[] args) throws Exception
-    {
+
+    public static void main(String[] args) throws Exception {
         SynthRack.main(args);
     }
 }

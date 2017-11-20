@@ -32,23 +32,23 @@ import javax.swing.filechooser.FileFilter;
  */
 public class GearFileFilter extends FileFilter {
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-	 */
-        @Override
-	public boolean accept(File f) {
-		if(f.getName().toLowerCase().indexOf(".gear")>0 || f.isDirectory())
-			return true;
-		else
-			return false;
-	}
+     */
+    @Override
+    public boolean accept(File file) {
+        if (file.getName().toLowerCase().indexOf(".gear") > 0 || file.isDirectory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see javax.swing.filechooser.FileFilter#getDescription()
-	 */
-        @Override
-	public String getDescription() {
-		return "myStudio gear setup";
-	}
-
+     */
+    @Override
+    public String getDescription() {
+        return "myStudio gear setup";
+    }
 }

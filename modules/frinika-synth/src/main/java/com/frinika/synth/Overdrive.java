@@ -28,43 +28,43 @@ package com.frinika.synth;
  *
  */
 public class Overdrive {
+
     static final float divisor[];
-    
-    static
-    {
+
+    static {
         divisor = new float[128];
-        for(int n = 0;n < divisor.length;n++)
-        {
-            divisor[n] = (float)(Math.log(n*2)/Math.log(2));
+        for (int n = 0; n < divisor.length; n++) {
+            divisor[n] = (float) (Math.log(n * 2) / Math.log(2));
         }
     }
 
     static final float atan[];
-    static
-    {
+
+    static {
         atan = new float[65536];
         {
-            for(float n=-10f;n<10f;n+=20f/65536f)
-                atan[(int)((n*3276.8f)+32768)] = (float)Math.atan(n);
+            for (float n = -10f; n < 10f; n += 20f / 65536f) {
+                atan[(int) ((n * 3276.8f) + 32768)] = (float) Math.atan(n);
+            }
         }
     }
-    
-    static final float process(float signal, int amount)
-    {
-        signal*=amount;
-        if(signal>=10f)
-            signal = 10f - (20f/65536f);
-        else if(signal<-10f)
+
+    static final float process(float signal, int amount) {
+        signal *= amount;
+        if (signal >= 10f) {
+            signal = 10f - (20f / 65536f);
+        } else if (signal < -10f) {
             signal = -10f;
-     
-        return (float)(atan[(int)((signal*3276.7f)+32768)] / divisor[amount]);      
+        }
+
+        return (float) (atan[(int) ((signal * 3276.7f) + 32768)] / divisor[amount]);
     }
- 
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         long start = System.currentTimeMillis();
-        for(float n=-10f;n<10f;n+=20f/65536f)
-            process(n,20);
-        System.out.println((System.currentTimeMillis()-start));
+        for (float n = -10f; n < 10f; n += 20f / 65536f) {
+            process(n, 20);
+        }
+        System.out.println((System.currentTimeMillis() - start));
     }
 }

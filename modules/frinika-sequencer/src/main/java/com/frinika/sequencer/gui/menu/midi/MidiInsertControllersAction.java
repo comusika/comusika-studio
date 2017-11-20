@@ -212,12 +212,12 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 
         @Override
         public int getIconHeight() {
-            return width;
+            return height;
         }
 
         @Override
         public int getIconWidth() {
-            return height;
+            return width;
         }
 
         @Override

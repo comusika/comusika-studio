@@ -23,6 +23,7 @@
  */
 package com.frinika.sequencer.gui.pianoroll;
 
+import com.frinika.gui.util.WindowUtils;
 import static com.frinika.localization.CurrentLocale.getMessage;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryContainer;
@@ -71,7 +72,7 @@ import java.util.Vector;
  */
 public class PianoRoll extends PianoRollPanelAdapter {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     private int noteItemHeight;
 

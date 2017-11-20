@@ -9,6 +9,7 @@ import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PresentationPanel;
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.mod.MODImporter;
 import com.frinika.model.EditHistoryAction;
@@ -70,7 +71,7 @@ import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.Part;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.sequencer.tools.BufferedPlayback;
-import com.frinika.soundhelix.FrinikaSoundHelixDialog;
+import com.frinika.soundhelix.FrinikaSoundHelixPanel;
 import com.frinika.tootX.gui.FrinikaMixerPanel;
 import com.frinika.tootX.gui.MidiLearnPanel;
 import com.frinika.tootX.midi.MidiInDeviceManager;
@@ -79,6 +80,7 @@ import com.frinika.tracker.MidiFileFilter;
 import com.frinika.tracker.ProjectFileFilter;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -208,11 +210,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     /**
      * Vector containing currently open project frames
      */
-    private static List<FrinikaFrame> openProjectFrames = new ArrayList<FrinikaFrame>();
+    private static List<FrinikaFrame> openProjectFrames = new ArrayList<>();
 
     private static FrinikaFrame focusFrame = null;
 
-    private static List<ProjectFocusListener> projectFocusListeners = new ArrayList<ProjectFocusListener>();
+    private static List<ProjectFocusListener> projectFocusListeners = new ArrayList<>();
 
     // hack to stop exit when last frma is closed.
     public static boolean doNotQuit = false;
@@ -2551,8 +2553,24 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
         submenu = new JMenu("Generator");
         item = new JMenuItem(new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                new FrinikaSoundHelixDialog(project, null, enabled).setVisible(true); // NBP NBPFrinikaFrame.this
+                FrinikaSoundHelixPanel panel = new FrinikaSoundHelixPanel(project);
+                JDialog dialog = WindowUtils.createDialog(panel, FrinikaFrame.this, Dialog.ModalityType.APPLICATION_MODAL);
+                WindowUtils.addHeaderPanel(dialog, "SoundHelix Generator", "", panel.getHeaderIcon());
+                panel.setOkCancelListener(new WindowUtils.OkCancelListener() {
+                    @Override
+                    public void okEvent() {
+                        WindowUtils.closeWindow(dialog);
+                    }
+
+                    @Override
+                    public void cancelEvent() {
+                        WindowUtils.closeWindow(dialog);
+                    }
+                });
+                dialog.setLocationByPlatform(true);
+                dialog.setVisible(true);
             }
         });
         item.setText("SoundHelix...");

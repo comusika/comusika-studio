@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.frinika.synth.importers.soundfont;
+
 import java.io.FileInputStream;
 
 /**
@@ -29,52 +30,51 @@ import java.io.FileInputStream;
  *
  */
 public class SHDRChunk extends Chunk {
-	static int RECSIZE = 46;
-	
-	short[][] samples;
-	
-	String[] names;
-	int[] sampleStart;
-	int[] sampleEnd;
-	int[] sampleStartLoop;
-	int[] sampleEndLoop;
-	int[] sampleRate;
-	byte[] originalPitch;
-	char[] pitchCorrection;
-	int[] sampleLink;
-	int[] sfSampleType;
-	
-	int count;
-	
-	public SHDRChunk(FileInputStream fis) throws Exception
-	{
-		super(fis,"shdr");
 
-		count = length / RECSIZE;
-		samples = new short[count][];
-		names = new String[count];
-		sampleStart = new int[count];
-		sampleEnd = new int[count];
-		sampleStartLoop = new int[count];
-		sampleEndLoop = new int[count];
-		sampleRate = new int[count];
-		originalPitch = new byte[count];
-		pitchCorrection = new char[count];
-		sampleLink = new int[count];
-		sfSampleType = new int[count];
-		
-		for(int n = 0;n<count;n++)
-		{
-			names[n] = readString(20);
-			sampleStart[n] = readInt32();
-			sampleEnd[n] = readInt32();
-			sampleStartLoop[n] = readInt32();
-			sampleEndLoop[n] = readInt32();
-			sampleRate[n] = readInt32();
-			originalPitch[n] = readByte();
-			pitchCorrection[n] = readChar();
-			sampleLink[n] = readInt16();
-			sfSampleType[n] = readInt16();
-		}
-	}	
+    static int RECSIZE = 46;
+
+    short[][] samples;
+
+    String[] names;
+    int[] sampleStart;
+    int[] sampleEnd;
+    int[] sampleStartLoop;
+    int[] sampleEndLoop;
+    int[] sampleRate;
+    byte[] originalPitch;
+    char[] pitchCorrection;
+    int[] sampleLink;
+    int[] sfSampleType;
+
+    int count;
+
+    public SHDRChunk(FileInputStream fis) throws Exception {
+        super(fis, "shdr");
+
+        count = length / RECSIZE;
+        samples = new short[count][];
+        names = new String[count];
+        sampleStart = new int[count];
+        sampleEnd = new int[count];
+        sampleStartLoop = new int[count];
+        sampleEndLoop = new int[count];
+        sampleRate = new int[count];
+        originalPitch = new byte[count];
+        pitchCorrection = new char[count];
+        sampleLink = new int[count];
+        sfSampleType = new int[count];
+
+        for (int n = 0; n < count; n++) {
+            names[n] = readString(20);
+            sampleStart[n] = readInt32();
+            sampleEnd[n] = readInt32();
+            sampleStartLoop[n] = readInt32();
+            sampleEndLoop[n] = readInt32();
+            sampleRate[n] = readInt32();
+            originalPitch[n] = readByte();
+            pitchCorrection[n] = readChar();
+            sampleLink[n] = readInt16();
+            sfSampleType[n] = readInt16();
+        }
+    }
 }

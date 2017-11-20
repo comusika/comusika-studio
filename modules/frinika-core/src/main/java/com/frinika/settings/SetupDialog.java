@@ -23,6 +23,7 @@
  */
 package com.frinika.settings;
 
+import com.frinika.gui.util.WindowUtils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
@@ -37,7 +38,7 @@ import javax.swing.JPanel;
 public class SetupDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     public static void main(String[] args) {
         new SetupDialog().setVisible(true);

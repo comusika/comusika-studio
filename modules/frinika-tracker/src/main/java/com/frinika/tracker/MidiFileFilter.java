@@ -31,17 +31,19 @@ import javax.swing.filechooser.FileFilter;
  *
  */
 public class MidiFileFilter extends FileFilter {
-                @Override
-		public boolean accept(File f) {
-			
-			if(f.getName().toLowerCase().indexOf(".mid")>0 || f.isDirectory())
-				return true;
-			else
-				return false;
-		}
 
-                @Override
-		public String getDescription() {
-			return "Standard Midi File";
-		}
+    @Override
+    public boolean accept(File file) {
+
+        if (file.getName().toLowerCase().indexOf(".mid") > 0 || file.isDirectory()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String getDescription() {
+        return "Standard Midi File";
+    }
 }

@@ -25,6 +25,7 @@ package com.frinika.settings;
 
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.toot.javasoundmultiplexed.MultiplexedJavaSoundAudioServer;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -45,7 +46,7 @@ import uk.org.toot.audio.server.ExtendedAudioServer;
 
 public class InitialAudioServerPanel extends JPanel {
 
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     private ExtendedAudioServer audioServer;
 

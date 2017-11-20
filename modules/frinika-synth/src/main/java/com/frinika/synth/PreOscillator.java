@@ -31,85 +31,81 @@ import com.frinika.voiceserver.VoiceInterrupt;
  *
  */
 public class PreOscillator extends Oscillator {
-	int amount = 0;
-	float[] lfoBuffer;
-	public float[] sampleBuffer = null;
 
-	public int pitchBend;
-	public float pitchBendFactor = 1;
+    int amount = 0;
+    float[] lfoBuffer;
+    public float[] sampleBuffer = null;
 
-	float lastLfoSample = 0;
-	
-	public PreOscillator(Synth synth)
-	{
-		super(synth);
-		frequency = 7;
-		updateIncrement();
-	}
-	
-	public void setVibratoAmount(final int amount)
-	{
-		synth.getAudioOutput().interruptTransmitter(this, new VoiceInterrupt() {
+    public int pitchBend;
+    public float pitchBendFactor = 1;
 
-                        @Override
-			public void doInterrupt() {
-				PreOscillator.this.amount = amount;
-			}
-		});
-	}
-	
-	/* (non-Javadoc)
+    float lastLfoSample = 0;
+
+    public PreOscillator(Synth synth) {
+        super(synth);
+        frequency = 7;
+        updateIncrement();
+    }
+
+    public void setVibratoAmount(final int amount) {
+        synth.getAudioOutput().interruptTransmitter(this, new VoiceInterrupt() {
+
+            @Override
+            public void doInterrupt() {
+                PreOscillator.this.amount = amount;
+            }
+        });
+    }
+
+    /* (non-Javadoc)
 	 * @see com.petersalomonsen.mystudio.mysynth.Oscillator#updateIncrement()
-	 */
-        @Override
-	protected void updateIncrement() {
-		increment = (float) ((float)(2.0 * Math.PI * frequency )/ (float)sampleRate);
-	}
-	
-	public final float[] getLfoBuffer()
-	{
-		return lfoBuffer;
-	}
-	
-	public void setVibratoFrequency(final float frequency)
-	{
-		synth.getAudioOutput().interruptTransmitter(this, new VoiceInterrupt() {
+     */
+    @Override
+    protected void updateIncrement() {
+        increment = (float) ((float) (2.0 * Math.PI * frequency) / (float) sampleRate);
+    }
 
-                        @Override
-			public void doInterrupt() {
-				PreOscillator.this.frequency = frequency;
-				updateIncrement();
-			}
-		});		
-	}
-	/* (non-Javadoc)
+    public final float[] getLfoBuffer() {
+        return lfoBuffer;
+    }
+
+    public void setVibratoFrequency(final float frequency) {
+        synth.getAudioOutput().interruptTransmitter(this, new VoiceInterrupt() {
+
+            @Override
+            public void doInterrupt() {
+                PreOscillator.this.frequency = frequency;
+                updateIncrement();
+            }
+        });
+    }
+
+    /* (non-Javadoc)
 	 * @see com.petersalomonsen.mystudio.audio.IAudioOutputGenerator#fillBuffer(int, int, float[])
-	 */
-        @Override
-	public void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
-		if(sampleBuffer==null || sampleBuffer.length != buffer.length)
-		{
-			lfoBuffer = new float[buffer.length / 2];
-			sampleBuffer = new float[buffer.length];
-		}
-		
-		for(int n=(startBufferPos/2);(n<endBufferPos/2);n++)
-		{
-			if(amount!=0)
-				lfoBuffer[n] = PitchCents.getPitchCent((int)(Sinus.getSin(position+=increment)*amount)) * pitchBendFactor;
-			else
-				lfoBuffer[n] = pitchBendFactor;
-			
-			sampleBuffer[n*2]=0;
-			sampleBuffer[n*2+1]=0;
-		} 
-	}
+     */
+    @Override
+    public void fillBuffer(int startBufferPos, int endBufferPos, float[] buffer) {
+        if (sampleBuffer == null || sampleBuffer.length != buffer.length) {
+            lfoBuffer = new float[buffer.length / 2];
+            sampleBuffer = new float[buffer.length];
+        }
 
-	/**
-	 * @return
-	 */
-	public final int getAmount() {
-		return amount;
-	} 
+        for (int n = (startBufferPos / 2); (n < endBufferPos / 2); n++) {
+            if (amount != 0) {
+                lfoBuffer[n] = PitchCents.getPitchCent((int) (Sinus.getSin(position += increment) * amount)) * pitchBendFactor;
+            } else {
+                lfoBuffer[n] = pitchBendFactor;
+            }
 
+            sampleBuffer[n * 2] = 0;
+            sampleBuffer[n * 2 + 1] = 0;
+        }
+    }
+
+    /**
+     * @return
+     */
+    public final int getAmount() {
+        return amount;
+    }
 }

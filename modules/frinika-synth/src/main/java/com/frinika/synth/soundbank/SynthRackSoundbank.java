@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.synth.soundbank;
 
 import com.frinika.synth.Synth;
@@ -33,58 +32,56 @@ import javax.sound.midi.Soundbank;
 import javax.sound.midi.SoundbankResource;
 
 /**
- * 
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class SynthRackSoundbank implements Soundbank {
 
-	Map<Integer,Instrument> instruments = new HashMap<>();
-	
-	public static int getInstrumentMapKey(Patch patch)
-	{
-		return patch.getBank()*128+patch.getProgram();
-	}
-	
-        @Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    Map<Integer, Instrument> instruments = new HashMap<>();
 
-        @Override
-	public Instrument getInstrument(Patch patch) {
-		return instruments.get(getInstrumentMapKey(patch));
-	}
+    public static int getInstrumentMapKey(Patch patch) {
+        return patch.getBank() * 128 + patch.getProgram();
+    }
 
-        @Override
-	public Instrument[] getInstruments() {
-		return instruments.values().toArray(new Instrument[instruments.size()]);
-	}
+    @Override
+    public String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-        @Override
-	public String getName() {
-		return "Frinika Synthrack soundbank";
-	}
+    @Override
+    public Instrument getInstrument(Patch patch) {
+        return instruments.get(getInstrumentMapKey(patch));
+    }
 
-        @Override
-	public SoundbankResource[] getResources() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Instrument[] getInstruments() {
+        return instruments.values().toArray(new Instrument[instruments.size()]);
+    }
 
-        @Override
-	public String getVendor() {
-		return "petersalomonsen.com";
-	}
+    @Override
+    public String getName() {
+        return "Frinika Synthrack soundbank";
+    }
 
-        @Override
-	public String getVersion() {
-		return "0.5";
-	}
+    @Override
+    public SoundbankResource[] getResources() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public void createAndRegisterInstrument(Patch patch, Synth synth) {
-		instruments.put(getInstrumentMapKey(patch),new SynthRackInstrument(this,synth,patch));
-	}
+    @Override
+    public String getVendor() {
+        return "petersalomonsen.com";
+    }
 
+    @Override
+    public String getVersion() {
+        return "0.5";
+    }
+
+    public void createAndRegisterInstrument(Patch patch, Synth synth) {
+        instruments.put(getInstrumentMapKey(patch), new SynthRackInstrument(this, synth, patch));
+    }
 }

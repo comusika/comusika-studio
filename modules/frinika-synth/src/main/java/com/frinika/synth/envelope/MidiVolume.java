@@ -26,13 +26,13 @@ package com.frinika.synth.envelope;
 import com.frinika.audio.Decibel;
 
 /**
- * 
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class MidiVolume {
 
-    static final float[] amplitudeRatios = new float[] {
+    static final float[] amplitudeRatios = new float[]{
         0,
         6.196825E-5f,
         2.4791213E-4f,
@@ -162,15 +162,13 @@ public class MidiVolume {
         0.98434585f,
         1f
     };
-    
-    public static float midiVolumeTodB(float midiVolume)
-    {
-        return((float)(20.0 * Math.log10(Math.pow((127.0/midiVolume),2.0))));
+
+    public static float midiVolumeTodB(float midiVolume) {
+        return ((float) (20.0 * Math.log10(Math.pow((127.0 / midiVolume), 2.0))));
     }
 
-    public static float midiVolumeToAmplitudeRatio(int midiVolume)
-    {
-        return(amplitudeRatios[midiVolume]);
+    public static float midiVolumeToAmplitudeRatio(int midiVolume) {
+        return (amplitudeRatios[midiVolume]);
     }
 
     /**
@@ -178,8 +176,8 @@ public class MidiVolume {
      */
     public static void main(String[] args) {
         System.out.println(amplitudeRatios.length);
-        for(int n=1;n<128;n++)
-            System.out.println(Decibel.getAmplitudeRatio(-MidiVolume.midiVolumeTodB(n))+"f,");
+        for (int n = 1; n < 128; n++) {
+            System.out.println(Decibel.getAmplitudeRatio(-MidiVolume.midiVolumeTodB(n)) + "f,");
+        }
     }
-
 }

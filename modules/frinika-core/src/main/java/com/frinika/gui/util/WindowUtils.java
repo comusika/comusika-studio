@@ -11,8 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,7 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * Utility static methods usable for windows and dialogs.
@@ -35,15 +32,15 @@ public class WindowUtils {
     private static LookAndFeel lookAndFeel = null;
 
     public static void addHeaderPanel(JDialog dialog, ResourceBundle resourceBundle) {
-        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), resourceBundle.getString("header.icon"));
+        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), new ImageIcon(dialog.getClass().getResource(resourceBundle.getString("header.icon"))));
     }
 
-    public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, String headerIcon) {
+    public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, ImageIcon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
-        if (!headerIcon.isEmpty()) {
-            headerPanel.setIcon(new ImageIcon(dialog.getClass().getResource(headerIcon)));
+        if (headerIcon != null) {
+            headerPanel.setIcon(headerIcon);
         }
         if (dialog instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
             ((WindowHeaderPanel.WindowHeaderDecorationProvider) dialog).setHeaderDecoration(headerPanel);
@@ -62,13 +59,13 @@ public class WindowUtils {
     }
 
     public static void invokeWindow(final Window window) {
-        if (lookAndFeel != null) {
-            try {
-                javax.swing.UIManager.setLookAndFeel(lookAndFeel);
-            } catch (UnsupportedLookAndFeelException ex) {
-                Logger.getLogger(WindowUtils.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+//        if (lookAndFeel != null) {
+//            try {
+//                javax.swing.UIManager.setLookAndFeel(lookAndFeel);
+//            } catch (UnsupportedLookAndFeelException ex) {
+//                Logger.getLogger(WindowUtils.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
@@ -241,6 +238,11 @@ public class WindowUtils {
                 assignGlobalKeyListener((Container) item, keyListener);
             }
         }
+    }
+
+    public static boolean isDarkMode() {
+        // TODO
+        return true;
     }
 
     /**

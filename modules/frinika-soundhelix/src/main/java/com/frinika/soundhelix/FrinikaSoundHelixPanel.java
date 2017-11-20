@@ -22,6 +22,7 @@
 package com.frinika.soundhelix;
 
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
@@ -29,11 +30,10 @@ import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import com.soundhelix.misc.Arrangement;
-import com.soundhelix.misc.Arrangement.ArrangementEntry;
 import com.soundhelix.misc.Sequence;
-import com.soundhelix.misc.Sequence.SequenceEntry;
 import com.soundhelix.misc.SongContext;
 import com.soundhelix.util.SongUtils;
+import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,17 +42,19 @@ import java.util.Random;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Synthesizer;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
- * SoundHelix generator for Frinika dialog.
+ * @author hajdam
  */
-public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
+public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
 
     private final AbstractSequencerProjectContainer project;
+    private WindowUtils.OkCancelListener okCancelListener = null;
 
-    public FrinikaSoundHelixDialog(AbstractSequencerProjectContainer project, java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public FrinikaSoundHelixPanel(AbstractSequencerProjectContainer project) {
         this.project = project;
         initComponents();
     }
@@ -66,178 +68,140 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jComboBox2 = new javax.swing.JComboBox();
-        jLabel1 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton4 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        presetLabel = new javax.swing.JLabel();
+        modeComboBox = new javax.swing.JComboBox();
+        customizeModeButton = new javax.swing.JButton();
+        laneOptionsPanel = new javax.swing.JPanel();
+        synthetizerLabel = new javax.swing.JLabel();
+        synthetizerComboBox = new javax.swing.JComboBox();
+        aboutButton = new javax.swing.JButton();
+        generateButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        progressBar = new javax.swing.JProgressBar();
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        presetLabel.setText("Preset");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("SoundHelix Generator");
+        modeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Piano 1", "Piano 2", "Percussion", "Popcorn", "SoundHelix - Legacy version" }));
 
-        jButton1.setText("Generate");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        customizeModeButton.setText("Customize...");
+        customizeModeButton.setEnabled(false);
+        customizeModeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                customizeModeButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        laneOptionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Lane Options"));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Lane Options"));
+        synthetizerLabel.setText("Syntetizer");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Gervill" }));
-        jComboBox2.setEnabled(false);
+        synthetizerComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Gervill" }));
+        synthetizerComboBox.setEnabled(false);
 
-        jLabel1.setText("Syntetizer");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout laneOptionsPanelLayout = new javax.swing.GroupLayout(laneOptionsPanel);
+        laneOptionsPanel.setLayout(laneOptionsPanelLayout);
+        laneOptionsPanelLayout.setHorizontalGroup(
+            laneOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(laneOptionsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox2, 0, 502, Short.MAX_VALUE)
-                    .addComponent(jLabel1))
+                .addGroup(laneOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(synthetizerComboBox, 0, 366, Short.MAX_VALUE)
+                    .addComponent(synthetizerLabel))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
+        laneOptionsPanelLayout.setVerticalGroup(
+            laneOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(laneOptionsPanelLayout.createSequentialGroup()
+                .addComponent(synthetizerLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addComponent(synthetizerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
-        jButton3.setText("About...");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        aboutButton.setText("About...");
+        aboutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                aboutButtonActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Piano 1", "Piano 2", "Percussion", "Popcorn", "SoundHelix - Legacy version" }));
-
-        jButton4.setText("Customize...");
-        jButton4.setEnabled(false);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        generateButton.setText("Generate");
+        generateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                generateButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 197, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 20, Short.MAX_VALUE)
-        );
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setText("Preset");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+            .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 498, Short.MAX_VALUE))
+                        .addComponent(aboutButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(generateButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton))
+                    .addComponent(laneOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jComboBox1, 0, 426, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(presetLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(modeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(82, 82, 82)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(customizeModeButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(presetLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4))
+                    .addComponent(modeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customizeModeButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(laneOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
-                            .addComponent(jButton1))
+                            .addComponent(cancelButton)
+                            .addComponent(generateButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(aboutButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        jButton1.setEnabled(false);
+    private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
+        generateButton.setEnabled(false);
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                jProgressBar1.setIndeterminate(true);
+                progressBar.setIndeterminate(true);
                 // initialize log4j
                 PropertyConfigurator.configureAndWatch("log4j.properties", 60 * 1000);
 
                 org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(new Throwable().getStackTrace()[0].getClassName());
                 logger.debug("Starting");
 
-                switch (jComboBox1.getSelectedIndex()) {
+                switch (modeComboBox.getSelectedIndex()) {
                     case 0: {
                         generateSoundHelixSong("SoundHelix-Piano.xml", logger);
                         break;
@@ -259,20 +223,38 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
                         break;
                     }
                 }
-                
-                jProgressBar1.setIndeterminate(false);
-                jButton1.setEnabled(true);
+
+                progressBar.setIndeterminate(false);
+                generateButton.setEnabled(true);
             }
         }).start();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_generateButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        new AboutSoundHelixDialog(null, true).setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        performCancel();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        new CustomSoundHelixDialog(null, true).setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
+        AboutSoundHelixPanel aboutPanel = new AboutSoundHelixPanel();
+        JDialog aboutDialog = WindowUtils.createDialog(aboutPanel, WindowUtils.getFrame(this), Dialog.ModalityType.APPLICATION_MODAL);
+        aboutPanel.setOkCancelListener(new WindowUtils.OkCancelListener() {
+            @Override
+            public void okEvent() {
+                WindowUtils.closeWindow(aboutDialog);
+            }
+
+            @Override
+            public void cancelEvent() {
+                WindowUtils.closeWindow(aboutDialog);
+            }
+        });
+        aboutDialog.setLocationByPlatform(true);
+        aboutDialog.setVisible(true);
+    }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void customizeModeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customizeModeButtonActionPerformed
+
+    }//GEN-LAST:event_customizeModeButtonActionPerformed
 
     private void generateSoundHelixSong(String fileName, org.apache.log4j.Logger logger) {
         File soundHelixFile = new File("resources/soundhelix/" + fileName);
@@ -302,14 +284,14 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
                 }
             }
 
-            SynthWrapper sw = new SynthWrapper(null, dev);
+            SynthWrapper sw = new SynthWrapper(project, dev);
 
             project.addMidiOutDevice(sw);
             project.getEditHistoryContainer().mark("Generated Lanes");
             List<MidiLane> lanes = new ArrayList<>();
             List<MidiPart> parts = new ArrayList<>();
             for (int i = 0; i < arrangement.size(); i++) {
-                ArrangementEntry entry = arrangement.get(i);
+                Arrangement.ArrangementEntry entry = arrangement.get(i);
                 MidiLane lane = project.createMidiLane();
                 lane.setMidiChannel(i);
                 lane.setMidiDevice(sw);
@@ -333,11 +315,11 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
 //    		System.out.println("Song length: "+(structure.getTicks()*60/(structure.getTicksPerBeat()*bpm))+" seconds");
 //            note = new NoteEvent(parts.get(0), 10, 60, 127, 1, 100);
 //            parts.get(0).add(note);
-            Iterator<ArrangementEntry> entryIterator = arrangement.iterator();
+            Iterator<Arrangement.ArrangementEntry> entryIterator = arrangement.iterator();
             int i = 0;
 
             while (entryIterator.hasNext()) {
-                ArrangementEntry ae = entryIterator.next();
+                Arrangement.ArrangementEntry ae = entryIterator.next();
                 if (i < 11) {
                     MidiPart part = parts.get(i);
                     long partPos = 0;
@@ -345,9 +327,10 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
                         long pos = 0;
                         Sequence sequence = ae.getTrack().get(j);
                         for (int k = 0; k < sequence.size(); k++) {
-                            SequenceEntry entry = sequence.get(k);
+                            Sequence.SequenceEntry entry = sequence.get(k);
                             if (entry.isNote()) {
-                                note = new NoteEvent(part, pos, entry.getPitch() + (i == 9 ? 0 : 60), entry.getVelocity() / 512, 1, entry.getTicks() * 24);
+                                int velocity = entry.getVelocity();
+                                note = new NoteEvent(part, pos, entry.getPitch() + (i == 9 ? 0 : 60), velocity == 1 ? 255 : velocity / 512, 1, entry.getTicks() * 24);
                                 part.add(note);
                             }
                             pos += entry.getTicks() * 24;
@@ -360,7 +343,8 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
                 }
                 i++;
             }
-            dispose();
+
+            performOk();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -394,7 +378,7 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
                 }
             }
 
-            SynthWrapper sw = new SynthWrapper(null, dev);
+            SynthWrapper sw = new SynthWrapper(project, dev);
 
             project.addMidiOutDevice(sw);
             project.getEditHistoryContainer().mark("Generated Lanes");
@@ -443,44 +427,43 @@ public class FrinikaSoundHelixDialog extends javax.swing.JDialog {
                     }
                 }
             }
-            dispose();
+
+            performOk();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                FrinikaSoundHelixDialog dialog = new FrinikaSoundHelixDialog(null, new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
+    public void setOkCancelListener(WindowUtils.OkCancelListener okCancelListener) {
+        this.okCancelListener = okCancelListener;
+    }
+
+    private void performOk() {
+        if (okCancelListener != null) {
+            okCancelListener.okEvent();
+        }
+    }
+
+    private void performCancel() {
+        if (okCancelListener != null) {
+            okCancelListener.cancelEvent();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JButton aboutButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton customizeModeButton;
+    private javax.swing.JButton generateButton;
+    private javax.swing.JPanel laneOptionsPanel;
+    private javax.swing.JComboBox modeComboBox;
+    private javax.swing.JLabel presetLabel;
+    private javax.swing.JProgressBar progressBar;
+    private javax.swing.JComboBox synthetizerComboBox;
+    private javax.swing.JLabel synthetizerLabel;
     // End of variables declaration//GEN-END:variables
 
+    public ImageIcon getHeaderIcon() {
+        return new javax.swing.ImageIcon(getClass().getResource("/com/frinika/soundhelix/soundhelix.png"));
+    }
 }

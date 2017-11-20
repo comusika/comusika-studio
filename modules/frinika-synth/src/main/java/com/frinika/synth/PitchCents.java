@@ -23,35 +23,31 @@
  */
 package com.frinika.synth;
 
-
 /**
  * @author Peter Johan Salomonsen
  *
  */
 public class PitchCents {
-	
+
     static final float[] pitchCents = new float[2400];
-	static
-	{
-		for(int n=0;n<pitchCents.length;n++)
-		{				
-			pitchCents[n] = (float)Math.pow(2.0,(((n-(pitchCents.length/2))/1200.0)) ); 
-		}		
-	}
-	
-	public static final float getPitchCent(int pitchCent)
-	{
-		return(pitchCents[pitchCent + (pitchCents.length/2)]);
-	}
-	
-    public static final float getRealPitchCent(float pitchCent)
-    {
-        return (float) Math.pow(2.0,((pitchCent/1200.0)) );
+
+    static {
+        for (int n = 0; n < pitchCents.length; n++) {
+            pitchCents[n] = (float) Math.pow(2.0, (((n - (pitchCents.length / 2)) / 1200.0)));
+        }
     }
-    
-	public static void main(String[] args)
-	{
-		for(int n=-1200;n<1200;n++)
-			System.out.println(getRealPitchCent(n));
-	}
+
+    public static final float getPitchCent(int pitchCent) {
+        return (pitchCents[pitchCent + (pitchCents.length / 2)]);
+    }
+
+    public static final float getRealPitchCent(float pitchCent) {
+        return (float) Math.pow(2.0, ((pitchCent / 1200.0)));
+    }
+
+    public static void main(String[] args) {
+        for (int n = -1200; n < 1200; n++) {
+            System.out.println(getRealPitchCent(n));
+        }
+    }
 }

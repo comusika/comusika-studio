@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.frinika.synth.importers.soundfont;
+
 import java.io.FileInputStream;
 
 /**
@@ -29,24 +30,23 @@ import java.io.FileInputStream;
  *
  */
 public class INSTChunk extends Chunk {
-	static int RECSIZE = 22;
-	
-	String[] names;
-	int[] instBagNdx;
-	int count;
-	
-	public INSTChunk(FileInputStream fis) throws Exception
-	{
-		super(fis,"inst");
-	
-		count = length / RECSIZE;
-		names = new String[count];
-		instBagNdx = new int[count];
-		
-		for(int n = 0;n<count;n++)
-		{
-			names[n] = readString(20);
-			instBagNdx[n] = readInt16();
-		}
-	}
+
+    static int RECSIZE = 22;
+
+    String[] names;
+    int[] instBagNdx;
+    int count;
+
+    public INSTChunk(FileInputStream fis) throws Exception {
+        super(fis, "inst");
+
+        count = length / RECSIZE;
+        names = new String[count];
+        instBagNdx = new int[count];
+
+        for (int n = 0; n < count; n++) {
+            names[n] = readString(20);
+            instBagNdx[n] = readInt16();
+        }
+    }
 }

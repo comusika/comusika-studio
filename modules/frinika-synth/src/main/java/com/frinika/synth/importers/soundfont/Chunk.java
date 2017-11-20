@@ -29,70 +29,63 @@ import java.io.FileInputStream;
  * @author Peter Johan Salomonsen
  *
  */
-class Chunk
-{
-	String name;
-	int length;
-	FileInputStream fis;
-	
-	public Chunk(FileInputStream fis, String name) throws Exception
-	{
-		this.fis = fis;
-		byte[] b = new byte[4];
+class Chunk {
 
-		while(!(new String(b).equals(name)) & fis.available()>0)
-		{
-			b[0] = b[2];
-			b[1] = b[3];
-			fis.read(b,2,2);
-		}
-		this.name = name;
-		
-		fis.read(b);
-		
-		length = (b[0] & 0xff)+ 
-		((b[1] & 0xff) << 8 ) +
-		((b[2] & 0xff) << 16 ) +
-		((b[3] & 0xff) << 24 );
-	}
-	
-	public String readString(int length) throws Exception
-	{
-		byte[] b = new byte[length];
-		fis.read(b);
-		int n;
-		for(n=0;n<length && b[n]!=0;n++);
-		return(new String(b,0,n));
-	}
+    String name;
+    int length;
+    FileInputStream fis;
 
-	public int readInt16() throws Exception
-	{
-		byte[] b = new byte[2];
-		fis.read(b);
-		
-		return((b[0] & 0xff)+ 
-		((b[1] & 0xff) << 8 ));
-	}
+    public Chunk(FileInputStream fis, String name) throws Exception {
+        this.fis = fis;
+        byte[] b = new byte[4];
 
-	public int readInt32() throws Exception
-	{
-		byte[] b = new byte[4];
-		fis.read(b);
-		
-		return((b[0] & 0xff)+ 
-		((b[1] & 0xff) << 8 ) +
-		((b[2] & 0xff) << 16 ) +
-		((b[3] & 0xff) << 24 ));
-	}
-	
-	public char readChar() throws Exception
-	{
-		return((char)fis.read());
-	}
+        while (!(new String(b).equals(name)) & fis.available() > 0) {
+            b[0] = b[2];
+            b[1] = b[3];
+            fis.read(b, 2, 2);
+        }
+        this.name = name;
 
-	public byte readByte() throws Exception
-	{
-		return((byte)fis.read());
-	}
+        fis.read(b);
+
+        length = (b[0] & 0xff)
+                + ((b[1] & 0xff) << 8)
+                + ((b[2] & 0xff) << 16)
+                + ((b[3] & 0xff) << 24);
+    }
+
+    public String readString(int length) throws Exception {
+        byte[] b = new byte[length];
+        fis.read(b);
+        int n;
+        for (n = 0; n < length && b[n] != 0; n++);
+        return (new String(b, 0, n));
+    }
+
+    public int readInt16() throws Exception {
+        byte[] b = new byte[2];
+        fis.read(b);
+
+        return ((b[0] & 0xff)
+                + ((b[1] & 0xff) << 8));
+    }
+
+    public int readInt32() throws Exception {
+        byte[] b = new byte[4];
+        fis.read(b);
+
+        return ((b[0] & 0xff)
+                + ((b[1] & 0xff) << 8)
+                + ((b[2] & 0xff) << 16)
+                + ((b[3] & 0xff) << 24));
+    }
+
+    public char readChar() throws Exception {
+        return ((char) fis.read());
+    }
+
+    public byte readByte() throws Exception {
+        return ((byte) fis.read());
+    }
 
 }

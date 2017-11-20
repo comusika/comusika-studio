@@ -23,6 +23,7 @@
  */
 package com.frinika.frame;
 
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.project.dialog.AboutDialog;
 import com.frinika.sequencer.gui.ProjectFrame;
 import java.awt.BorderLayout;
@@ -53,7 +54,7 @@ import javax.swing.SwingConstants;
 public class WelcomeDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private boolean darkMode = true;
+    private boolean darkMode = WindowUtils.isDarkMode();
 
     Map<Integer, ActionListener> listeners = new HashMap<>();
 

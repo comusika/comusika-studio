@@ -36,97 +36,97 @@ import javax.swing.*;
  *
  */
 public class SoundFontImporterGUI extends JFrame {
-	static File lastSelectedPath;
-	static File previousFolder = null;
-	
-	SoundFontImporter sfi;
-	private JComboBox cb = null;
-	
-	public SoundFontImporterGUI(SoundFontImporter sfi)
-	{
-		super();
-		setLayout(new FlowLayout());
-		this.sfi = sfi;
-		initialize();
 
-	}
-	/**
-	 * This method initializes this
-	 * 
-	 */
-	private void initialize() {
-		final JButton but = new JButton("Open soundfont");
-		but.addMouseListener(new MouseAdapter() {
-                                @Override
-				public void mouseClicked(MouseEvent e) {
-					try
-					{
-						JFileChooser chooser = new JFileChooser();
-						chooser.setDialogTitle("Open soundfont");
-						chooser.setFileFilter(new SoundFontFileFilter());
-						if(SoundFontImporterGUI.lastSelectedPath !=null )
-							chooser.setSelectedFile(SoundFontImporterGUI.lastSelectedPath);
-						if(chooser.showOpenDialog(SoundFontImporterGUI.this)==
-							JFileChooser.APPROVE_OPTION) {
-							File soundFontFile = chooser.getSelectedFile();
-							SoundFontImporterGUI.lastSelectedPath = soundFontFile;
-							sfi.getSoundFont(soundFontFile);
-							updateInstrumentList();
-							pack();
-							repaint();
-						};
-					} catch(Exception ex) { ex.printStackTrace(); }
-				}		    
-		    });
-		add(but);
-		updateInstrumentList();
-        setSize(100,200);
+    static File lastSelectedPath;
+    static File previousFolder = null;
+
+    SoundFontImporter sfi;
+    private JComboBox cb = null;
+
+    public SoundFontImporterGUI(SoundFontImporter sfi) {
+        super();
+        setLayout(new FlowLayout());
+        this.sfi = sfi;
+        initialize();
+
+    }
+
+    /**
+     * This method initializes this
+     *
+     */
+    private void initialize() {
+        final JButton but = new JButton("Open soundfont");
+        but.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    JFileChooser chooser = new JFileChooser();
+                    chooser.setDialogTitle("Open soundfont");
+                    chooser.setFileFilter(new SoundFontFileFilter());
+                    if (SoundFontImporterGUI.lastSelectedPath != null) {
+                        chooser.setSelectedFile(SoundFontImporterGUI.lastSelectedPath);
+                    }
+                    if (chooser.showOpenDialog(SoundFontImporterGUI.this)
+                            == JFileChooser.APPROVE_OPTION) {
+                        File soundFontFile = chooser.getSelectedFile();
+                        SoundFontImporterGUI.lastSelectedPath = soundFontFile;
+                        sfi.getSoundFont(soundFontFile);
+                        updateInstrumentList();
+                        pack();
+                        repaint();
+                    };
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        add(but);
+        updateInstrumentList();
+        setSize(100, 200);
         pack();
         setVisible(true);
-	}
-	
-    public static void getMissingSoundFont(File file, SoundFontImporter sfi) throws Exception
-    {
-	if(previousFolder!=null) {
-	    file = new File(previousFolder,file.getName());
-	}
+    }
+
+    public static void getMissingSoundFont(File file, SoundFontImporter sfi) throws Exception {
+        if (previousFolder != null) {
+            file = new File(previousFolder, file.getName());
+        }
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("A soundfont is missing");
         chooser.setFileFilter(new SoundFontFileFilter());
         chooser.setSelectedFile(file);
-        
-        if(chooser.showOpenDialog(null)==
-            JFileChooser.APPROVE_OPTION) {
+
+        if (chooser.showOpenDialog(null)
+                == JFileChooser.APPROVE_OPTION) {
             File soundFontFile = chooser.getSelectedFile();
             sfi.getSoundFont(soundFontFile);
-	    previousFolder = soundFontFile.getParentFile();
+            previousFolder = soundFontFile.getParentFile();
         }
     }
-        
-	void updateInstrumentList()
-	{
-		if(sfi.inst != null)
-		{
-			if(cb!=null)
-				remove(cb);
-			cb = new JComboBox();
-			cb.addItem("");
-			for(String name : sfi.getInstrumentNames())
-				cb.addItem(name);
-			cb.addItemListener(new ItemListener() {
-	
-                                @Override
-				public void itemStateChanged(ItemEvent e) {
-					try
-					{
-						sfi.getInstrument(cb.getSelectedIndex()-1);
-					}
-					catch(Exception ex)
-					{
-						ex.printStackTrace();
-					}
-				}});
-			add(cb);
-		}
-	}
+
+    void updateInstrumentList() {
+        if (sfi.inst != null) {
+            if (cb != null) {
+                remove(cb);
+            }
+            cb = new JComboBox();
+            cb.addItem("");
+            for (String name : sfi.getInstrumentNames()) {
+                cb.addItem(name);
+            }
+            cb.addItemListener(new ItemListener() {
+
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    try {
+                        sfi.getInstrument(cb.getSelectedIndex() - 1);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            add(cb);
+        }
+    }
 }

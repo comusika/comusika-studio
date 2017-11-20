@@ -32,19 +32,17 @@ import javax.swing.JComboBox;
  *
  */
 public class ChannelComboBox extends JComboBox implements GlobalInstrumentNameListener {
+
     private SynthRack synth;
 
-    public ChannelComboBox(SynthRack synth)
-    {
+    public ChannelComboBox(SynthRack synth) {
         this.synth = synth;
-        for(int n=0;n<16;n++)
-        {
-            String itemName = n+"";
-            if(synth.getSynth(n)!=null)
-            {
-                itemName+=" "+synth.getSynth(n).getInstrumentName();
+        for (int n = 0; n < 16; n++) {
+            String itemName = n + "";
+            if (synth.getSynth(n) != null) {
+                itemName += " " + synth.getSynth(n).getInstrumentName();
             }
-            addItem(n+"");
+            addItem(n + "");
         }
         setSelectedIndex(0);
         synth.addGlobalInstrumentNameListener(this);
@@ -56,13 +54,15 @@ public class ChannelComboBox extends JComboBox implements GlobalInstrumentNameLi
     @Override
     public void instrumentNameChange(int synthIndex, String instrumentName) {
         boolean isSelected = false;
-        if(getSelectedIndex()==synthIndex)
+        if (getSelectedIndex() == synthIndex) {
             isSelected = true;
+        }
 
         removeItemAt(synthIndex);
-        insertItemAt(synthIndex+" "+instrumentName,synthIndex);
-        
-        if(isSelected)
+        insertItemAt(synthIndex + " " + instrumentName, synthIndex);
+
+        if (isSelected) {
             setSelectedIndex(synthIndex);
+        }
     }
 }
