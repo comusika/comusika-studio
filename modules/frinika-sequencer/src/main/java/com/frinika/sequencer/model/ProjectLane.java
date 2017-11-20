@@ -38,72 +38,68 @@ import javax.swing.Icon;
  */
 public class ProjectLane extends Lane {
 
-	/**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-    
+
     AbstractSequencerProjectContainer project;
-	Vector<LaneTreeListener> laneTreeListeners;
+    Vector<LaneTreeListener> laneTreeListeners;
 
     {
-        parts=new Vector<>();
+        parts = new Vector<>();
     }
-    
+
     /**
      * Public constructor for de-externalization
      *
      */
-	public ProjectLane()
-    {
-       
+    public ProjectLane() {
+
     }
-    
-	public ProjectLane(AbstractSequencerProjectContainer project) {
-		super("project",project);
-		this.project = project;
-		setHidden(true);
+
+    public ProjectLane(AbstractSequencerProjectContainer project) {
+        super("project", project);
+        this.project = project;
+        setHidden(true);
     }
-    
-    @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		// TODO Auto-generated method stub	
-	}
-	
-	public void notifyViewChanged() {
-		for(LaneTreeListener l:laneTreeListeners) {
-			l.fireLaneTreeChanged();
-		}
-		
-	}
 
     @Override
-	public Selectable deepCopy(Selectable parent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void restoreFromClone(EditHistoryRecordable object) {
+        // TODO Auto-generated method stub	
+    }
+
+    public void notifyViewChanged() {
+        for (LaneTreeListener l : laneTreeListeners) {
+            l.fireLaneTreeChanged();
+        }
+
+    }
 
     @Override
-	public void deepMove(long tick) {
-		// TODO Auto-generated method stub
-		
-	}
+    public Selectable deepCopy(Selectable parent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
-	public long rightTickForMove() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public void deepMove(long tick) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public Part createPart() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
 
-	@Override
-	public Icon getIcon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public long rightTickForMove() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public Part createPart() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Icon getIcon() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

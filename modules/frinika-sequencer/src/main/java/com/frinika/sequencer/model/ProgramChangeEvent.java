@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.model.EditHistoryRecordable;
@@ -32,98 +31,91 @@ import javax.sound.midi.ShortMessage;
 
 public class ProgramChangeEvent extends ChannelEvent {
 
-	transient MidiEvent programEvent;
+    transient MidiEvent programEvent;
 
-	transient MidiEvent msbEvent;
+    transient MidiEvent msbEvent;
 
-	transient MidiEvent lsbEvent;
+    transient MidiEvent lsbEvent;
 
-	int prog;
+    int prog;
 
-	int msb;
+    int msb;
 
-	int lsb;
+    int lsb;
 
-	/**
-	 * 
-	 */
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    public ProgramChangeEvent(MidiPart part, long startTick, int prog, int msb,
+            int lsb) {
+        super(part, startTick);
 
-	public ProgramChangeEvent(MidiPart part, long startTick, int prog, int msb,
-			int lsb) {
-		super(part, startTick);
+    }
 
-	}
+    @Override
+    public long getEndTick() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public long getEndTick() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+        //	System .out.println(" COMMIT REMOVE PROG ");
 
-	@SuppressWarnings("deprecation")
-	@Override
-	void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
-	//	System .out.println(" COMMIT REMOVE PROG ");
+        getTrack().remove(msbEvent);
+        getTrack().remove(lsbEvent);
+        getTrack().remove(programEvent);
+        zombie = true;
+    }
 
-		getTrack().remove(msbEvent);
-		getTrack().remove(lsbEvent);
-		getTrack().remove(programEvent);
-                zombie=true;
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+        // System. out.println(" COMMIT ADD PROG ");
+        try {
 
-		// System. out.println(" COMMIT ADD PROG ");
-		try {
+            ShortMessage shm = new ShortMessage();
+            shm.setMessage(ShortMessage.CONTROL_CHANGE, channel, 0, msb);
+            msbEvent = new MidiEvent(shm, startTick);
+            getTrack().add(msbEvent);
 
-			ShortMessage shm = new ShortMessage();
-			shm.setMessage(ShortMessage.CONTROL_CHANGE, channel, 0, msb);
-			msbEvent = new MidiEvent(shm, startTick);
-			getTrack().add(msbEvent);
+            shm = new ShortMessage();
+            shm.setMessage(ShortMessage.CONTROL_CHANGE, channel, 0x20, lsb);
+            lsbEvent = new MidiEvent(shm, startTick);
+            getTrack().add(lsbEvent);
 
-			shm = new ShortMessage();
-			shm.setMessage(ShortMessage.CONTROL_CHANGE, channel, 0x20, lsb);
-			lsbEvent = new MidiEvent(shm, startTick);
-			getTrack().add(lsbEvent);
+            shm = new ShortMessage();
+            shm.setMessage(ShortMessage.PROGRAM_CHANGE, channel, prog, 0);
+            programEvent = new MidiEvent(shm, startTick);
+            getTrack().add(programEvent);
 
-			shm = new ShortMessage();
-			shm.setMessage(ShortMessage.PROGRAM_CHANGE, channel, prog, 0);
-			programEvent = new MidiEvent(shm, startTick);
-			getTrack().add(programEvent);
-
-		} catch (InvalidMidiDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-                zombie=false;
-	}
-
-        @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		// TODO Auto-generated method stub
-		ProgramChangeEvent evt=(ProgramChangeEvent)object;
-		this.part = evt.part;
-		this.startTick = evt.startTick;
-		this.prog = evt.prog;
-		this.msb = evt.msb;
-		this.lsb = evt.lsb;		
-	}
-
-	public void setProgram(int prog2, int msb2, int lsb2) {
-
-		
-		prog=prog2;
-		msb=msb2;
-		lsb=lsb2;
-		
-	}
-        
-        public MyPatch getPatch() {
-            return new MyPatch(prog, msb, lsb);
+        } catch (InvalidMidiDataException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        zombie = false;
+    }
 
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
+        // TODO Auto-generated method stub
+        ProgramChangeEvent evt = (ProgramChangeEvent) object;
+        this.part = evt.part;
+        this.startTick = evt.startTick;
+        this.prog = evt.prog;
+        this.msb = evt.msb;
+        this.lsb = evt.lsb;
+    }
+
+    public void setProgram(int prog2, int msb2, int lsb2) {
+
+        prog = prog2;
+        msb = msb2;
+        lsb = lsb2;
+    }
+
+    public MyPatch getPatch() {
+        return new MyPatch(prog, msb, lsb);
+    }
 }

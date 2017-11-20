@@ -21,13 +21,15 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.renderer;
 
 import javax.sound.midi.MidiMessage;
 
 public interface MidiRender {
-	public void send(MidiMessage message);				
-	public int read(float[] buffer, int from, int to);
-	public void close();
+
+    void send(MidiMessage message);
+
+    int read(float[] buffer, int from, int to);
+
+    void close();
 }

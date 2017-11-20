@@ -29,59 +29,54 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Provides a view of the Lanes for display purposes.
- * If any lane is hidden / opened  / removed or added
- * This needs to get rebuilt and the partview redrawn.
- * 
+ * Provides a view of the Lanes for display purposes. If any lane is hidden /
+ * opened / removed or added This needs to get rebuilt and the partview redrawn.
+ *
  * @author Paul
  *
  */
-public class ViewableLaneList implements Iterable<Lane>  {
+public class ViewableLaneList implements Iterable<Lane> {
 
-	AbstractSequencerProjectContainer project;
-	Vector<Lane> lanes;
-	int y;
-	int id;
-	
-	public ViewableLaneList(AbstractSequencerProjectContainer project){
-		this.project=project;
-		
-		rebuild();
-		
-	}
+    AbstractSequencerProjectContainer project;
+    Vector<Lane> lanes;
+    int y;
+    int id;
 
-	public void rebuild() {
-		lanes=new Vector<>();
-		y=0;
-		id=0;
-		Lane root= project.getProjectLane();
-		rebuild(root);
-	}
-	
-	private void rebuild(Lane root) {
-		if (!root.isHidden()) {
-			
-			int height = root.getHeight()*Layout.getLaneHeightScale();
-			root.setDisplayPos(y, height,id++);
-			y+= height;			
-			lanes.add(root);
-			
-		}
-		if (root.isOpen() && root.getChildren() != null ) {
-			for (Lane child:root.getChildren()) {
-				rebuild(child);
-			}
-		}
-		
-	}
-	
-	public List<Lane> getVisibleLanes() {
-		return lanes;
-	}
+    public ViewableLaneList(AbstractSequencerProjectContainer project) {
+        this.project = project;
 
-        @Override
-	public Iterator<Lane> iterator() {
-		return lanes.iterator();
-	}
-	
+        rebuild();
+    }
+
+    public void rebuild() {
+        lanes = new Vector<>();
+        y = 0;
+        id = 0;
+        Lane root = project.getProjectLane();
+        rebuild(root);
+    }
+
+    private void rebuild(Lane root) {
+        if (!root.isHidden()) {
+
+            int height = root.getHeight() * Layout.getLaneHeightScale();
+            root.setDisplayPos(y, height, id++);
+            y += height;
+            lanes.add(root);
+        }
+        if (root.isOpen() && root.getChildren() != null) {
+            for (Lane child : root.getChildren()) {
+                rebuild(child);
+            }
+        }
+    }
+
+    public List<Lane> getVisibleLanes() {
+        return lanes;
+    }
+
+    @Override
+    public Iterator<Lane> iterator() {
+        return lanes.iterator();
+    }
 }

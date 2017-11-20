@@ -21,30 +21,28 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 /**
  * Interface to a reference-copy ("ghost") of a Part.
- * 
- * Ghosts appear as Parts in the Tracker-view, but do not contain their own 
+ *
+ * Ghosts appear as Parts in the Tracker-view, but do not contain their own
  * events. Instead, Ghosts are internally linked to the origial Part from which
  * they have been created. They represent the original Part transparently, but
  * are not editable themselves. All changed applied to the original Part will
- * immediately take effect on Ghosts also. 
- * 
+ * immediately take effect on Ghosts also.
+ *
  * (Currently only implemented for MidiParts.)
- * 
+ *
  * @see MidiPartGhost
  * @see com.frinika.sequencer.gui.menu.RepeatAction
  * @author Jens Gulden
  */
 public interface Ghost {
 
-	public Part getReferredPart();
-	
-	public long getStartTick();
-	
-	public Lane getLane();
-	
+    Part getReferredPart();
+
+    long getStartTick();
+
+    Lane getLane();
 }

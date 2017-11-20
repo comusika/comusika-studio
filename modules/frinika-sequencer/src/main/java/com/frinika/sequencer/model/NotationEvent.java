@@ -21,41 +21,38 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.model.EditHistoryRecordable;
 
 public class NotationEvent extends MultiEvent {
 
-	private static final long serialVersionUID = 1L;
-	
-    public NotationEvent(MidiPart part, long startTick)
-    {
-   		super(part, startTick);
-    }	
+    private static final long serialVersionUID = 1L;
 
-        @Override
-	public long getEndTick() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public NotationEvent(MidiPart part, long startTick) {
+        super(part, startTick);
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void commitRemoveImpl() {
-	}
+    @Override
+    public long getEndTick() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void commitAddImpl() {
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    public void commitRemoveImpl() {
+    }
 
-        @Override
-	public void restoreFromClone(EditHistoryRecordable object) {		
-		NotationEvent evt=(NotationEvent)object;
-		this.part = evt.part;
-		this.startTick = evt.startTick;
-	}
+    @SuppressWarnings("deprecation")
+    @Override
+    public void commitAddImpl() {
+    }
 
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
+        NotationEvent evt = (NotationEvent) object;
+        this.part = evt.part;
+        this.startTick = evt.startTick;
+    }
 }

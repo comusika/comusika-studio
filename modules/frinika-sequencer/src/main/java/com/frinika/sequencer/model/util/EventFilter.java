@@ -26,6 +26,5 @@ import com.frinika.sequencer.model.MultiEvent;
 
 public interface EventFilter {
 
-	boolean isValidEvent(MultiEvent event);
-
+    boolean isValidEvent(MultiEvent event);
 }

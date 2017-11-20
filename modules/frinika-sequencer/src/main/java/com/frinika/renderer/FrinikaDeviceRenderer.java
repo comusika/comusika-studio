@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.renderer;
 
 import com.frinika.sequencer.FrinikaTrackWrapper;
@@ -32,94 +31,80 @@ import uk.org.toot.audio.core.AudioProcess;
 
 public class FrinikaDeviceRenderer {
 
-	MidiDevice dev;
-	FrinikaRenderer renderer;
-	FrinikaChannelRenderer[] channels = new FrinikaChannelRenderer[16]; 
-	
-	public FrinikaDeviceRenderer(FrinikaRenderer renderer, MidiDevice dev)
-	{
-		this.renderer = renderer;
-		this.dev = dev;
-	}
-	
-	public void addTrack(FrinikaTrackWrapper track)
-	{
-		int ch = track.getMidiChannel();
-		if(channels[ch] == null)
-		{
-			channels[ch] = new FrinikaChannelRenderer(this, ch);
-		}
-		channels[ch].addTrack(track);		
-	}
-	
-	public MidiDevice getDevice()
-	{
-		return dev;
-	}
-	
-	public void beforeStart()
-	{		
+    MidiDevice dev;
+    FrinikaRenderer renderer;
+    FrinikaChannelRenderer[] channels = new FrinikaChannelRenderer[16];
+
+    public FrinikaDeviceRenderer(FrinikaRenderer renderer, MidiDevice dev) {
+        this.renderer = renderer;
+        this.dev = dev;
+    }
+
+    public void addTrack(FrinikaTrackWrapper track) {
+        int ch = track.getMidiChannel();
+        if (channels[ch] == null) {
+            channels[ch] = new FrinikaChannelRenderer(this, ch);
+        }
+        channels[ch].addTrack(track);
+    }
+
+    public MidiDevice getDevice() {
+        return dev;
+    }
+
+    public void beforeStart() {
+        for (FrinikaChannelRenderer channel : channels) {
+            if (channel != null) {
+                channel.beforeStart();
+            }
+        }
+        for (FrinikaChannelRenderer channel : channels) {
+            if (channel != null) {
+                channel.beforeStart2();
+            }
+        }
+
+    }
+
+    AudioProcess renderProcess = new AudioProcess() {
+        @Override
+        public void open() {
+        }
+
+        @Override
+        public int processAudio(AudioBuffer buffer) {
+
+            int samplecount = buffer.getSampleCount();
+
             for (FrinikaChannelRenderer channel : channels) {
                 if (channel != null) {
-                    channel.beforeStart();
-                }
-            }
-            for (FrinikaChannelRenderer channel : channels) {
-                if (channel != null) {
-                    channel.beforeStart2();
+                    channel.processAudio(buffer);
                 }
             }
 
-	}
-	
-	AudioProcess renderProcess = new AudioProcess()
-	{
-                @Override
-		public void open() {
-		}
+            return 0;
+        }
 
-                @Override
-		public int processAudio(AudioBuffer buffer) {
-			
-			int samplecount = buffer.getSampleCount();
-			
-                    for (FrinikaChannelRenderer channel : channels) {
-                        if (channel != null) {
-                            channel.processAudio(buffer);
-                        }
-                    }
-			
-			return 0;
-		}
+        @Override
+        public void close() {
+        }
+    };
 
-                @Override
-		public void close() {
-		}
-	};
+    public void start() {
+        if (dev instanceof SynthWrapper) {
+            ((SynthWrapper) dev).setRenderAudioProcess(renderProcess);
+        }
+    }
 
-	
-	public void start()
-	{		
-		if(dev instanceof SynthWrapper) 
-		{
-			((SynthWrapper)dev).setRenderAudioProcess(renderProcess);
-		}
-	}
-	
-	public void stop()
-	{		
-		if(dev instanceof SynthWrapper) 
-		{
-			((SynthWrapper)dev).setRenderAudioProcess(null);
-		}
-		
-            for (FrinikaChannelRenderer channel : channels) {
-                if (channel != null) {
-                    channel.stop();
-                }
+    public void stop() {
+        if (dev instanceof SynthWrapper) {
+            ((SynthWrapper) dev).setRenderAudioProcess(null);
+        }
+
+        for (FrinikaChannelRenderer channel : channels) {
+            if (channel != null) {
+                channel.stop();
             }
-	}
-
-	
-	
+        }
+    }
 }

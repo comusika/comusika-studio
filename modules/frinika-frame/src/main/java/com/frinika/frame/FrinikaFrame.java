@@ -69,6 +69,7 @@ import com.frinika.sequencer.gui.transport.StartStopAction;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.Part;
+import com.frinika.sequencer.project.ProjectRepaintListener;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.sequencer.tools.BufferedPlayback;
 import com.frinika.soundhelix.FrinikaSoundHelixPanel;
@@ -455,6 +456,21 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         MidiInDeviceManager.setProject(project);
 
         this.project = project;
+
+        project.registerProjectRepaintListener(new ProjectRepaintListener() {
+            @Override
+            public void repaintViews() {
+                partViewEditor.repaint();
+                repaintPartView();
+                // TODO repaint others if needed
+            }
+
+            @Override
+            public void repaintPartView() {
+                partViewEditor.getPartview().repaint();
+                partViewEditor.getPartview().repaintItems();
+            }
+        });
 
         /*
 		 * Rectangle windowSize = GraphicsEnvironment
@@ -2557,7 +2573,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             public void actionPerformed(ActionEvent e) {
                 FrinikaSoundHelixPanel panel = new FrinikaSoundHelixPanel(project);
                 JDialog dialog = WindowUtils.createDialog(panel, FrinikaFrame.this, Dialog.ModalityType.APPLICATION_MODAL);
-                WindowUtils.addHeaderPanel(dialog, "SoundHelix Generator", "", panel.getHeaderIcon());
+                WindowUtils.addHeaderPanel(dialog, "SoundHelix Generator", "Generate song using SoundHelix generator", panel.getHeaderIcon());
                 panel.setOkCancelListener(new WindowUtils.OkCancelListener() {
                     @Override
                     public void okEvent() {

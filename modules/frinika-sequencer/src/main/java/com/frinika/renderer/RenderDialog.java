@@ -42,81 +42,78 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 public class RenderDialog extends JDialog implements Runnable {
+
     private static final long serialVersionUID = 1L;
 
     JProgressBar progressBar;
     MyMidiRenderer midiRenderer;
-    
+
     AbstractSequencerProjectContainer project;
-    
+
     int numberOfSamples;
-    
+
     public RenderDialog(JFrame frame,
-            AbstractSequencerProjectContainer project, 
-            long startTick, 
-            long endTick)
-    {
-        super(frame,true);
-        
+            AbstractSequencerProjectContainer project,
+            long startTick,
+            long endTick) {
+        super(frame, true);
+
         this.project = project;
         this.setResizable(false);
         this.setUndecorated(true);
-        try
-        {
-            midiRenderer = new MyMidiRenderer(project.getMixer(),project.getSequencer(),startTick,(int)(endTick-startTick),project.getAudioServer().getSampleRate());
-            numberOfSamples = midiRenderer.available()/4;
-            progressBar = new JProgressBar(0,midiRenderer.available());
+        try {
+            midiRenderer = new MyMidiRenderer(project.getMixer(), project.getSequencer(), startTick, (int) (endTick - startTick), project.getAudioServer().getSampleRate());
+            numberOfSamples = midiRenderer.available() / 4;
+            progressBar = new JProgressBar(0, midiRenderer.available());
             progressBar.setStringPainted(true);
-            
-            setLayout(new GridLayout(0,1));
-            
+
+            setLayout(new GridLayout(0, 1));
+
             JLabel lb = new JLabel("Render section");
-            lb.setFont(new Font(lb.getFont().getName(),Font.BOLD,lb.getFont().getSize()*2));
+            lb.setFont(new Font(lb.getFont().getName(), Font.BOLD, lb.getFont().getSize() * 2));
             add(lb);
             add(progressBar);
 
             new Thread(this).start();
-            
+
             this.setSize(getPreferredSize());
-            
+
             this.setLocationRelativeTo(frame);
             this.setVisible(true);
-        } catch(IOException e) {}
+        } catch (IOException e) {
+        }
     }
-    
+
     byte[] buffer = new byte[1024];
-    
+
     @Override
     public void run() {
-    	// Stop audio server
-        FrinikaAudioServer audioServer=FrinikaAudioSystem.getAudioServer();
-        
-        project.getAudioServer().stop();	
+        // Stop audio server
+        FrinikaAudioServer audioServer = FrinikaAudioSystem.getAudioServer();
+
+        project.getAudioServer().stop();
         audioServer.setRealTime(false);
-        
-        
-    	try
-        {
-        	AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar,midiRenderer),new AudioFormat((float) FrinikaConfig.sampleRate,16,2,true,true),numberOfSamples);
+
+        try {
+            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
-       
+
             sequencer.setRealtime(false);
             sequencer.start();
             project.getMixer().setEnabled(true);
             int ret = 0;
-            while(ret != -1)
-            {
-            	ret = ais.read(buffer);
+            while (ret != -1) {
+                ret = ais.read(buffer);
             }
             sequencer.stop();
             sequencer.setRealtime(true);
-         
+
             RenderDialog.this.dispose();
-        } catch(IOException e) {
-        	e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         // Restore output process (mixer) from project and restart audio server
-        
+
         project.getMixer().getMainBus().setOutputProcess(project.getOutputProcess());
         audioServer.setRealTime(true);
         project.getAudioServer().start();

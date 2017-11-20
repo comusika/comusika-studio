@@ -28,37 +28,39 @@ import java.util.SortedSet;
 
 public class EventIterator implements Iterator<MultiEvent> {
 
-	Iterator<MultiEvent> eIter;
-	MultiEvent next=null;
-	private EventFilter filter;
-	
-	public EventIterator(SortedSet<MultiEvent> list,EventFilter filter) {
-		eIter= list.iterator();
-		this.filter=filter;
-		seekNext();
-	}
-	
-        @Override
-	public boolean hasNext() {
-		return next != null ;
-	}
-	private void seekNext() {
-		while(eIter.hasNext()) {
-			if (filter.isValidEvent((next=eIter.next()))) return; 
-		}
-		next=null;
-	}
+    Iterator<MultiEvent> eIter;
+    MultiEvent next = null;
+    private EventFilter filter;
 
-        @Override
-	public MultiEvent next() {
-		MultiEvent tmp=next;
-		seekNext();
-		return tmp;
-	}
+    public EventIterator(SortedSet<MultiEvent> list, EventFilter filter) {
+        eIter = list.iterator();
+        this.filter = filter;
+        seekNext();
+    }
 
-        @Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public boolean hasNext() {
+        return next != null;
+    }
 
+    private void seekNext() {
+        while (eIter.hasNext()) {
+            if (filter.isValidEvent((next = eIter.next()))) {
+                return;
+            }
+        }
+        next = null;
+    }
+
+    @Override
+    public MultiEvent next() {
+        MultiEvent tmp = next;
+        seekNext();
+        return tmp;
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

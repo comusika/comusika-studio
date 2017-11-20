@@ -21,8 +21,9 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.base;
+package com.frinika.project;
 
+import com.frinika.base.AbstractProjectContainer;
 import com.frinika.tootX.MixerControlsMidiStreamSnapshotAutomation;
 import java.io.IOException;
 import java.io.InputStream;

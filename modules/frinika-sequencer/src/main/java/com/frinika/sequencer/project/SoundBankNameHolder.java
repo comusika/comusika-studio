@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.frinika.sequencer.project;
 
 /**
@@ -12,6 +11,8 @@ package com.frinika.sequencer.project;
  * @author pjl
  */
 public interface SoundBankNameHolder {
-	public String getSoundBankFileName();
-    public void setSoundBankFileName(String name);
+
+    String getSoundBankFileName();
+
+    void setSoundBankFileName(String name);
 }

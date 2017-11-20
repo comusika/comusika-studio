@@ -26,33 +26,33 @@ import com.frinika.model.EditHistoryAction;
 
 public class MovePartEditAction implements EditHistoryAction {
 
-	Part part;
+    Part part;
 
-	double dTick;
+    double dTick;
 
-	Lane dstLane;
+    Lane dstLane;
 
-	Lane srcLane;
+    Lane srcLane;
 
-	public MovePartEditAction(Part part, double dTick, Lane dstLane) {
-		this.part = part;
-		this.srcLane = part.getLane();
-		this.dTick = dTick;
-		this.dstLane = dstLane;
-	}
+    public MovePartEditAction(Part part, double dTick, Lane dstLane) {
+        this.part = part;
+        this.srcLane = part.getLane();
+        this.dTick = dTick;
+        this.dstLane = dstLane;
+    }
 
-        @Override
-	public void undo() {
-		
-		// TODO put this into the Part interface.
+    @Override
+    public void undo() {
+
+        // TODO put this into the Part interface.
 //		if (part instanceof AudioPart) {
 //		//	part( );
 //		} else if (part instanceof MidiPart){	
 //		part.startTick -= dTick;
 //		part.endTick -= dTick;
 //		 ((MidiPart)part).commitEventsRemove();
-		// TODO there is a redundant remove add in the next call
-		part.moveContentsBy(-dTick,srcLane);
+        // TODO there is a redundant remove add in the next call
+        part.moveContentsBy(-dTick, srcLane);
 //		if (srcLane != dstLane) {
 //			dstLane.getParts().remove(part);
 //			srcLane.getParts().add(part);
@@ -61,10 +61,10 @@ public class MovePartEditAction implements EditHistoryAction {
 //		((MidiPart)part).commitEventsAdd();
 //		}
 
-	}
+    }
 
-        @Override
-	public void redo() {
+    @Override
+    public void redo() {
 //		part.startTick += dTick;
 //		part.endTick += dTick;
 //		if (part instanceof MidiPart) ((MidiPart)part).commitEventsRemove();
@@ -73,15 +73,13 @@ public class MovePartEditAction implements EditHistoryAction {
 //			dstLane.getParts().add(part);
 //			part.lane=dstLane;
 //		}
-		// TODO parent child structure
-		part.moveContentsBy(dTick,dstLane);
+        // TODO parent child structure
+        part.moveContentsBy(dTick, dstLane);
 //		if (part instanceof MidiPart) ((MidiPart)part).commitEventsAdd();
 
-	}
+    }
 
-	public Part getPart() {
-		return part;
-	}
-
-
+    public Part getPart() {
+        return part;
+    }
 }

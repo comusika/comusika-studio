@@ -28,104 +28,104 @@ import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 
 /**
  * Action to split selected parts at a given tick.
- * 
+ *
  * @author Paul
- * 
+ *
  */
 public class GluePartEditAction implements EditHistoryAction {
 
-	AbstractSequencerProjectContainer project;
+    AbstractSequencerProjectContainer project;
 
-	MidiPart origPart1;
+    MidiPart origPart1;
 
-	MidiPart origPart2 = null;
+    MidiPart origPart2 = null;
 
-	MidiPart newPart = null;
+    MidiPart newPart = null;
 
-	public GluePartEditAction(MidiPart part) {
-		origPart1 = part;
-		project = part.getLane().getProject();
-	}
+    public GluePartEditAction(MidiPart part) {
+        origPart1 = part;
+        project = part.getLane().getProject();
+    }
 
-        @Override
-	public void undo() {
+    @Override
+    public void undo() {
 
-		if (newPart == null)
-			return;
-		newPart.commitEventsRemove();
-		newPart.lane.parts.remove(newPart);
+        if (newPart == null) {
+            return;
+        }
+        newPart.commitEventsRemove();
+        newPart.lane.parts.remove(newPart);
 
-		origPart1.lane.parts.add(origPart1);
-		origPart1.commitEventsAdd();
+        origPart1.lane.parts.add(origPart1);
+        origPart1.commitEventsAdd();
 
-		origPart2.lane.parts.add(origPart2);
-		origPart2.commitEventsAdd();
-		project.getPartSelection().removeSelected(newPart);
+        origPart2.lane.parts.add(origPart2);
+        origPart2.commitEventsAdd();
+        project.getPartSelection().removeSelected(newPart);
+    }
 
-	}
+    @Override
+    public void redo() {
 
-        @Override
-	public void redo() {
+        if (newPart == null) {
+            origPart2 = findNearest(origPart1);
+            if (origPart2 == null) {
+                System.out
+                        .println(" Need at least 2 parts in the lane to use glue");
+                return;
+            }
 
-		if (newPart == null) {
-			origPart2 = findNearest(origPart1);
-			if (origPart2 == null) {
-				System.out
-						.println(" Need at least 2 parts in the lane to use glue");
-				return;
-			}
+            newPart = new MidiPart((MidiLane) origPart1.getLane());
 
-			newPart = new MidiPart((MidiLane) origPart1.getLane());
+            newPart.setStartTick(Math.min(origPart1.getStartTick(),
+                    origPart2.getStartTick()));
+            newPart.setEndTick(Math.max(origPart1.getEndTick(), origPart2.getEndTick()));
 
-			newPart.setStartTick(Math.min(origPart1.getStartTick(),
-					origPart2.getStartTick()));
-			newPart.setEndTick(Math.max(origPart1.getEndTick(), origPart2.getEndTick()));
+            for (MultiEvent ev : origPart1.getMultiEvents()) {
+                MultiEvent eNew = (MultiEvent) ev.deepCopy(newPart);
+                newPart.getMultiEvents().add(eNew);
+            }
 
-			for (MultiEvent ev : origPart1.getMultiEvents()) {
-				MultiEvent eNew = (MultiEvent) ev.deepCopy(newPart);
-				newPart.getMultiEvents().add(eNew);
-			}
+            for (MultiEvent ev : origPart2.getMultiEvents()) {
+                MultiEvent eNew = (MultiEvent) ev.deepCopy(newPart);
+                newPart.getMultiEvents().add(eNew);
+            }
 
-			for (MultiEvent ev : origPart2.getMultiEvents()) {
-				MultiEvent eNew = (MultiEvent) ev.deepCopy(newPart);
-				newPart.getMultiEvents().add(eNew);
-			}
+        } else {
+            // newPart.lane.parts.add(newPart);
+        }
 
-		} else {
-			// newPart.lane.parts.add(newPart);
-		}
+        origPart1.commitEventsRemove();
+        origPart1.lane.parts.remove(origPart1);
+        origPart2.commitEventsRemove();
+        origPart2.lane.parts.remove(origPart2);
+        newPart.commitEventsAdd();
 
-		origPart1.commitEventsRemove();
-		origPart1.lane.parts.remove(origPart1);
-		origPart2.commitEventsRemove();
-		origPart2.lane.parts.remove(origPart2);
-		newPart.commitEventsAdd();
+        project.getPartSelection().removeSelected(origPart1);
+        project.getPartSelection().removeSelected(origPart2);
+    }
 
-		project.getPartSelection().removeSelected(origPart1);
-		project.getPartSelection().removeSelected(origPart2);
-	}
+    MidiPart findNearest(Part ref) {
 
-	MidiPart findNearest(Part ref) {
+        long dist = Long.MAX_VALUE;
+        long start = ref.getStartTick();
+        Part part2 = null;
 
-		long dist = Long.MAX_VALUE;
-		long start = ref.getStartTick();
-		Part part2 = null;
+        for (Part part : ref.getLane().getParts()) {
+            if (part == ref) {
+                continue;
+            }
+            long end2 = part.getEndTick();
+            long start2 = part.getStartTick();
+            if (start2 < start) {
+                long dist2 = end2 - start;
+                if (Math.abs(dist2) < dist) {
+                    part2 = part;
+                    dist = Math.abs(dist2);
+                }
 
-		for (Part part : ref.getLane().getParts()) {
-			if (part == ref)
-				continue;
-			long end2 = part.getEndTick();
-			long start2 = part.getStartTick();
-			if (start2 < start) {
-				long dist2 = end2 - start;
-				if (Math.abs(dist2) < dist) {
-					part2 = part;
-					dist = Math.abs(dist2);
-				}
-
-			}
-		}
-		return (MidiPart) part2;
-	}
-
+            }
+        }
+        return (MidiPart) part2;
+    }
 }

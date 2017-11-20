@@ -59,11 +59,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * A Part encapsulates what can be displayed in the partview.
- * The startTick and endTick define the range in the display.
- * (These do not need to correspond to the range of any contained items)
- * It's Lane defines the row of display.
- * 
+ * A Part encapsulates what can be displayed in the partview. The startTick and
+ * endTick define the range in the display. (These do not need to correspond to
+ * the range of any contained items) It's Lane defines the row of display.
+ *
  * @author Paul
  *
  */
@@ -84,7 +83,6 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     Part rootPart;      // the part that I was copied from.
     transient Part editParent;    // the part I was edited from.
 
-
     public Part getEditParent() {
         return editParent;
     }
@@ -92,6 +90,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     public void setEditParent(Part editParent) {
         this.editParent = editParent;
     }
+
     public Part getRootPart() {
         return rootPart;
     }
@@ -111,12 +110,12 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     protected Part() {
         color = Color.lightGray;
         rootPart = this;
-        editParent= null;
+        editParent = null;
     }
 
     /**
      * Construct a new Part and add it to it's lane.
-     * 
+     *
      * @param lane
      */
     public Part(Lane lane) {
@@ -126,11 +125,10 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             this.lane.add(this);
             color = lane.color;
         }
-
     }
 
     /**
-     * 
+     *
      * @return the Lane that contains the Part
      */
     public Lane getLane() {
@@ -138,7 +136,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return length of the part in ticks
      */
     public long getDurationInTicks() {
@@ -149,7 +147,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return start of the part in ticks
      */
     public long getStartTick() {
@@ -158,7 +156,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return end tick of the part
      */
     public long getEndTick() {
@@ -167,7 +165,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return length of the part in samples
      */
     public double getDurationInSecs() {
@@ -178,7 +176,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return start of the part in samples
      */
     public double getStartInSecs() {
@@ -187,7 +185,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return end samples of the part
      */
     public double getEndInSecs() {
@@ -196,7 +194,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return length of the part
      */
     public double getDuration(boolean sampleBased) {
@@ -208,8 +206,8 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
-     * @return start of the part 
+     *
+     * @return start of the part
      */
     public double getStart(boolean sampleBased) {
         if (sampleBased) {
@@ -221,8 +219,8 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
-     * @return end  of the part
+     *
+     * @return end of the part
      */
     public double getEnd(boolean sampleBased) {
         if (sampleBased) {
@@ -249,13 +247,12 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * NOTE AudioPert overrides these methods
-     * 
-     *  Set the start tick.
-     *  This does not effect any items contained in the part.
-     *  Purely for display.
-     *  
+     *
+     * Set the start tick. This does not effect any items contained in the part.
+     * Purely for display.
+     *
      * @param tick new start tick
      */
     public void setStartTick(double tick) {
@@ -263,7 +260,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @param tick new end tick for display purpose only
      */
     public void setEndTick(double tick) {
@@ -279,9 +276,9 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     *  Moves the part and all it contains by deltaTick.
-     *  Concrete subclasses implement moveItemsBy method to move the contents of the Part.
-     * 
+     * Moves the part and all it contains by deltaTick. Concrete subclasses
+     * implement moveItemsBy method to move the contents of the Part.
+     *
      * @param tick
      * @deprecated
      */
@@ -291,7 +288,6 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
         endTick += deltaTick;
 
         moveItemsBy(deltaTick);
-
 
     }
 
@@ -311,17 +307,18 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     public abstract void commitEventsAdd();
 
     /**
-     * 
+     *
      * Called when part is removed from the model
-     * 
+     *
      */
     public abstract void commitEventsRemove();
 
     abstract public void copyBy(double tick, Lane dst);
 
     /**
-     * move the contents by tick into dstLane 
-     *  @param tick
+     * move the contents by tick into dstLane
+     *
+     * @param tick
      */
     public abstract void moveContentsBy(double tick, Lane dstLane);
 
@@ -332,9 +329,9 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * 
+     *
      * @return if part is part of the model.
-     * 
+     *
      */
     public boolean isAttached() {
         if (lane == null) {
@@ -388,8 +385,8 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     *  Override to customize the right button popup
-     *  
+     * Override to customize the right button popup
+     *
      * @param invoker
      * @param x
      * @param y
@@ -402,9 +399,9 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
     /**
      * Allow custom menus to be added.
-     * 
+     *
      * This will appear at the top of the right button popup menu.
-     * 
+     *
      * @param menuPlugin
      */
     public static void addPluginRightButtonMenu(MenuPlugin menuPlugin) {
@@ -413,7 +410,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
     /**
      * Shows the right-click context menu of the current component.
-     * 
+     *
      * @param frame
      * @param invoker
      * @param x
@@ -430,9 +427,9 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
     }
 
     /**
-     * Fills the context menu with part-type specific (or possibly even instance-specific) items.
-     * TO BE EXTENDED BY SUBCLASSES.
-     * 
+     * Fills the context menu with part-type specific (or possibly even
+     * instance-specific) items. TO BE EXTENDED BY SUBCLASSES.
+     *
      * @param popup
      */
     protected void initContextMenu(final ProjectFrame frame, JPopupMenu popup) {
@@ -511,8 +508,9 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             }
 
             /**
-             * Special handling of cancel, because values changed in the dialog will directly be applied
-             * and thus must explicitly be restored if cancel is chosen.
+             * Special handling of cancel, because values changed in the dialog
+             * will directly be applied and thus must explicitly be restored if
+             * cancel is chosen.
              */
             @Override
             public void cancel() {
@@ -526,9 +524,10 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
     /**
      * Create PropertiesPanel.
-     * 
-     * Optionally overwritten by subclass, returning a subclass-instance of PropertiesPanel.
-     * 
+     *
+     * Optionally overwritten by subclass, returning a subclass-instance of
+     * PropertiesPanel.
+     *
      * @param frame
      * @return
      */
@@ -546,7 +545,8 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
     // --- inner class ---
     /**
-     * Optionally to be extended by subclass and returned via createProperitesPanel().
+     * Optionally to be extended by subclass and returned via
+     * createProperitesPanel().
      */
     protected class PropertiesPanel extends JPanel implements OptionsEditor {
 
@@ -557,7 +557,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
         /**
          * Constructor.
-         * 
+         *
          * @param frame
          */
         protected PropertiesPanel(ProjectFrame frame) {
@@ -569,7 +569,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
         /**
          * Fills the panel with gui elements for editing the part's properties.
-         * 
+         *
          * TO BE EXTENDED BY SUBCLASS.
          */
         protected void initComponents() {
@@ -637,7 +637,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
         /**
          * Refreshes the GUI so that it reflects the model's current state.
-         * 
+         *
          * TO BE EXTENDED BY SUBCLASS.
          */
         @Override
@@ -649,7 +649,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
         /**
          * Updates the model so that it contains the values set by the user.
-         * 
+         *
          * TO BE EXTENDED BY SUBCLASS.
          */
         @Override
@@ -661,13 +661,11 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
 
     /**
      *
-     * Must be called if structure is changed.
-     *  - the database partResourceID is set to null (flag for new)
-     *  - rootPart is set to this.
-     *  - if we have edited a copied part then
+     * Must be called if structure is changed. - the database partResourceID is
+     * set to null (flag for new) - rootPart is set to this. - if we have edited
+     * a copied part then
      */
     public void setChanged() {
-
 
         if (rootPart != this) {
             // this part is currently a copy of a different part
@@ -679,12 +677,11 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             // we are an original.
             // so disassociate from any saved part resource.
             if (partResourceId != null) {
-                System.out.println(" Detaching a root part from "+partResourceId);
-                partResourceId=null;
+                System.out.println(" Detaching a root part from " + partResourceId);
+                partResourceId = null;
             }
 
         }
-
 
         if (partResourceId != null) {
             // should not happen
@@ -694,7 +691,5 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
                 Logger.getLogger(Part.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-  
-
     }
 }

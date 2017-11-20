@@ -26,47 +26,41 @@ package com.frinika.sequencer.patchname;
 import java.io.Serializable;
 
 public class MyPatch implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	public int prog;
-	public int msb;
-	public int lsb;
+    private static final long serialVersionUID = 1L;
 
-       
-        
-	public MyPatch(int prog, int msb, int lsb) {
-		this.prog = prog;
-		this.msb = msb;
-		this.lsb = lsb;
-	}
-	
+    public int prog;
+    public int msb;
+    public int lsb;
+
+    public MyPatch(int prog, int msb, int lsb) {
+        this.prog = prog;
+        this.msb = msb;
+        this.lsb = lsb;
+    }
+
     public MyPatch(int hashCode) {
-        prog=hashCode&0xff;
-        msb=(hashCode&0xff00)/0x100;
-        lsb=(hashCode&0xff0000)/0x10000;
-}
+        prog = hashCode & 0xff;
+        msb = (hashCode & 0xff00) / 0x100;
+        lsb = (hashCode & 0xff0000) / 0x10000;
+    }
 
-	
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MyPatch)) {
+            return false;
+        }
+        MyPatch c = (MyPatch) obj;
+        return c.prog == prog && c.msb == msb && c.lsb == lsb;
+    }
 
-        @Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof MyPatch)) return false;		
-		MyPatch c = (MyPatch)obj;
-		return c.prog == prog && c.msb == msb && c.lsb == lsb;
-	}
+    @Override
+    public int hashCode() {
+        return prog + msb * 0x100 + lsb * 0x10000;
+    }
 
-        @Override
-	public int hashCode() {
-		return prog + msb*0x100 + lsb*0x10000;
-	}
-	
-	
-        @Override
-	public String toString() {
-		return "prog:"+prog+" msb:"+msb + " lsb:"+lsb;
-	}
-
+    @Override
+    public String toString() {
+        return "prog:" + prog + " msb:" + msb + " lsb:" + lsb;
+    }
 }

@@ -21,25 +21,21 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.model.EditHistoryContainer;
 import java.util.Collection;
 
 public class MultiEventDeletionRecorder {
-    
 
-	public MultiEventDeletionRecorder(String changeText, Collection<MultiEvent> multiEventList,EditHistoryContainer editHistory)
-    {
-		editHistory.mark(changeText);
+    public MultiEventDeletionRecorder(String changeText, Collection<MultiEvent> multiEventList, EditHistoryContainer editHistory) {
+        editHistory.mark(changeText);
 
-		for (MultiEvent ev:multiEventList) {
-			MidiPart track=ev.getPart();
-			track.remove(ev);
-		}
-		
-		editHistory.notifyEditHistoryListeners();   
+        for (MultiEvent ev : multiEventList) {
+            MidiPart track = ev.getPart();
+            track.remove(ev);
+        }
+
+        editHistory.notifyEditHistoryListeners();
     }
 }
-

@@ -29,84 +29,77 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiEvent;
 
-
 /**
  * @author Peter Johan Salomonsen
  */
 public class MetaEvent extends MultiEvent {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
-    
+
     transient MidiEvent metaEvent;
-    
+
     int type;
     byte[] data;
-    
-	@SuppressWarnings("deprecation")
-	@Override
-	void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
-	//	System. out.println(" COMMIT REMOVE PROG ");
 
-		getTrack().remove(metaEvent);
-
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
-
-		// System. out.println(" COMMIT ADD PROG ");
-		try {
-
-			metaEvent = new MidiEvent(getMessage(), startTick);
-			getTrack().add(metaEvent);
-
-		} catch (InvalidMidiDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
+    @SuppressWarnings("deprecation")
     @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		// TODO Auto-generated method stub
-		MetaEvent evt=(MetaEvent)object;
-		this.part = evt.part;
-		this.startTick = evt.startTick;
-		this.type = evt.type;
-		this.data = evt.data;
-	}    
+    void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+        //	System. out.println(" COMMIT REMOVE PROG ");
 
-    public MetaEvent(MidiPart part, long startTick)
-    {
-    		super(part, startTick);
+        getTrack().remove(metaEvent);
+
     }
-    
+
+    @SuppressWarnings("deprecation")
     @Override
-	public long getEndTick() {
-		// TODO Auto-generated method stub
-		return 0;
-	}        
+    public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
 
-	public void setMessage(int type, byte[] data) {
-    	this.type = type;
-    	this.data = data;
-    }    
-	
-	public void setMessage(MetaMessage message)
-	{
-    	this.type = message.getType();
-    	this.data = message.getData();
-	}
-	
-	public MetaMessage getMessage() throws InvalidMidiDataException
-	{
-		MetaMessage msg = new MetaMessage();
-		msg.setMessage(type, data, data.length);
-		return msg;
-	}	
+        // System. out.println(" COMMIT ADD PROG ");
+        try {
 
+            metaEvent = new MidiEvent(getMessage(), startTick);
+            getTrack().add(metaEvent);
+
+        } catch (InvalidMidiDataException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
+        // TODO Auto-generated method stub
+        MetaEvent evt = (MetaEvent) object;
+        this.part = evt.part;
+        this.startTick = evt.startTick;
+        this.type = evt.type;
+        this.data = evt.data;
+    }
+
+    public MetaEvent(MidiPart part, long startTick) {
+        super(part, startTick);
+    }
+
+    @Override
+    public long getEndTick() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public void setMessage(int type, byte[] data) {
+        this.type = type;
+        this.data = data;
+    }
+
+    public void setMessage(MetaMessage message) {
+        this.type = message.getType();
+        this.data = message.getData();
+    }
+
+    public MetaMessage getMessage() throws InvalidMidiDataException {
+        MetaMessage msg = new MetaMessage();
+        msg.setMessage(type, data, data.length);
+        return msg;
+    }
 }

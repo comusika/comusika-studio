@@ -23,32 +23,35 @@
  */
 package com.frinika.sequencer.model;
 
-
 /**
- * If you want to make sure that the changes in a MultiEvent is recorded in the EditHistory
- * you should wrap this class around your MultiEvent change code. It applies to one single
- * MultiEvent and make sure that all neccesities are done in order to record the change.
- * 
- * Recording a MultiEvent change in the editHistory implies removing the MultiEvent before the
- * change - doing the actual change - and then adding the multiEvent again.
- * 
+ * If you want to make sure that the changes in a MultiEvent is recorded in the
+ * EditHistory you should wrap this class around your MultiEvent change code. It
+ * applies to one single MultiEvent and make sure that all neccesities are done
+ * in order to record the change.
+ *
+ * Recording a MultiEvent change in the editHistory implies removing the
+ * MultiEvent before the change - doing the actual change - and then adding the
+ * multiEvent again.
+ *
  * @author Peter Johan Salomonsen
  */
 public abstract class MultiEventChangeRecorder {
-    
+
     /**
-     * When invoking this constructor all the history recording and the actual change will be done
-     * @param changeText - The text to be visible in the undo menu for this change
+     * When invoking this constructor all the history recording and the actual
+     * change will be done
+     *
+     * @param changeText - The text to be visible in the undo menu for this
+     * change
      * @param multiEvent - The multiEvent you want to change
      */
-    public MultiEventChangeRecorder(String changeText, MultiEvent multiEvent)
-    {
+    public MultiEventChangeRecorder(String changeText, MultiEvent multiEvent) {
         multiEvent.getPart().getEditHistoryContainer().mark(changeText);
         multiEvent.getPart().remove(multiEvent);
         doChange(multiEvent);
         multiEvent.getPart().add(multiEvent);
         multiEvent.getPart().getEditHistoryContainer().notifyEditHistoryListeners();
     }
-    
+
     public abstract void doChange(MultiEvent multiEvent);
 }

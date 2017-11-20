@@ -26,11 +26,13 @@ package com.frinika.sequencer.model;
 import com.frinika.model.EditHistoryRecordable;
 
 /**
- * This is a Dummy subclass of MultiEvent used to generate MultiEvents that are ordered as
- * the first among the MultiEvents with the same tick.
+ * This is a Dummy subclass of MultiEvent used to generate MultiEvents that are
+ * ordered as the first among the MultiEvents with the same tick.
+ *
  * @author Peter Johan Salomonsen
  */
 public final class SubsetMultiEvent extends MultiEvent {
+
     private static final long serialVersionUID = 1L;
 
     SubsetMultiEvent(long startTick) {
@@ -39,29 +41,28 @@ public final class SubsetMultiEvent extends MultiEvent {
 
     @Override
     public long getEndTick() {
-    	return startTick;
-    }
-    
-    @Override
-    void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
-        
+        return startTick;
     }
 
     @Override
-	public
-    void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+    void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+
+    }
+
+    @Override
+    public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        throw(new CloneNotSupportedException("The SubsetMultiEvent is for internal use, and definately not to be cloned!"));
+        throw (new CloneNotSupportedException("The SubsetMultiEvent is for internal use, and definately not to be cloned!"));
     }
 
     /**
      * n/a
      */
     @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		
-	}
+    public void restoreFromClone(EditHistoryRecordable object) {
+
+    }
 }

@@ -23,13 +23,13 @@
 package com.frinika.sequencer.model;
 
 /**
- * 
+ *
  * Can listen for changes (e.g. open hide) in the lane structure.
- *  
+ *
  * @author Paul
  *
  */
 public interface LaneTreeListener {
-	public void fireLaneTreeChanged();
 
+    void fireLaneTreeChanged();
 }

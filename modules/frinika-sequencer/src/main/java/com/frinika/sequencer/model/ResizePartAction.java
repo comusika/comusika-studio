@@ -26,39 +26,39 @@ import com.frinika.model.EditHistoryAction;
 
 public class ResizePartAction implements EditHistoryAction {
 
-	Part part;
+    Part part;
 
-	double startSec;
-	double endSec;
-	double startOrig;
-	double endOrig;
+    double startSec;
+    double endSec;
+    double startOrig;
+    double endOrig;
 
-	// TODO XXX
-	public ResizePartAction(Part part, double start,double end) {
-		this.part = part;
-		this.startSec = start;
-		this.endSec =end;
-		this.startOrig = part.getStartInSecs();
-		this.endOrig = part.getEndInSecs();
-	}
+    // TODO XXX
+    public ResizePartAction(Part part, double start, double end) {
+        this.part = part;
+        this.startSec = start;
+        this.endSec = end;
+        this.startOrig = part.getStartInSecs();
+        this.endOrig = part.getEndInSecs();
+    }
 
-        @Override
-	public void undo() {
-		part.commitEventsRemove();
-		part.setStartInSecs(startOrig);
-		part.setEndInSecs(endOrig);
-		part.commitEventsAdd();
-	}
+    @Override
+    public void undo() {
+        part.commitEventsRemove();
+        part.setStartInSecs(startOrig);
+        part.setEndInSecs(endOrig);
+        part.commitEventsAdd();
+    }
 
-        @Override
-	public void redo() {
-		part.commitEventsRemove();
-		part.setStartInSecs(startSec);
-		part.setEndInSecs(endSec);
-		part.commitEventsAdd();
-	}
+    @Override
+    public void redo() {
+        part.commitEventsRemove();
+        part.setStartInSecs(startSec);
+        part.setEndInSecs(endSec);
+        part.commitEventsAdd();
+    }
 
-	public Part getPart() {
-		return part;
-	}
+    public Part getPart() {
+        return part;
+    }
 }

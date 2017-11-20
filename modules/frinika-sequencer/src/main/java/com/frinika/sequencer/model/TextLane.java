@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.global.Toolbox;
@@ -38,115 +37,113 @@ import javax.swing.event.ChangeListener;
 
 /**
  * Text lane.
- * 
+ *
  * @author Jens Gulden
  */
 public class TextLane extends Lane {
-	
-	private static final long serialVersionUID = 1L;
 
-	transient protected ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
+    private static final long serialVersionUID = 1L;
 
-	static Icon iconTextLane = new javax.swing.ImageIcon(
-			TextLane.class.getResource("/icons/new_track_text.gif"));
-	
-	static int nameCount=0;
-	
-	public TextLane(AbstractSequencerProjectContainer project) {
-		super("Text " + nameCount++, project);
-		long ticks = project.getSequencer().getTickPosition();
-		createNewTextPart(ticks);
-	}
-	
-	public TextPart createNewTextPart(long ticks) {
-		TextPart part = new TextPart(this);
-		part.setStartTick(ticks);
-		part.setEndTick(ticks + TextPart.DEFAULT_WIDTH);
-		return part;
-	}
-	
-        @Override
-	public Selectable deepCopy(Selectable parent) {
-		return null;
-	}
+    transient protected ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
 
-        @Override
-	public void deepMove(long tick) {
-		// TODO Auto-generated method stub
-	}
+    static Icon iconTextLane = new javax.swing.ImageIcon(
+            TextLane.class.getResource("/icons/new_track_text.gif"));
 
-        @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
+    static int nameCount = 0;
 
-	}
+    public TextLane(AbstractSequencerProjectContainer project) {
+        super("Text " + nameCount++, project);
+        long ticks = project.getSequencer().getTickPosition();
+        createNewTextPart(ticks);
+    }
 
-	public String getAllText(String delim) {
-		ArrayList<String> l = new ArrayList<>();
-		for (Part p : getParts()) {
-			String s = ((TextPart)p).getText().trim();
-			l.add(s);
-		}
-		// remove empty parts at the end
-		while ((!l.isEmpty()) && (l.get(l.size()-1).equals(TextPart.EMPTY_STRING))) {
-			l.remove(l.size()-1);
-		}
-		return Toolbox.joinStrings(l, delim);
-	}
-	
-	public void setAllText(String text, String delim) {
-		List<String> stringParts = Toolbox.splitString(text, delim);
-		List<Part> textParts = getParts();
-		Iterator<Part> iterator = new ArrayList(textParts).iterator();
-		long lastTick = 0;
-		for (String s : stringParts) {
-			TextPart textPart;
-			if (iterator.hasNext()) {
-				textPart = (TextPart)iterator.next();
-			} else {
-				textPart = createNewTextPart(lastTick + 128*4);
-			}
-			textPart.setText(s);
-			lastTick = textPart.getEndTick();
-		}
-		// any text parts left? reset them to "no-content"
-		while (iterator.hasNext()) {
-			TextPart textPart = (TextPart)iterator.next();
-			textPart.setText(TextPart.EMPTY_STRING);
-		}
-	}
-	
-	public void addChangeListener(ChangeListener l) {
-		changeListeners.add(l);
-	}
-	
-	public void removeChangeListener(ChangeListener l) {
-		changeListeners.remove(l);
-	}
-	
-	void fireChangeEvent() {
-		ChangeEvent e = new ChangeEvent(this);
-		for (ChangeListener l : changeListeners) {
-			l.stateChanged(e);
-		}
-	}
-	
-	// --- Serialization ---
+    public TextPart createNewTextPart(long ticks) {
+        TextPart part = new TextPart(this);
+        part.setStartTick(ticks);
+        part.setEndTick(ticks + TextPart.DEFAULT_WIDTH);
+        return part;
+    }
 
-	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
-		in.defaultReadObject();
-		changeListeners = new ArrayList<>();
-	}
+    @Override
+    public Selectable deepCopy(Selectable parent) {
+        return null;
+    }
 
-	@Override
-	public Part createPart() {
-		// TODO Auto-generated method stub    (could probably use this ?)
-		assert(false);
-		return null;
-	}
+    @Override
+    public void deepMove(long tick) {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public Icon getIcon() {
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
 
-		return iconTextLane;
-	}
+    }
+
+    public String getAllText(String delim) {
+        ArrayList<String> l = new ArrayList<>();
+        for (Part p : getParts()) {
+            String s = ((TextPart) p).getText().trim();
+            l.add(s);
+        }
+        // remove empty parts at the end
+        while ((!l.isEmpty()) && (l.get(l.size() - 1).equals(TextPart.EMPTY_STRING))) {
+            l.remove(l.size() - 1);
+        }
+        return Toolbox.joinStrings(l, delim);
+    }
+
+    public void setAllText(String text, String delim) {
+        List<String> stringParts = Toolbox.splitString(text, delim);
+        List<Part> textParts = getParts();
+        Iterator<Part> iterator = new ArrayList(textParts).iterator();
+        long lastTick = 0;
+        for (String s : stringParts) {
+            TextPart textPart;
+            if (iterator.hasNext()) {
+                textPart = (TextPart) iterator.next();
+            } else {
+                textPart = createNewTextPart(lastTick + 128 * 4);
+            }
+            textPart.setText(s);
+            lastTick = textPart.getEndTick();
+        }
+        // any text parts left? reset them to "no-content"
+        while (iterator.hasNext()) {
+            TextPart textPart = (TextPart) iterator.next();
+            textPart.setText(TextPart.EMPTY_STRING);
+        }
+    }
+
+    public void addChangeListener(ChangeListener l) {
+        changeListeners.add(l);
+    }
+
+    public void removeChangeListener(ChangeListener l) {
+        changeListeners.remove(l);
+    }
+
+    void fireChangeEvent() {
+        ChangeEvent e = new ChangeEvent(this);
+        for (ChangeListener l : changeListeners) {
+            l.stateChanged(e);
+        }
+    }
+
+    // --- Serialization ---
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        changeListeners = new ArrayList<>();
+    }
+
+    @Override
+    public Part createPart() {
+        // TODO Auto-generated method stub    (could probably use this ?)
+        assert (false);
+        return null;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return iconTextLane;
+    }
 }

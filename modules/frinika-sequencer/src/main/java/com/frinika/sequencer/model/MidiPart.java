@@ -72,9 +72,6 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
         super(lane);
     }
 
-    /**
-     *
-     */
     public void setBoundsFromEvents() {
         if (multiEvents.size() > 0) {
             setStartTick(multiEvents.first().getStartTick());

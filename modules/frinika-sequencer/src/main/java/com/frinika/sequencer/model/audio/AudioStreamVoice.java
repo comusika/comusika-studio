@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model.audio;
 
 import com.frinika.audio.io.AudioReader;
@@ -34,144 +33,139 @@ import uk.org.toot.audio.server.AudioServer;
 
 public class AudioStreamVoice extends SynchronizedAudioProcess {
 
-	AudioReader ais;
+    AudioReader ais;
 
-	boolean running = false;
+    boolean running = false;
 
-	byte[] byteBuffer = null;
+    byte[] byteBuffer = null;
 
-	int nChannel;
+    int nChannel;
 
-	long clipStartPositionInMillis;
+    long clipStartPositionInMillis;
 
-	long clipStartPositionInFrames;
+    long clipStartPositionInFrames;
 
-	long framePos = -1; // current frame in file
+    long framePos = -1; // current frame in file
 
-	private float sampleRate;
+    private float sampleRate;
 
-	/**
-	 * Construct a DAAudioStreamVoice. This is an extension of the
-	 * SynchronizedVoice which uses a sequencer as synchronization source.
-	 * 
-	 * The extended SynchronizedVoice class requires that we initially provide
-	 * an offset for where in the clip to start (initialFramePos parameter), but
-	 * the synchronization will then correct the position as the clip is
-	 * playing. Thus we'll use the same formula as the synchronization to
-	 * calculate the initialFramePos.
-	 * 
-	 * @param voiceServer -
-	 *            The voice server we're playing in
-	 * @param sequencer -
-	 *            the sequencer that we are playing in
-	 * @param ais -
-	 *            The audio clip input stream
-	 * @param clipStartTimePosition -
-	 *            The start time in microseconds relative to Start time relative
-	 *            to sequencer zero time
-	 * @param modulator
-	 *            Evelope for the audio (can be null)
-	 * @throws Exception
-	 */
-	public AudioStreamVoice(final AudioServer audioServer,
-			final FrinikaSequencer sequencer, final AudioReader ais,
-			final long clipStartTimePosition1)
-			throws Exception {
-		super(audioServer, 0); 
-		//getFramePos(sequencer, audioServer,clipStartTimePosition1));
-		
+    /**
+     * Construct a DAAudioStreamVoice. This is an extension of the
+     * SynchronizedVoice which uses a sequencer as synchronization source.
+     *
+     * The extended SynchronizedVoice class requires that we initially provide
+     * an offset for where in the clip to start (initialFramePos parameter), but
+     * the synchronization will then correct the position as the clip is
+     * playing. Thus we'll use the same formula as the synchronization to
+     * calculate the initialFramePos.
+     *
+     * @param voiceServer - The voice server we're playing in
+     * @param sequencer - the sequencer that we are playing in
+     * @param ais - The audio clip input stream
+     * @param clipStartTimePosition - The start time in microseconds relative to
+     * Start time relative to sequencer zero time
+     * @param modulator Evelope for the audio (can be null)
+     * @throws Exception
+     */
+    public AudioStreamVoice(final AudioServer audioServer,
+            final FrinikaSequencer sequencer, final AudioReader ais,
+            final long clipStartTimePosition1)
+            throws Exception {
+        super(audioServer, 0);
+        //getFramePos(sequencer, audioServer,clipStartTimePosition1));
+
 //		try{
 //		throw new Exception(" FIXME ME" );
 //		}catch(Exception  e){
 //			e.printStackTrace();
 //		}
-		
-		this.sampleRate=audioServer.getSampleRate();
-	
-		this.ais = ais;
-		setRealStartTime(clipStartTimePosition1);
-		nChannel = ais.getFormat().getChannels();
+        this.sampleRate = audioServer.getSampleRate();
 
-		sequencer.addSongPositionListener(new SongPositionListener() {
-                        @Override
-			public void notifyTickPosition(long tick) {
-				setRunning(sequencer.isRunning());
-				setFramePos(getFramePos(sequencer, audioServer,
-						clipStartPositionInMillis));
-			}
+        this.ais = ais;
+        setRealStartTime(clipStartTimePosition1);
+        nChannel = ais.getFormat().getChannels();
 
-                        @Override
-			public boolean requiresNotificationOnEachTick() {
-				return false;
-			}
-		});
-	}
+        sequencer.addSongPositionListener(new SongPositionListener() {
+            @Override
+            public void notifyTickPosition(long tick) {
+                setRunning(sequencer.isRunning());
+                setFramePos(getFramePos(sequencer, audioServer,
+                        clipStartPositionInMillis));
+            }
 
-	long milliToFrame(double t) {
-		return (long) ((t *  sampleRate) / 1000000);
-	}
-	
-	private static long getFramePos(FrinikaSequencer sequencer,
-			AudioServer audioServer, long clipStartTimePosition) {
-		return (long) (((sequencer.getMicrosecondPosition() - clipStartTimePosition) * audioServer
-				.getSampleRate()) / 1000000);
-	}
+            @Override
+            public boolean requiresNotificationOnEachTick() {
+                return false;
+            }
+        });
+    }
 
-	/**
-	 * Tell the voice whether to play or not (if the sequencer is running)
-	 */
-	public void setRunning(final boolean running) {
-		AudioStreamVoice.this.running = running;
-	}
+    long milliToFrame(double t) {
+        return (long) ((t * sampleRate) / 1000000);
+    }
 
-	@Override
-	public void processAudioSynchronized(AudioBuffer buffer) {
+    private static long getFramePos(FrinikaSequencer sequencer,
+            AudioServer audioServer, long clipStartTimePosition) {
+        return (long) (((sequencer.getMicrosecondPosition() - clipStartTimePosition) * audioServer
+                .getSampleRate()) / 1000000);
+    }
 
-		if (!running)
-			return;
+    /**
+     * Tell the voice whether to play or not (if the sequencer is running)
+     */
+    public void setRunning(final boolean running) {
+        AudioStreamVoice.this.running = running;
+    }
 
-		boolean realTime = buffer.isRealTime();
-		// Correct byte buffer size
-		if (byteBuffer == null
-				|| byteBuffer.length != buffer.getSampleCount() * 2 * nChannel)
-			byteBuffer = new byte[buffer.getSampleCount() * 2 * nChannel];
+    @Override
+    public void processAudioSynchronized(AudioBuffer buffer) {
 
-		long seekPos = getFramePos();
+        if (!running) {
+            return;
+        }
 
-		if (seekPos != framePos) {
-			// S ystem.out.println(" Reposition file pointer ");
-			try {
-				ais.seekFrame(seekPos, realTime);
-				framePos = seekPos;
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
+        boolean realTime = buffer.isRealTime();
+        // Correct byte buffer size
+        if (byteBuffer == null
+                || byteBuffer.length != buffer.getSampleCount() * 2 * nChannel) {
+            byteBuffer = new byte[buffer.getSampleCount() * 2 * nChannel];
+        }
 
-		ais.processAudio(buffer);
-		
-		if (ais.getChannels() == 1) {
-			buffer.copyChannel(0, 1);
-		}
-		
-		framePos += buffer.getSampleCount();
-				
-	}
+        long seekPos = getFramePos();
 
-	public void setRealStartTime(long realStartTime) {
-		clipStartPositionInMillis = realStartTime;
-		clipStartPositionInFrames = (long) ((clipStartPositionInMillis * sampleRate) / 1000000);
-	}
+        if (seekPos != framePos) {
+            // S ystem.out.println(" Reposition file pointer ");
+            try {
+                ais.seekFrame(seekPos, realTime);
+                framePos = seekPos;
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
 
-        @Override
-	public void close() {
-	
-	}
+        ais.processAudio(buffer);
 
-        @Override
-	public void open() {
-	
-	}
+        if (ais.getChannels() == 1) {
+            buffer.copyChannel(0, 1);
+        }
 
+        framePos += buffer.getSampleCount();
+
+    }
+
+    public void setRealStartTime(long realStartTime) {
+        clipStartPositionInMillis = realStartTime;
+        clipStartPositionInFrames = (long) ((clipStartPositionInMillis * sampleRate) / 1000000);
+    }
+
+    @Override
+    public void close() {
+
+    }
+
+    @Override
+    public void open() {
+
+    }
 }

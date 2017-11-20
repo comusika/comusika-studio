@@ -42,14 +42,14 @@ import java.util.Vector;
 
 /**
  * Maintains a list of time signature changes.
- * 
+ *
  * TODO the iterators need to implement a locking mechanism to avoid concurrent
  * modification
- * 
+ *
  * Please use iterators if posible. Faster than repeated querries.
- * 
+ *
  * @author pjl
- * 
+ *
  */
 public class TimeSignatureList implements Serializable {
 
@@ -66,7 +66,6 @@ public class TimeSignatureList implements Serializable {
         // eventByBeat = new TreeMap<Integer, TimeSignitureEvent>(new
         // Comparator<TimeSignitureEvent>() {
         // });
-
     }
 
     public void remove(int bar) {
@@ -115,7 +114,7 @@ public class TimeSignatureList implements Serializable {
         return list;
     }
 
-    public class TimeSignatureEvent  implements Serializable {
+    public class TimeSignatureEvent implements Serializable {
 
         public final int bar;     // bar at which the Time Signiture Happens
         public int beat;          // Beat at which it happens (
@@ -174,7 +173,6 @@ public class TimeSignatureList implements Serializable {
 
         //	TimeSignatureEvent ret = null;
         //	TimeSignatureEvent next= null;
-
         Iterator<Map.Entry<Integer, TimeSignatureEvent>> iter = eventByBar.entrySet().iterator();
 
         TimeSignatureEvent ts1 = iter.next().getValue();  // Should always be one event
@@ -200,13 +198,13 @@ public class TimeSignatureList implements Serializable {
 
     private void readObject(ObjectInputStream in)
             throws ClassNotFoundException, IOException {
-         in.defaultReadObject();
-         eventByBar = new TreeMap<>();
-         for (TimeSignatureEvent ev:list) {
-             eventByBar.put(ev.bar,ev);
-         }
-         dirty=false;
-     }
+        in.defaultReadObject();
+        eventByBar = new TreeMap<>();
+        for (TimeSignatureEvent ev : list) {
+            eventByBar.put(ev.bar, ev);
+        }
+        dirty = false;
+    }
 
     void display() {
         reco();
@@ -283,7 +281,6 @@ public class TimeSignatureList implements Serializable {
             }
 
             // Case when there is no event after beat1
-
             beatNext = ts.beat + ((beat1 - ts.beat) / ts.beatsPerBar) * ts.beatsPerBar;
             barNow = (ts.bar + ((beat1 - ts.beat) / ts.beatsPerBar)) - 1;
             tsNext = null;
@@ -399,9 +396,9 @@ public class TimeSignatureList implements Serializable {
      *
      * Create an iterator between beat1 and beat2
      *
-     * @param beat1  should be a multiple of step
+     * @param beat1 should be a multiple of step
      * @param beat2
-     * @param step   should be a divisor of 1 OR negtive will step by whole bars
+     * @param step should be a divisor of 1 OR negtive will step by whole bars
      *
      * @return
      */
@@ -444,7 +441,6 @@ public class TimeSignatureList implements Serializable {
             System.out.println(" Event =" + ev.beat + "  " + ev.bar + "  " + ev.beatsPerBar);
         }
 
-
         File tt = new File("/tmp/TS");
 
         OutputStream fout = new FileOutputStream(tt);
@@ -457,10 +453,9 @@ public class TimeSignatureList implements Serializable {
 
         ObjectInputStream in = new ObjectInputStream(fin);
 
-        Object x=in.readObject();
+        Object x = in.readObject();
 
-        
-        iter = ((TimeSignatureList)x).createQStepIterator(beat1, beat2, 1);
+        iter = ((TimeSignatureList) x).createQStepIterator(beat1, beat2, 1);
 
         while (iter.hasNext()) {
             iter.next();
@@ -468,9 +463,5 @@ public class TimeSignatureList implements Serializable {
             TimeSignatureEvent ev = list.getEventAtBeat((int) iter.getBeat());
             System.out.println(" Event =" + ev.beat + "  " + ev.bar + "  " + ev.beatsPerBar);
         }
-
-
-
-
     }
 }

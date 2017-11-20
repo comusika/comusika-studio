@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.frinika.sequencer.project;
+
 import com.frinika.synth.settings.SynthSettings;
 
 /**
@@ -29,8 +30,12 @@ import com.frinika.synth.settings.SynthSettings;
  *
  */
 public interface ProjectSettings {
-    public byte[] getSequence();
-    public void setSequence(byte[] sequence);
-    public SynthSettings getSynthSettings();
-    public void setSynthSettings(SynthSettings synthSettings);
+
+    byte[] getSequence();
+
+    void setSequence(byte[] sequence);
+
+    SynthSettings getSynthSettings();
+
+    void setSynthSettings(SynthSettings synthSettings);
 }

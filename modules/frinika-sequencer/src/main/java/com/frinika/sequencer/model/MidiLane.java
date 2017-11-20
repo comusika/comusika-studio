@@ -407,7 +407,6 @@ public class MidiLane extends Lane implements RecordableLane {
         } else {
             project.getSequencer().recordDisable(this);
         }
-
     }
 
     @Override
@@ -429,7 +428,6 @@ public class MidiLane extends Lane implements RecordableLane {
         }
 
         return peakMonitor.getPeak();
-
     }
 
     // Jens:
@@ -648,7 +646,6 @@ public class MidiLane extends Lane implements RecordableLane {
 
         // System. out.println(" Setup keynames " + keyNames);
         notifyFocusListeners();
-
     }
 
     private void notifyFocusListeners() {
@@ -678,7 +675,6 @@ public class MidiLane extends Lane implements RecordableLane {
 
         System.out.println(k + "--->" + index);
         notifyFocusListeners();
-
     }
 
     public int mapNote(int num) {

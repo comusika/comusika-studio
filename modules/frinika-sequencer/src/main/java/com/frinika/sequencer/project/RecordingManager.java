@@ -83,14 +83,12 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
 
     void detachLastTake() {
 
-
         // disable last part 
         if (lastPart != null) {
             if (lastPart.getLane() != null) {
                 lastPart.removeFromModel();
             }
         }
-
 
     }
 
@@ -102,11 +100,9 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
 
         if (currentRecordingTake.size() > 0) {
 
-
             System.out.println(" THAT WAS A TAKE ");
 
             project.getEditHistoryContainer().mark(" Recording take ");
-
 
             if (!isDrumTake) {
                 detachLastTake();
@@ -125,7 +121,6 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
                     continue;
                 }
 
-
                 assert (!flag); // fixme for multiple lanes.
                 flag = true;
 
@@ -142,8 +137,6 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
                 }
                 part.setBoundsFromEvents();
 
-
-
                 if (lastPart != null) {
                     if (multiPart == null) {
                         multiPart = new MultiPart();
@@ -157,7 +150,6 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
 
             }
 
-
 //            recordingTakes.add(currentRecordingTake);
 //            if (recordingTakeDialog != null) {
 //                recordingTakeDialog.notifyNewTake(recordingTakes.size() - 1);
@@ -167,8 +159,6 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
 //                    recordingTakeDialog.setVisible(true);
 //                }
 //            }
-
-
         }
         currentRecordingTake.clear();
     }
@@ -176,9 +166,7 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
     @Override
     public void notifyTickPosition(long tick) {
 
-
         processEvents();
-
 
         if (tick < lastTick) {
             looped = true;
@@ -311,10 +299,10 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
             in = size - 1;
             this.size = size;
         }
-        
+
         void clear() {
             out = size - 1;
-            in = size - 1;        
+            in = size - 1;
         }
 
         Event poke() throws Exception {
@@ -335,12 +323,12 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
             return stack[out];
         }
 
-        public   boolean isEmpty() {
+        public boolean isEmpty() {
             return in == out;
         }
     }
 
-   protected class Event {
+    protected class Event {
 
         public ShortMessage mess; // = new ShortMessage();
         public long stamp;

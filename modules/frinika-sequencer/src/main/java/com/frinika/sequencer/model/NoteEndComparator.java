@@ -24,16 +24,19 @@ package com.frinika.sequencer.model;
 
 import java.util.Comparator;
 
-public class NoteEndComparator implements Comparator <NoteEvent> {
+public class NoteEndComparator implements Comparator<NoteEvent> {
 
-        @Override
-	public int compare(NoteEvent arg0, NoteEvent arg1) {
-		long t0=  arg0.getEndTick();
-		long t1 = arg1.getEndTick();
-		
-		if (t0 < t1 ) return -1;
-		else if (t0 > t1 ) return 1;
-		else return arg0.compareTo(arg1);
-	}
+    @Override
+    public int compare(NoteEvent arg0, NoteEvent arg1) {
+        long t0 = arg0.getEndTick();
+        long t1 = arg1.getEndTick();
 
+        if (t0 < t1) {
+            return -1;
+        } else if (t0 > t1) {
+            return 1;
+        } else {
+            return arg0.compareTo(arg1);
+        }
+    }
 }

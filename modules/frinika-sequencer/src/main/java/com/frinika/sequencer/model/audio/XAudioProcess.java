@@ -21,18 +21,16 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model.audio;
 
 import java.io.IOException;
 import uk.org.toot.audio.core.AudioProcess;
 
-public interface XAudioProcess extends AudioProcess{
+public interface XAudioProcess extends AudioProcess {
 
-	void seekFrame(long i, boolean b) throws IOException;
+    void seekFrame(long i, boolean b) throws IOException;
 
-	int getChannels();
+    int getChannels();
 
-	int getLengthInFrames();
-
+    int getLengthInFrames();
 }

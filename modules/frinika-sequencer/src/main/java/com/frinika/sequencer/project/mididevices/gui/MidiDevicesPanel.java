@@ -35,65 +35,62 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 
-
 /**
  * @author Peter Johan Salomonsen
  */
 @SuppressWarnings("serial")
 public class MidiDevicesPanel extends JPanel {
-    
-	JTabbedPane deviceTabs;
-	AbstractSequencerProjectContainer project;
-	
-	public MidiDevicesPanel(final AbstractSequencerProjectContainer project)
-    {
-    		this.project = project;
-    		
-    		setLayout(new BorderLayout());
-    		
-    		JPanel topPanel = new JPanel();
-    		
-    		final JButton but = new JButton("New MIDI Out Device");
-    		but.addActionListener(new ActionListener() {
-                            @Override
-    			public void actionPerformed(ActionEvent e) {
-    				
-    				JPopupMenu popup = new JPopupMenu();
-    				project.addMidiDevices(popup);
-    				popup.show(but,0,0);
-    			}
 
-    		});
-    		
-    		topPanel.add(but);
-    		
-    		add(topPanel,BorderLayout.NORTH);
-    		
+    JTabbedPane deviceTabs;
+    AbstractSequencerProjectContainer project;
+
+    public MidiDevicesPanel(final AbstractSequencerProjectContainer project) {
+        this.project = project;
+
+        setLayout(new BorderLayout());
+
+        JPanel topPanel = new JPanel();
+
+        final JButton but = new JButton("New MIDI Out Device");
+        but.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                JPopupMenu popup = new JPopupMenu();
+                project.addMidiDevices(popup);
+                popup.show(but, 0, 0);
+            }
+
+        });
+
+        topPanel.add(but);
+
+        add(topPanel, BorderLayout.NORTH);
+
         deviceTabs = new JTabbedPane();
         updateDeviceTabs();
-        add(deviceTabs,BorderLayout.CENTER);
+        add(deviceTabs, BorderLayout.CENTER);
     }
-    
-    public void updateDeviceTabs()
-    {
-   		deviceTabs.removeAll();
-        for(MidiDevice midiDevice : project.getSequencer().listMidiOutDevices())
-        {
-        	String deviceTabName = project.getMidiDeviceDescriptor(midiDevice).getProjectName();
-            deviceTabs.addTab(deviceTabName,((SynthWrapper)midiDevice).getIcon(), new MidiDeviceMixerPanel(this,(SynthWrapper)midiDevice));
-        }   	
+
+    public void updateDeviceTabs() {
+        deviceTabs.removeAll();
+        for (MidiDevice midiDevice : project.getSequencer().listMidiOutDevices()) {
+            String deviceTabName = project.getMidiDeviceDescriptor(midiDevice).getProjectName();
+            deviceTabs.addTab(deviceTabName, ((SynthWrapper) midiDevice).getIcon(), new MidiDeviceMixerPanel(this, (SynthWrapper) midiDevice));
+        }
     }
 
     /**
      * Remove a mididevice from the midi devices panel and the project
+     *
      * @param synthWrapper
      */
-	public void remove(MidiDevice synthWrapper) {
-		project.removeMidiOutDevice(synthWrapper);
-		updateDeviceTabs();		
-	}
+    public void remove(MidiDevice synthWrapper) {
+        project.removeMidiOutDevice(synthWrapper);
+        updateDeviceTabs();
+    }
 
-	public AbstractSequencerProjectContainer getProject() {
-		return project;
-	}
+    public AbstractSequencerProjectContainer getProject() {
+        return project;
+    }
 }

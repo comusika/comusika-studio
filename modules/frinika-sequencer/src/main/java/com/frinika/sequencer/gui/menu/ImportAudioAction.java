@@ -56,13 +56,11 @@ public class ImportAudioAction extends AbstractAction {
         }
 
         try {
-
             JFileChooser chooser = new JFileChooser();
             chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.import_audio.dialogtitle"));
             chooser.setFileFilter(new WavFileFilter());
 
             if (!allowMulti) {
-
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File wavFile = chooser.getSelectedFile();
                     long milliSecPos = project.getProjectContainer().getSequencer().getMicrosecondPosition();

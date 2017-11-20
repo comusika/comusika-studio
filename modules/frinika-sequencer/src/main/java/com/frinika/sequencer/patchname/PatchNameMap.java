@@ -18,9 +18,6 @@ import javax.sound.midi.Synthesizer;
 
 public class PatchNameMap implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private Vector<Node> topList = new Vector<>();
     // these are used to build keynames whilst parsing a text file.
@@ -53,8 +50,7 @@ public class PatchNameMap implements Serializable {
             String rest = line.substring(clB + 1);
             String name = rest.trim();
 
-       //     System.out.println(cmd);
-
+            //     System.out.println(cmd);
             if (!readPatches) {
 
                 if (cmd.equals("define patchnames")) {
@@ -77,7 +73,7 @@ public class PatchNameMap implements Serializable {
                     }
 
                     int key = Integer.parseInt(cmd.substring(2));
-                //    System.out.println(" keyname["+key+"]="+name);
+                    //    System.out.println(" keyname["+key+"]="+name);
                     keyNames[key] = name;
                 }
             }
@@ -91,7 +87,7 @@ public class PatchNameMap implements Serializable {
 
     public PatchNameMap(Synthesizer synthesizer, int channel) {
 
-  //      System.out.println(" Creating patch map for " + synthesizer.toString() + " channel =" + channel);
+        //      System.out.println(" Creating patch map for " + synthesizer.toString() + " channel =" + channel);
         Instrument[] loadedins = synthesizer.getLoadedInstruments();
         Instrument[] availins = synthesizer.getAvailableInstruments();
         Instrument[] availableInstruments;
@@ -124,7 +120,7 @@ public class PatchNameMap implements Serializable {
         }
 
         for (Instrument instr : availableInstruments) {
-   //         System.out.println(" Loading patch for " +instr.getName());
+            //         System.out.println(" Loading patch for " +instr.getName());
             Patch p = instr.getPatch();
             boolean[] channels = null;
             if (getChannels != null) {
@@ -141,15 +137,14 @@ public class PatchNameMap implements Serializable {
                 }
             }
             if (channels == null || channels[channel]) {
-    //            System.out.println("OK for the channel ");
+                //            System.out.println("OK for the channel ");
                 MyPatch patch = new MyPatch(p.getProgram(), p.getBank() >> 7, p.getBank() & 0x7f);
                 Node node = new Node(instr.getName(), patch);
                 node.keynames = keynames;
                 listAtLevel(0).add(node);
 
             } else {
- //              System.out.println("channel does not support it");
-
+                //              System.out.println("channel does not support it");
             }
         }
     }
@@ -158,7 +153,7 @@ public class PatchNameMap implements Serializable {
         int level = Integer.parseInt(cmd.substring(1));
         listAtLevel(level).add(new Node(name, new Vector<Node>()));
 
-    // System.out.println(" g"+level+ " > "+name);
+        // System.out.println(" g"+level+ " > "+name);
     }
 
     private Vector<Node> listAtLevel(int level) {
@@ -185,10 +180,10 @@ public class PatchNameMap implements Serializable {
         int lsb;
 
         if (toks.length < 4) {
-       //     int msb_orig = msb;
+            //     int msb_orig = msb;
             lsb = msb % 128;
             msb = msb / 128;
-     //       System.out.println(msb_orig + " --- > " + msb + ":" + lsb);
+            //       System.out.println(msb_orig + " --- > " + msb + ":" + lsb);
         } else {
             lsb = Integer.parseInt(toks[3].trim());
         }
@@ -197,9 +192,9 @@ public class PatchNameMap implements Serializable {
 
         currentPatchNode = new Node(name, patch);
         listAtLevel(level).add(currentPatchNode);
-    // System.out.println(" p"+level+ " > "+name + " " +
-    // prog+"|"+msb+"|"+lsb);
-    // TODO Auto-generated method stub
+        // System.out.println(" p"+level+ " > "+name + " " +
+        // prog+"|"+msb+"|"+lsb);
+        // TODO Auto-generated method stub
 
     }
 
@@ -248,7 +243,6 @@ public class PatchNameMap implements Serializable {
             }
         }
         return false;
-
     }
 
     public Vector<Node> getList() {

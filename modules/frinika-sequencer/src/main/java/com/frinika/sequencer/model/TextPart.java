@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.global.FrinikaConfig;
@@ -53,74 +52,73 @@ import javax.swing.JTextField;
 
 /**
  * In-place editable text part.
- * 
+ *
  * @author Jens Gulden
  */
 public class TextPart extends Part { //implements ConfigListener {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public final static int DEFAULT_WIDTH = 10240; // ticks
-	
-	public final static String EMPTY_STRING = "...";
+    public final static int DEFAULT_WIDTH = 10240; // ticks
 
-	protected String text = EMPTY_STRING;
+    public final static String EMPTY_STRING = "...";
 
-	protected JTextArea renderLabel;
+    protected String text = EMPTY_STRING;
 
-	transient private static HashMap<PartView,TextPartEditor> activeEditors = new HashMap<PartView,TextPartEditor>();
-	
-	/**
-	 * @param lane
-	 */
-	public TextPart(TextLane lane) {
-		super(lane);
-		init();
-	}
-	
-	private TextPart() { // for cloning
-		super();
-		init();
-	}
-	
-	private void init() {
-		//FrinikaConfig.addConfigListener(this);
-		renderLabel = new JTextArea();
-		renderLabel.setLineWrap(true);
-		renderLabel.setWrapStyleWord(true);
-		//renderLabel.setFont( FrinikaConfig.TEXT_LANE_FONT );
-		renderLabel.setOpaque(false);
-	}
-	
-	public String getText() {
-		return text;
-	}
+    protected JTextArea renderLabel;
 
-	public void setText(String text) {
-		if ((this.text == null) || (!this.text.equals(text))) {
-			this.text = text;
-			((TextLane)lane).fireChangeEvent();
-		}
-	}
-	
-	public synchronized void startInplaceEdit(PartView partView) {
-		TextPartEditor editor = activeEditors.get(partView);
-		if (editor != null) {
-			editor.editOK();
-		}
-		Rectangle r = partView.getPartBounds(this);
-		r.x += partView.getVirtualScreenRect().x;
-		r.y += partView.getVirtualScreenRect().y;
-		editor = new TextPartEditor(this, partView, r);
-		partView.validate();
-		//partView.repaintItems();
-		activeEditors.put(partView, editor);
-	}
+    transient private static HashMap<PartView, TextPartEditor> activeEditors = new HashMap<PartView, TextPartEditor>();
 
-	public synchronized void endInplaceEdit(PartView partView) {
-		activeEditors.remove(partView);
-	}
+    /**
+     * @param lane
+     */
+    public TextPart(TextLane lane) {
+        super(lane);
+        init();
+    }
 
+    private TextPart() { // for cloning
+        super();
+        init();
+    }
+
+    private void init() {
+        //FrinikaConfig.addConfigListener(this);
+        renderLabel = new JTextArea();
+        renderLabel.setLineWrap(true);
+        renderLabel.setWrapStyleWord(true);
+        //renderLabel.setFont( FrinikaConfig.TEXT_LANE_FONT );
+        renderLabel.setOpaque(false);
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        if ((this.text == null) || (!this.text.equals(text))) {
+            this.text = text;
+            ((TextLane) lane).fireChangeEvent();
+        }
+    }
+
+    public synchronized void startInplaceEdit(PartView partView) {
+        TextPartEditor editor = activeEditors.get(partView);
+        if (editor != null) {
+            editor.editOK();
+        }
+        Rectangle r = partView.getPartBounds(this);
+        r.x += partView.getVirtualScreenRect().x;
+        r.y += partView.getVirtualScreenRect().y;
+        editor = new TextPartEditor(this, partView, r);
+        partView.validate();
+        //partView.repaintItems();
+        activeEditors.put(partView, editor);
+    }
+
+    public synchronized void endInplaceEdit(PartView partView) {
+        activeEditors.remove(partView);
+    }
 
 //	/* (non-Javadoc)
 //	 * @see com.frinika.sequencer.model.Part#attach()
@@ -131,245 +129,238 @@ public class TextPart extends Part { //implements ConfigListener {
 //
 //	}
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#clone()
-	 */
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		TextPart p = new TextPart();
-		p.lane = lane;
-		p.text = text;
-		p.setStartTick(getStartTick());
-		p.setEndTick(getEndTick());
-		return p;
-	}
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        TextPart p = new TextPart();
+        p.lane = lane;
+        p.text = text;
+        p.setStartTick(getStartTick());
+        p.setEndTick(getEndTick());
+        return p;
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#commitEventsAdd()
-	 */
-	@Override
-	public void commitEventsAdd() {
-		// nop
-	}
+     */
+    @Override
+    public void commitEventsAdd() {
+        // nop
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#commitEventsRemove()
-	 */
-	@Override
-	public void commitEventsRemove() {
-		// nop
-	}
+     */
+    @Override
+    public void commitEventsRemove() {
+        // nop
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#copyBy(long, com.frinika.sequencer.model.Lane)
-	 */
-	@Override
-	public void copyBy(double tick, Lane dst) {
-		// nop
-	}
+     */
+    @Override
+    public void copyBy(double tick, Lane dst) {
+        // nop
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#detach()
-	 */
+     */
 //	@Override
 //	public void detach() {
 //		// nop
 //	}
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#drawThumbNail(java.awt.Graphics2D, java.awt.Rectangle, com.frinika.sequencer.gui.partview.PartView)
-	 */
-	@Override
-	public void drawThumbNail(Graphics2D g, Rectangle rect, PartView partView) {
-		renderLabel.setSize(rect.width, rect.height);
-		//renderLabel.setText("<html>"+getText()+"</html>");
-		renderLabel.setText(getText());
-		renderLabel.setFont( FrinikaConfig.TEXT_LANE_FONT );
-		g.setColor(Color.WHITE);
-		g.fillRect(rect.x+1, rect.y+1, rect.width-1, rect.height-1); // fill (again) with white background (avoid double filling would require more subtle ColorScheme or changes to PartView)
-		g.translate(rect.x, rect.y);
-		//partView.add(renderLabel);
-		renderLabel.paint(g);
-		//partView.remove(renderLabel);
-		g.translate(-rect.x, -rect.y);
-	}
+     */
+    @Override
+    public void drawThumbNail(Graphics2D g, Rectangle rect, PartView partView) {
+        renderLabel.setSize(rect.width, rect.height);
+        //renderLabel.setText("<html>"+getText()+"</html>");
+        renderLabel.setText(getText());
+        renderLabel.setFont(FrinikaConfig.TEXT_LANE_FONT);
+        g.setColor(Color.WHITE);
+        g.fillRect(rect.x + 1, rect.y + 1, rect.width - 1, rect.height - 1); // fill (again) with white background (avoid double filling would require more subtle ColorScheme or changes to PartView)
+        g.translate(rect.x, rect.y);
+        //partView.add(renderLabel);
+        renderLabel.paint(g);
+        //partView.remove(renderLabel);
+        g.translate(-rect.x, -rect.y);
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#moveContentsBy(long, com.frinika.sequencer.model.Lane)
-	 */
-	@Override
-	public void moveContentsBy(double tick, Lane dstLane) {
-		setStartTick (getStartTick() + tick);
-		setEndTick(getEndTick() + tick);
-	}
+     */
+    @Override
+    public void moveContentsBy(double tick, Lane dstLane) {
+        setStartTick(getStartTick() + tick);
+        setEndTick(getEndTick() + tick);
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#moveItemsBy(long)
-	 */
-	@Override
-	protected void moveItemsBy(long deltaTick) {
-		// nop
-	}
+     */
+    @Override
+    protected void moveItemsBy(long deltaTick) {
+        // nop
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Part#onLoad()
-	 */
-	@Override
-	public void onLoad() {
-		// nop
-	}
+     */
+    @Override
+    public void onLoad() {
+        // nop
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Selectable#deepCopy(com.frinika.sequencer.model.Selectable)
-	 */
-        @Override
-	public Selectable deepCopy(Selectable parent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+     */
+    @Override
+    public Selectable deepCopy(Selectable parent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.Selectable#deepMove(long)
-	 */
-        @Override
-	public void deepMove(long tick) {
-		// nop
-	}
+     */
+    @Override
+    public void deepMove(long tick) {
+        // nop
+    }
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
 	 * @see com.frinika.sequencer.model.EditHistoryRecordable#restoreFromClone(com.frinika.sequencer.model.EditHistoryRecordable)
-	 */
-        @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		// TODO Auto-generated method stub
+     */
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	/*public void configurationChanged(ChangeEvent event) {
+    /*public void configurationChanged(ChangeEvent event) {
 		if (event.getSource() == FrinikaConfig._TEXT_LANE_FONT) {
 			renderLabel.setFont( FrinikaConfig.TEXT_LANE_FONT );
 		}
 	}*/
-
-	
-	// --- context menu ------------------------------------------------------
-	
-	/**
-	 * Fills the part's context menu with menu-items.
-	 *  
-	 * @param popup
-	 */
-	@Override
-	protected void initContextMenu(final ProjectFrame frame, JPopupMenu popup) {
-		/*JMenuItem item = new JMenuItem(new RepeatAction(frame));
+    // --- context menu ------------------------------------------------------
+    /**
+     * Fills the part's context menu with menu-items.
+     *
+     * @param popup
+     */
+    @Override
+    protected void initContextMenu(final ProjectFrame frame, JPopupMenu popup) {
+        /*JMenuItem item = new JMenuItem(new RepeatAction(frame));
 		//item.setText(item.getText()+"..."); // hack
 		item.setMnemonic(KeyEvent.VK_R);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));		
 		popup.add(item);
 		item = new JMenuItem(new SplitSelectedPartsAction(frame));
 		popup.add(item);*/
-		super.initContextMenu(frame, popup);
-	}
+        super.initContextMenu(frame, popup);
+    }
 
-	
-	// --- properties panel --------------------------------------------------
-	
-	/**
-	 * Create PropertiesPanel.
-	 * 
-	 * @param frame
-	 * @return
-	 */
-	@Override
-	protected OptionsEditor createPropertiesPanel(ProjectFrame frame) {
-		return new TextPartPropertiesPanel(frame);
-	}
-	
-	// --- inner class ---
-	
-	/**
-	 * Instance returned via createProperitesPanel().
-	 * 
-	 * This is an example how type-specific Properties-Panels can be built.
-	 * Currently, this just inherits all defaults. 
-	 */
-	protected class TextPartPropertiesPanel extends PropertiesPanel {
-		
-		protected OptionsBinder binder;
-		
-		/**
-		 * Constructor.
-		 * 
-		 * @param frame
-		 */
-		protected TextPartPropertiesPanel(ProjectFrame frame) {
-			super(frame);
-		}
-		
-		/**
-		 * Fills the panel with gui elements for editing the part's properties.
-		 */
-		@Override
-		protected void initComponents() {
-			super.initComponents();
-			GridBagConstraints gc = new GridBagConstraints();
-			gc.insets = new Insets(5,5,5,5);
-			gc.gridwidth = GridBagConstraints.REMAINDER;
-			gc.fill = GridBagConstraints.HORIZONTAL;
-			JSeparator sep = new JSeparator();
-			this.add(sep, gc);
-			//gc = new GridBagConstraints();
-			JPanel fontpanel = new JPanel();
-			fontpanel.setLayout(new BorderLayout(5,5));
-			final JTextField fontTextField = new JTextField();
-			JButton fontButton = new JButton("Pick Font...");
-			Map<Field, Object> bindMap = new HashMap<>();
-			bindMap.put(FrinikaConfig._TEXT_LANE_FONT.getField(), fontTextField);
-			binder = new DefaultOptionsBinder(bindMap, null);
-			fontTextField.addActionListener(new ActionListener() {
-                                @Override
-				public void actionPerformed(ActionEvent e) {
-					updateFont(fontTextField.getText());
-				}
-			});
-			fontButton.addActionListener(new ActionListener() {
-                                @Override
-				public void actionPerformed(ActionEvent e) {
-					FrinikaConfig.pickFont(frame.getFrame(), fontTextField);
-					updateFont(fontTextField.getText());
-				}
-			});
-			fontpanel.add(new JLabel("Font:"), BorderLayout.WEST);
-			fontpanel.add(fontTextField, BorderLayout.CENTER);
-			fontpanel.add(fontButton, BorderLayout.EAST);
-			this.add(fontpanel, gc);
-		}
+    // --- properties panel --------------------------------------------------
+    /**
+     * Create PropertiesPanel.
+     *
+     * @param frame
+     * @return
+     */
+    @Override
+    protected OptionsEditor createPropertiesPanel(ProjectFrame frame) {
+        return new TextPartPropertiesPanel(frame);
+    }
 
-		private void updateFont(String s) { // will lead to immediate update in gui (via TextPartView's ConfigListener)
-			Font font = FrinikaConfig.stringToFont(s);
-			if (font != null) {
-				FrinikaConfig._TEXT_LANE_FONT.set(font);
-				frame.repaintPartView();
-			}
-		}
-		
-		/**
-		 * Refreshes the GUI so that it reflects the model's current state.
-		 */
-		@Override
-		public void refresh() {
-			super.refresh();
-			binder.refresh();
-		}
-		
-		/**
-		 * Updates the model so that it contains the values set by the user.
-		 */
-		@Override
-		public void update() {
-			super.update();
-			binder.update();
-		}
-	}
-	
+    // --- inner class ---
+    /**
+     * Instance returned via createProperitesPanel().
+     *
+     * This is an example how type-specific Properties-Panels can be built.
+     * Currently, this just inherits all defaults.
+     */
+    protected class TextPartPropertiesPanel extends PropertiesPanel {
+
+        protected OptionsBinder binder;
+
+        /**
+         * Constructor.
+         *
+         * @param frame
+         */
+        protected TextPartPropertiesPanel(ProjectFrame frame) {
+            super(frame);
+        }
+
+        /**
+         * Fills the panel with gui elements for editing the part's properties.
+         */
+        @Override
+        protected void initComponents() {
+            super.initComponents();
+            GridBagConstraints gc = new GridBagConstraints();
+            gc.insets = new Insets(5, 5, 5, 5);
+            gc.gridwidth = GridBagConstraints.REMAINDER;
+            gc.fill = GridBagConstraints.HORIZONTAL;
+            JSeparator sep = new JSeparator();
+            this.add(sep, gc);
+            //gc = new GridBagConstraints();
+            JPanel fontpanel = new JPanel();
+            fontpanel.setLayout(new BorderLayout(5, 5));
+            final JTextField fontTextField = new JTextField();
+            JButton fontButton = new JButton("Pick Font...");
+            Map<Field, Object> bindMap = new HashMap<>();
+            bindMap.put(FrinikaConfig._TEXT_LANE_FONT.getField(), fontTextField);
+            binder = new DefaultOptionsBinder(bindMap, null);
+            fontTextField.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updateFont(fontTextField.getText());
+                }
+            });
+            fontButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    FrinikaConfig.pickFont(frame.getFrame(), fontTextField);
+                    updateFont(fontTextField.getText());
+                }
+            });
+            fontpanel.add(new JLabel("Font:"), BorderLayout.WEST);
+            fontpanel.add(fontTextField, BorderLayout.CENTER);
+            fontpanel.add(fontButton, BorderLayout.EAST);
+            this.add(fontpanel, gc);
+        }
+
+        private void updateFont(String s) { // will lead to immediate update in gui (via TextPartView's ConfigListener)
+            Font font = FrinikaConfig.stringToFont(s);
+            if (font != null) {
+                FrinikaConfig._TEXT_LANE_FONT.set(font);
+                frame.repaintPartView();
+            }
+        }
+
+        /**
+         * Refreshes the GUI so that it reflects the model's current state.
+         */
+        @Override
+        public void refresh() {
+            super.refresh();
+            binder.refresh();
+        }
+
+        /**
+         * Updates the model so that it contains the values set by the user.
+         */
+        @Override
+        public void update() {
+            super.update();
+            binder.update();
+        }
+    }
 }

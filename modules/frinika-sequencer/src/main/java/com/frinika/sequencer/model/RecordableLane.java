@@ -23,13 +23,16 @@
 package com.frinika.sequencer.model;
 
 public interface RecordableLane {
-	boolean isRecording();
-	boolean isMute();
+
+    boolean isRecording();
+
+    boolean isMute();
 //	boolean isSolo();
 
-	void setRecording(boolean b);
-	void setMute(boolean b);
-//	void setSolo(boolean b);
-	double getMonitorValue();
+    void setRecording(boolean b);
 
+    void setMute(boolean b);
+//	void setSolo(boolean b);
+
+    double getMonitorValue();
 }

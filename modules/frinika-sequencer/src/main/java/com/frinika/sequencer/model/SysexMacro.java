@@ -21,20 +21,18 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
 
 /**
- * A class implementing this interface can be used as a simple macro(-interpreter)
- * for MIDI system exclusive (sysex) messages.
- *  
+ * A class implementing this interface can be used as a simple
+ * macro(-interpreter) for MIDI system exclusive (sysex) messages.
+ *
  * @author Jens Gulden
  */
 public interface SysexMacro {
-	
-	public MidiMessage[] parseMessages(String macro) throws InvalidMidiDataException;
-	
+
+    MidiMessage[] parseMessages(String macro) throws InvalidMidiDataException;
 }

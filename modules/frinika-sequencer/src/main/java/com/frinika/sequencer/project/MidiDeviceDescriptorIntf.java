@@ -6,41 +6,41 @@ import javax.swing.Icon;
 
 public interface MidiDeviceDescriptorIntf {
 
-	public String getMidiDeviceName();
+    String getMidiDeviceName();
 
-	/**
-	 * Set the name of the midi device as registered in MidiSystem
-	 *
-	 * @param midiDeviceName
-	 */
-	public void setMidiDeviceName(String midiDeviceName);
+    /**
+     * Set the name of the midi device as registered in MidiSystem
+     *
+     * @param midiDeviceName
+     */
+    void setMidiDeviceName(String midiDeviceName);
 
-	/**
-	 * Get the name of the midi device as the user has set for it in the Frinika
-	 * project
-	 *
-	 * @return
-	 */
-	public String getProjectName();
+    /**
+     * Get the name of the midi device as the user has set for it in the Frinika
+     * project
+     *
+     * @return
+     */
+    String getProjectName();
 
-	/**
-	 * Set the name of the midi device as the user wants to name it in the
-	 * Frinika project
-	 *
-	 * @param projectName
-	 */
-	public void setProjectName(String projectName);
+    /**
+     * Set the name of the midi device as the user wants to name it in the
+     * Frinika project
+     *
+     * @param projectName
+     */
+    void setProjectName(String projectName);
 
-	public MidiDevice getMidiDevice();
+    MidiDevice getMidiDevice();
 
-	public Serializable getSerializableMidiDevice();
+    Serializable getSerializableMidiDevice();
 
-	public Icon getIcon();
+    Icon getIcon();
 
-	public Icon getLargeIcon();
+    Icon getLargeIcon();
 
     /**
      * @param midiDevice the midiDevice to set
      */
-    public void setMidiDevice(MidiDevice midiDevice);
+    void setMidiDevice(MidiDevice midiDevice);
 }

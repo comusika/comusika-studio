@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.model.EditHistoryRecordable;
@@ -30,29 +29,31 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
 
-
 /**
  * Controller events represents a Pitch Bend
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class PitchBendEvent extends ChannelEvent {
+
     private static final long serialVersionUID = 1L;
 
     transient MidiEvent midiEvent;
-    
+
     int value;
-    
+
     @SuppressWarnings("deprecation")
-    public PitchBendEvent(FrinikaTrackWrapper track, long startTick,int value) {
+    public PitchBendEvent(FrinikaTrackWrapper track, long startTick, int value) {
         super(track, startTick);
         this.value = value;
     }
 
-    public PitchBendEvent(MidiPart multiEventGroup, long startTick,int value) {
+    public PitchBendEvent(MidiPart multiEventGroup, long startTick, int value) {
         super(multiEventGroup, startTick);
         this.value = value;
     }
+
     /**
      * @return Returns the value.
      */
@@ -68,13 +69,13 @@ public class PitchBendEvent extends ChannelEvent {
     public void setValue(int value) {
         this.value = value;
     }
-    
+
     /**
      * @return Returns the value for UI.
      */
     @Override
     public int getValueUI() {
-        return value-8192;
+        return value - 8192;
     }
 
     /**
@@ -82,45 +83,42 @@ public class PitchBendEvent extends ChannelEvent {
      */
     @Override
     public void setValueUI(int value) {
-        this.value = value+8192;
+        this.value = value + 8192;
     }
-    
+
     @Override
     public long getEndTick() {
-    	return startTick;
+        return startTick;
     }
-    
+
     @SuppressWarnings("deprecation")
     @Override
     void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
         getTrack().remove(midiEvent);
-        zombie=true;
+        zombie = true;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-	public
-    void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
-        try
-        {
+    public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+        try {
             ShortMessage shm = new ShortMessage();
-            shm.setMessage(ShortMessage.PITCH_BEND,channel,value & 0x3f,(value >> 7));
-            midiEvent = new MidiEvent(shm,startTick);
+            shm.setMessage(ShortMessage.PITCH_BEND, channel, value & 0x3f, (value >> 7));
+            midiEvent = new MidiEvent(shm, startTick);
             getTrack().add(midiEvent);
-         
-        } catch(InvalidMidiDataException e)
-        {
+
+        } catch (InvalidMidiDataException e) {
             e.printStackTrace();
-     
+
         }
-        zombie=false;
+        zombie = false;
     }
 
     @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		PitchBendEvent evt = (PitchBendEvent)object;
-		this.part = evt.part;
-		this.startTick = evt.startTick;
-		this.value = evt.value;
-	}
+    public void restoreFromClone(EditHistoryRecordable object) {
+        PitchBendEvent evt = (PitchBendEvent) object;
+        this.part = evt.part;
+        this.startTick = evt.startTick;
+        this.value = evt.value;
+    }
 }

@@ -30,87 +30,95 @@ import java.util.Iterator;
 
 /**
  * Iterates on all the notes in given part list
- * 
+ *
  * IN the order part by part not sequentially
- * 
+ *
  * @author Paul
- * 
+ *
  */
 public class EventsInPartsIterator implements Iterator<MultiEvent> {
 
-	Iterator<Part> partIter = null;
+    Iterator<Part> partIter = null;
 
-	// Iterator<MultiEvent> noteIter = null;
-	EventIterator eventIter = null;
+    // Iterator<MultiEvent> noteIter = null;
+    EventIterator eventIter = null;
 
-	// MultiEvent next=null;
-	EventFilter filter;
+    // MultiEvent next=null;
+    EventFilter filter;
 
-	public EventsInPartsIterator(Collection<Part> partList, EventFilter filter) {
-		this.filter = filter;
-		partIter = partList.iterator();
-		advanceToNextMidiPart();
-	}
+    public EventsInPartsIterator(Collection<Part> partList, EventFilter filter) {
+        this.filter = filter;
+        partIter = partList.iterator();
+        advanceToNextMidiPart();
+    }
 
-	public EventsInPartsIterator(Part part, EventFilter filter) {
-		this.filter = filter;
-		partIter = null;
-		eventIter = new EventIterator(((MidiPart) part).getMultiEvents(),
-				filter); // .iterator();
-	}
+    public EventsInPartsIterator(Part part, EventFilter filter) {
+        this.filter = filter;
+        partIter = null;
+        eventIter = new EventIterator(((MidiPart) part).getMultiEvents(),
+                filter); // .iterator();
+    }
 
-	private boolean advanceToNextMidiPart() {
+    private boolean advanceToNextMidiPart() {
 
-		if (partIter == null ) return false;
-		Part part = null;
+        if (partIter == null) {
+            return false;
+        }
+        Part part = null;
 
-		while (partIter.hasNext()) {
-			part = partIter.next();
-			if (part instanceof MidiPart) {
-				Collection<MultiEvent> list = ((MidiPart) part)
-						.getMultiEvents();
-				if (list.size() == 0)
-					continue;
-				eventIter = new EventIterator(((MidiPart) part)
-						.getMultiEvents(), filter); // .iterator();
-				if (!eventIter.hasNext())
-					continue;
-				return true;
-			}
-		}
-		eventIter = null;
-		return false;
-	}
+        while (partIter.hasNext()) {
+            part = partIter.next();
+            if (part instanceof MidiPart) {
+                Collection<MultiEvent> list = ((MidiPart) part)
+                        .getMultiEvents();
+                if (list.size() == 0) {
+                    continue;
+                }
+                eventIter = new EventIterator(((MidiPart) part)
+                        .getMultiEvents(), filter); // .iterator();
+                if (!eventIter.hasNext()) {
+                    continue;
+                }
+                return true;
+            }
+        }
+        eventIter = null;
+        return false;
+    }
 
-        @Override
-	public boolean hasNext() {
-		if (eventIter == null)
-			return false;
-		if (eventIter.hasNext())
-			return true;
+    @Override
+    public boolean hasNext() {
+        if (eventIter == null) {
+            return false;
+        }
+        if (eventIter.hasNext()) {
+            return true;
+        }
 
-		// TODO Auto-generated method stub
-		return advanceToNextMidiPart();
-	}
+        // TODO Auto-generated method stub
+        return advanceToNextMidiPart();
+    }
 
-        @Override
-	public MultiEvent next() {
-		while (eventIter.hasNext()) {
-			MultiEvent ev = eventIter.next();
-			assert (ev != null);
-			if (filter.isValidEvent(ev))	return  ev;
-		}
+    @Override
+    public MultiEvent next() {
+        while (eventIter.hasNext()) {
+            MultiEvent ev = eventIter.next();
+            assert (ev != null);
+            if (filter.isValidEvent(ev)) {
+                return ev;
+            }
+        }
 
-		// He he sneak a bit of recursion in here (PJL)
-		if (advanceToNextMidiPart())
-			return next();
-		return null;
-	}
+        // He he sneak a bit of recursion in here (PJL)
+        if (advanceToNextMidiPart()) {
+            return next();
+        }
+        return null;
+    }
 
-        @Override
-	public void remove() {
-		assert (false);
-		// TODO Auto-generated method stub
-	}
-
+    @Override
+    public void remove() {
+        assert (false);
+        // TODO Auto-generated method stub
+    }
 }

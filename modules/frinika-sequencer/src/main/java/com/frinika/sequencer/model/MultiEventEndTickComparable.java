@@ -21,39 +21,40 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 /**
- * A MultiEvent wrapper class for creating a comparable based on the end tick of a MultiEvent.
+ * A MultiEvent wrapper class for creating a comparable based on the end tick of
+ * a MultiEvent.
+ *
  * @author Peter Johan Salomonsen
  */
 public class MultiEventEndTickComparable implements Comparable {
+
     MultiEvent multiEvent;
-    
+
     /**
-     * Package private constructor - use MultiEvent.getMultiEventEndTickComparable instead
+     * Package private constructor - use
+     * MultiEvent.getMultiEventEndTickComparable instead
+     *
      * @param multiEvent
      */
-    MultiEventEndTickComparable(MultiEvent multiEvent)
-    {
+    MultiEventEndTickComparable(MultiEvent multiEvent) {
         this.multiEvent = multiEvent;
     }
 
     public MultiEvent getMultiEvent() {
         return multiEvent;
     }
-    
+
     @Override
-    public int compareTo(Object obj)
-    {
-        int ret = new Long(multiEvent.getEndTick()).compareTo(((MultiEventEndTickComparable)obj).getMultiEvent().getEndTick());
+    public int compareTo(Object obj) {
+        int ret = new Long(multiEvent.getEndTick()).compareTo(((MultiEventEndTickComparable) obj).getMultiEvent().getEndTick());
         // In case the tick is the same use multiEventID for ordering
-        if(ret==0 && obj != this)
-        {
-            return new Long(multiEvent.multiEventID).compareTo(((MultiEventEndTickComparable)obj).getMultiEvent().multiEventID);
-        }
-        else
+        if (ret == 0 && obj != this) {
+            return new Long(multiEvent.multiEventID).compareTo(((MultiEventEndTickComparable) obj).getMultiEvent().multiEventID);
+        } else {
             return ret;
-    }    
+        }
+    }
 }

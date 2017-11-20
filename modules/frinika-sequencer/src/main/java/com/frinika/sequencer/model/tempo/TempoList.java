@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model.tempo;
 
 import com.frinika.sequencer.FrinikaTrackWrapper;
@@ -40,329 +39,328 @@ import javax.sound.midi.MidiEvent;
 
 /**
  * Maintains a list of tempo changes.
- * 
- * 
+ *
+ *
  * Tempo changes occur at midi ticks ( an tempo changed is fixed to a tick)
- * 
+ *
  * Inserting a new tempo change sets a dirty flag.
- * 
+ *
  * If need be the real time of the events are reconstructed if the dirty flag is
  * true.
- * 
+ *
  * @author pjl
- * 
+ *
  */
-
 public class TempoList implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	transient private TreeMap<Long, MyTempoEvent> treeSet;
+    transient private TreeMap<Long, MyTempoEvent> treeSet;
 
-	private Vector<MyTempoEvent> list; // for the list
+    private Vector<MyTempoEvent> list; // for the list
 
-	transient private boolean dirty = true;
+    transient private boolean dirty = true;
 
-	private double ticksPerBeat;
+    private double ticksPerBeat;
 
-	AbstractSequencerProjectContainer project;
+    AbstractSequencerProjectContainer project;
 
-	transient Vector<TempoListListener> listeners;
+    transient Vector<TempoListListener> listeners;
 
-	public void addTempoListListener(TempoListListener o) {
-		listeners.add(o);
-	}
+    public void addTempoListListener(TempoListListener o) {
+        listeners.add(o);
+    }
 
-	public void removeTempoListListener(TempoListListener o) {
-		listeners.remove(o);
-	}
+    public void removeTempoListListener(TempoListListener o) {
+        listeners.remove(o);
+    }
 
-	public void notifyListeners() {
-		for (TempoListListener o : listeners)
-			o.notifyTempoListChange();
-	}
+    public void notifyListeners() {
+        for (TempoListListener o : listeners) {
+            o.notifyTempoListChange();
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	private void readObject(ObjectInputStream in)
-			throws ClassNotFoundException, IOException {
+    @SuppressWarnings("unchecked")
+    private void readObject(ObjectInputStream in)
+            throws ClassNotFoundException, IOException {
 
-		in.defaultReadObject();
+        in.defaultReadObject();
 
-		treeSet = new TreeMap<>();
+        treeSet = new TreeMap<>();
 
-		for (MyTempoEvent e : list) {
-			treeSet.put(e.tick, e);
-		}
-		dirty = true;
-		listeners = new Vector<>();
-	}
+        for (MyTempoEvent e : list) {
+            treeSet.put(e.tick, e);
+        }
+        dirty = true;
+        listeners = new Vector<>();
+    }
 
-	private void writeObject(ObjectOutputStream out) throws IOException {
-		reco();
-		out.defaultWriteObject();
-	}
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        reco();
+        out.defaultWriteObject();
+    }
 
-	public TempoList(double ticksPerBeat, AbstractSequencerProjectContainer project) {
-		this.project = project;
-		treeSet = new TreeMap<>();
-		list = new Vector<>();
-		this.ticksPerBeat = ticksPerBeat;
-		listeners = new Vector<>();
-	}
+    public TempoList(double ticksPerBeat, AbstractSequencerProjectContainer project) {
+        this.project = project;
+        treeSet = new TreeMap<>();
+        list = new Vector<>();
+        this.ticksPerBeat = ticksPerBeat;
+        listeners = new Vector<>();
+    }
 
-	/**
-	 * Add a tempo event
-	 * 
-	 * @param tick
-	 * @param bpm
-	 */
-	public synchronized void add(long tick, double bpm) {
+    /**
+     * Add a tempo event
+     *
+     * @param tick
+     * @param bpm
+     */
+    public synchronized void add(long tick, double bpm) {
 
-		if (treeSet.remove(tick) != null)
-			System.out.println(" DUPLICATE TIME REMOVED ");
+        if (treeSet.remove(tick) != null) {
+            System.out.println(" DUPLICATE TIME REMOVED ");
+        }
 
-		treeSet.put(tick, new MyTempoEvent(bpm));
-		dirty = true;
-	}
+        treeSet.put(tick, new MyTempoEvent(bpm));
+        dirty = true;
+    }
 
-	/**
-	 * 
-	 * Remove tempo events between tick1 and tick2
-	 * 
-	 * @param tick1
-	 * @param tick2
-	 */
-	public synchronized void remove(long tick1, long tick2) {
-		treeSet.subMap(tick1, tick2).clear();
-		dirty = true;
-	}
+    /**
+     *
+     * Remove tempo events between tick1 and tick2
+     *
+     * @param tick1
+     * @param tick2
+     */
+    public synchronized void remove(long tick1, long tick2) {
+        treeSet.subMap(tick1, tick2).clear();
+        dirty = true;
+    }
 
-	public synchronized void reco() {
-		if (!dirty)
-			return;
-		list.clear();
-		FrinikaTrackWrapper tempoTrack = null;
+    public synchronized void reco() {
+        if (!dirty) {
+            return;
+        }
+        list.clear();
+        FrinikaTrackWrapper tempoTrack = null;
 
-		if (project != null) {
-			tempoTrack = project.getTempoTrack();
-			tempoTrack.clear();
-		}
+        if (project != null) {
+            tempoTrack = project.getTempoTrack();
+            tempoTrack.clear();
+        }
 
-		long tick = 0;
-		double bpm = 120;
-		double time = 0.0;
+        long tick = 0;
+        double bpm = 120;
+        double time = 0.0;
 
-		for (Map.Entry<Long, MyTempoEvent> e : treeSet.entrySet()) {
-			long deltaTick = e.getKey() - tick;
-			time += deltaTick * 60.0 / bpm / ticksPerBeat;
-			e.getValue().time = time;
-			tick = e.getValue().tick = e.getKey();
+        for (Map.Entry<Long, MyTempoEvent> e : treeSet.entrySet()) {
+            long deltaTick = e.getKey() - tick;
+            time += deltaTick * 60.0 / bpm / ticksPerBeat;
+            e.getValue().time = time;
+            tick = e.getValue().tick = e.getKey();
 
-			bpm = e.getValue().bpm;
-			if (tempoTrack != null) {
-				try {
-					// System.out.println(" Adding tempo event " + e.getKey()
-					// + " " + bpm + " " + tempoTrack);
-					TempoMessage tempoMsg = new TempoMessage((float) bpm);
-					MidiEvent tempoEvent = new MidiEvent(tempoMsg, e.getKey());
-					e.getValue().tempoEvent = tempoEvent;
-					tempoTrack.add(tempoEvent);
-				} catch (InvalidMidiDataException ex) {
-					ex.printStackTrace();
-				}
-			}
-			list.add(e.getValue());
-		}
+            bpm = e.getValue().bpm;
+            if (tempoTrack != null) {
+                try {
+                    // System.out.println(" Adding tempo event " + e.getKey()
+                    // + " " + bpm + " " + tempoTrack);
+                    TempoMessage tempoMsg = new TempoMessage((float) bpm);
+                    MidiEvent tempoEvent = new MidiEvent(tempoMsg, e.getKey());
+                    e.getValue().tempoEvent = tempoEvent;
+                    tempoTrack.add(tempoEvent);
+                } catch (InvalidMidiDataException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            list.add(e.getValue());
+        }
 
-		dirty = false;
-	}
+        dirty = false;
+    }
 
-	public class MyTempoEvent implements Serializable {
-		transient public MidiEvent tempoEvent;
+    public class MyTempoEvent implements Serializable {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+        transient public MidiEvent tempoEvent;
 
-		private double bpm;
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		transient private double time; // reconstructed in a dirty way
+        private double bpm;
 
-		private long tick;
+        transient private double time; // reconstructed in a dirty way
 
-		private MyTempoEvent() {
-		}
+        private long tick;
 
-		MyTempoEvent(double bpm) {
-			this.bpm = bpm;
-		}
+        private MyTempoEvent() {
+        }
 
-		void display() {
-			System.out.print(time + ":" + bpm);
-		}
+        MyTempoEvent(double bpm) {
+            this.bpm = bpm;
+        }
 
-		public long getTick() {
-			return tick;
-		}
+        void display() {
+            System.out.print(time + ":" + bpm);
+        }
 
-		public double getBPM() {
-			return bpm;
-		}
+        public long getTick() {
+            return tick;
+        }
 
-		public double getTime() {
-			if (dirty)
-				reco();
-			return time;
-		}
+        public double getBPM() {
+            return bpm;
+        }
 
-		public MidiEvent getTempoEvent() {
-			return tempoEvent;
-		}
+        public double getTime() {
+            if (dirty) {
+                reco();
+            }
+            return time;
+        }
 
-	}
+        public MidiEvent getTempoEvent() {
+            return tempoEvent;
+        }
+    }
 
-	/**
-	 * 
-	 * get tempo event before tick.
-	 * 
-	 * @param tick
-	 * @return
-	 */
-	public synchronized MyTempoEvent getTempoEventAt(long tick) {
-		if (dirty)
-			reco();
-		SortedMap<Long, MyTempoEvent> head = treeSet.headMap(tick + 1);
-		MyTempoEvent ev = (head.get(head.lastKey()));
-		return ev;
-	}
+    /**
+     *
+     * get tempo event before tick.
+     *
+     * @param tick
+     * @return
+     */
+    public synchronized MyTempoEvent getTempoEventAt(long tick) {
+        if (dirty) {
+            reco();
+        }
+        SortedMap<Long, MyTempoEvent> head = treeSet.headMap(tick + 1);
+        MyTempoEvent ev = (head.get(head.lastKey()));
+        return ev;
+    }
 
-	/**
-	 * 
-	 * Get tempo at tick.
-	 * 
-	 * @param tick
-	 * @return
-	 */
-	public synchronized float getTempoAt(long tick) {
-		if (dirty)
-			reco();
-		SortedMap<Long, MyTempoEvent> head = treeSet.headMap(tick + 1);
-		if (head.isEmpty()) {
-			return 120.0f;
-		}
-		MyTempoEvent ev = (head.get(head.lastKey()));
-		return (float) ev.bpm;
-	}
+    /**
+     *
+     * Get tempo at tick.
+     *
+     * @param tick
+     * @return
+     */
+    public synchronized float getTempoAt(long tick) {
+        if (dirty) {
+            reco();
+        }
+        SortedMap<Long, MyTempoEvent> head = treeSet.headMap(tick + 1);
+        if (head.isEmpty()) {
+            return 120.0f;
+        }
+        MyTempoEvent ev = (head.get(head.lastKey()));
+        return (float) ev.bpm;
+    }
 
-	/**
-	 * return the tick at the given time
-	 * 
-	 * Slow (do not use if speed is required)
-	 * 
-	 * @param time
-	 * @return tick
-	 */
+    /**
+     * return the tick at the given time
+     *
+     * Slow (do not use if speed is required)
+     *
+     * @param time
+     * @return tick
+     */
+    public synchronized double getTickAtTime(double time) {
 
-	public synchronized double getTickAtTime(double time) {
+        if (dirty) {
+            reco();
+        }
 
-		if (dirty)
-			reco();
+        MyTempoEvent lastEv = list.firstElement();
 
-		MyTempoEvent lastEv = list.firstElement();
+        if (time < 0) {
+            return ticksPerBeat * time * lastEv.bpm / 60.0;
+        }
 
-		if (time < 0) {
-			return ticksPerBeat * time * lastEv.bpm / 60.0;
-		}
+        for (MyTempoEvent ev : list) {
+            assert (ev != null);
+            if (ev.time > time) {
+                break;
+            }
+            lastEv = ev;
+        }
 
-		for (MyTempoEvent ev : list) {
-			assert (ev != null);
-			if (ev.time > time)
-				break;
-			lastEv = ev;
-		}
+        return lastEv.tick + ticksPerBeat * (time - lastEv.time) * lastEv.bpm
+                / 60.0;
+    }
 
-		return lastEv.tick + ticksPerBeat * (time - lastEv.time) * lastEv.bpm
-				/ 60.0;
+    /**
+     *
+     *
+     * @param tick
+     * @return real time at this tick in seconds
+     */
+    public synchronized double getTimeAtTick(double tick) {
 
-	}
+        // assert(tick >= 0);
+        if (dirty) {
+            reco();
+        }
+        long itick = (long) tick + 1; // 
+        SortedMap<Long, MyTempoEvent> head = treeSet.headMap(itick);
+        MyTempoEvent ev;
+        Long lastKey;
 
-	/**
-	 * 
-	 * 
-	 * @param tick
-	 * @return real time at this tick in seconds
-	 */
-	public synchronized double getTimeAtTick(double tick) {
+        if (head.isEmpty()) {
 
-		// assert(tick >= 0);
+            // PJS thinks this is annyoing so temporarily commented out :)
+            // System.out.println(this);
+            // Yeh but I put it here because it shouold never happen . . . but
+            // it was . . . (PJL)
+            // System.out.println(" Tempo list has no head event " + tick +
+            // this);
+            // try {
+            // throw new Exception();
+            // } catch (Exception e) {
+            // // TODO Auto-generated catch block
+            // e.printStackTrace();
+            // }
+            // allow negative events for audio parts before the start
+            lastKey = 0L;
+            ev = treeSet.get(treeSet.firstKey());
+        } else {
+            lastKey = head.lastKey();
+            ev = head.get(lastKey);
+        }
 
-		if (dirty)
-			reco();
-		long itick = (long) tick + 1; // 
-		SortedMap<Long, MyTempoEvent> head = treeSet.headMap(itick);
-		MyTempoEvent ev;
-		Long lastKey;
+        return ev.time + (tick - lastKey) * 60.0 / ev.bpm / ticksPerBeat;
+    }
 
-		if (head.isEmpty()) {
+    // return (60.0 * 1000000.0 * tick)
+    // / (sequence.getResolution() * sequencer.getTempoInBPM());
+    // }
+    // public double getTickAt(double time) {
+    // // TODO Auto-generated method stub
+    // return 0;
+    // }
+    public void display() {
+        reco();
+        for (Map.Entry<Long, MyTempoEvent> me : treeSet.entrySet()) {
+            System.out.println(me.getKey() + " : " + me.getValue().time + " : "
+                    + me.getValue().bpm);
+            // System.out.println(getTimeAt(me.getKey()+0.5));
+        }
+    }
 
-			// PJS thinks this is annyoing so temporarily commented out :)
+    public static void main(String args[]) {
 
-			// System.out.println(this);
-			// Yeh but I put it here because it shouold never happen . . . but
-			// it was . . . (PJL)
-			// System.out.println(" Tempo list has no head event " + tick +
-			// this);
-			// try {
-			// throw new Exception();
-			// } catch (Exception e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
+    }
 
-			// allow negative events for audio parts before the start
-			
-			lastKey = 0L;
-			ev = treeSet.get(treeSet.firstKey());
-		} else {
-			lastKey = head.lastKey();
-			ev = head.get(lastKey);
-		}
+    public int size() {
+        return treeSet.size();
+    }
 
-		return ev.time + (tick - lastKey) * 60.0 / ev.bpm / ticksPerBeat;
-	}
-
-	// return (60.0 * 1000000.0 * tick)
-	// / (sequence.getResolution() * sequencer.getTempoInBPM());
-	// }
-	// public double getTickAt(double time) {
-	// // TODO Auto-generated method stub
-	// return 0;
-	// }
-
-	public void display() {
-		reco();
-		for (Map.Entry<Long, MyTempoEvent> me : treeSet.entrySet()) {
-			System.out.println(me.getKey() + " : " + me.getValue().time + " : "
-					+ me.getValue().bpm);
-			// System.out.println(getTimeAt(me.getKey()+0.5));
-		}
-	}
-
-	public static void main(String args[]) {
-
-	}
-
-	public int size() {
-		return treeSet.size();
-	}
-
-	public MyTempoEvent elementAt(int row) {
-		if (dirty)
-			reco();
-		return list.elementAt(row);
-	}
+    public MyTempoEvent elementAt(int row) {
+        if (dirty) {
+            reco();
+        }
+        return list.elementAt(row);
+    }
 }
