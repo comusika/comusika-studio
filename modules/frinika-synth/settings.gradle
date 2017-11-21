@@ -1,6 +1,0 @@
-rootProject.name = 'frinika-synth'
-
-apply from: '../modules-settings.gradle'
-
-include ":modules:frinika-core"
-include ":modules:frinika-audio"

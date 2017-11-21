@@ -1,4 +1,0 @@
-rootProject.name = 'frinika-jack'
-
-apply from: '../modules-settings.gradle'
-

@@ -6,7 +6,6 @@ apply from: '../modules.gradle'
 
 dependencies {
     compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-synth'))
     compile(project(':modules:frinika-sequencer'))
     testCompile group: 'junit', name: 'junit', version: '4.10'
 }

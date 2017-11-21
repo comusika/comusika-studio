@@ -48,7 +48,7 @@ task javadocJar (type: Jar, dependsOn: javadoc) {
 def configureExec(task) {
     task.main = mainClass
     task.classpath = sourceSets.main.runtimeClasspath
-    task.args appArgs
+//    task.args appArgs
 }
 
 task run(type: JavaExec) {
@@ -95,9 +95,12 @@ dependencies {
     compile(project(':modules:frinika-notation'))
     compile(project(':modules:frinika-sequencer'))
     compile(project(':modules:frinika-project'))
-    compile(project(':modules:frinika-audio-osx'))
-    compile(project(':modules:frinika-rasmusdsp'))
-    compile(project(':modules:frinika-frogdisco'))
+    compile(project(':modules:frinika-driver-osx'))
+    compile(project(':modules:frinika-driver-frogdisco'))
+    compile(project(':modules:frinika-device-synthrack'))
+    compile(project(':modules:frinika-device-rasmusdsp'))
+    compile(project(':modules:frinika-device-opl3'))
+    compile(project(':modules:frinika-device-debug'))
     compile(project(':modules:frinika-mystudio'))
     compile 'com.apple:AppleJavaExtensions:1.4'
     compile 'com.jgoodies:looks:2.1.4'

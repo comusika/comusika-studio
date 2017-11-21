@@ -24,6 +24,7 @@
 package com.frinika;
 
 import com.bulenkov.darcula.DarculaLaf;
+import com.bulenkov.darcula.DarculaLookAndFeelInfo;
 import com.frinika.frame.WelcomeDialog;
 import com.frinika.project.dialog.SplashDialog;
 import com.frinika.global.FrinikaConfig;
@@ -43,6 +44,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -151,9 +154,10 @@ public class FrinikaMain {
 //            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
             // Workaround for https://github.com/bulenkov/iconloader/issues/14
             javax.swing.UIManager.getFont("Label.font");
+            UIManager.installLookAndFeel(new DarculaLookAndFeelInfo());
             UIManager.setLookAndFeel(new DarculaLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

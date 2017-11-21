@@ -1,0 +1,11 @@
+group = 'com.frinika'
+ext.libraryName = 'Frinika debug device library'
+ext.libraryDescription = 'Debug device library for Frinika'
+
+apply from: '../modules.gradle'
+
+dependencies {
+    compile(project(':modules:frinika-core'))
+    compile(project(':modules:frinika-audio'))
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+}

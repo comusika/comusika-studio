@@ -1,2 +1,5 @@
 0.1.0
-- Initial release
+- Project modularized
+- Added darcula dark look and feel
+- Added SoundHelix generator
+- 

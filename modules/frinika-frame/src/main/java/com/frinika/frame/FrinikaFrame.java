@@ -429,208 +429,19 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     }
 
-    public void setProject(final ProjectContainer project) throws Exception {
-        project.resetEndTick();
-        // This might be useful for more placement control.
-        // Dimension frameSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final Receiver receiver = project.getSequencer().getReceiver();
-
-        midiLearnFrame = new MidiLearnPanel(project.getMidiDeviceRouter());
-
-        /*
-		 * Vector<String> midiInList = FrinikaConfig.getMidiInDeviceList(); for
-		 * (String name : midiInList) { MidiDevice midiIn = null; // TOOT_FIXME
-		 * MidiHub.getMidiInDeviceByName(name); * PJS: I use a USB midi device
-		 * that I unplug every now and then without this test I'm not able to
-		 * reopen my projects if I don't have this midi device
-		 * 
-		 * PJL: Should we ask for replacement devices here ?
-		 * 
-		 * 
-		 * if (midiIn != null) { try { midiIn.open();
-		 * midiIn.getTransmitter().setReceiver(receiver); System.
-		 * out.println(midiIn + " ---> " + receiver); } catch (Exception e) {
-		 * e.printStackTrace(); } } else System. out.println("Couldn't reopen
-		 * mididevice: " + name); }
-         */
-        MidiInDeviceManager.setProject(project);
-
-        this.project = project;
-
-        project.registerProjectRepaintListener(new ProjectRepaintListener() {
-            @Override
-            public void repaintViews() {
-                partViewEditor.repaint();
-                repaintPartView();
-                // TODO repaint others if needed
-            }
-
-            @Override
-            public void repaintPartView() {
-                partViewEditor.getPartview().repaint();
-                partViewEditor.getPartview().repaintItems();
-            }
-        });
-
-        /*
-		 * Rectangle windowSize = GraphicsEnvironment
-		 * .getLocalGraphicsEnvironment().getDefaultScreenDevice()
-		 * .getDefaultConfiguration().getBounds();
-         */
- /*
-		 * Point p = GraphicsEnvironment.getLocalGraphicsEnvironment()
-		 * .getCenterPoint(); Dimension frameSize = new
-		 * Dimension(windowSize.getSize()); setSize(frameSize); setLocation(0,
-		 * 0);
-         */
-        Dimension frameSize;
-        int x;
-        int y;
-
-        if (position == null) {
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
-            Rectangle windowSize;
-            Insets windowInsets;
-
-            GraphicsEnvironment ge = java.awt.GraphicsEnvironment
-                    .getLocalGraphicsEnvironment();
-            GraphicsConfiguration gc = ge.getDefaultScreenDevice()
-                    .getDefaultConfiguration();
-            if (gc == null) {
-                gc = getGraphicsConfiguration();
-            }
-
-            if (gc != null) {
-                windowSize = gc.getBounds();
-                windowInsets = toolkit.getScreenInsets(gc);
-            } else {
-                windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-                windowInsets = new java.awt.Insets(0, 0, 0, 0);
-            }
-
-            // PJL using xrandr and a virtual screen 2560x1024 then windowSize.x
-            // == windowSize.width=1280;
-            windowSize.x = 0;
-
-            int w = (windowSize.width - windowSize.x)
-                    - (windowInsets.left + windowInsets.right + 10);
-            int h = (windowSize.height - windowSize.y)
-                    - (windowInsets.top + windowInsets.bottom + 10);
-            y = windowInsets.top
-                    + ((windowSize.height - windowSize.y)
-                    - (windowInsets.top + windowInsets.bottom) - h) / 2;
-            x = windowInsets.left
-                    + ((windowSize.width - windowSize.x)
-                    - (windowInsets.left + windowInsets.right) - w) / 2;
-
-            frameSize = new Dimension(w, h);
-
-            setSize(new Dimension(w - 1, h - 1));
-        } else {
-            frameSize = position.getSize();
-            y = position.y;
-            x = position.x;
-        }
-
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-        setIconImage(new javax.swing.ImageIcon(FrinikaFrame.class
-                .getResource("/icons/frinika.png")).getImage());
-
-        String name = "Frinika - Copyright (c) Frinika developers - Licensed under GNU General Public License";
-        File file = project.getProjectFile();
-        if (file != null) {
-            name = file.getName();
-        }
-
-        setTitle(name);
-
-        project.getEditHistoryContainer().addEditHistoryListener(
-                new EditHistoryListener() {
-            /**
-             * An asterix sign next to the project title indicating if edits
-             * have been done
-             */
-            boolean showAsterix = false;
-
-            @Override
-            public void fireSequenceDataChanged(
-                    EditHistoryAction[] edithistoryEntries) {
-                if (project.getEditHistoryContainer().hasChanges() != showAsterix) {
-                    showAsterix = project.getEditHistoryContainer()
-                            .hasChanges();
-                    if (showAsterix) {
-                        setTitle(getTitle() + "*");
-                    } else {
-                        setTitle(getTitle().substring(0,
-                                getTitle().length() - 1));
-                    }
-                }
-            }
-        });
-
-        // Karl, flexdock, use -Dfrinika.window.flexdock=no to disble flexdock
-        if (System.getProperty("frinika.window.flexdock") == null) {
-            DockingManager.setFloatingEnabled(true);
-            viewport = new Viewport();
-        }
-
-        createMenu();
-
-        globalToolBar = new GlobalToolBar(project);
-
-        JPanel content = new JPanel(new BorderLayout());
-        setContentPane(content);
-
-        content.add(globalToolBar, BorderLayout.NORTH);
-
-        if (viewport == null) {
-            JTabbedPane midPanels = new JTabbedPane();
-            content.add(midPanels, BorderLayout.CENTER);
-
-            midPanels.addTab(CurrentLocale.getMessage("project.maintabs.tracks"),
-                    createSplit(frameSize));
-            midPanels.addTab(CurrentLocale.getMessage("project.maintabs.midiout_devices"),
-                    new JScrollPane(midiDevicesPanel = new MidiDevicesPanel(
-                            project)));
-
-            midPanels.addTab(CurrentLocale.getMessage("project.maintabs.audiomixer"),
-                    new FrinikaMixerPanel(project.getMixerControls(), midiLearnFrame));
-        } else {
-            content.add(viewport, BorderLayout.CENTER);
-
-            initViews();
-
-            perspectivePreset1();
-
-        }
-
-        statusBar = new StatusBar();
-
-        content.add(statusBar, BorderLayout.SOUTH);
-        validate();
-        // setVisible before setSize assures that the window doesn't open blank
-        // (happens always when using XGL (compiz/beryl))
-        setSize(frameSize);
-        setLocation(x, y);
-
-        openProjectFrames.add(this);
-
-        overRideKeys();
-
-        if (FrinikaConfig.MAXIMIZE_WINDOW) {
-            this.setExtendedState(MAXIMIZED_BOTH);
-        }
-    }
-
     public FrinikaFrame(final ProjectContainer project) throws Exception {
         this(project, null);
     }
 
     public FrinikaFrame(final ProjectContainer project, Rectangle position)
             throws Exception {
-
+        this();
         this.position = position;
+        this.project = project;
+        init();
+    }
+
+    private void init() throws Exception {
         project.resetEndTick();
         // This might be useful for more placement control.
         // Dimension frameSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -743,7 +554,20 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             });
         }
 
-        this.project = project;
+        project.registerProjectRepaintListener(new ProjectRepaintListener() {
+            @Override
+            public void repaintViews() {
+                partViewEditor.repaint();
+                repaintPartView();
+                // TODO repaint others if needed
+            }
+
+            @Override
+            public void repaintPartView() {
+                partViewEditor.getPartview().repaint();
+                partViewEditor.getPartview().repaintItems();
+            }
+        });
 
         /*
 		 * Rectangle windowSize = GraphicsEnvironment
