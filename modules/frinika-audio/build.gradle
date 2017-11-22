@@ -11,5 +11,4 @@ if (!hasProperty('mainClass')) {
 dependencies {
     compile(project(':modules:frinika-core'))
     compile ':RasmusDSP'
-    testCompile group: 'junit', name: 'junit', version: '4.10'
 }

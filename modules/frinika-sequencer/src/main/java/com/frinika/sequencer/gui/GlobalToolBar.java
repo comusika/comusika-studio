@@ -25,6 +25,7 @@ package com.frinika.sequencer.gui;
 
 import com.frinika.gui.ToolbarSeperator;
 import com.frinika.gui.util.ButtonFactory;
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.Metronome;
@@ -163,7 +164,7 @@ public class GlobalToolBar extends JToolBar {
                     metronome.setVelocity(metronomeSlider.getValue());
                 }
             });
-            panel.add(ButtonFactory.makeIconLabel("metronome20"));
+            panel.add(ButtonFactory.makeIconLabel(WindowUtils.isDarkMode() ? "metronome20-dark" : "metronome20"));
             panel.add(metronomeSlider);
             add(panel);
         } catch (Exception e) {

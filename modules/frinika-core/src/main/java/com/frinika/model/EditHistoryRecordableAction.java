@@ -60,7 +60,7 @@ public class EditHistoryRecordableAction implements EditHistoryAction {
         this.recordable = recordable;
         try {
             recordableClone = (EditHistoryRecordable) recordable.clone();
-        } catch (CloneNotSupportedException e) {
+        } catch (Exception e) {
 
         }
     }

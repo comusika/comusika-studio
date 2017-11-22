@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.midi;
 
 import com.frinika.midi.MidiMessageListener;
@@ -31,77 +30,76 @@ import javax.sound.midi.MidiMessage;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 
-/** 
+/**
  * Allows to 'snoop' the data sent to a receiver, by passing data on to
  * MidiMessageListeners.
- * 
+ *
  * Note that instances of MidiMessageListener don't get directly connected to a
  * MonitorReceiver (there are no addMidiMessageListener() /
- * removeMidiMessageListener() methods on MonitorReceiver), but will be added to /
- * removed from higher-level classes that use MonitorReceivers.
- * 
+ * removeMidiMessageListener() methods on MonitorReceiver), but will be added to
+ * / removed from higher-level classes that use MonitorReceivers.
+ *
  * @see MidiMessageListener
  * @author Jens Gulden
  */
 public class MonitorReceiver implements Receiver {
 
-	protected Receiver chained;
-	protected Collection<MidiMessageListener> listeners;
+    protected Receiver chained;
+    protected Collection<MidiMessageListener> listeners;
 
-	private static boolean isLinux = System.getProperty("os.name").equals(
-			"Linux");
+    private static boolean isLinux = System.getProperty("os.name").equals(
+            "Linux");
 
-	public MonitorReceiver(Collection<MidiMessageListener> listeners,
-			Receiver chained) {
-		this.chained = chained;
-		this.listeners = listeners;
-	}
+    public MonitorReceiver(Collection<MidiMessageListener> listeners,
+            Receiver chained) {
+        this.chained = chained;
+        this.listeners = listeners;
+    }
 
-        @Override
-	public void send(MidiMessage message, long timeStamp) {
+    @Override
+    public void send(MidiMessage message, long timeStamp) {
 
-		// I hope no one is interested in these events
-		if (message.getStatus() >= ShortMessage.MIDI_TIME_CODE)
-			return;
+        // I hope no one is interested in these events
+        if (message.getStatus() >= ShortMessage.MIDI_TIME_CODE) {
+            return;
+        }
 
-		if (isLinux) {
-			if (message.getStatus() == ShortMessage.PITCH_BEND) {
-				ShortMessage mess = (ShortMessage) message;
-				short low = (byte) mess.getData1();
-				short high = (byte) mess.getData2();
+        if (isLinux) {
+            if (message.getStatus() == ShortMessage.PITCH_BEND) {
+                ShortMessage mess = (ShortMessage) message;
+                short low = (byte) mess.getData1();
+                short high = (byte) mess.getData2();
 
+                int channel = mess.getChannel();
 
-				int channel = mess.getChannel();
+                // linux midi has a bug in the pitch bend this fixes the problem
+                low = (byte) mess.getData1();
+                high = (byte) mess.getData2();
 
-                                // linux midi has a bug in the pitch bend this fixes the problem
-				low = (byte) mess.getData1();
-				high = (byte) mess.getData2();
-				
-				high= (short) ((high+64) & 0x007f);
-				
-				try {
-					mess.setMessage(ShortMessage.PITCH_BEND, channel,
-							low, high);
-				} catch (InvalidMidiDataException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+                high = (short) ((high + 64) & 0x007f);
 
-		chained.send(message, timeStamp);
-		notifyListeners(message);
-	}
+                try {
+                    mess.setMessage(ShortMessage.PITCH_BEND, channel,
+                            low, high);
+                } catch (InvalidMidiDataException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
 
-        @Override
-	public void close() {
-		chained.close();
-	}
+        chained.send(message, timeStamp);
+        notifyListeners(message);
+    }
 
-	protected void notifyListeners(MidiMessage message) {
-		for (MidiMessageListener l : listeners) {
-			l.midiMessage(message);
-		}
-	}
+    @Override
+    public void close() {
+        chained.close();
+    }
 
+    protected void notifyListeners(MidiMessage message) {
+        for (MidiMessageListener l : listeners) {
+            l.midiMessage(message);
+        }
+    }
 }

@@ -24,7 +24,7 @@
 package com.frinika.sequencer.gui.pianoroll;
 
 import com.frinika.gui.util.WindowUtils;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.sequencer.FrinikaSequence;
@@ -483,7 +483,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
         assert (pitch < 128);
 
         project.getEditHistoryContainer().mark(
-                getMessage("sequencer.pianoroll.add_note"));
+                CurrentLocale.getMessage("sequencer.pianoroll.add_note"));
 
         if (drumWriteMode) {
             newNote = new NoteEvent((MidiPart) focusPart, tick, pitch,
@@ -952,7 +952,7 @@ public class PianoRoll extends PianoRollPanelAdapter {
     @Override
     public void erase(Item it) {
         NoteEvent note = (NoteEvent) it;
-        editHistory.mark(getMessage("sequencer.pianoroll.erase_note"));
+        editHistory.mark(CurrentLocale.getMessage("sequencer.pianoroll.erase_note"));
         note.getPart().remove(note);
         editHistory.notifyEditHistoryListeners();
     }

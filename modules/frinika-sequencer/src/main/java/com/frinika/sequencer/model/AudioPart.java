@@ -237,13 +237,13 @@ public class AudioPart extends Part implements AudioReaderFactory {
         }
     }
 
-    /*
-	 * 
-	 * Create a new AudioPart but do not attach to the project.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.frinika.sequencer.model.Part#clone()
+    /**
+     *
+     * Create a new AudioPart but do not attach to the project.
+     *
+     * (non-Javadoc)
+     *
+     * @see com.frinika.sequencer.model.Part#clone()
      */
     @Override
     public Object clone() throws CloneNotSupportedException {

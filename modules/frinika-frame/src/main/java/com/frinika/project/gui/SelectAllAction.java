@@ -1,5 +1,6 @@
 package com.frinika.project.gui;
 
+import com.frinika.frame.FrinikaFrame;
 import com.frinika.sequencer.gui.ProjectFrame;
 import java.awt.event.KeyEvent;
 
@@ -13,16 +14,15 @@ public class SelectAllAction {
     }
 
     public boolean selectAll(KeyEvent e) {
+        FrinikaFrame frinikaFrame = (FrinikaFrame) project;
         if (project.getTrackerPanel().getTable().hasFocus()) {
             project.getTrackerPanel().getTable().selectAll();
         } else if (project.getPartViewEditor().getPartview().getMousePosition() != null) {
             project.getPartViewEditor().getPartview().selectAll();
-
-        } else if (project.getPianoControllerPane().getPianoRoll().getMousePosition() != null) {
-
-            project.getPianoControllerPane().getPianoRoll().selectAll();
-        } else if (project.getPianoControllerPane().getControllerView().getMousePosition() != null) {
-            project.getPianoControllerPane().getControllerView().selectAll();
+        } else if (frinikaFrame.getPianoControllerPane().getPianoRoll().getMousePosition() != null) {
+            frinikaFrame.getPianoControllerPane().getPianoRoll().selectAll();
+        } else if (frinikaFrame.getPianoControllerPane().getControllerView().getMousePosition() != null) {
+            frinikaFrame.getPianoControllerPane().getControllerView().selectAll();
         } else {
             return true;
         }

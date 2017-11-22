@@ -23,7 +23,6 @@
  */
 package com.frinika.gui;
 
-import com.frinika.global.ProjectFrameIntf;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;

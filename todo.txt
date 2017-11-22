@@ -5,3 +5,6 @@ LaOE: http://www.oli4.ch/laoe/
 Maybe:
 kangas
 JSynthLib: https://sourceforge.net/projects/jsynthlib/
+liliyond.org
+https://sourceforge.net/projects/jsidplay2/
+tymidity

@@ -828,7 +828,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         return trackerPanel;
     }
 
-    @Override
     public PianoControllerSplitPane getPianoControllerPane() {
         return pianoControllerPane;
     }

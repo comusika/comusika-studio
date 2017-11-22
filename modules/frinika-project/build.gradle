@@ -8,8 +8,8 @@ dependencies {
     compile(project(':modules:frinika-core'))
     compile(project(':modules:frinika-sequencer'))
     compile(project(':modules:frinika-device-debug'))
+    compile(project(':modules:frinika-pianoroll'))
     compile(project(':modules:sevenzip'))
     compile ':js'
     compile ':FrinikaServerInterfaces'
-    testCompile group: 'junit', name: 'junit', version: '4.10'
 }

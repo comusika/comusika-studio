@@ -22,18 +22,15 @@
  */
 package com.frinika.sequencer.model;
 
-
 import com.frinika.sequencer.gui.pianoroll.ControllerHandle;
 import javax.swing.JPopupMenu;
 
-public interface ControllerListInterface  {
+public interface ControllerListInterface {
 
-	// private static final long serialVersionUID = 1L;
-	  
-	JPopupMenu getControllerPopup();
+    // private static final long serialVersionUID = 1L;
+    JPopupMenu getControllerPopup();
 
-	ControllerHandle getControllerHandle(int i);
+    ControllerHandle getControllerHandle(int i);
 
-	ControllerHandle handleCalled(String actionCommand);
-
+    ControllerHandle handleCalled(String actionCommand);
 }

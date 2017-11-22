@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.midi;
 
 import com.frinika.audio.midi.MidiDeviceIconProvider;
@@ -57,458 +56,456 @@ import javax.swing.JPanel;
 import rasmus.midi.provider.RasmusSynthesizer;
 
 /**
- * 
- * DrumMapper is a midi device that redirects midi events to other devices doing some mapping enroute.
- * 
+ *
+ * DrumMapper is a midi device that redirects midi events to other devices doing
+ * some mapping enroute.
+ *
  */
 public class DrumMapper implements MidiDevice, MidiDeviceIconProvider {
-	
-	
-	public class NoteMap {
-		public int note;
+
+    public class NoteMap {
+
+        public int note;
 //		Receiver recv;
 //		int chan;
-	}
-	
-	private static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class.getResource("/icons/frinika.png"));
-	
-        @Override
-	public Icon getIcon()
-	{
-		if(icon.getIconHeight() > 16 || icon.getIconWidth() > 16)
-		{
-			BufferedImage img = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-			Graphics2D g = img.createGraphics();
-			icon.paintIcon(null, g, 0, 0);
-			g.dispose();
-			Image im = img.getScaledInstance(16 , 16, Image.SCALE_SMOOTH);
-			icon = new ImageIcon(im);
-		}		
-		return icon;
-	}	
+    }
 
-	MidiDevice defaultDevice;
+    private static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class.getResource("/icons/frinika.png"));
 
-	//int channel=-1;
-	
-	Receiver defRecv;
+    @Override
+    public Icon getIcon() {
+        if (icon.getIconHeight() > 16 || icon.getIconWidth() > 16) {
+            BufferedImage img = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics2D g = img.createGraphics();
+            icon.paintIcon(null, g, 0, 0);
+            g.dispose();
+            Image im = img.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(im);
+        }
+        return icon;
+    }
 
-	NoteMap noteMap[] = new NoteMap[128];
+    MidiDevice defaultDevice;
 
-	public static class DrumMapperInfo extends Info {
-		DrumMapperInfo() {
-			super("DrumMapper", "drpj.co.uk", "A MIDI drum mapper", "0.0.1");
-		}
-	}
+    //int channel=-1;
+    Receiver defRecv;
 
-	Info deviceInfo = new DrumMapperInfo();
+    NoteMap noteMap[] = new NoteMap[128];
 
-	Receiver receiver;
+    public static class DrumMapperInfo extends Info {
 
-	List<Receiver> receivers;
+        DrumMapperInfo() {
+            super("DrumMapper", "drpj.co.uk", "A MIDI drum mapper", "0.0.1");
+        }
+    }
 
-	DrumMapper() {
-		int i = 0;
-		for (; i < 128; i++) {
-			NoteMap n = noteMap[i] = new NoteMap();
-			n.note = i;
-	//		n.recv = null;
-	//		n.chan = 9;
-		}
+    Info deviceInfo = new DrumMapperInfo();
 
-		receiver = new Receiver() {
+    Receiver receiver;
 
-			/*
+    List<Receiver> receivers;
+
+    DrumMapper() {
+        int i = 0;
+        for (; i < 128; i++) {
+            NoteMap n = noteMap[i] = new NoteMap();
+            n.note = i;
+            //		n.recv = null;
+            //		n.chan = 9;
+        }
+
+        receiver = new Receiver() {
+
+            /*
 			 * (non-Javadoc)
 			 * 
 			 * @see javax.sound.midi.Receiver#send(javax.sound.midi.MidiMessage,
 			 *      long)
-			 */
-                        @Override
-			public void send(MidiMessage message, long timeStamp) {
+             */
+            @Override
+            public void send(MidiMessage message, long timeStamp) {
 
-				// if it's a note then use note device
-				// otherwise use the defualt device.
-			//	if (channel == -1) return;
-				
-				try {
-					if (message instanceof ShortMessage) {
-						ShortMessage shm = (ShortMessage) message;
-						if (shm.getCommand() == ShortMessage.NOTE_ON) {
-							int note = shm.getData1();
-					
-						//	Receiver recv = noteMap[note].recv;
-						//	if (recv == null)
-							Receiver  recv = defRecv;
-							if (recv == null)
-								return;
-							int noteByte = noteMap[note].note;
-							shm.setMessage(shm.getCommand(), shm.getChannel(), noteByte, shm
-									.getData2());
-							recv.send(shm, timeStamp);
-							return;
-						}
-					}
-					if (defRecv != null)
-						defRecv.send(message, timeStamp);
+                // if it's a note then use note device
+                // otherwise use the defualt device.
+                //	if (channel == -1) return;
+                try {
+                    if (message instanceof ShortMessage) {
+                        ShortMessage shm = (ShortMessage) message;
+                        if (shm.getCommand() == ShortMessage.NOTE_ON) {
+                            int note = shm.getData1();
 
-				} catch (InvalidMidiDataException e) {
-					// For debugging
-					e.printStackTrace();
-				}
-			}
+                            //	Receiver recv = noteMap[note].recv;
+                            //	if (recv == null)
+                            Receiver recv = defRecv;
+                            if (recv == null) {
+                                return;
+                            }
+                            int noteByte = noteMap[note].note;
+                            shm.setMessage(shm.getCommand(), shm.getChannel(), noteByte, shm
+                                    .getData2());
+                            recv.send(shm, timeStamp);
+                            return;
+                        }
+                    }
+                    if (defRecv != null) {
+                        defRecv.send(message, timeStamp);
+                    }
 
-                        @Override
-			public void close() {
-				// TODO Auto-generated method stub
-			}
-		};
+                } catch (InvalidMidiDataException e) {
+                    // For debugging
+                    e.printStackTrace();
+                }
+            }
 
-		receivers = new ArrayList<>();
-		receivers.add(receiver);
+            @Override
+            public void close() {
+                // TODO Auto-generated method stub
+            }
+        };
 
-	}
+        receivers = new ArrayList<>();
+        receivers.add(receiver);
 
+    }
 
-	public void save(File file) {
-		try {
-			ObjectOutputStream out = new ObjectOutputStream(
-					new FileOutputStream(file));
-			// out.writeObject(setup);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(" DRUM MAP SAVE ");
-	}
+    public void save(File file) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(
+                    new FileOutputStream(file));
+            // out.writeObject(setup);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(" DRUM MAP SAVE ");
+    }
 
-	public void load(File file) {
-		try {
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(
-					file));
-			// SynthSettings setup = (SynthSettings)in.readObject();
-			// loadSynthSetup(setup);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(" DRUM MAP LOAD ");
-	}
+    public void load(File file) {
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(
+                    file));
+            // SynthSettings setup = (SynthSettings)in.readObject();
+            // loadSynthSetup(setup);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(" DRUM MAP LOAD ");
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#getMaxPolyphony()
-	 */
-	public int getMaxPolyphony() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+     */
+    public int getMaxPolyphony() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#getChannels()
-	 */
-	public MidiChannel[] getChannels() {
-		return null;
-	}
+     */
+    public MidiChannel[] getChannels() {
+        return null;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#getVoiceStatus()
-	 */
-	public VoiceStatus[] getVoiceStatus() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+     */
+    public VoiceStatus[] getVoiceStatus() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#isSoundbankSupported(javax.sound.midi.Soundbank)
-	 */
-	public boolean isSoundbankSupported(Soundbank soundbank) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+     */
+    public boolean isSoundbankSupported(Soundbank soundbank) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#loadInstrument(javax.sound.midi.Instrument)
-	 */
-	public boolean loadInstrument(Instrument instrument) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+     */
+    public boolean loadInstrument(Instrument instrument) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#unloadInstrument(javax.sound.midi.Instrument)
-	 */
-	public void unloadInstrument(Instrument instrument) {
-		// TODO Auto-generated method stub
+     */
+    public void unloadInstrument(Instrument instrument) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#remapInstrument(javax.sound.midi.Instrument,
 	 *      javax.sound.midi.Instrument)
-	 */
-	public boolean remapInstrument(Instrument from, Instrument to) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+     */
+    public boolean remapInstrument(Instrument from, Instrument to) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#getDefaultSoundbank()
-	 */
-	public Soundbank getDefaultSoundbank() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+     */
+    public Soundbank getDefaultSoundbank() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#getAvailableInstruments()
-	 */
-	public Instrument[] getAvailableInstruments() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+     */
+    public Instrument[] getAvailableInstruments() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#getLoadedInstruments()
-	 */
-	public Instrument[] getLoadedInstruments() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+     */
+    public Instrument[] getLoadedInstruments() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#loadAllInstruments(javax.sound.midi.Soundbank)
-	 */
-	public boolean loadAllInstruments(Soundbank soundbank) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+     */
+    public boolean loadAllInstruments(Soundbank soundbank) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#unloadAllInstruments(javax.sound.midi.Soundbank)
-	 */
-	public void unloadAllInstruments(Soundbank soundbank) {
-		// TODO Auto-generated method stub
+     */
+    public void unloadAllInstruments(Soundbank soundbank) {
+        // TODO Auto-generated method stub
+    }
 
-	}
-
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#loadInstruments(javax.sound.midi.Soundbank,
 	 *      javax.sound.midi.Patch[])
-	 */
-	public boolean loadInstruments(Soundbank soundbank, Patch[] patchList) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+     */
+    public boolean loadInstruments(Soundbank soundbank, Patch[] patchList) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.Synthesizer#unloadInstruments(javax.sound.midi.Soundbank,
 	 *      javax.sound.midi.Patch[])
-	 */
-	public void unloadInstruments(Soundbank soundbank, Patch[] patchList) {
-		// TODO Auto-generated method stub
+     */
+    public void unloadInstruments(Soundbank soundbank, Patch[] patchList) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getDeviceInfo()
-	 */
-        @Override
-	public Info getDeviceInfo() {
-		// TODO Auto-generated method stub
-		return deviceInfo;
-	}
+     */
+    @Override
+    public Info getDeviceInfo() {
+        // TODO Auto-generated method stub
+        return deviceInfo;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#open()
-	 */
-        @Override
-	public void open() throws MidiUnavailableException {
-	}
+     */
+    @Override
+    public void open() throws MidiUnavailableException {
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#close()
-	 */
-        @Override
-	public void close() {
-	}
+     */
+    @Override
+    public void close() {
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#isOpen()
-	 */
-        @Override
-	public boolean isOpen() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+     */
+    @Override
+    public boolean isOpen() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getMicrosecondPosition()
-	 */
-        @Override
-	public long getMicrosecondPosition() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+     */
+    @Override
+    public long getMicrosecondPosition() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getMaxReceivers()
-	 */
-        @Override
-	public int getMaxReceivers() {
-		return -1;
-	}
+     */
+    @Override
+    public int getMaxReceivers() {
+        return -1;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getMaxTransmitters()
-	 */
-        @Override
-	public int getMaxTransmitters() {
-		return 0;
-	}
+     */
+    @Override
+    public int getMaxTransmitters() {
+        return 0;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getReceiver()
-	 */
-        @Override
-	public Receiver getReceiver() throws MidiUnavailableException {
-		return receiver;
-	}
+     */
+    @Override
+    public Receiver getReceiver() throws MidiUnavailableException {
+        return receiver;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getReceivers()
-	 */
-	@SuppressWarnings("unchecked")
-        @Override
-	public List getReceivers() {
-		return receivers;
-	}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List getReceivers() {
+        return receivers;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getTransmitter()
-	 */
-        @Override
-	public Transmitter getTransmitter() throws MidiUnavailableException {
-		return null;
-	}
+     */
+    @Override
+    public Transmitter getTransmitter() throws MidiUnavailableException {
+        return null;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see javax.sound.midi.MidiDevice#getTransmitters()
-	 */
-	@SuppressWarnings("unchecked")
-        @Override
-	public List getTransmitters() {
-		return null;
-	}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List getTransmitters() {
+        return null;
+    }
 
-	/**
-	 * over to provide easier GUI manufactoring
-	 */
-        @Override
-	public String toString() {
-		return getDeviceInfo().toString();
-	}
+    /**
+     * over to provide easier GUI manufactoring
+     */
+    @Override
+    public String toString() {
+        return getDeviceInfo().toString();
+    }
 
-	public void instrumentNameChange(Synth synth, String instrumentName) {
-		// TODO Auto-generated method stub
+    public void instrumentNameChange(Synth synth, String instrumentName) {
+        // TODO Auto-generated method stub
+    }
 
-	}
+    public MidiDevice getDefaultMidiDevice() {
+        return defaultDevice;
+    }
 
-	public MidiDevice getDefaultMidiDevice() {
-		return defaultDevice;
-	}
+    public void setDefaultMidiDevice(MidiDevice midiDevice) {
+        if (defaultDevice != midiDevice) {
 
-	public void setDefaultMidiDevice(MidiDevice midiDevice) {
-		if (defaultDevice != midiDevice) {
+            if (defRecv != null) {
+                defRecv.close();
+            }
+            try {
+                midiDevice.open();
+                defRecv = midiDevice.getReceiver();
+                System.out.println(" Set default receiver " + defRecv);
+                defaultDevice = midiDevice;
+            } catch (MidiUnavailableException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        defaultDevice = midiDevice;
+    }
 
-			if (defRecv != null)
-				defRecv.close();
-			try {
-				midiDevice.open();
-				defRecv = midiDevice.getReceiver();
-				System.out.println(" Set default receiver " + defRecv);
-				defaultDevice = midiDevice;
-			} catch (MidiUnavailableException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		defaultDevice = midiDevice;
-	}
+    public JPanel getGUIPanel(AbstractSequencerProjectContainer project, MidiLane lane) {
+        return project.createDrumMapperGUI(this, project, lane);
+    }
 
-	public JPanel getGUIPanel(AbstractSequencerProjectContainer project,MidiLane lane) {
-		return new DrumMapperGUI(this, project,lane);
-	}
+    public NoteMap getNoteMap(int i) {
+        // TODO Auto-generated method stub
+        return noteMap[i];
+    }
 
+    public void setMapping(int in, int out) {
+        if (in < 0 || in > 127) {
+            return;
+        }
+        if (out < 0 || out > 127) {
+            return;
+        }
+        System.out.println(in + " --->" + out);
+        noteMap[in].note = out;
 
-	public NoteMap getNoteMap(int i) {
-		// TODO Auto-generated method stub
-		return noteMap[i];
-	}
+    }
 
-	public void setMapping(int in,int out) {
-		if (in <0 || in > 127) return;
-		if (out <0 || out > 127) return;
-		System.out.println(in + " --->" +out);
-		noteMap[in].note=out;
-		
-	}
-
-
-	public void setNoteMap(int[] noteMap2) {
-		for (int i=0;i<128;i++) {			
-			noteMap[i].note=noteMap2[i];
-		}
-		
-	}
-
+    public void setNoteMap(int[] noteMap2) {
+        for (int i = 0; i < 128; i++) {
+            noteMap[i].note = noteMap2[i];
+        }
+    }
 
 //	public int getChannel() {
 //		return channel;

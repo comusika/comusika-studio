@@ -61,3 +61,7 @@ task javadocJar (type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+}

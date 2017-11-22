@@ -52,6 +52,7 @@ import com.frinika.sequencer.gui.selection.MultiEventSelection;
 import com.frinika.sequencer.gui.selection.PartSelection;
 import com.frinika.sequencer.gui.selection.SelectionFocusable;
 import com.frinika.sequencer.midi.DrumMapper;
+import com.frinika.sequencer.midi.DrumMapperGUI;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.MidiLane;
@@ -114,6 +115,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileFilter;
@@ -2264,6 +2266,11 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     public ControlResolver getControlResolver() {
         return controlResolver;
+    }
+
+    @Override
+    public JPanel createDrumMapperGUI(DrumMapper drumMapper, AbstractSequencerProjectContainer project, MidiLane lane) {
+        return new DrumMapperGUI(drumMapper, project, lane);
     }
 
     private void attachTootNotifications() {

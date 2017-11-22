@@ -97,7 +97,7 @@
       <Properties>
         <Property name="mnemonic" type="int" value="110"/>
         <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="action.quantizeNoteStart" type="code"/>
+          <Connection code="action.q.quantizeNoteStart" type="code"/>
         </Property>
         <Property name="text" type="java.lang.String" value="note start times"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -122,7 +122,7 @@
       <Properties>
         <Property name="mnemonic" type="int" value="108"/>
         <Property name="selected" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="action.quantizeNoteLength" type="code"/>
+          <Connection code="action.q.quantizeNoteLength" type="code"/>
         </Property>
         <Property name="text" type="java.lang.String" value="note lengths"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">

@@ -25,7 +25,7 @@ package com.frinika.frame.action;
 
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.ProjectFileFilter;
@@ -80,8 +80,7 @@ public class CreateProjectAction extends AbstractAction {
         try {
 
             JFileChooser chooser = new JFileChooser();
-            chooser
-                    .setDialogTitle(getMessage("project.menu.file.new_project.dialogtitle"));
+            chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.new_project.dialogtitle"));
             chooser.setFileFilter(new ProjectFileFilter());
             //		if (project.getProjectFile() != null)
             //			chooser.setSelectedFile(project.getProjectFile());

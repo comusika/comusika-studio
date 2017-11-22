@@ -28,6 +28,7 @@ import com.frinika.gui.AbstractDialog;
 import com.frinika.gui.OptionsDialog;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
+import com.frinika.sequencer.gui.menu.midi.MidiStepRecordActionDialog;
 import com.frinika.sequencer.gui.partview.PartView;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;

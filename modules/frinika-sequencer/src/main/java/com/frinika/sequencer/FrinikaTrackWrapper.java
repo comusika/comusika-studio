@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
-import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;

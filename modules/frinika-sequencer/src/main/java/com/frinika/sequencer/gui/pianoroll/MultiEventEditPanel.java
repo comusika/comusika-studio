@@ -27,6 +27,8 @@ import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryListener;
 import com.frinika.sequencer.gui.Item;
 import com.frinika.sequencer.gui.LabelFieldEditor;
+import com.frinika.sequencer.gui.pianoroll.FeedbackEventListener;
+import com.frinika.sequencer.gui.pianoroll.MultiEventTableModel;
 import com.frinika.sequencer.gui.selection.SelectionContainer;
 import com.frinika.sequencer.gui.selection.SelectionListener;
 import com.frinika.sequencer.model.MultiEvent;

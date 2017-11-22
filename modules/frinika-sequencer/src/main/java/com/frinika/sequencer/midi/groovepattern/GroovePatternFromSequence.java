@@ -23,7 +23,6 @@
  */
 package com.frinika.sequencer.midi.groovepattern;
 
-import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;

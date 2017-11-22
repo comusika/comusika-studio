@@ -1,5 +1,6 @@
 rootProject.name = 'frinika-studio'
 
+include ":modules:frinika-action"
 include ":modules:frinika-core"
 include ":modules:frinika-audio"
 include ":modules:frinika-frame"
@@ -11,6 +12,7 @@ include ":modules:frinika-simphoney"
 include ":modules:frinika-tracker"
 include ":modules:frinika-sequencer"
 include ":modules:frinika-project"
+include ":modules:frinika-pianoroll"
 include ":modules:frinika-frame"
 include ":modules:frinika-driver-jack"
 include ":modules:frinika-driver-osx"

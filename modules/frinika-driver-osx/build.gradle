@@ -9,5 +9,4 @@ dependencies {
     compile(':jasiohost')
     compile ':toot'
     compile ':TootAudioServers'
-    testCompile group: 'junit', name: 'junit', version: '4.10'
 }

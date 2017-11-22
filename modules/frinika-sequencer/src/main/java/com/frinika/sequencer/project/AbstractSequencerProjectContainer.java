@@ -45,6 +45,7 @@ import com.frinika.sequencer.gui.selection.MidiSelection;
 import com.frinika.sequencer.gui.selection.MultiEventSelection;
 import com.frinika.sequencer.gui.selection.PartSelection;
 import com.frinika.sequencer.gui.selection.SelectionFocusable;
+import com.frinika.sequencer.midi.DrumMapper;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.MidiLane;
@@ -85,6 +86,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.mixer.AudioMixer;
@@ -337,6 +339,8 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
     public void repaintPartView() {
         projectRepaintListener.repaintPartView();
     }
+
+    public abstract JPanel createDrumMapperGUI(DrumMapper drumMapper, AbstractSequencerProjectContainer project, MidiLane lane);
 
     // NBP
     private class MidiDevicesActionListener implements ActionListener {

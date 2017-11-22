@@ -26,7 +26,6 @@ package com.frinika.sequencer.gui.menu.midi;
 import com.frinika.base.AbstractProjectContainer;
 import com.frinika.gui.AbstractDialogAction;
 import com.frinika.sequencer.gui.partview.PartView;
-import com.frinika.sequencer.gui.pianoroll.PianoRoll;
 import com.frinika.sequencer.gui.selection.MidiSelection;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
@@ -68,7 +67,12 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
     public void actionPerformed(ActionEvent e) {
         if (!(java.awt.EventQueue.getCurrentEvent().getSource() instanceof JMenuItem)) { // event does not originate from JMenuItem, but from KeyStroke
             Object focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
-            if (!((focusOwner instanceof PartView) || (focusOwner instanceof PianoRoll))) { // otherwise any gui-element catching single-key strokes would invoke menu
+            // NBP
+//            if (!((focusOwner instanceof PartView) || (focusOwner instanceof PianoRoll))) { // otherwise any gui-element catching single-key strokes would invoke menu
+//                return;
+//            }
+
+            if (!((focusOwner instanceof PartView))) { // otherwise any gui-element catching single-key strokes would invoke menu
                 return;
             }
         }

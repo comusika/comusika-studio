@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.pianoroll;
 
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.sequencer.FrinikaSequence;
@@ -413,17 +413,17 @@ public class ControllerView extends PianoRollPanelAdapter implements AdjustmentL
         if (velocityMode) {
 
             project.getEditHistoryContainer().mark(
-                    getMessage("sequencer.controllerview.adjust_velocity"));
+                    CurrentLocale.getMessage("sequencer.controllerview.adjust_velocity"));
 
-            if (notesUnder.size() != 0) {
+            if (!notesUnder.isEmpty()) {
                 setValue(notesUnder, val);
                 project.getDragList().notifyFeedbackItemListeners(notesUnder.firstElement());
             }
         } else {
             project.getEditHistoryContainer().mark(
-                    getMessage("sequencer.controllerview.write_control"));
+                    CurrentLocale.getMessage("sequencer.controllerview.write_control"));
 
-            if (notesUnder.size() != 0) {
+            if (!notesUnder.isEmpty()) {
                 for (MultiEvent ev : notesUnder) {
                     ev.getPart().remove(ev);
                 }
@@ -569,7 +569,6 @@ public class ControllerView extends PianoRollPanelAdapter implements AdjustmentL
         } else {
             paintImageImplCntrl(visibleRect, g);
         }
-
     }
 
     @Override
@@ -1179,7 +1178,6 @@ public class ControllerView extends PianoRollPanelAdapter implements AdjustmentL
         writeTool = new WriteTool(MyCursors.getCursor(CursorType.PENCIL));
         eraseTool = new EraseTool(MyCursors.getCursor(CursorType.ERASER));
         dragViewTool = new DragViewTool(MyCursors.getCursor(CursorType.MOVE));
-
     }
 
     public void setControllerType(ControllerHandle handle) {

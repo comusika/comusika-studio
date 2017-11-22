@@ -78,6 +78,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class MidiVoiceView extends LaneView {
 
+    private static final long serialVersionUID = 1L;
+
     final MidiResource midiResource;
     MidiDevice midiDev = null;
     int channel;
@@ -104,10 +106,6 @@ public class MidiVoiceView extends LaneView {
 
         init();
     }
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
 
     private void toggleDrumMapperView() {
         drumMapView = !drumMapView;

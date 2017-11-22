@@ -25,7 +25,6 @@ package com.frinika.sequencer.gui;
 
 import com.frinika.global.ProjectFrameIntf;
 import com.frinika.sequencer.gui.partview.VoicePartViewSplitPane;
-import com.frinika.sequencer.gui.pianoroll.PianoControllerSplitPane;
 import com.frinika.sequencer.gui.tracker.TrackerPanel;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
@@ -128,11 +127,6 @@ public interface ProjectFrame extends ProjectFrameIntf {
      * @return the trackerPanel
      */
     TrackerPanel getTrackerPanel();
-
-    /**
-     * @return the pianoControllerPane
-     */
-    PianoControllerSplitPane getPianoControllerPane();
 
     /**
      * @return the notationPanel

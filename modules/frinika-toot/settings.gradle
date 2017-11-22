@@ -1,4 +1,0 @@
-rootProject.name = 'frinika-toot'
-
-apply from: '../modules-settings.gradle'
-
