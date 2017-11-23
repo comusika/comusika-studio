@@ -129,10 +129,6 @@ public interface ProjectFrame extends ProjectFrameIntf {
     TrackerPanel getTrackerPanel();
 
     /**
-     * @return the notationPanel
-     */
-    // NBP NotationPanel getNotationPanel();
-    /**
      * @return the partViewEditor
      */
     VoicePartViewSplitPane getPartViewEditor();

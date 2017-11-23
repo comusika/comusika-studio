@@ -23,6 +23,7 @@
  */
 package com.frinika.project;
 
+import com.frinika.base.MessageDialog;
 import com.frinika.audio.DynamicMixer;
 import com.frinika.audio.io.BufferedRandomAccessFileManager;
 import com.frinika.audio.toot.AudioInjector;
@@ -71,7 +72,6 @@ import com.frinika.sequencer.model.util.TimeUtils;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import com.frinika.sequencer.project.ProjectSettings;
-import com.frinika.project.RecordingManager;
 import com.frinika.sequencer.project.SoundBankNameHolder;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.settings.SynthSettings;
@@ -113,12 +113,9 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.event.ChangeEvent;
-import javax.swing.filechooser.FileFilter;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.core.Taps;
@@ -317,9 +314,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return "Unnamed";
     }
 
-//    public MidiDeviceRouter getMidiDeviceRouter() {
-//        throw new UnsupportedOperationException("Not yet implemented");
-//    }
     /**
      * Redirects midi events used for controls
      *
@@ -434,7 +428,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             e.printStackTrace();
         }
         return x;
-
     }
 
     void createMixer() {
@@ -481,7 +474,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             System.err.println(" \n Sorry but I do not want to go on without an audio output device. \n Bye bye . . .  ");
             System.exit(1);
         }
-
     }
 
     /**
@@ -502,7 +494,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      */
     void postInit() {
         new RecordingManager(this, 10000);
-
     }
 
     /**
@@ -658,7 +649,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      * @param seq sequence
      * @param midiDevice assign tracks to mididevice.
      * @param adjustPPQ recalculate the ticks if sequence PPQ is not the
-     * defualt.
+     * default.
      *
      * @throws java.lang.Exception
      */
@@ -826,7 +817,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                         }
                     }
                 }
-
             }
 
             count++;
@@ -993,15 +983,16 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
             return (ProjectContainer) obj;
         }
     }
-    /**
-     * Save project to a file
-     *
-     * @param file
-     */
+
     public transient int compression_level = 0;
     transient private TimeUtils timeUtils;    // Keep a note of all open midi out devices
     private static List<MidiDevice> midiOutList = new ArrayList<MidiDevice>();
 
+    /**
+     * Save project to a file.
+     *
+     * @param file
+     */
     public void saveProject(File file) throws IOException { // throw exception
         // so ProjectFrame
         // can show error
@@ -1060,7 +1051,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
                     }
                     encoder.Code(inStream, outStream, -1, -1, null);
                 }
-
             } finally {
                 if (fis != null) {
                     fis.close();
@@ -1258,10 +1248,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return editHistoryContainer;
     }
 
-    /**
-     * Close the project
-     *
-     */
     @Override
     public void close() {
         if (renderer != null) {
@@ -1272,7 +1258,7 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     * adds a lane to the project and updates the history
+     * Adds a lane to the project and updates the history
      */
     @Override
     public void add(Lane lane) {
@@ -1332,7 +1318,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      */
     public void setTempoInBPM(float tempo) {
         getTempoList().add(0, tempo);
-
     }
 
     public void buildMidiIndex() {
@@ -1404,11 +1389,8 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     }
 
     /**
-     *
      * Note we don't rebuild the midirouter here because we want to wait untill
      * all the controllers have been created by the GUI.
-     *
-     *
      *
      * @param in
      * @throws java.lang.ClassNotFoundException
@@ -1546,7 +1528,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     public void setSaveReferencedData(boolean saveReferencedData) {
         this.saveReferencedData = saveReferencedData;
-
     }
 
     @Override
@@ -1568,7 +1549,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
 
     @Override
     public MyClipboard clipBoard() {
-        // TODO Auto-generated method stub
         return myClipboard;
     }
 
@@ -1584,7 +1564,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     @Override
     public double getPartViewSnapQuantization() {
         return partViewSnapQuantization;
-
     }
 
     @Override
@@ -1605,7 +1584,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
     @Override
     public boolean isPartViewSnapQuantized() {
         return isPartViewSnapQuantized;
-
     }
 
     @Override
@@ -1695,7 +1673,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         for (Lane lane : parent.getChildren()) {
             validate(lane);
         }
-
     }
 
     public void resetEndTick() {
@@ -1739,10 +1716,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return projectFile;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public File getAudioDirectory() {
         if (audioDir != null) {
@@ -1779,7 +1752,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         // if (!audioDir.exists())
         // audioDir.mkdir();
         // return audioDir.toString();
-
     }
 
     /**
@@ -1864,22 +1836,16 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      */
     void loadMidiOutDevice(MidiDeviceDescriptor descriptor)
             throws MidiUnavailableException {
-
         this.midiDeviceDescriptorMap.put(descriptor.getMidiDevice(), descriptor);
         sequencer.addMidiOutDevice(descriptor.getMidiDevice());
-        midiOutList.add(descriptor.getMidiDevice()); // PJL keep note of open
-        // devices
-
+        midiOutList.add(descriptor.getMidiDevice()); // PJL keep note of open devices
     }
 
     @Override
     public void loadMidiOutDevice(MidiDeviceDescriptorIntf descriptor) throws MidiUnavailableException {
-
         this.midiDeviceDescriptorMap.put(descriptor.getMidiDevice(), (MidiDeviceDescriptor) descriptor);
         sequencer.addMidiOutDevice(descriptor.getMidiDevice());
-        midiOutList.add(descriptor.getMidiDevice()); // PJL keep note of open
-        // devices
-
+        midiOutList.add(descriptor.getMidiDevice()); // PJL keep note of open devices
     }
 
     @Override
@@ -1887,9 +1853,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return getMidiDeviceDescriptors().indexOf(getMidiDeviceDescriptor(midiDevice));
     }
 
-    /**
-     *
-     */
     static public void closeAllMidiOutDevices() {
         for (MidiDevice dev : midiOutList) {
             System.out.println(" Closing " + dev);
@@ -1915,7 +1878,6 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
      */
     @Override
     public void removeMidiOutDevice(MidiDevice midiDevice) {
-
         midiDeviceDescriptors.remove(midiDeviceDescriptorMap.get(midiDevice));
         midiDeviceDescriptorMap.remove(midiDevice);
         sequencer.removeMidiOutDevice(midiDevice);
@@ -1946,134 +1908,16 @@ public class ProjectContainer extends AbstractSequencerProjectContainer implemen
         return outputProcess;
     }
 
-    // NBP Added  from ProjectFrame
-    public String promptFile(String defaultFilename, String[][] suffices,
-            boolean saveMode, boolean directoryMode) { // Jens
-        JFileChooser fc = new JFileChooser();
-        if (!directoryMode) {
-            final boolean save = saveMode;
-            // final String[][] suff = suffices;
-            if (suffices != null) {
-                for (String[] suffice : suffices) {
-                    final String suffix = suffice[0];
-                    final String description = suffice[1];
-                    // if (suffix == null) suffix = "*";
-                    // if (description == null) description = "";
-                    FileFilter ff = new FileFilter() {
-                        @Override
-                        public boolean accept(File file) {
-                            if (file.isDirectory()) {
-                                return true;
-                            }
-                            String name = file.getName();
-                            return suffix.equals("*")
-                                    || name.endsWith("." + suffix)
-                                    || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
-                        }
-
-                        @Override
-                        public String getDescription() {
-                            return "." + suffix + " - " + description;
-                        }
-                    };
-                    fc.addChoosableFileFilter(ff);
-                }
-            }
-        } else { // directory mode
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
-
-        int r;
-        if (defaultFilename != null) {
-            File file = new File(defaultFilename);
-            fc.setSelectedFile(file);
-        }
-        if (saveMode) {
-            r = fc.showSaveDialog(null);
-        } else {
-            r = fc.showOpenDialog(null);
-        }
-
-        if (r == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            String name = file.getName();
-            String extraSuffix = "";
-            if (name.indexOf('.') == -1) { // no suffix entered
-                if (suffices != null && suffices.length > 0) {
-                    extraSuffix = "." + suffices[0][0]; // use first one as
-                    // default
-                }
-            }
-            String filename = file.getAbsolutePath() + extraSuffix;
-            if (saveMode) {
-                File fl = new File(filename);
-                if (fl.exists()) {
-                    if (!confirm("File " + filename
-                            + " already exists. Overwrite?")) {
-                        return null;
-                    }
-                }
-            }
-            return filename;
-        } else {
-            return null;
-        }
-    }
-
-    public String promptFile(String defaultFilename, String[][] suffices,
-            boolean saveMode) {
-        return promptFile(defaultFilename, suffices, saveMode, false);
-    }
-
-    public String promptFile(String defaultFilename, String[][] suffices) {
-        return promptFile(defaultFilename, suffices, false);
-    }
-
-    private static boolean fileDoesntExistAndDoesntEndWithAnySuffix(File file) {
-        if (file.exists()) {
-            return false;
-        }
-        String name = file.getName();
-        return (name.indexOf('.') == -1);
-    }
-
-    public boolean confirm(String msg) { // Jens
-        int result = JOptionPane.showConfirmDialog(null, msg,
-                "Frinika Question", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE); // NBP frame
-        return (result == JOptionPane.OK_OPTION);
-    }
-
     @Override
     public void message(String message) {
-        JOptionPane.showMessageDialog(null, message, "Frinika Message", JOptionPane.INFORMATION_MESSAGE);
-        // TODO ProjectFrame.staticMessage(this, string);
-
+        // NBP
+        MessageDialog.message(null, message);
     }
 
     @Override
     public void error(String message) {
-        JOptionPane.showMessageDialog(null, message, "Frinika Error", JOptionPane.ERROR_MESSAGE);
-        // TODO ProjectFrame.staticMessage(this, string);
-
-    }
-
-    public void error(Throwable ex) {
-        JOptionPane.showMessageDialog(null, ex, "Frinika Error", JOptionPane.ERROR_MESSAGE);
-        // TODO ProjectFrame.staticMessage(this, string);
-
-    }
-
-    public String prompt(String msg, String initialValue) { // Jens
-        if (initialValue == null) {
-            initialValue = "";
-        }
-        String result = JOptionPane.showInputDialog(null, msg, initialValue); // NBP frame
-        return result;
-    }
-
-    public String prompt(String msg) { // Jens
-        return prompt(msg, null);
+        // NBP
+        MessageDialog.error(null, message);
     }
 
     public SynthLane createSynthLane(MidiDeviceDescriptor desc) {

@@ -10,7 +10,6 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,7 +17,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
-import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -28,12 +26,9 @@ import javax.swing.SwingUtilities;
  */
 public class WindowUtils {
 
-    private static final int BUTTON_CLICK_TIME = 150;
-    private static LookAndFeel lookAndFeel = null;
+    private static boolean darkMode = true;
 
-    public static void addHeaderPanel(JDialog dialog, ResourceBundle resourceBundle) {
-        addHeaderPanel(dialog, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), new ImageIcon(dialog.getClass().getResource(resourceBundle.getString("header.icon"))));
-    }
+    private static final int BUTTON_CLICK_TIME = 150;
 
     public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, ImageIcon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
@@ -59,14 +54,6 @@ public class WindowUtils {
     }
 
     public static void invokeWindow(final Window window) {
-//        if (lookAndFeel != null) {
-//            try {
-//                javax.swing.UIManager.setLookAndFeel(lookAndFeel);
-//            } catch (UnsupportedLookAndFeelException ex) {
-//                Logger.getLogger(WindowUtils.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -110,14 +97,6 @@ public class WindowUtils {
 //        if (window.getParent() instanceof XBEditorFrame) {
 //            window.setIconImage(((XBEditorFrame) window.getParent()).getMainFrameManagement().getFrameIcon());
 //        }
-    }
-
-    public static LookAndFeel getLookAndFeel() {
-        return lookAndFeel;
-    }
-
-    public static void setLookAndFeel(LookAndFeel lookAndFeel) {
-        WindowUtils.lookAndFeel = lookAndFeel;
     }
 
     public static void closeWindow(Window window) {
@@ -241,8 +220,11 @@ public class WindowUtils {
     }
 
     public static boolean isDarkMode() {
-        // TODO
-        return true;
+        return darkMode;
+    }
+
+    public static void setDarkMode(boolean darkMode) {
+        WindowUtils.darkMode = darkMode;
     }
 
     /**

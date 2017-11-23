@@ -228,7 +228,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
         return null;
     }
 
-    private ProjectRepaintListener projectRepaintListener;
+    private transient ProjectRepaintListener projectRepaintListener;
 
     private static Icon default_midi_icon = getIconResource("midi.png");
 

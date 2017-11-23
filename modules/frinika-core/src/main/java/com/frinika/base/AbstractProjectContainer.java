@@ -24,6 +24,7 @@
 package com.frinika.base;
 
 import com.frinika.model.EditHistoryContainer;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ import uk.org.toot.audio.mixer.MixerControls;
  *
  * @author Peter Johan Salomonsen
  */
-public abstract class AbstractProjectContainer {
+public abstract class AbstractProjectContainer implements Serializable {
 
     // Modified listener for new/load/save events
     private static final List<FrinikaProjectChangeListener> changeListeners = new ArrayList<>();

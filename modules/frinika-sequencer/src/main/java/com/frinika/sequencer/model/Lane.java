@@ -211,7 +211,6 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
         if (lane instanceof MidiLane) {
             ((MidiLane) lane).detachFTW();
         }
-
     }
 
     /**

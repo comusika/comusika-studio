@@ -21,14 +21,13 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 /**
- * Listens to commit operations of MultiEvents to or from their corresponding Track.
- * Note that listeners get added or removed from the MultiEvent's owning part, not
- * the MultiEvent itself. 
- * 
+ * Listens to commit operations of MultiEvents to or from their corresponding
+ * Track. Note that listeners get added or removed from the MultiEvent's owning
+ * part, not the MultiEvent itself.
+ *
  * @see MultiEvent.commitAdd
  * @see MultiEvent.commitRemove
  * @see MidiPart.addCommitListener
@@ -36,16 +35,22 @@ package com.frinika.sequencer.model;
  * @author Jens Gulden
  */
 public interface CommitListener {
-	
-	/**
-	 * Notifies the listener that a event.commitAdd() has been performed.
-	 * @param event note that MultiEvent is not a subclass of Java's Event class, here the source-object is directly passed as parameter to the listener-method without being wrapped in an Event 
-	 */
-	public void commitAddPerformed(MultiEvent event);
 
-	/**
-	 * Notifies the listener that a event.commitRemove() has been performed.
-	 * @param event note that MultiEvent is not a subclass of Java's Event class, here the source-object is directly passed as parameter to the listener-method without being wrapped in an Event 
-	 */
-	public void commitRemovePerformed(MultiEvent event);
+    /**
+     * Notifies the listener that a event.commitAdd() has been performed.
+     *
+     * @param event note that MultiEvent is not a subclass of Java's Event
+     * class, here the source-object is directly passed as parameter to the
+     * listener-method without being wrapped in an Event
+     */
+    void commitAddPerformed(MultiEvent event);
+
+    /**
+     * Notifies the listener that a event.commitRemove() has been performed.
+     *
+     * @param event note that MultiEvent is not a subclass of Java's Event
+     * class, here the source-object is directly passed as parameter to the
+     * listener-method without being wrapped in an Event
+     */
+    void commitRemovePerformed(MultiEvent event);
 }

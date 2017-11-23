@@ -25,7 +25,7 @@ package com.frinika.sequencer.model;
 import com.frinika.audio.io.AudioWriter;
 import com.frinika.audio.toot.AudioPeakMonitor;
 import com.frinika.global.FrinikaConfig;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SequencerListener;
@@ -45,310 +45,304 @@ import uk.org.toot.audio.server.AudioServer;
 import uk.org.toot.audio.server.IOAudioProcess;
 
 public class AudioLane extends Lane implements RecordableLane,
-		SequencerListener {
+        SequencerListener {
 
-	transient AudioProcess audioInProcess = null; // audio input
-	protected transient AudioProcess audioInsert = null;
-	static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class
-			.getResource("/icons/audiolane.png"));
+    transient AudioProcess audioInProcess = null; // audio input
+    protected transient AudioProcess audioInsert = null;
+    static Icon icon = new javax.swing.ImageIcon(RasmusSynthesizer.class
+            .getResource("/icons/audiolane.png"));
 
-	// THIS IS TEMPORARY - have to be able to add mixerslots dynamically
-	// we still need a unique id. But maybe move this up to Lane ?
-	public static int stripNo = 1;
+    // THIS IS TEMPORARY - have to be able to add mixerslots dynamically
+    // we still need a unique id. But maybe move this up to Lane ?
+    public static int stripNo = 1;
 
-	/**
-	 * Audio Process to be connected to the project mixer
-	 */
-	transient AudioProcess audioProcess;
+    /**
+     * Audio Process to be connected to the project mixer
+     */
+    transient AudioProcess audioProcess;
 
-	transient AudioPeakMonitor peakMonitor;
+    transient AudioPeakMonitor peakMonitor;
 
-	transient boolean armed = false; // armed for recording
+    transient boolean armed = false; // armed for recording
 
-	transient boolean isRecording = false; // is sequencer running && armed //
-											// recording
+    transient boolean isRecording = false; // is sequencer running && armed //
+    // recording
 
-	transient boolean hasRecorded = false; // true if any data has been saved
+    transient boolean hasRecorded = false; // true if any data has been saved
 
-	transient AudioWriter writer = null; // direct to disk writer
+    transient AudioWriter writer = null; // direct to disk writer
 
-	transient private long recordStartTimeInMicros;
+    transient private long recordStartTimeInMicros;
 
-	transient private FrinikaSequencer sequencer;
+    transient private FrinikaSequencer sequencer;
 
-	transient private MixControls mixerControls = null;
-	transient int stripInt=-1;
-	
-	private static final long serialVersionUID = 1L;
-	protected transient File clipFile;
-	
-	static int nameCount = 0;
+    transient private MixControls mixerControls = null;
+    transient int stripInt = -1;
 
-	public AudioLane(AbstractSequencerProjectContainer project) {
-		super("Audio " + nameCount++, project);
-		attachAudioProcessToMixer();
-	}
+    private static final long serialVersionUID = 1L;
+    protected transient File clipFile;
 
-	public void dispose() {
-		project.getSequencer().removeSequencerListener(this);
-		writer.discard();
-	}
+    static int nameCount = 0;
 
-        @Override
-	public void removeFromModel() {
-		project.removeStrip(stripInt+"");
-		super.removeFromModel();
-	}
-	
-	private void attachAudioProcessToMixer() {
+    public AudioLane(AbstractSequencerProjectContainer project) {
+        super("Audio " + nameCount++, project);
+        attachAudioProcessToMixer();
+    }
 
-		peakMonitor = new AudioPeakMonitor();
+    public void dispose() {
+        project.getSequencer().removeSequencerListener(this);
+        writer.discard();
+    }
 
-		audioProcess = new AudioProcess() {
-                        @Override
-			public void close() {
-			}
+    @Override
+    public void removeFromModel() {
+        project.removeStrip(stripInt + "");
+        super.removeFromModel();
+    }
 
-                        @Override
-			public void open() {
-			}
+    private void attachAudioProcessToMixer() {
 
-                        @Override
-			public int processAudio(AudioBuffer buffer) {
-				// Process audio of all parts in this lane
-				// do we need to zero the buffer here ?
+        peakMonitor = new AudioPeakMonitor();
 
-				if (armed) {
-					audioInProcess.processAudio(buffer);
-					peakMonitor.processAudio(buffer);
-					if (audioInsert != null ) audioInsert.processAudio(buffer);
-					if (isRecording) {
-						// TODO handle DISCONNECT
-						writer.processAudio(buffer);
-						hasRecorded = true;
-					}
-					if (FrinikaConfig.getDirectMonitoring()) {
-						buffer.makeSilence();
-					}
-				} else {
-					if (project.getSequencer().isRunning()) {
-						buffer.setChannelFormat(ChannelFormat.STEREO);
-						buffer.makeSilence();
-						for (Part part : getParts()) {
-							if (((AudioPart) part).getAudioProcess() != null)
-								((AudioPart) part).getAudioProcess()
-										.processAudio(buffer);
-						}
-						peakMonitor.processAudio(buffer);
-					} else {
-						buffer.makeSilence();
-					}
-				}
+        audioProcess = new AudioProcess() {
+            @Override
+            public void close() {
+            }
 
-				buffer.setMetaInfo(channelLabel);
-				return AUDIO_OK;
-			}
-		};
+            @Override
+            public void open() {
+            }
 
-		try {
-			mixerControls = project.addMixerInput(audioProcess, (stripInt=stripNo++)
-					+ "");
-			
-			// project.getMixer().getStrip((stripNo++) + "").setInputProcess(
-			// audioProcess);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            @Override
+            public int processAudio(AudioBuffer buffer) {
+                // Process audio of all parts in this lane
+                // do we need to zero the buffer here ?
 
-		sequencer = project.getSequencer();
-		sequencer.addSequencerListener(this);
-	}
+                if (armed) {
+                    audioInProcess.processAudio(buffer);
+                    peakMonitor.processAudio(buffer);
+                    if (audioInsert != null) {
+                        audioInsert.processAudio(buffer);
+                    }
+                    if (isRecording) {
+                        // TODO handle DISCONNECT
+                        writer.processAudio(buffer);
+                        hasRecorded = true;
+                    }
+                    if (FrinikaConfig.getDirectMonitoring()) {
+                        buffer.makeSilence();
+                    }
+                } else {
+                    if (project.getSequencer().isRunning()) {
+                        buffer.setChannelFormat(ChannelFormat.STEREO);
+                        buffer.makeSilence();
+                        for (Part part : getParts()) {
+                            if (((AudioPart) part).getAudioProcess() != null) {
+                                ((AudioPart) part).getAudioProcess()
+                                        .processAudio(buffer);
+                            }
+                        }
+                        peakMonitor.processAudio(buffer);
+                    } else {
+                        buffer.makeSilence();
+                    }
+                }
 
-        @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		System.out.println("AudioLane restroeFromClone");
-	}
+                buffer.setMetaInfo(channelLabel);
+                return AUDIO_OK;
+            }
+        };
 
-        @Override
-	public Selectable deepCopy(Selectable parent) {
+        try {
+            mixerControls = project.addMixerInput(audioProcess, (stripInt = stripNo++)
+                    + "");
 
-		return null;
-	}
+            // project.getMixer().getStrip((stripNo++) + "").setInputProcess(
+            // audioProcess);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-        @Override
-	public void deepMove(long tick) {
-		// TODO Auto-generated method stub
+        sequencer = project.getSequencer();
+        sequencer.addSequencerListener(this);
+    }
 
-	}
+    @Override
+    public void restoreFromClone(EditHistoryRecordable object) {
+        System.out.println("AudioLane restroeFromClone");
+    }
 
-        @Override
-	public boolean isRecording() {
-		return armed;
-	}
+    @Override
+    public Selectable deepCopy(Selectable parent) {
+        return null;
+    }
 
-        @Override
-	public boolean isMute() {
-		return mixerControls.isMute();
-	}
+    @Override
+    public void deepMove(long tick) {
+        // TODO Auto-generated method stub
+    }
 
-	public boolean isSolo() {
-		return mixerControls.isSolo();
-	}
+    @Override
+    public boolean isRecording() {
+        return armed;
+    }
 
-        @Override
-	public void setRecording(boolean b) {
-		if (b && audioInProcess == null) {
-			armed = false;
-			project.message(getMessage("recording.please_select_audio_input"));
-			return;
-		}
+    @Override
+    public boolean isMute() {
+        return mixerControls.isMute();
+    }
 
-		armed = b;
+    public boolean isSolo() {
+        return mixerControls.isSolo();
+    }
 
-	}
+    @Override
+    public void setRecording(boolean b) {
+        if (b && audioInProcess == null) {
+            armed = false;
+            project.message(CurrentLocale.getMessage("recording.please_select_audio_input"));
+            return;
+        }
 
-        @Override
-	public void setMute(boolean b) {
-		mixerControls.getMuteControl().setValue(b);
-	}
+        armed = b;
+    }
 
-	public void setSolo(boolean b) {
-		mixerControls.getSoloControl().setValue(b);
-	}
+    @Override
+    public void setMute(boolean b) {
+        mixerControls.getMuteControl().setValue(b);
+    }
 
-	private void readObject(ObjectInputStream in)
-			throws ClassNotFoundException, IOException {
+    public void setSolo(boolean b) {
+        mixerControls.getSoloControl().setValue(b);
+    }
 
-		in.defaultReadObject();
-		attachAudioProcessToMixer();
-	}
+    private void readObject(ObjectInputStream in)
+            throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        attachAudioProcessToMixer();
+    }
 
-	public AudioProcess getAudioInDevice() {
-		return audioInProcess;
-	}
+    public AudioProcess getAudioInDevice() {
+        return audioInProcess;
+    }
 
-	public void setAudioInDevice(AudioProcess handle) {
-		audioInProcess = handle;
-		if (writer != null)
-			writer.close();
-		writer = newAudioWriter();
-	}
+    public void setAudioInDevice(AudioProcess handle) {
+        audioInProcess = handle;
+        if (writer != null) {
+            writer.close();
+        }
+        writer = newAudioWriter();
+    }
 
-        @Override
-	public double getMonitorValue() {
-		return peakMonitor.getPeak();
-	}
+    @Override
+    public double getMonitorValue() {
+        return peakMonitor.getPeak();
+    }
 
-	/**
-	 * 
-	 * Creates a new audio file handle to save a clip.
-	 * 
-	 */
-	public AudioWriter newAudioWriter() {
+    /**
+     * Creates a new audio file handle to save a clip.
+     */
+    public AudioWriter newAudioWriter() {
 
-		clipFile = newFilename();
+        clipFile = newFilename();
 
-		AudioFormat format = new AudioFormat(
-				FrinikaConfig.sampleRate,
-				16,
-				((IOAudioProcess) audioInProcess).getChannelFormat().getCount(),
-				true, false);
+        AudioFormat format = new AudioFormat(
+                FrinikaConfig.sampleRate,
+                16,
+                ((IOAudioProcess) audioInProcess).getChannelFormat().getCount(),
+                true, false);
 
-		try {
-			return new AudioWriter(clipFile, format);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+        try {
+            return new AudioWriter(clipFile, format);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	}
+    public File newFilename() {
+        AbstractSequencerProjectContainer proj = getProject();
 
-	public File newFilename() {
-		AbstractSequencerProjectContainer proj = getProject();
-		
-		File audioDir = proj.getAudioDirectory();
-		String audioFileName = getName() + ".wav";
-		File clipFile = new File(audioDir, audioFileName);
-		int cnt = 1;
-		while (clipFile.exists()) {
-			audioFileName = getName() + "_" + (cnt++) + ".wav";
-			clipFile = new File(audioDir, audioFileName);
-		}
-		return clipFile;
-	}
+        File audioDir = proj.getAudioDirectory();
+        String audioFileName = getName() + ".wav";
+        File clipFile = new File(audioDir, audioFileName);
+        int cnt = 1;
+        while (clipFile.exists()) {
+            audioFileName = getName() + "_" + (cnt++) + ".wav";
+            clipFile = new File(audioDir, audioFileName);
+        }
+        return clipFile;
+    }
 
-        @Override
-	public void beforeStart() {
-	}
+    @Override
+    public void beforeStart() {
+    }
 
-        @Override
-	public void start() {
-		isRecording = project.getSequencer().isRecording();
-		if (isRecording) {
-			recordStartTimeInMicros = sequencer.getMicrosecondPosition();
-		}
-	}
+    @Override
+    public void start() {
+        isRecording = project.getSequencer().isRecording();
+        if (isRecording) {
+            recordStartTimeInMicros = sequencer.getMicrosecondPosition();
+        }
+    }
 
-        @Override
-	public void stop() {
-		isRecording = false;
-		if (hasRecorded) {
-			project.getEditHistoryContainer().mark(
-					getMessage("sequencer.audiolane.record"));
+    @Override
+    public void stop() {
+        isRecording = false;
+        if (hasRecorded) {
+            project.getEditHistoryContainer().mark(
+                    CurrentLocale.getMessage("sequencer.audiolane.record"));
 
-			writer.close();
-			hasRecorded = false;
-			AudioServer server = project.getAudioServer();
-			int latencyInframes = project.getAudioServer().getTotalLatencyFrames();
+            writer.close();
+            hasRecorded = false;
+            AudioServer server = project.getAudioServer();
+            int latencyInframes = project.getAudioServer().getTotalLatencyFrames();
 
-			System.out.println(" latency in frames is " + latencyInframes);
-			double latencyInMicros = latencyInframes * 1000000.0
-					/ server.getSampleRate();
+            System.out.println(" latency in frames is " + latencyInframes);
+            double latencyInMicros = latencyInframes * 1000000.0
+                    / server.getSampleRate();
 
-			// shift record time back in time because we play along with a delay
-			// output.
-			recordStartTimeInMicros -= latencyInMicros;
-			// TODO Latency compensation
-			AudioPart part;
-			try {
-				part = new AudioPart(this, writer.getFile(),
-						recordStartTimeInMicros);
-				part.onLoad();
-				writer = newAudioWriter();
+            // shift record time back in time because we play along with a delay
+            // output.
+            recordStartTimeInMicros -= latencyInMicros;
+            // TODO Latency compensation
+            AudioPart part;
+            try {
+                part = new AudioPart(this, writer.getFile(),
+                        recordStartTimeInMicros);
+                part.onLoad();
+                writer = newAudioWriter();
 
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			
-			}
-			project.getEditHistoryContainer().notifyEditHistoryListeners();
-		}
-	}
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
 
-	public MixControls getMixerControls() {
-		return mixerControls;
-	}
+            }
+            project.getEditHistoryContainer().notifyEditHistoryListeners();
+        }
+    }
 
-	/**
-	 * 
-	 */
-	@Override
-	public Part createPart() {
-		try {
-			throw new Exception(" Attempt to create an AudiPart");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // TODO Auto-generated method stub
-		return null;
-	}
+    public MixControls getMixerControls() {
+        return mixerControls;
+    }
 
-	@Override
-	public Icon getIcon() {
-		return icon;
-	}
+    @Override
+    public Part createPart() {
+        try {
+            throw new Exception(" Attempt to create an AudiPart");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Icon getIcon() {
+        return icon;
+    }
 }

@@ -69,9 +69,6 @@ public class TextPart extends Part { //implements ConfigListener {
 
     transient private static HashMap<PartView, TextPartEditor> activeEditors = new HashMap<PartView, TextPartEditor>();
 
-    /**
-     * @param lane
-     */
     public TextPart(TextLane lane) {
         super(lane);
         init();

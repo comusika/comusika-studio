@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.sequencer.model;
 
 import com.frinika.model.EditHistoryRecordable;
@@ -32,25 +31,27 @@ import javax.sound.midi.ShortMessage;
 
 /**
  * Controller events represents a MIDI control change
+ *
  * @author Peter Johan Salomonsen
  *
  */
 public class ControllerEvent extends ChannelEvent {
+
     private static final long serialVersionUID = 1L;
 
     transient MidiEvent midiEvent;
-    
+
     int controlNumber;
     int value;
 
     @SuppressWarnings("deprecation")
-    public ControllerEvent(FrinikaTrackWrapper track, long startTick,int controlNumber,int value) {
+    public ControllerEvent(FrinikaTrackWrapper track, long startTick, int controlNumber, int value) {
         super(track, startTick);
         this.controlNumber = controlNumber;
         this.value = value;
     }
 
-    public ControllerEvent(MidiPart multiEventGroup, long startTick,int controlNumber,int value) {
+    public ControllerEvent(MidiPart multiEventGroup, long startTick, int controlNumber, int value) {
         super(multiEventGroup, startTick);
         this.controlNumber = controlNumber;
         this.value = value;
@@ -85,44 +86,41 @@ public class ControllerEvent extends ChannelEvent {
     public void setValue(int value) {
         this.value = value;
     }
+
     @Override
     public long getEndTick() {
-    	return startTick;
+        return startTick;
     }
-    
-    @SuppressWarnings({"deprecation","deprecation"})
+
+    @SuppressWarnings({"deprecation", "deprecation"})
     @Override
     void commitRemoveImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
         getTrack().remove(midiEvent);
-        zombie=true;
+        zombie = true;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-	public
-    void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
-        try
-        {
+    public void commitAddImpl() { // Jens, renamed to be able to handle notification of CommitListeners in MultiEvent, see MultiEvent.commitXxx()
+        try {
             ShortMessage shm = new ShortMessage();
-            shm.setMessage(ShortMessage.CONTROL_CHANGE,channel,controlNumber,value);
-            midiEvent = new MidiEvent(shm,startTick);
+            shm.setMessage(ShortMessage.CONTROL_CHANGE, channel, controlNumber, value);
+            midiEvent = new MidiEvent(shm, startTick);
             getTrack().add(midiEvent);
-         
-        } catch(InvalidMidiDataException e)
-        {
+
+        } catch (InvalidMidiDataException e) {
             e.printStackTrace();
-     
+
         }
-        zombie=false;
+        zombie = false;
     }
 
     @Override
-	public void restoreFromClone(EditHistoryRecordable object) {
-		ControllerEvent evt = (ControllerEvent)object;
-		this.part = evt.part;
-		this.startTick = evt.startTick;
-		this.controlNumber = evt.controlNumber;
-		this.value = evt.value;
-	}
-
+    public void restoreFromClone(EditHistoryRecordable object) {
+        ControllerEvent evt = (ControllerEvent) object;
+        this.part = evt.part;
+        this.startTick = evt.startTick;
+        this.controlNumber = evt.controlNumber;
+        this.value = evt.value;
+    }
 }

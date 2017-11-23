@@ -24,6 +24,7 @@
 package com.frinika.project.scripting.javascript;
 
 import com.frinika.localization.CurrentLocale;
+import com.frinika.base.MessageDialog;
 import com.frinika.project.ProjectContainer;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.project.scripting.gui.ScriptingDialog;
@@ -550,23 +551,19 @@ public class JavascriptScope extends ScriptableObject {
 
     public void message(String s) {
         System.out.println(s);
-        if (project != null) {
-            project.message(s);
-        }
+        MessageDialog.message(dialog, s);
     }
 
     public void error(String s) {
         System.err.println(s);
-        if (project != null) {
-            project.error(s);
-        }
+        MessageDialog.error(dialog, s);
     }
 
     public boolean confirm(String s) {
         System.out.print(s);
         if (project != null) {
             System.out.println("... Ok.");
-            return project.confirm(s);
+            return MessageDialog.confirm(dialog, s);
         } else {
             System.out.println("... Cancel.");
             return false;
@@ -577,7 +574,7 @@ public class JavascriptScope extends ScriptableObject {
         System.out.print(s);
         String r;
         if (project != null) {
-            r = project.prompt(s);
+            r = MessageDialog.prompt(dialog, s);
         } else {
             r = null;
         }
@@ -612,7 +609,7 @@ public class JavascriptScope extends ScriptableObject {
             } else {
                 s = new String[0][0];
             }
-            r = project.promptFile(defaultFilename, s, saveMode, directoryMode);
+            r = MessageDialog.promptFile(dialog, defaultFilename, s, saveMode, directoryMode);
         } else {
             r = null;
         }
@@ -755,7 +752,7 @@ public class JavascriptScope extends ScriptableObject {
                 return p.waitFor();
             }
         } catch (IOException | InterruptedException e) {
-            project.error(e);
+            MessageDialog.error(dialog, e);
             return -1;
         }
     }
@@ -916,7 +913,7 @@ public class JavascriptScope extends ScriptableObject {
                 try {
                     p.saveProject(file);
                 } catch (IOException t) {
-                    project.error(t);
+                    MessageDialog.error(dialog, t);
                 }
             } else {
                 // nop (script must test whether filename valid)
@@ -931,10 +928,10 @@ public class JavascriptScope extends ScriptableObject {
                     // lastSaved... value of project
                     // like manual saving
                 } catch (IOException t) {
-                    project.error(t);
+                    MessageDialog.error(dialog, t);
                 }
             } else {
-                project.error("Invalid filename for saving '" + filename + "'.");
+                MessageDialog.error(dialog, "Invalid filename for saving '" + filename + "'.");
             }
         }
 
@@ -982,8 +979,11 @@ public class JavascriptScope extends ScriptableObject {
                     lane = project.createTextLane();
                     break;
                 default:
-                    project.error("cannot create new lane, unknown type " + type);
-                    return null;
+                    throw new IllegalStateException("cannot create new lane, unknown type " + type);
+
+                // WAS 
+                // project.error();
+                // return null;
             }
             lane.setName(name);
             project.getEditHistoryContainer().notifyEditHistoryListeners();
@@ -999,7 +999,6 @@ public class JavascriptScope extends ScriptableObject {
             }
             return null;
         }
-
     }
 
     public class Lane {
@@ -1065,7 +1064,7 @@ public class JavascriptScope extends ScriptableObject {
             } else if (type == TYPE_TEXT) {
                 part = new TextPart((TextLane) l);
             } else {
-                project.error("cannot create new part, unknown type " + type);
+                MessageDialog.error(dialog, "cannot create new part, unknown type " + type);
                 return null;
             }
 
@@ -1321,7 +1320,6 @@ public class JavascriptScope extends ScriptableObject {
                 ((TextPart) p).setText(text);
             }
         }
-
     }
 
     public class Selection {
@@ -1431,7 +1429,6 @@ public class JavascriptScope extends ScriptableObject {
         public void execute() {
             item.doClick();
         }
-
     }
 
     public class PropertiesWrapper {

@@ -30,7 +30,6 @@ import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
  * Action to split selected parts at a given tick.
  *
  * @author Paul
- *
  */
 public class GluePartEditAction implements EditHistoryAction {
 

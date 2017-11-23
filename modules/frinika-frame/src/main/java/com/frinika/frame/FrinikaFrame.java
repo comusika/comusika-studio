@@ -1318,7 +1318,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         // FrinikaConfig.setLastProjectFilename(newProject
                         // .getAbsolutePath());
                     }
-                    ;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -2625,10 +2624,8 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     }
 
     public static void midiInDeviceChange() {
-
         System.out.println("MIDIIN CHANGER");
         MidiInDeviceManager.reset(FrinikaConfig.getMidiInDeviceList());
-
     }
 
     @Override
@@ -2983,9 +2980,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		}*/
         //DefaultOptionsBinder optionsBinder = new DefaultOptionsBinder(map, map2, properties);
         DefaultOptionsBinder optionsBinder = new DefaultOptionsBinder(map, FrinikaConfig.getProperties());
-        ConfigDialog d = new ConfigDialog(frame, optionsBinder);
+        ConfigDialog dialog = new ConfigDialog(frame, optionsBinder);
         PresentationPanel presentationPanel = new PresentationPanel(configDialogPanel.getTabbedPane());
-        d.getContentPane().add(presentationPanel, BorderLayout.CENTER);
-        return d;
+        dialog.getContentPane().add(presentationPanel, BorderLayout.CENTER);
+        return dialog;
     }
 }

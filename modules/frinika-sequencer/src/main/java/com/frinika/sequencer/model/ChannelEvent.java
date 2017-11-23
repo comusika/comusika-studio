@@ -25,19 +25,16 @@ package com.frinika.sequencer.model;
 
 import com.frinika.sequencer.FrinikaTrackWrapper;
 
-
 /**
  * @author Peter Johan Salomonsen
  */
 public abstract class ChannelEvent extends MultiEvent {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
     int channel;
-        
+
     /**
-     * 
+     *
      * @param track
      * @param startTick
      * @deprecated
@@ -47,11 +44,10 @@ public abstract class ChannelEvent extends MultiEvent {
         // TODO Auto-generated constructor stub
     }
 
-    public ChannelEvent(MidiPart part, long startTick)
-    {
-    		super(part, startTick);
+    public ChannelEvent(MidiPart part, long startTick) {
+        super(part, startTick);
     }
-    
+
     /**
      * @return Returns the channel.
      */

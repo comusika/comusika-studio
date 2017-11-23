@@ -24,6 +24,7 @@
 package com.frinika.project.scripting;
 
 import com.frinika.global.FrinikaConfig;
+import com.frinika.base.MessageDialog;
 import com.frinika.project.ProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 import com.frinika.project.scripting.javascript.JavascriptScope;
@@ -157,7 +158,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
                     project.message("Script execution has been aborted.");
                     result = "";
                 } else {
-                    project.error(t);
+                    MessageDialog.error(dialog, t);
                     result = null;
                 }
             }

@@ -54,13 +54,13 @@ public class ChartPrintTest extends JPanel {
         frame.setLocation(100, 100);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-       	String keyRoot="C";
-	String scale="Major";
-        Chart chart=new Chart();
-       chart.setDefaultKey(keyRoot,scale); 
-        chart.appendBar("Bm7b6 Ab6+5",4);
-        chart.appendBar("C",4);
-        
+        String keyRoot = "C";
+        String scale = "Major";
+        Chart chart = new Chart();
+        chart.setDefaultKey(keyRoot, scale);
+        chart.appendBar("Bm7b6 Ab6+5", 4);
+        chart.appendBar("C", 4);
+
         final ChartPrintTest s = new ChartPrintTest(chart);
         s.setLayout(new BorderLayout());
 
@@ -83,7 +83,6 @@ public class ChartPrintTest extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PrinterJob job = PrinterJob.getPrinterJob();
-
 
                 job.setPrintable(new Printable() {
 
@@ -168,8 +167,8 @@ public class ChartPrintTest extends JPanel {
             x += barWidth;
         }
 
-        for (int i=0;i<=barPerLine;i++) {
-            g.drawLine(i*barWidth, 0, i*barWidth, y);
+        for (int i = 0; i <= barPerLine; i++) {
+            g.drawLine(i * barWidth, 0, i * barWidth, y);
         }
 
     }
@@ -191,6 +190,6 @@ public class ChartPrintTest extends JPanel {
     }
 
     private void paintChord(Chord chord, Graphics2D g2, int x, int y) {
-             g2.drawString(chord.name,x,y);
+        g2.drawString(chord.name, x, y);
     }
 }

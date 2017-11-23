@@ -23,8 +23,9 @@
  */
 package com.frinika.sequencer.model;
 
+import com.frinika.base.MessageDialog;
 import com.frinika.global.Toolbox;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
@@ -35,7 +36,6 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.SysexMessage;
-import javax.swing.JOptionPane;
 
 /**
  * Event for system-exclusive MIDI data.
@@ -117,15 +117,16 @@ public class SysexEvent extends MultiEvent {
         final String oldMacroString = this.macro;
         boolean err;
         do {
-            err = false; // TODO frame?
-            final String s = JOptionPane.showInputDialog(null, getMessage("sequencer.sysex.edit_sysex") + ":", oldMacroString);
+            err = false;
+            // NBP
+            final String s = MessageDialog.prompt(null, CurrentLocale.getMessage("sequencer.sysex.edit_sysex") + ":", oldMacroString);
             if (s != null) {
                 if (!s.equals(oldMacroString)) {
                     try {
                         final MidiEvent[] events = parseMacro(s);
                         final MidiEvent[] oldEvents = this.midiEvents;
 
-                        project.getEditHistoryContainer().mark(getMessage("sequencer.sysex.edit_sysex"));
+                        project.getEditHistoryContainer().mark(CurrentLocale.getMessage("sequencer.sysex.edit_sysex"));
                         EditHistoryAction action = new EditHistoryAction() {
                             @Override
                             public void redo() {
@@ -147,7 +148,8 @@ public class SysexEvent extends MultiEvent {
                         project.getEditHistoryContainer().push(action);
                         project.getEditHistoryContainer().notifyEditHistoryListeners();
                     } catch (InvalidMidiDataException imde) {
-                        project.error(imde.getMessage());
+                        // NBP
+                        MessageDialog.error(null, imde.getMessage());
                         err = true;
                     }
                 }

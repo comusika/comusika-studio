@@ -23,6 +23,7 @@
  */
 package com.frinika.project.scripting.gui;
 
+import com.frinika.base.MessageDialog;
 import com.frinika.project.scripting.DefaultFrinikaScript;
 import com.frinika.project.scripting.FrinikaScript;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
@@ -171,7 +172,7 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
             lastSaveTimestamp = file.lastModified();
             setDirty(false);
         } catch (IOException ioe) {
-            dialog.project.error(ioe);
+            MessageDialog.error(dialog, ioe);
         }
     }
 
@@ -233,8 +234,8 @@ class ScriptEditorInternalFrame extends JInternalFrame implements ScriptListener
 //System. out.println("starting watchdog thread for " + filename);
         while (!this.isClosed()) {
             if (hasBeenModifiedByExternalApplication()) {
-                if (dialog.project.confirm("Script " + filename + " has been modified by an external application. Reload?")) {
-                    if ((!hasBeenModifiedWithoutSaving()) || dialog.project.confirm("This will DESTROY local changes. Reload anyway?")) {
+                if (MessageDialog.confirm(this, "Script " + filename + " has been modified by an external application. Reload?")) {
+                    if ((!hasBeenModifiedWithoutSaving()) || MessageDialog.confirm(this, "This will DESTROY local changes. Reload anyway?")) {
                         reload();
                     }
                 } else { // don't reload, leave external changes for now

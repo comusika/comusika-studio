@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.frinika.sequencer.midieventprocessor;
+
 import com.frinika.sequencer.MidiEventProcessor;
 import com.frinika.sequencer.model.ControllerEvent;
 import com.frinika.sequencer.model.NoteEvent;
@@ -33,28 +34,26 @@ import com.frinika.sequencer.model.NoteEvent;
 public class AddVelocity extends MidiEventProcessor {
 
     int amount;
-    
-    public AddVelocity(int amount)
-    {
-        this.amount = amount;    
+
+    public AddVelocity(int amount) {
+        this.amount = amount;
     }
-    
+
     @Override
     public void processNoteEvent(NoteEvent event) {
-        int newVel = event.getVelocity()+amount;
-        
-        if(newVel>127)
+        int newVel = event.getVelocity() + amount;
+
+        if (newVel > 127) {
             event.setVelocity(127);
-        else if(newVel<0)
+        } else if (newVel < 0) {
             event.setVelocity(0);
-        else
+        } else {
             event.setVelocity(newVel);
+        }
     }
 
     @Override
     public void processControllerEvent(ControllerEvent event) {
         // TODO Auto-generated method stub
-        
     }
-
 }
