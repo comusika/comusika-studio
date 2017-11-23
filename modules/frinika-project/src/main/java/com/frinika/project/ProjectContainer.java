@@ -71,7 +71,7 @@ import com.frinika.sequencer.model.util.TimeUtils;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import com.frinika.sequencer.project.ProjectSettings;
-import com.frinika.sequencer.project.RecordingManager;
+import com.frinika.project.RecordingManager;
 import com.frinika.sequencer.project.SoundBankNameHolder;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.settings.SynthSettings;

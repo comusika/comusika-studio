@@ -27,7 +27,7 @@ import com.frinika.frame.FrinikaFrame;
 import com.frinika.midi.MidiMessageListener;
 import com.frinika.project.ProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
-import com.frinika.sequencer.project.RecordingManager;
+import com.frinika.project.RecordingManager;
 import com.frinika.tootX.gui.ControlFocus;
 import com.frinika.tootX.midi.MidiRouterSerialization; 
 import java.awt.BorderLayout;

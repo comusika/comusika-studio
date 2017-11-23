@@ -10,7 +10,7 @@ import com.frinika.sequencer.model.MenuPlugin;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.Part;
-import com.frinika.sequencer.project.MultiPart;
+import com.frinika.project.MultiPart;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;

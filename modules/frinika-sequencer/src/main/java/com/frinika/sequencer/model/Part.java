@@ -32,7 +32,7 @@ import com.frinika.sequencer.gui.TimeFormat;
 import com.frinika.sequencer.gui.TimeSelector;
 import com.frinika.sequencer.gui.partview.PartView;
 import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
-import com.frinika.sequencer.project.MultiPart;
+import com.frinika.project.MultiPart;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;

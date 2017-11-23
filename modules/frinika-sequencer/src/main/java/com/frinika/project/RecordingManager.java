@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.frinika.sequencer.project;
+package com.frinika.project;
 
+import com.frinika.project.MultiPart;
 import com.frinika.midi.MidiMessageListener;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.FrinikaTrackWrapper;
@@ -17,6 +18,7 @@ import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.PitchBendEvent;
+import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;

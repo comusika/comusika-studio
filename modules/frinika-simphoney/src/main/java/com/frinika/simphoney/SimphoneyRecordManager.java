@@ -32,7 +32,7 @@ import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.PitchBendEvent;
-import com.frinika.sequencer.project.RecordingManager;
+import com.frinika.project.RecordingManager;
 import javax.sound.midi.ShortMessage;
 import uk.org.toot.control.BooleanControl;
 
