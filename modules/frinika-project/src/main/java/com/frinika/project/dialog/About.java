@@ -23,6 +23,18 @@
  */
 package com.frinika.project.dialog;
 
+import com.frinika.gui.util.WindowUtils;
+import com.frinika.project.panel.AboutPanel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 /**
@@ -31,12 +43,58 @@ import javax.swing.JFrame;
 public class About {
 
     public static void about(JFrame parentFrame) {
-        new AboutDialog(parentFrame).setVisible(true);
+        final JDialog aboutDialog = new JDialog(parentFrame);
+        aboutDialog.setUndecorated(true);
+        aboutDialog.setModal(true);
+        aboutDialog.setTitle("About Frinika");
+        aboutDialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        AboutPanel aboutPanel = new AboutPanel();
+        aboutDialog.add(aboutPanel, BorderLayout.CENTER);
+        aboutDialog.pack();
+        centerDialog(aboutDialog);
+        aboutPanel.setOkCancelListener(new WindowUtils.OkCancelListener() {
+            @Override
+            public void okEvent() {
+                aboutDialog.setVisible(false);
+            }
+
+            @Override
+            public void cancelEvent() {
+                aboutDialog.setVisible(false);
+            }
+        });
+
+        aboutDialog.setVisible(true);
+
+        //aboutDialog.pack();
+        // new AboutDialog(parentFrame).setVisible(true);
         /*
         JOptionPane.showMessageDialog(parentFrame,
                 new AboutPanel()
          ,
 				"About Frinika",JOptionPane.INFORMATION_MESSAGE);
          */
+    }
+
+    private static void centerDialog(JDialog aboutDialog) {
+        Rectangle windowSize;
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+        if (gc == null) {
+            gc = aboutDialog.getGraphicsConfiguration();
+        }
+
+        if (gc != null) {
+            windowSize = gc.getBounds();
+        } else {
+            windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
+        }
+
+        Dimension size = aboutDialog.getSize();
+        Point parent_loc = aboutDialog.getLocation();
+        aboutDialog.setLocation(parent_loc.x + windowSize.width / 2 - (size.width / 2),
+                parent_loc.y + windowSize.height / 2 - (size.height / 2));
     }
 }
