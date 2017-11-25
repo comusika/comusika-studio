@@ -4,7 +4,7 @@
  */
 package com.frinika.project.gui;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.MenuPlugable;
 import com.frinika.sequencer.model.MenuPlugin;
 import com.frinika.sequencer.model.MidiLane;
@@ -21,10 +21,10 @@ import javax.swing.JRadioButtonMenuItem;
 
 public class MultiPartMenuPlugin implements MenuPlugin {
 
-    private ProjectContainer proj;
+    private FrinikaProjectContainer project;
 
-    public MultiPartMenuPlugin(ProjectContainer proj) {
-        this.proj = proj;
+    public MultiPartMenuPlugin(FrinikaProjectContainer project) {
+        this.project = project;
     }
 
     @SuppressWarnings("serial")
@@ -62,13 +62,13 @@ public class MultiPartMenuPlugin implements MenuPlugin {
 
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                proj.getEditHistoryContainer().mark("X");
+                                project.getEditHistoryContainer().mark("X");
                                 if (item.isSelected()) {
                                     part.addToModel();
                                 } else {
                                     part.removeFromModel();
                                 }
-                                proj.getEditHistoryContainer().notifyEditHistoryListeners();
+                                project.getEditHistoryContainer().notifyEditHistoryListeners();
                             }
                         });
                         subMenu.add(item);
@@ -82,7 +82,7 @@ public class MultiPartMenuPlugin implements MenuPlugin {
 
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                proj.getEditHistoryContainer().mark("X");
+                                project.getEditHistoryContainer().mark("X");
                                 System.out.println(part + " " + item.isSelected());
 
                                 for (Part partX : multi.getParts()) {
@@ -97,7 +97,7 @@ public class MultiPartMenuPlugin implements MenuPlugin {
                                         }
                                     }
                                 }
-                                proj.getEditHistoryContainer().notifyEditHistoryListeners();
+                                project.getEditHistoryContainer().notifyEditHistoryListeners();
                             }
                         });
                         subMenu.add(item);

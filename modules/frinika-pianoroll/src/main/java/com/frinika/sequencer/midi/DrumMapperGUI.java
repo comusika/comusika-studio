@@ -5,7 +5,7 @@ import com.frinika.sequencer.gui.PopupClient;
 import com.frinika.sequencer.gui.PopupSelectorButton;
 import com.frinika.sequencer.gui.pianoroll.VirtualPianoVert;
 import com.frinika.sequencer.model.MidiLane;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 public class DrumMapperGUI extends JPanel {
 
     DrumMapper dm;
-    AbstractSequencerProjectContainer proj;
+    SequencerProjectContainer proj;
 
     VirtualPianoVert inPiano;
     VirtualPianoVert outPiano;
@@ -29,7 +29,7 @@ public class DrumMapperGUI extends JPanel {
     JButton setMap;
     MidiLane lane;
 
-    public DrumMapperGUI(final DrumMapper dm, AbstractSequencerProjectContainer proj, MidiLane lane) {
+    public DrumMapperGUI(final DrumMapper dm, SequencerProjectContainer proj, MidiLane lane) {
         this.dm = dm;
         this.lane = lane;
         this.proj = proj;

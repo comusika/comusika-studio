@@ -24,7 +24,7 @@
 package com.frinika.codeexamples;
 
 import com.frinika.frame.FrinikaFrame;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.audio.DAudioReader;
 import com.frinika.voiceserver.AudioContext;
 import com.frinika.voiceserver.VoiceServer;
@@ -53,7 +53,7 @@ public class AudioPlayBackExampleDA {
         final VoiceServer voiceServer = new AudioContext().getVoiceServer();
 
         // Create the project container
-        final ProjectContainer proj = new ProjectContainer();
+        final FrinikaProjectContainer proj = new FrinikaProjectContainer();
 
         String nl = System.getProperty("line.separator");
         String fileSeparator = System.getProperty("file.separator");

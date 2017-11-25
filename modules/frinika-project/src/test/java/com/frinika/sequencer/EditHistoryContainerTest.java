@@ -1,9 +1,9 @@
 package com.frinika.sequencer;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class EditHistoryContainerTest {
 
     MidiPart part;
-    AbstractSequencerProjectContainer proj;
+    SequencerProjectContainer proj;
 
     @Before
     protected void setUp() throws Exception {
@@ -24,7 +24,7 @@ public class EditHistoryContainerTest {
 //      Create the audio context
         //new AudioContext();
         // Create the project container
-        proj = new ProjectContainer();
+        proj = new FrinikaProjectContainer();
 
         // Create a lane
         com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();

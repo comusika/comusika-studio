@@ -18,7 +18,7 @@ import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.PitchBendEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -42,11 +42,11 @@ public class RecordingManager implements SongPositionListener, MidiMessageListen
     protected FrinikaSequencer sequencer;
     long lastTick = -1;
     protected Stack stack;
-    protected AbstractSequencerProjectContainer project;
+    protected SequencerProjectContainer project;
     boolean looped;
     boolean isDrumTake;
 
-    public RecordingManager(AbstractSequencerProjectContainer proj, int buffSize) {
+    public RecordingManager(SequencerProjectContainer proj, int buffSize) {
         this.project = proj;
         this.sequencer = proj.getSequencer();
         sequencer.addSongPositionListener(this);

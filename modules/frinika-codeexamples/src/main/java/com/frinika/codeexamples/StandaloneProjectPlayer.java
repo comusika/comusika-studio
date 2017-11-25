@@ -23,7 +23,7 @@
  */
 package com.frinika.codeexamples;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import java.io.File;
 
 /**
@@ -43,9 +43,9 @@ public class StandaloneProjectPlayer {
 
                     @Override
                     public void run() {
-                        ProjectContainer projectContainer = null;
+                        FrinikaProjectContainer projectContainer = null;
                         try {
-                            projectContainer = ProjectContainer.loadProject(f);
+                            projectContainer = FrinikaProjectContainer.loadProject(f);
                             projectContainer.getAudioServer().start();
                             projectContainer.getSequencer().start();
                             System.out.println("Playing");

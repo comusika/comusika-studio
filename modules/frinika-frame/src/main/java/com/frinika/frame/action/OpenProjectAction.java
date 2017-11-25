@@ -26,7 +26,7 @@ package com.frinika.frame.action;
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.ProjectFileFilter;
 import java.awt.event.ActionEvent;
@@ -61,7 +61,7 @@ public class OpenProjectAction extends AbstractAction {
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File newProject = chooser.getSelectedFile();
 
-                project = new FrinikaFrame(ProjectContainer
+                project = new FrinikaFrame(FrinikaProjectContainer
                         .loadProject(newProject));
                 FrinikaConfig.setLastProjectFilename(newProject
                         .getAbsolutePath());

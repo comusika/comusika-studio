@@ -47,7 +47,7 @@ public class SynthesizerDescriptor extends MidiDeviceDescriptor implements Synth
     }
 
     @Override
-    protected void installImp(ProjectContainer project) {
+    protected void installImp(FrinikaProjectContainer project) {
         super.installImp(project);
         if (soundBankFileName != null) {
             try {

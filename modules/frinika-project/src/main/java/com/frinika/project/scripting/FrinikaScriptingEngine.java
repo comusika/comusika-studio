@@ -25,7 +25,7 @@ package com.frinika.project.scripting;
 
 import com.frinika.global.FrinikaConfig;
 import com.frinika.base.MessageDialog;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 import com.frinika.project.scripting.javascript.JavascriptScope;
 import com.frinika.sequencer.model.MultiEvent;
@@ -40,13 +40,21 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
 
 /**
  * Scriptig-engine for Frinika. The static elements of this class handle
@@ -77,12 +85,12 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
     transient static Properties global = null;
     transient private static Collection<ScriptListener> scriptListeners = new HashSet<ScriptListener>();
 
-    public static void executeScript(FrinikaScript script, ProjectContainer project, ScriptingDialog dialog) {
+    public static void executeScript(FrinikaScript script, FrinikaProjectContainer project, ScriptingDialog dialog) {
         ScriptThread thread = new ScriptThread(script, project, dialog);
         thread.start();
     }
 
-    static Object runScript(FrinikaScript script, ProjectContainer project, ScriptingDialog dialog) { // called from SriptThread
+    static Object runScript(FrinikaScript script, FrinikaProjectContainer project, ScriptingDialog dialog) { // called from SriptThread
         int language = script.getLanguage();
         String name = script.getName();
 
@@ -146,7 +154,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
         }
     }
 
-    protected static Object executeJavascript(String source, String name, ProjectContainer project, SortedSet<MultiEvent> events, ScriptingDialog dialog) {
+    protected static Object executeJavascript(String source, String name, FrinikaProjectContainer project, SortedSet<MultiEvent> events, ScriptingDialog dialog) {
         Context cx = Context.enter();
         try {
             JavascriptScope scope = new JavascriptScope(cx, project, events, dialog);
@@ -174,7 +182,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
         }
     }
 
-    protected static Object executeGroovyScript(String source, String name, ProjectContainer project, SortedSet<MultiEvent> events, final ScriptingDialog dialog) {
+    protected static Object executeGroovyScript(String source, String name, FrinikaProjectContainer project, SortedSet<MultiEvent> events, final ScriptingDialog dialog) {
         ScriptEngineManager factory = new ScriptEngineManager();
         ScriptEngine engine = factory.getEngineByName("groovy");
 
@@ -282,17 +290,19 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
     // --- instance members --------------------------------------------------
     protected Collection<FrinikaScript> scripts;
 
-    protected ProjectContainer project;
+    /**
+     * This field is used for backward compatibility / serialization purposes
+     * only.
+     */
+    @Deprecated
+    public Serializable project = null;
 
     protected Properties persistent = null; // init on first get (usual case will remain null)
 
     /**
      * Constructor. One instance per ProjectContainer (1:1).
-     *
-     * @param project
      */
-    public FrinikaScriptingEngine(ProjectContainer project) {
-        this.project = project;
+    public FrinikaScriptingEngine() {
         scripts = new ArrayList<>();
     }
 

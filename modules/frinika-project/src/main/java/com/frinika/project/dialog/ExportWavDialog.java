@@ -26,7 +26,7 @@ package com.frinika.project.dialog;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
 import com.frinika.tools.ProgressBarInputStream;
@@ -55,14 +55,14 @@ public class ExportWavDialog extends JDialog implements Runnable {
     JProgressBar progressBar;
     MyMidiRenderer midiRenderer;
 
-    ProjectContainer project;
+    FrinikaProjectContainer project;
     File file;
     javax.sound.sampled.AudioFileFormat.Type type;
 
     int numberOfSamples;
 
     public ExportWavDialog(JFrame frame,
-            ProjectContainer project,
+            FrinikaProjectContainer project,
             javax.sound.sampled.AudioFileFormat.Type type,
             File file,
             long startTick,

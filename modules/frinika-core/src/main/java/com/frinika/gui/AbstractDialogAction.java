@@ -23,7 +23,7 @@
  */
 package com.frinika.gui;
 
-import com.frinika.base.AbstractProjectContainer;
+import com.frinika.base.BaseProjectContainer;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
 import java.awt.Component;
@@ -48,12 +48,12 @@ import javax.swing.JComponent;
  */
 public abstract class AbstractDialogAction extends AbstractAction {
 
-    protected AbstractProjectContainer project;
+    protected BaseProjectContainer project;
     protected String actionId;
     protected OptionsDialog optionsDialog;
     protected boolean canceled;
 
-    public AbstractDialogAction(AbstractProjectContainer project, String actionId) {
+    public AbstractDialogAction(BaseProjectContainer project, String actionId) {
         super(CurrentLocale.getMessage(actionId) + "...");
         this.project = project;
         this.actionId = actionId;
@@ -139,7 +139,7 @@ public abstract class AbstractDialogAction extends AbstractAction {
         }
     }
 
-    public AbstractProjectContainer getProjectFrame() {
+    public BaseProjectContainer getProjectFrame() {
         return project;
     }
 

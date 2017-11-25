@@ -3,7 +3,7 @@ package com.frinika.sequencer.gui.pianoroll;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.sound.midi.InvalidMidiDataException;
@@ -18,9 +18,9 @@ public class AudioFeedBack implements ActionListener {
     private int chan;
     private int pitch;
     Timer timer;
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
 
-    public AudioFeedBack(AbstractSequencerProjectContainer project) {
+    public AudioFeedBack(SequencerProjectContainer project) {
         this.project = project;
         timer = new Timer(0, this);
         timer.setRepeats(false);

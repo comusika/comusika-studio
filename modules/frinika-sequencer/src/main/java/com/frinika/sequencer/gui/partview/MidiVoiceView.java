@@ -43,7 +43,7 @@ import com.frinika.sequencer.model.util.TimeUtils;
 import com.frinika.sequencer.patchname.MyPatch;
 import com.frinika.sequencer.patchname.Node;
 import com.frinika.sequencer.patchname.PatchNameMap;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -83,13 +83,13 @@ public class MidiVoiceView extends LaneView {
     final MidiResource midiResource;
     MidiDevice midiDev = null;
     int channel;
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     boolean drumMapView = false;
     DrumMapper mapper = null;
     TimeUtils timeUtil;
     static HashMap<Lane, MidiQuantizeAction> quantizeDialogCache = new HashMap<Lane, MidiQuantizeAction>();
 
-    public MidiVoiceView(MidiLane lane, AbstractSequencerProjectContainer project) {
+    public MidiVoiceView(MidiLane lane, SequencerProjectContainer project) {
         super(lane);
         this.project = project;
         timeUtil = project.getTimeUtils(); // Jens
@@ -617,7 +617,7 @@ public class MidiVoiceView extends LaneView {
         };
 
         PopupSelectorButton popsel = new PopupSelectorButton(resource, client, chanStr);
-        popsel.setIcon(AbstractSequencerProjectContainer.getIconResource("jack_connector.png"));
+        popsel.setIcon(SequencerProjectContainer.getIconResource("jack_connector.png"));
         return popsel;
 
     }
@@ -727,7 +727,7 @@ public class MidiVoiceView extends LaneView {
         if (icon != null) {
             popsel.setIcon(icon);
         } else {
-            popsel.setIcon(AbstractSequencerProjectContainer.getIconResource("midi.png"));
+            popsel.setIcon(SequencerProjectContainer.getIconResource("midi.png"));
         }
         return popsel;
 

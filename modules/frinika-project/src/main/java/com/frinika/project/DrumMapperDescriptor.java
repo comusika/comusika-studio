@@ -8,18 +8,18 @@ import java.io.ObjectOutputStream;
 public class DrumMapperDescriptor extends MidiDeviceDescriptor {
 
     private static final long serialVersionUID = 1L;
-    transient ProjectContainer project;
+    transient FrinikaProjectContainer project;
     MidiDeviceDescriptor target;
     int[] noteMap = new int[128];
 
-    public DrumMapperDescriptor(SynthWrapper midiDevice, ProjectContainer proj) {
+    public DrumMapperDescriptor(SynthWrapper midiDevice, FrinikaProjectContainer proj) {
         super(midiDevice);
         assert (midiDevice.getRealDevice() instanceof DrumMapper);
         project = proj;
     }
 
     @Override
-    protected void installImp(ProjectContainer project) {
+    protected void installImp(FrinikaProjectContainer project) {
 
         // super will sort out setting my real device 
         super.installImp(project);

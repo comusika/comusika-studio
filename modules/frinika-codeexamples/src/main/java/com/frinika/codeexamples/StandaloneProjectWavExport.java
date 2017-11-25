@@ -3,7 +3,7 @@ package com.frinika.codeexamples;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
 import java.io.File;
@@ -31,7 +31,7 @@ public class StandaloneProjectWavExport {
     public static void main(String[] args) throws Exception {
         // Load a project
         FrinikaAudioSystem.usePhysicalAudioOutput = false;
-        ProjectContainer project = ProjectContainer.loadProject(new File("/home/peter/mystudio/faro.frinika"));
+        FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(new File("/home/peter/mystudio/faro.frinika"));
         long startTick = 0;
         long endTick = 128 * 16;
         FrinikaAudioServer audioServer = (FrinikaAudioServer) project.getAudioServer();

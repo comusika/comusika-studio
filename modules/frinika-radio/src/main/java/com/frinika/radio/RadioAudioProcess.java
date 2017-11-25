@@ -22,7 +22,7 @@
 
 package com.frinika.radio;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import javax.sound.sampled.LineUnavailableException;
@@ -39,9 +39,9 @@ public class RadioAudioProcess implements AudioProcess {
     ArrayList<RadioStreamTargetDataLine> newTdLines = new ArrayList<>();
     ArrayList<RadioStreamTargetDataLine> closedTdLines = new ArrayList<>();
 
-    ProjectContainer project;
+    FrinikaProjectContainer project;
 
-    public RadioAudioProcess(ProjectContainer project) {
+    public RadioAudioProcess(FrinikaProjectContainer project) {
         this.project = project;
     }
 

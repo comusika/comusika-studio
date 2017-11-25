@@ -31,7 +31,7 @@ import uk.org.toot.audio.mixer.MixControls;
  */
 public interface DynamicMixer {
 
-    MixControls addMixerInput(AudioProcess myProcess, String string);
+    MixControls addMixerInput(AudioProcess myProcess, String stripName);
 
     void removeStrip(String tag);
 }

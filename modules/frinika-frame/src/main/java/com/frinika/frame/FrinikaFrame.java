@@ -15,7 +15,7 @@ import com.frinika.mod.MODImporter;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryListener;
 import com.frinika.notation.NotationPanel;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.About;
 import com.frinika.project.dialog.BounceToLane;
 import com.frinika.project.dialog.ExportWavDialog;
@@ -221,7 +221,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     public static boolean doNotQuit = false;
 
     // PianoRollEditor pianoRollEditor;
-    public static FrinikaFrame findFrame(ProjectContainer project) {
+    public static FrinikaFrame findFrame(FrinikaProjectContainer project) {
         for (FrinikaFrame pr : openProjectFrames) {
             if (pr.project == project) {
                 return pr;
@@ -240,7 +240,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     GlobalToolBar globalToolBar;
 
-    ProjectContainer project;
+    FrinikaProjectContainer project;
 
     private File midiFile;
 
@@ -429,11 +429,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     }
 
-    public FrinikaFrame(final ProjectContainer project) throws Exception {
+    public FrinikaFrame(final FrinikaProjectContainer project) throws Exception {
         this(project, null);
     }
 
-    public FrinikaFrame(final ProjectContainer project, Rectangle position)
+    public FrinikaFrame(final FrinikaProjectContainer project, Rectangle position)
             throws Exception {
         this();
         this.position = position;
@@ -1313,7 +1313,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                     }
                     if (chooser.showOpenDialog(FrinikaFrame.this) == JFileChooser.APPROVE_OPTION) {
                         File newProject = chooser.getSelectedFile();
-                        new FrinikaFrame(ProjectContainer
+                        new FrinikaFrame(FrinikaProjectContainer
                                 .loadProject(newProject), position);
                         // FrinikaConfig.setLastProjectFilename(newProject
                         // .getAbsolutePath());
@@ -1459,7 +1459,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         MidiDevice mididdevice = selectMidiDevice();
 
                         FrinikaFrame frame = new FrinikaFrame(
-                                new ProjectContainer(MidiSystem
+                                new FrinikaProjectContainer(MidiSystem
                                         .getSequence(newMidiFile), mididdevice));
 
                         midiFile = newMidiFile;
@@ -2596,7 +2596,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     }
 
     @Override
-    public ProjectContainer getProjectContainer() {
+    public FrinikaProjectContainer getProjectContainer() {
         return project;
     }
 
@@ -2882,7 +2882,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         }
     }
 
-    public static void staticMessage(ProjectContainer container, String string) {
+    public static void staticMessage(FrinikaProjectContainer container, String string) {
         for (FrinikaFrame f : openProjectFrames) {
             if (f.project == container) {
                 f.message(string);

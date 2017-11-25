@@ -1,6 +1,6 @@
 package com.frinika.sequencer;
 
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.synth.envelope.MidiVolume;
 import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
@@ -15,10 +15,10 @@ public class Metronome implements AudioProcess, SongPositionListener {
     float[] sampleData;
     float level = 0f;
     boolean active = false;
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     int metSamplePos = 0;
 
-    public Metronome(AbstractSequencerProjectContainer project) throws Exception {
+    public Metronome(SequencerProjectContainer project) throws Exception {
 //		super(project.getAudioServer().openAudioOutput(project.getAudioServer().getAvailableOutputNames().get(0),null));
         this.project = project;
 

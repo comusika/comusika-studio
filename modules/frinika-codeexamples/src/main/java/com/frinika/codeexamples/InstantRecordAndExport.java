@@ -23,7 +23,7 @@
  */
 package com.frinika.codeexamples;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.ExportWavDialog;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.tootX.midi.MidiInDeviceManager;
@@ -48,7 +48,7 @@ public class InstantRecordAndExport {
 
     public static void main(String[] args) throws Exception {
         // Create the project container
-        ProjectContainer proj = new ProjectContainer();
+        FrinikaProjectContainer proj = new FrinikaProjectContainer();
         proj.getAudioServer().start();
         // Create a lane
         com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();

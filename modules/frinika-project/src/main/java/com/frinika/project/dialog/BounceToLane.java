@@ -24,7 +24,7 @@
 package com.frinika.project.dialog;
 
 import com.frinika.global.FrinikaConfig;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.AudioPart;
@@ -57,13 +57,13 @@ public class BounceToLane extends JDialog implements Runnable {
     JProgressBar progressBar;
     MyMidiRenderer midiRenderer;
 
-    ProjectContainer project;
+    FrinikaProjectContainer project;
     File file;
     AudioLane lane;
     int numberOfSamples;
 
     public BounceToLane(JFrame frame,
-            ProjectContainer project,
+            FrinikaProjectContainer project,
             File file,
             long startTick,
             long endTick,

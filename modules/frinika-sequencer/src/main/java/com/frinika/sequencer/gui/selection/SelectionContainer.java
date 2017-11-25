@@ -24,7 +24,7 @@
 package com.frinika.sequencer.gui.selection;
 
 import com.frinika.sequencer.model.Selectable;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -53,10 +53,10 @@ public abstract class SelectionContainer<T extends Selectable> implements Select
     Vector<T> selectedList = new Vector<>();
 
     Vector<SelectionListener<T>> selectionListeners = new Vector<>();
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     boolean dirty = false;
 
-    public SelectionContainer(AbstractSequencerProjectContainer project) {
+    public SelectionContainer(SequencerProjectContainer project) {
         this.project = project;
 
     }

@@ -26,7 +26,7 @@ package com.frinika.project.scripting.gui;
 import com.frinika.gui.AbstractDialog;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.base.MessageDialog;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.gui.action.ScriptingAction;
 import com.frinika.project.scripting.DefaultFrinikaScript;
 import com.frinika.project.scripting.FrinikaScript;
@@ -76,11 +76,11 @@ public class ScriptingDialog extends JDialog implements InternalFrameListener, S
     ScriptEditorInternalFrame activeEditor;
     JMenu scriptingMenu;
     Point addNewPosition = new Point(20, 20);
-    ProjectContainer project;
+    FrinikaProjectContainer project;
     FrinikaScriptingEngine engine;
     private Map<String, FrinikaScript> presets;
 
-    public ScriptingDialog(AbstractDialog dialog, ProjectContainer project, JMenu scriptingMenu) {
+    public ScriptingDialog(AbstractDialog dialog, FrinikaProjectContainer project, JMenu scriptingMenu) {
         super(dialog, "Frinika " + CurrentLocale.getMessage(ScriptingAction.actionId), false);
         this.project = project;
         this.scriptingMenu = scriptingMenu;

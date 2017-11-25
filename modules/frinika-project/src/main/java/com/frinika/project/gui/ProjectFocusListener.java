@@ -24,10 +24,10 @@
 
 package com.frinika.project.gui;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 
 public interface ProjectFocusListener {
 	
-	public void projectFocusNotify(ProjectContainer project);
+	public void projectFocusNotify(FrinikaProjectContainer project);
 
 }

@@ -26,7 +26,7 @@ package com.frinika.sequencer.project;
 import com.frinika.audio.DynamicMixer;
 import com.frinika.audio.io.BufferedRandomAccessFileManager;
 import com.frinika.audio.toot.AudioInjector;
-import com.frinika.base.AbstractProjectContainer;
+import com.frinika.base.BaseProjectContainer;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
@@ -66,7 +66,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -91,9 +90,8 @@ import javax.swing.JSeparator;
 import uk.org.toot.audio.core.AudioProcess;
 import uk.org.toot.audio.mixer.AudioMixer;
 
-// Should be implemented instead but there are problems with class loading in serialization
-public abstract class AbstractSequencerProjectContainer extends AbstractProjectContainer implements EditHistoryRecorder<Lane>, MidiConsumer,
-        Serializable, DynamicMixer {
+public abstract class SequencerProjectContainer implements BaseProjectContainer,
+        EditHistoryRecorder<Lane>, MidiConsumer, DynamicMixer {
 
     protected int ticksPerQuarterNote = FrinikaConfig.TICKS_PER_QUARTER;
     protected transient MidiResource midiResource;
@@ -219,7 +217,7 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
 
     public static Icon getIconResource(String name) {
         try {
-            Icon icon = new javax.swing.ImageIcon(AbstractProjectContainer.class.getResource("/com/frinika/resources/icons/" + name));
+            Icon icon = new javax.swing.ImageIcon(BaseProjectContainer.class.getResource("/com/frinika/resources/icons/" + name));
             return icon;
         } catch (Exception e) {
             e.printStackTrace();
@@ -340,16 +338,16 @@ public abstract class AbstractSequencerProjectContainer extends AbstractProjectC
         projectRepaintListener.repaintPartView();
     }
 
-    public abstract JPanel createDrumMapperGUI(DrumMapper drumMapper, AbstractSequencerProjectContainer project, MidiLane lane);
+    public abstract JPanel createDrumMapperGUI(DrumMapper drumMapper, SequencerProjectContainer project, MidiLane lane);
 
     // NBP
     private class MidiDevicesActionListener implements ActionListener {
 
-        AbstractSequencerProjectContainer project;
+        SequencerProjectContainer project;
         final Icon icon;
         final MidiDevice.Info info;
 
-        public MidiDevicesActionListener(AbstractSequencerProjectContainer project, Icon icon, MidiDevice.Info info) {
+        public MidiDevicesActionListener(SequencerProjectContainer project, Icon icon, MidiDevice.Info info) {
             this.info = info;
             this.icon = icon;
         }

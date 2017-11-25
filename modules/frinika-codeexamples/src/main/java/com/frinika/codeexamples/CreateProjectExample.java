@@ -1,7 +1,7 @@
 package com.frinika.codeexamples;
 
 import com.frinika.frame.FrinikaFrame;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
@@ -19,7 +19,7 @@ public class CreateProjectExample {
 
     public static void main(String[] args) throws Exception {
         // Create the project container
-        ProjectContainer proj = new ProjectContainer();
+        FrinikaProjectContainer proj = new FrinikaProjectContainer();
         proj.getAudioServer().start();
         // Create a lane
         com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();

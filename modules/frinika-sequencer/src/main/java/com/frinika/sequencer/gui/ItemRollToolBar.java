@@ -26,7 +26,7 @@ package com.frinika.sequencer.gui;
 import com.frinika.gui.ToolbarSeperator;
 import com.frinika.gui.util.ButtonFactory;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.Insets;
@@ -59,13 +59,13 @@ public class ItemRollToolBar extends JToolBar implements ActionListener {
 
     List<ItemPanel> clients;
 
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
 
     private JButton quantizeSet;
     JPanel tools;
     ButtonGroup toolGroup;
 
-    public ItemRollToolBar(List<ItemPanel> cli, AbstractSequencerProjectContainer project) {
+    public ItemRollToolBar(List<ItemPanel> cli, SequencerProjectContainer project) {
         this.setMargin(new Insets(0, 0, 0, 0));
         this.project = project;
         FlowLayout layout = new FlowLayout(FlowLayout.CENTER, 0, 0);

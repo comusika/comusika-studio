@@ -31,7 +31,7 @@ import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.gui.TimeFormat;
 import com.frinika.sequencer.gui.TimeSelector;
 import com.frinika.sequencer.gui.partview.PartView;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.project.MultiPart;
 import java.awt.Color;
 import java.awt.Component;
@@ -64,7 +64,6 @@ import javax.swing.event.ChangeListener;
  * the range of any contained items) It's Lane defines the row of display.
  *
  * @author Paul
- *
  */
 public abstract class Part implements Item, Selectable, EditHistoryRecordable, Serializable, MenuPlugable {
 
@@ -172,7 +171,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
         if (startTick > endTick) {
             return 0;
         }
-        return (lane.project.getTempoList().getTimeAtTick(endTick) - lane.project.getTempoList().getTimeAtTick(startTick));
+        return (lane.frinikaProject.getTempoList().getTimeAtTick(endTick) - lane.frinikaProject.getTempoList().getTimeAtTick(startTick));
     }
 
     /**
@@ -181,7 +180,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
      */
     public double getStartInSecs() {
         //if (startTick > endTick ) return 0;
-        return lane.project.getTempoList().getTimeAtTick(startTick);
+        return lane.frinikaProject.getTempoList().getTimeAtTick(startTick);
     }
 
     /**
@@ -190,7 +189,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
      */
     public double getEndInSecs() {
         //if (startTick > endTick ) return 0;
-        return lane.project.getTempoList().getTimeAtTick(endTick);
+        return lane.frinikaProject.getTempoList().getTimeAtTick(endTick);
     }
 
     /**
@@ -487,7 +486,7 @@ public abstract class Part implements Item, Selectable, EditHistoryRecordable, S
             public void ok() {
                 super.ok();
                 // commit as undoable action
-                AbstractSequencerProjectContainer project = ((ProjectFrame) frame).getProjectContainer();
+                SequencerProjectContainer project = ((ProjectFrame) frame).getProjectContainer();
                 project.getEditHistoryContainer().mark(getMessage("project.menu.edit_properties"));
                 EditHistoryAction action = new EditHistoryAction() {
 

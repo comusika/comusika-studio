@@ -31,7 +31,7 @@ import com.frinika.frame.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import static com.frinika.localization.CurrentLocale.getMessage;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.About;
 import com.frinika.project.dialog.SplashDialog;
 import com.frinika.project.gui.ProjectFocusListener;
@@ -174,7 +174,7 @@ public class Simphoney2Main {
 		FrinikaFrame.addProjectFocusListener(new ProjectFocusListener() {
 
                         @Override
-			public void projectFocusNotify(ProjectContainer project) {
+			public void projectFocusNotify(FrinikaProjectContainer project) {
 				FrinikaAudioSystem.installClient(project.getAudioClient());
 			}
 

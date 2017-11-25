@@ -24,7 +24,7 @@
 package com.frinika.codeexamples;
 
 import com.frinika.frame.FrinikaFrame;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.voiceserver.AudioContext;
 import com.frinika.voiceserver.VoiceInterrupt;
@@ -135,7 +135,7 @@ public class AudioPlayBackExample {
         voiceServer.addTransmitter(voice);
 
         // Create the project container
-        final ProjectContainer proj = new ProjectContainer();
+        final FrinikaProjectContainer proj = new FrinikaProjectContainer();
 
         // Sequencer synchronization goes here
         proj.getSequencer().addSongPositionListener(new SongPositionListener() {

@@ -25,7 +25,7 @@ package com.frinika.sequencer.gui.tracker;
 
 import com.frinika.FrinikaMain;
 import com.frinika.frame.FrinikaFrame;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
 import java.awt.Dimension;
@@ -43,7 +43,7 @@ public class TrackerPanelTest {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(new Dimension(800, 600));
         // Create the project container
-        ProjectContainer proj = new ProjectContainer();
+        FrinikaProjectContainer proj = new FrinikaProjectContainer();
 //	proj.getAudioServer().start();
         // Create a lane
         com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();

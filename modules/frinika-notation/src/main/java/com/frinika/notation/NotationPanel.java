@@ -34,7 +34,7 @@ import com.frinika.sequencer.gui.selection.SelectionListener;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.Part;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ComponentEvent;
@@ -49,13 +49,13 @@ public class NotationPanel extends ItemScrollPane implements
 
     private static final long serialVersionUID = 1L;
 
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     NotationEditor notationEditor;
     NotationHeader notationHeader;
 
     MultiEventEditPanel noteEditPanel;
 
-    public NotationPanel(final AbstractSequencerProjectContainer project) {
+    public NotationPanel(final SequencerProjectContainer project) {
 
         this.project = project;
         // Create the main piano and contrller views using this as the

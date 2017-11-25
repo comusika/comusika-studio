@@ -25,7 +25,7 @@ package com.frinika.sequencer.model.tempo;
 
 import com.frinika.sequencer.FrinikaTrackWrapper;
 import com.frinika.sequencer.midi.message.TempoMessage;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,9 +63,24 @@ public class TempoList implements Serializable {
 
     private double ticksPerBeat;
 
-    AbstractSequencerProjectContainer project;
+    /**
+     * This field is used for backward compatibility / serialization purposes
+     * only.
+     */
+    @Deprecated
+    public Serializable project = null;
+
+    public transient SequencerProjectContainer frinikaProject;
 
     transient Vector<TempoListListener> listeners;
+
+    public TempoList(double ticksPerBeat, SequencerProjectContainer project) {
+        this.frinikaProject = project;
+        treeSet = new TreeMap<>();
+        list = new Vector<>();
+        this.ticksPerBeat = ticksPerBeat;
+        listeners = new Vector<>();
+    }
 
     public void addTempoListListener(TempoListListener o) {
         listeners.add(o);
@@ -99,14 +114,6 @@ public class TempoList implements Serializable {
     private void writeObject(ObjectOutputStream out) throws IOException {
         reco();
         out.defaultWriteObject();
-    }
-
-    public TempoList(double ticksPerBeat, AbstractSequencerProjectContainer project) {
-        this.project = project;
-        treeSet = new TreeMap<>();
-        list = new Vector<>();
-        this.ticksPerBeat = ticksPerBeat;
-        listeners = new Vector<>();
     }
 
     /**
@@ -144,8 +151,8 @@ public class TempoList implements Serializable {
         list.clear();
         FrinikaTrackWrapper tempoTrack = null;
 
-        if (project != null) {
-            tempoTrack = project.getTempoTrack();
+        if (frinikaProject != null) {
+            tempoTrack = frinikaProject.getTempoTrack();
             tempoTrack.clear();
         }
 
@@ -347,10 +354,6 @@ public class TempoList implements Serializable {
                     + me.getValue().bpm);
             // System.out.println(getTimeAt(me.getKey()+0.5));
         }
-    }
-
-    public static void main(String args[]) {
-
     }
 
     public int size() {

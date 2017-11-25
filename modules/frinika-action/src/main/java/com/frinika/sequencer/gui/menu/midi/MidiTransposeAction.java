@@ -24,7 +24,7 @@
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import javax.swing.JComponent;
 
 /**
@@ -36,7 +36,7 @@ public class MidiTransposeAction extends AbstractMidiAction {
 
     int transpose = 1;
 
-    public MidiTransposeAction(AbstractSequencerProjectContainer project) {
+    public MidiTransposeAction(SequencerProjectContainer project) {
         super(project, "sequencer.midi.transpose");
     }
 

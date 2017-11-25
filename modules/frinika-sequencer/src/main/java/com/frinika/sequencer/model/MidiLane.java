@@ -33,7 +33,7 @@ import com.frinika.sequencer.MidiResource;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.midi.MonitorReceiver;
 import com.frinika.sequencer.patchname.MyPatch;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.synth.Synth;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.synths.MySampler;
@@ -111,7 +111,7 @@ public class MidiLane extends Lane implements RecordableLane {
      * @param cloneMe
      */
     private MidiLane(MidiLane cloneMe) {
-        super("Copy of " + cloneMe.getName(), cloneMe.project);
+        super("Copy of " + cloneMe.getName(), cloneMe.frinikaProject);
         trackHeaderPart = (MidiPart) (cloneMe.trackHeaderPart.deepCopy(null));
         trackHeaderPart.lane = this;
         midiDeviceIndex = cloneMe.midiDeviceIndex;
@@ -133,7 +133,7 @@ public class MidiLane extends Lane implements RecordableLane {
      * @param ftw
      * @param project
      */
-    public MidiLane(FrinikaTrackWrapper ftw, AbstractSequencerProjectContainer project) {
+    public MidiLane(FrinikaTrackWrapper ftw, SequencerProjectContainer project) {
         super("Midi " + nameCount++, project);
         this.ftw = ftw;
         // cntrlList=new ControllerList(); // TODO different lists
@@ -247,7 +247,7 @@ public class MidiLane extends Lane implements RecordableLane {
     private void writeObject(ObjectOutputStream out) throws IOException {
         this.midiChannel = ftw.getMidiChannel();
         if (ftw.getMidiDevice() != null) {
-            this.midiDeviceIndex = project.getMidiDeviceIndex(ftw.getMidiDevice());
+            this.midiDeviceIndex = frinikaProject.getMidiDeviceIndex(ftw.getMidiDevice());
         }
         out.defaultWriteObject();
     }
@@ -261,7 +261,7 @@ public class MidiLane extends Lane implements RecordableLane {
         ftw.setMidiChannel(midiChannel);
         if (midiDeviceIndex != null) {
             try {
-                ftw.setMidiDevice(project.getSequencer().listMidiOutDevices().get(midiDeviceIndex));
+                ftw.setMidiDevice(frinikaProject.getSequencer().listMidiOutDevices().get(midiDeviceIndex));
             } catch (Exception e) {
                 System.out.println("WARNING: Was unable to connect to external midi device");
             }
@@ -280,11 +280,11 @@ public class MidiLane extends Lane implements RecordableLane {
          * might not be loaded before the object is entirely read. Chicken and
          * egg problem - but this solves it...
          */
-        if (this.getProject().getSequence() == null) {
-            this.getProject().createSequence();
+        if (this.project.getSequence() == null) {
+            this.project.createSequence();
         }
 
-        this.ftw = this.getProject().getSequence().createFrinikaTrack();
+        this.ftw = this.project.getSequence().createFrinikaTrack();
 
         in.defaultReadObject();
 
@@ -383,7 +383,7 @@ public class MidiLane extends Lane implements RecordableLane {
 
     @Override
     public boolean isRecording() {
-        return project.getSequencer().isRecording(this);
+        return frinikaProject.getSequencer().isRecording(this);
     }
 
     @Override
@@ -402,10 +402,10 @@ public class MidiLane extends Lane implements RecordableLane {
 
         MidiInDeviceManager.open(FrinikaConfig.getMidiInDeviceList()); // Possibly redundant now?
         if (b) {
-            project.getSequencer().recordEnable(this);
+            frinikaProject.getSequencer().recordEnable(this);
 
         } else {
-            project.getSequencer().recordDisable(this);
+            frinikaProject.getSequencer().recordDisable(this);
         }
     }
 
@@ -649,13 +649,13 @@ public class MidiLane extends Lane implements RecordableLane {
     }
 
     private void notifyFocusListeners() {
-        Part f = project.getPartSelection().getFocus();
-        if (f == null) {
+        Part part = frinikaProject.getPartSelection().getFocus();
+        if (part == null) {
             return;
         }
-        if (f.getLane() == this) {
-            project.getPartSelection().setDirty();
-            project.getPartSelection().notifyListeners();
+        if (part.getLane() == this) {
+            frinikaProject.getPartSelection().setDirty();
+            frinikaProject.getPartSelection().notifyListeners();
         }
     }
 
@@ -711,7 +711,7 @@ public class MidiLane extends Lane implements RecordableLane {
         if (midiDeviceIndex == null) {
             this.midiChannel = ftw.getMidiChannel();
             if (ftw.getMidiDevice() != null) {
-                this.midiDeviceIndex = project.getMidiDeviceIndex(ftw.getMidiDevice());
+                this.midiDeviceIndex = frinikaProject.getMidiDeviceIndex(ftw.getMidiDevice());
             }
         }
 //        //-----------------

@@ -22,7 +22,7 @@
  */
 package com.frinika.simphoney;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.FrinikaTrackWrapper;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.ControllerEvent;
@@ -50,7 +50,7 @@ public class SimphoneyRecordManager extends RecordingManager {
     private boolean createTakeRequest=false;
        
     public SimphoneyRecordManager(ProjectFrame frame) {
-        super((ProjectContainer) frame.getProjectContainer(), 1000);
+        super((FrinikaProjectContainer) frame.getProjectContainer(), 1000);
         this.frame = frame;
     //    puncEvent = null;
         loopMarker = new BooleanControl(0, "loopMarker", false, true) {

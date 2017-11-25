@@ -29,7 +29,7 @@ import com.frinika.sequencer.gui.pianoroll.DragEventListener;
 import com.frinika.sequencer.gui.pianoroll.FeedbackEventListener;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -64,13 +64,13 @@ import java.util.Vector;
 @SuppressWarnings("serial")
 public class DragList extends Vector<Item> {
 
-    private AbstractSequencerProjectContainer project;
+    private SequencerProjectContainer project;
     transient Vector<DragEventListener> dragEventListeners;
     transient Vector<FeedbackEventListener> feedbackEventListeners;
     private Item dragItem;
 
 //	MultiEvent referenceItem;
-    public DragList(AbstractSequencerProjectContainer project) {
+    public DragList(SequencerProjectContainer project) {
         this.project = project;
         dragEventListeners = new Vector<>();
         feedbackEventListeners = new Vector<>();

@@ -25,10 +25,10 @@ package com.frinika.project.gui.action;
 
 import com.frinika.gui.AbstractDialog;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.FrinikaScript;
 import com.frinika.project.scripting.gui.ScriptingDialog;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -53,17 +53,17 @@ public class ScriptingAction extends AbstractAction {
 
     public final static String actionId = "sequencer.project.scripting"; // also accessed by ScriptingDialog
 
-    private AbstractSequencerProjectContainer project;
+    private SequencerProjectContainer project;
     private FrinikaScript script;
     private ScriptingDialog scriptingDialog;
 
-    public ScriptingAction(AbstractSequencerProjectContainer project) {
+    public ScriptingAction(SequencerProjectContainer project) {
         super(CurrentLocale.getMessage(actionId));
         this.project = project;
         script = null;
     }
 
-    public ScriptingAction(AbstractSequencerProjectContainer project, FrinikaScript script) {
+    public ScriptingAction(SequencerProjectContainer project, FrinikaScript script) {
         super(script.getName());
         this.project = project;
         this.script = script;
@@ -71,7 +71,7 @@ public class ScriptingAction extends AbstractAction {
     }
 
     public void initDialog(JMenu scriptingSubmenu) { // must be called extra, after menu-item as been added to submenu
-        scriptingDialog = new ScriptingDialog(new AbstractDialog(), (ProjectContainer) project, scriptingSubmenu);
+        scriptingDialog = new ScriptingDialog(new AbstractDialog(), (FrinikaProjectContainer) project, scriptingSubmenu);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ScriptingAction extends AbstractAction {
                 scriptingDialog.setVisible(true);
             }
         } else {
-            ((ProjectContainer) project).getScriptingEngine().executeScript(script, (ProjectContainer) project, null);
+            ((FrinikaProjectContainer) project).getScriptingEngine().executeScript(script, (FrinikaProjectContainer) project, null);
         }
     }
 }

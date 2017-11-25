@@ -25,7 +25,7 @@ package com.frinika.project.scripting.javascript;
 
 import com.frinika.localization.CurrentLocale;
 import com.frinika.base.MessageDialog;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 import com.frinika.sequencer.FrinikaSequencer;
@@ -405,7 +405,7 @@ public class JavascriptScope extends ScriptableObject {
 
     private Context context;
 
-    private ProjectContainer project;
+    private FrinikaProjectContainer project;
 
     private ScriptingDialog dialog;
 
@@ -420,7 +420,7 @@ public class JavascriptScope extends ScriptableObject {
      * @param project
      * @param events
      */
-    public JavascriptScope(Context context, ProjectContainer project, SortedSet<MultiEvent> events, ScriptingDialog dialog) {
+    public JavascriptScope(Context context, FrinikaProjectContainer project, SortedSet<MultiEvent> events, ScriptingDialog dialog) {
         super();
         this.context = context;
         this.project = project;
@@ -760,9 +760,9 @@ public class JavascriptScope extends ScriptableObject {
     // --- inner classes (for exposed variables "selection" etc.) ---
     public class Song {
 
-        private ProjectContainer p;
+        private FrinikaProjectContainer p;
 
-        Song(ProjectContainer p) {
+        Song(FrinikaProjectContainer p) {
             this.p = p;
         }
 

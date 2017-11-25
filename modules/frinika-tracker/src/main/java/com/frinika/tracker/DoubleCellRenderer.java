@@ -34,9 +34,6 @@ public class DoubleCellRenderer extends DefaultTableCellRenderer {
 
     static DecimalFormat numberFormat = new DecimalFormat("0.00");
 
-    /* (non-Javadoc)
-	 * @see javax.swing.JLabel#getText()
-     */
     @Override
     public String getText() {
         try {

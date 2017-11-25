@@ -24,7 +24,7 @@
 
 package com.frinika.radio;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,7 +53,7 @@ public class LocalOGGHttpRadio {
 
     final int port = 15000;
 
-    ProjectContainer project = null;
+    FrinikaProjectContainer project = null;
 
     private LocalOGGHttpRadio()
     {
@@ -119,7 +119,7 @@ public class LocalOGGHttpRadio {
         }
     }
 
-    public static void startRadio(ProjectContainer project)
+    public static void startRadio(FrinikaProjectContainer project)
     {
         instance.project = project;
         instance.startListener();

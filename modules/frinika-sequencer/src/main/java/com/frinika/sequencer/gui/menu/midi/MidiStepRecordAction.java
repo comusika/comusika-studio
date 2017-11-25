@@ -33,7 +33,7 @@ import com.frinika.sequencer.gui.partview.PartView;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -54,11 +54,11 @@ public class MidiStepRecordAction extends AbstractAction {
     int lengthDiff = -4;
     int velocity = 100;
     boolean autoRecord = true;
-    private AbstractSequencerProjectContainer project;
+    private SequencerProjectContainer project;
     private MidiStepRecordActionDialog dialog;
     MidiPart part;
 
-    public MidiStepRecordAction(AbstractSequencerProjectContainer project) {
+    public MidiStepRecordAction(SequencerProjectContainer project) {
         super(CurrentLocale.getMessage(actionId));
         this.project = project;
     }

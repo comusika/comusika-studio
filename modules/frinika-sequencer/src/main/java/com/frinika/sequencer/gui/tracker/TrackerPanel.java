@@ -43,7 +43,7 @@ import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.Part;
 import com.frinika.sequencer.model.PitchBendEvent;
 import com.frinika.sequencer.model.SysexEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.tracker.DoubleCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -116,12 +116,9 @@ import javax.swing.table.TableColumn;
  */
 public class TrackerPanel extends JPanel implements SelectionListener<Part>, SongPositionListener {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     MidiPart part;
     int playingRow = 0;
 
@@ -152,7 +149,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
         });
     }
 
-    public TrackerPanel(FrinikaSequence sequence, AbstractSequencerProjectContainer project) {
+    public TrackerPanel(FrinikaSequence sequence, SequencerProjectContainer project) {
         this.project = project;
         this.multiEventSelectionContainer = project.getMultiEventSelection();
         initComponents();
@@ -206,11 +203,9 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
                             }
                         }
                     }
-
                 }
             }
         }
-
     };
 
     MidiMessageListener listener = new MidiMessageListener() {
@@ -238,7 +233,6 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
         }
         listenlane = ((MidiLane) lane);
         project.getSequencer().addMidiMessageListener(listener);
-
     }
 
     void disconnectMidiListener() {
@@ -438,7 +432,6 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
                                     } else {
                                         setBackground(row_background);
                                     }
-
                                 }
                             }
                         }
@@ -446,7 +439,6 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
 
                     return this;
                 }
-
             }
 
             TrackerTableCellRender renderer = new TrackerTableCellRender();
@@ -680,7 +672,6 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
                     super.tableChanged(e);
                 }
             }
-
         };
 
         table.addFocusListener(new FocusListener() {
@@ -955,9 +946,7 @@ public class TrackerPanel extends JPanel implements SelectionListener<Part>, Son
 
     @Override
     public void selectionChanged(SelectionContainer<? extends Part> src) {
-
         setPartToFocus();
-
     }
 
     @Override

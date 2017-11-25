@@ -34,16 +34,11 @@ public class MidiFileFilter extends FileFilter {
 
     @Override
     public boolean accept(File file) {
-
-        if (file.getName().toLowerCase().indexOf(".mid") > 0 || file.isDirectory()) {
-            return true;
-        } else {
-            return false;
-        }
+        return file.getName().toLowerCase().indexOf(".mid") > 0 || file.isDirectory();
     }
 
     @Override
     public String getDescription() {
-        return "Standard Midi File";
+        return "Standard Midi File (*.mid)";
     }
 }

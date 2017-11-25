@@ -26,7 +26,8 @@ package com.frinika.sequencer.model;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.model.EditHistoryRecordableAction;
 import com.frinika.model.EditHistoryRecorder;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectSerializer;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -74,7 +75,17 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 
     private String name;
 
-    AbstractSequencerProjectContainer project;
+    /**
+     * This field is used for backward compatibility / serialization purposes
+     * only.
+     */
+    @Deprecated
+    public SequencerProjectSerializer project = null;
+
+    /**
+     * Please don't use this field directly. Used only for serialization.
+     */
+    public transient SequencerProjectContainer frinikaProject;
 
     /*
 	 * to save the position in the children list. Only for use by the add/remove
@@ -88,9 +99,9 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
     protected Lane() {
     }
 
-    protected Lane(String name, AbstractSequencerProjectContainer project) {
+    protected Lane(String name, SequencerProjectContainer project) {
         height = 1; // Layout.getLaneItemHeight();
-        this.project = project;
+        this.frinikaProject = project;
         parts = new Vector<>();
         children = new Vector<>();
         setName(name);
@@ -126,9 +137,9 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
             parts.remove(part);
         }
         if (part.isSelected()) {
-            part.lane.project.getPartSelection().removeSelected(part);
+            part.lane.frinikaProject.getPartSelection().removeSelected(part);
         }
-        project.getEditHistoryContainer().push(this,
+        frinikaProject.getEditHistoryContainer().push(this,
                 EditHistoryRecordableAction.EDIT_HISTORY_TYPE_REMOVE, part);
     }
 
@@ -141,7 +152,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 
         part.lane = this;
         part.commitEventsAdd();
-        project.getEditHistoryContainer().push(this,
+        frinikaProject.getEditHistoryContainer().push(this,
                 EditHistoryRecordableAction.EDIT_HISTORY_TYPE_ADD, part);
     }
 
@@ -156,8 +167,8 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
 //	public int getColorID() {
 //		return colorID;
 //	}
-    public AbstractSequencerProjectContainer getProject() {
-        return project;
+    public SequencerProjectContainer getProject() {
+        return frinikaProject;
     }
 
     @Override
@@ -335,7 +346,7 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
      */
     @Override
     public void removeFromModel() {
-        project.remove(this);
+        frinikaProject.remove(this);
         detachComponents();
         System.out.println(" REMOVE LANE ");
     }
@@ -356,14 +367,13 @@ public abstract class Lane implements Selectable, EditHistoryRecordable,
      */
     @Override
     public void addToModel() {
-        project.add(this);
+        frinikaProject.add(this);
         attachComponents();
         System.out.println(" Add LANE ");
     }
 
     /**
      * For undo/redo
-     *
      */
     private void attachComponents() {
 //		for (Part part : getParts()) {

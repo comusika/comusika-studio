@@ -33,7 +33,7 @@ import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.PitchBendEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -65,7 +65,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
     long resolution = 16;
     ControllerFunction function;
 
-    public MidiInsertControllersAction(AbstractSequencerProjectContainer project) {
+    public MidiInsertControllersAction(SequencerProjectContainer project) {
         super(project, "sequencer.midi.insert_controllers");
         initControllerFunctions();
         function = availableFunctions.iterator().next(); // first one by default
@@ -167,7 +167,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
 
     @Override
     protected JComponent createGUI() {
-        return new MidiInsertControllersActionEditor((AbstractSequencerProjectContainer) project, this);
+        return new MidiInsertControllersActionEditor((SequencerProjectContainer) project, this);
     }
 
     @Override
@@ -303,7 +303,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
         protected void createGUIExtra(JPanel panel) {
             panel.add(new JPanel()); // spacer
             panel.add(new JLabel("Interval"));
-            final TimeSelector phaseTimeSelector = new TimeSelector(phase, (AbstractSequencerProjectContainer) project, TimeFormat.BAR_BEAT_TICK);
+            final TimeSelector phaseTimeSelector = new TimeSelector(phase, (SequencerProjectContainer) project, TimeFormat.BAR_BEAT_TICK);
             phaseTimeSelector.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent e) {
@@ -312,7 +312,7 @@ public class MidiInsertControllersAction extends AbstractMidiAction {
             });
             panel.add(phaseTimeSelector);
             panel.add(new JLabel("Shift"));
-            final TimeSelector shiftTimeSelector = new TimeSelector(shift, (AbstractSequencerProjectContainer) project, TimeFormat.BAR_BEAT_TICK);
+            final TimeSelector shiftTimeSelector = new TimeSelector(shift, (SequencerProjectContainer) project, TimeFormat.BAR_BEAT_TICK);
             phaseTimeSelector.addChangeListener(new ChangeListener() {
                 @Override
                 public void stateChanged(ChangeEvent e) {

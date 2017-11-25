@@ -32,25 +32,15 @@ import javax.swing.filechooser.FileFilter;
  */
 public class ProjectFileFilter extends FileFilter {
 
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-     */
     @Override
     public boolean accept(File f) {
-        if (f.getName().toLowerCase().indexOf(".frinika") > 0
+        return f.getName().toLowerCase().indexOf(".frinika") > 0
                 || f.getName().toLowerCase().indexOf(".mystudio") > 0
-                || f.isDirectory()) {
-            return true;
-        } else {
-            return false;
-        }
+                || f.isDirectory();
     }
 
-    /* (non-Javadoc)
-     * @see javax.swing.filechooser.FileFilter#getDescription()
-     */
     @Override
     public String getDescription() {
-        return "Frinika project";
+        return "Frinika project (*.frinika)";
     }
 }

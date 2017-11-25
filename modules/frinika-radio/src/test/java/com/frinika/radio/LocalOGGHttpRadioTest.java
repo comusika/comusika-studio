@@ -23,7 +23,7 @@
 package com.frinika.radio;
 
 import com.frinika.project.MidiDeviceDescriptor;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
@@ -78,7 +78,7 @@ public class LocalOGGHttpRadioTest {
         final String[] returnedEncoding = new String[1];
         final byte[] returnedData = new byte[65536];
 
-        ProjectContainer projectContainer = new ProjectContainer();
+        FrinikaProjectContainer projectContainer = new FrinikaProjectContainer();
 
         MidiDevice dev = null;
         for(MidiDevice.Info info : MidiSystem.getMidiDeviceInfo())

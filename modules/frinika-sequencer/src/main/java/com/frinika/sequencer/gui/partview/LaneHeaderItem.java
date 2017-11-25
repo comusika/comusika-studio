@@ -12,7 +12,7 @@ import com.frinika.sequencer.model.RecordableLane;
 import com.frinika.sequencer.model.SoloManager;
 import com.frinika.sequencer.model.SynthLane;
 import com.frinika.sequencer.model.TextLane;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -68,14 +68,14 @@ public class LaneHeaderItem extends JPanel implements Observer, MenuPlugable {
     private boolean notify = true;
 
     // private int dy=-1;
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     Color voice_selected_background;
     Color voice_unselected_background;
     JLabel midiLaneLabel;
     SoloManager soloManager;
     LaneHeaderPanel parent;
 
-    public LaneHeaderItem(final AbstractSequencerProjectContainer project,
+    public LaneHeaderItem(final SequencerProjectContainer project,
             final LaneHeaderPanel parent, final Lane lane, int index) {
         this.lane = lane;
         this.parent = parent;

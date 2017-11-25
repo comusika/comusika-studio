@@ -26,7 +26,7 @@ package com.frinika.sequencer.gui.menu.midi;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.util.Collection;
 import javax.swing.JComponent;
 
@@ -46,13 +46,13 @@ public class MidiDurationAction extends AbstractMidiAction {
     long changeTicks = 16;
     int legatoGap = 1;
 
-    public MidiDurationAction(AbstractSequencerProjectContainer project) {
+    public MidiDurationAction(SequencerProjectContainer project) {
         super(project, "sequencer.midi.duration");
     }
 
     @Override
     protected JComponent createGUI() {
-        return new MidiDurationActionEditor(this, (AbstractSequencerProjectContainer) project);
+        return new MidiDurationActionEditor(this, (SequencerProjectContainer) project);
     }
 
     @Override

@@ -24,7 +24,7 @@ package com.frinika.codeexamples;
 
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.frame.FrinikaFrame;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.Lane;
@@ -67,7 +67,7 @@ public class MidiPlayer {
         //  URL url = new URL("http://www.notz.com/music/jazz/midi/rndmdngt.mid");
         //     File file = new File("/home/pjl/MIDI/www.alisdair.com/skylark.mid");
         System.out.println(" Load midi into a new project ");
-        ProjectContainer proj = new ProjectContainer(MidiSystem.getSequence(url), null);
+        FrinikaProjectContainer proj = new FrinikaProjectContainer(MidiSystem.getSequence(url), null);
         proj.addMidiOutDevice(sw);
 
         for (Lane lane : proj.getLanes()) {

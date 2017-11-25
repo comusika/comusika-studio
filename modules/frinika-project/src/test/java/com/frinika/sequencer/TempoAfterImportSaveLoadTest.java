@@ -1,6 +1,6 @@
 package com.frinika.sequencer;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiEvent;
@@ -30,53 +30,48 @@ import junit.framework.TestCase;
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 /**
  * @author Peter Johan Salomonsen
  */
 public class TempoAfterImportSaveLoadTest extends TestCase {
 
-	Sequence seq;
-	float tempo = 114;
-	int resolution = 480;
-	
-        @Override
+    Sequence seq;
+    float tempo = 114;
+    int resolution = 480;
+
+    @Override
     protected void setUp() throws Exception {
-        super.setUp();	
-        seq = new Sequence(Sequence.PPQ, resolution,1);
-		
+        super.setUp();
+        seq = new Sequence(Sequence.PPQ, resolution, 1);
 
-		
-		int mpq = (int)(60000000 / tempo);
-		try
-		{
-			MetaMessage tempoMsg = new MetaMessage();
-			tempoMsg.setMessage(0x51,new byte[] {
-				(byte)(mpq>>16 & 0xff),
-				(byte)(mpq>>8 & 0xff),
-				(byte)(mpq & 0xff)
-			},3);
-			MidiEvent tempoEvent = new MidiEvent(tempoMsg,0);
+        int mpq = (int) (60000000 / tempo);
+        try {
+            MetaMessage tempoMsg = new MetaMessage();
+            tempoMsg.setMessage(0x51, new byte[]{
+                (byte) (mpq >> 16 & 0xff),
+                (byte) (mpq >> 8 & 0xff),
+                (byte) (mpq & 0xff)
+            }, 3);
+            MidiEvent tempoEvent = new MidiEvent(tempoMsg, 0);
             seq.getTracks()[0].add(tempoEvent);
-		} catch (InvalidMidiDataException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        }
+    }
 
-    public void testImportMidi()
-    {
-    		try {
-				ProjectContainer proj = new ProjectContainer(seq);
-                                proj.getSequencer().start();
-                                Thread.sleep(100);
-                                proj.getSequencer().stop();
-				assertEquals((int)tempo,(int)proj.getSequencer().getTempoInBPM());
-			// 	assertEquals(tempo,proj.getTempo());
-				assertEquals(resolution,proj.getSequence().getResolution());
+    public void testImportMidi() {
+        try {
+            FrinikaProjectContainer proj = new FrinikaProjectContainer(seq);
+            proj.getSequencer().start();
+            Thread.sleep(100);
+            proj.getSequencer().stop();
+            assertEquals((int) tempo, (int) proj.getSequencer().getTempoInBPM());
+            // 	assertEquals(tempo,proj.getTempo());
+            assertEquals(resolution, proj.getSequence().getResolution());
 
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

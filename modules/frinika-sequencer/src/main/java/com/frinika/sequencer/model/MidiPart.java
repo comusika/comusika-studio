@@ -299,7 +299,7 @@ public class MidiPart extends Part implements EditHistoryRecorder<MultiEvent> {
         if (multiEventEndTickComparables != null) {
             multiEventEndTickComparables.remove(multiEvent.getMultiEventEndTickComparable());
         }
-        lane.project.getMultiEventSelection().removeSelected(multiEvent);
+        lane.frinikaProject.getMultiEventSelection().removeSelected(multiEvent);
         setChanged();
         getEditHistoryContainer().push(this, EditHistoryRecordableAction.EDIT_HISTORY_TYPE_REMOVE, multiEvent);
         //    System. out.println("removed "+multiEvent.toString());

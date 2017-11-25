@@ -23,24 +23,28 @@
 package com.frinika.sequencer.model;
 
 import com.frinika.model.EditHistoryRecordable;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectSerializer;
 import java.util.Vector;
 import javax.swing.Icon;
 
 /*
- * 
  * Top level lane container for a project.
  * A project has one of these and it is the root for all the other lanes.
  * 
  * The intention is that the part for this lane will provide an view and interface move editing complete vertical sections of the project.
- * 
- * 
  */
 public class ProjectLane extends Lane {
 
     private static final long serialVersionUID = 1L;
 
-    AbstractSequencerProjectContainer project;
+    /**
+     * This field is used for backward compatibility / serialization purposes
+     * only.
+     */
+    @Deprecated
+    public SequencerProjectSerializer project = null;
+
     Vector<LaneTreeListener> laneTreeListeners;
 
     {
@@ -48,16 +52,15 @@ public class ProjectLane extends Lane {
     }
 
     /**
-     * Public constructor for de-externalization
-     *
+     * Public constructor for de-externalization.
      */
     public ProjectLane() {
-
+        super();
     }
 
-    public ProjectLane(AbstractSequencerProjectContainer project) {
+    public ProjectLane(SequencerProjectContainer project) {
         super("project", project);
-        this.project = project;
+        this.frinikaProject = project;
         setHidden(true);
     }
 
@@ -70,7 +73,6 @@ public class ProjectLane extends Lane {
         for (LaneTreeListener l : laneTreeListeners) {
             l.fireLaneTreeChanged();
         }
-
     }
 
     @Override

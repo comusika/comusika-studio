@@ -24,7 +24,7 @@
 package com.frinika.codeexamples;
 
 import com.frinika.global.FrinikaConfig;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.voiceserver.AudioContext;
@@ -59,7 +59,7 @@ public class QuickSession {
          * Create a project with an Audio lane and a Midi lane
          */
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-        ProjectContainer project = ProjectContainer.loadProject(new File(fmt.format(new Date()) + ".frinika"));
+        FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(new File(fmt.format(new Date()) + ".frinika"));
         AudioLane audioLane = project.createAudioLane();
 
         // TOOT_FIXME

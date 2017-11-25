@@ -26,7 +26,7 @@ package com.frinika.sequencer.gui;
 import com.frinika.global.ProjectFrameIntf;
 import com.frinika.sequencer.gui.partview.VoicePartViewSplitPane;
 import com.frinika.sequencer.gui.tracker.TrackerPanel;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.tootX.midi.MidiLearnIF;
 import java.awt.Component;
@@ -74,7 +74,7 @@ public interface ProjectFrame extends ProjectFrameIntf {
 
     void tryQuit();
 
-    AbstractSequencerProjectContainer getProjectContainer();
+    SequencerProjectContainer getProjectContainer();
 
     /**
      *

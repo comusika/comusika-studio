@@ -24,7 +24,7 @@
 package com.frinika.sequencer.gui.menu.midi;
 
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import javax.swing.JComponent;
 
 /**
@@ -36,13 +36,13 @@ public class MidiShiftAction extends AbstractMidiAction {
 
     long d;
 
-    public MidiShiftAction(AbstractSequencerProjectContainer project) {
+    public MidiShiftAction(SequencerProjectContainer project) {
         super(project, "sequencer.midi.shift");
     }
 
     @Override
     protected JComponent createGUI() {
-        return new AbstractTimeSelectorMidiActionEditor<MidiShiftAction>((AbstractSequencerProjectContainer) project, this) {
+        return new AbstractTimeSelectorMidiActionEditor<MidiShiftAction>((SequencerProjectContainer) project, this) {
 
             @Override
             protected String getLabel() {

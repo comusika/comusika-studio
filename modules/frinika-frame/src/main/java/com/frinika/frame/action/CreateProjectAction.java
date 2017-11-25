@@ -26,7 +26,7 @@ package com.frinika.frame.action;
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.ProjectFileFilter;
 import java.awt.event.ActionEvent;
@@ -44,7 +44,7 @@ public class CreateProjectAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
 
         try {
-            frame = new FrinikaFrame(new ProjectContainer());
+            frame = new FrinikaFrame(new FrinikaProjectContainer());
         } catch (Exception e3) {
             // TODO Auto-generated catch block
             e3.printStackTrace();
@@ -67,7 +67,7 @@ public class CreateProjectAction extends AbstractAction {
 
         try {
 
-            frame = new FrinikaFrame(new ProjectContainer());
+            frame = new FrinikaFrame(new FrinikaProjectContainer());
         } catch (Exception e2) {
             // TODO Auto-generated catch block
             e2.printStackTrace();
@@ -93,7 +93,7 @@ public class CreateProjectAction extends AbstractAction {
                     }
                 }
 
-                frame = new FrinikaFrame(ProjectContainer
+                frame = new FrinikaFrame(FrinikaProjectContainer
                         .loadProject(newProject));
                 FrinikaConfig.setLastProjectFilename(newProject
                         .getAbsolutePath());

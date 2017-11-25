@@ -25,7 +25,7 @@ package com.frinika.sequencer.project.mididevices.gui;
 
 import com.frinika.sequencer.gui.mixer.MidiDeviceMixerPanel;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,9 +42,9 @@ import javax.swing.JTabbedPane;
 public class MidiDevicesPanel extends JPanel {
 
     JTabbedPane deviceTabs;
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
 
-    public MidiDevicesPanel(final AbstractSequencerProjectContainer project) {
+    public MidiDevicesPanel(final SequencerProjectContainer project) {
         this.project = project;
 
         setLayout(new BorderLayout());
@@ -90,7 +90,7 @@ public class MidiDevicesPanel extends JPanel {
         updateDeviceTabs();
     }
 
-    public AbstractSequencerProjectContainer getProject() {
+    public SequencerProjectContainer getProject() {
         return project;
     }
 }

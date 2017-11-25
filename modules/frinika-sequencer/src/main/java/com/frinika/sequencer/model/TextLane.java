@@ -25,7 +25,7 @@ package com.frinika.sequencer.model;
 
 import com.frinika.global.Toolbox;
 import com.frinika.model.EditHistoryRecordable;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -44,14 +44,14 @@ public class TextLane extends Lane {
 
     private static final long serialVersionUID = 1L;
 
-    transient protected ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
+    transient protected List<ChangeListener> changeListeners = new ArrayList<>();
 
     static Icon iconTextLane = new javax.swing.ImageIcon(
             TextLane.class.getResource("/icons/new_track_text.gif"));
 
     static int nameCount = 0;
 
-    public TextLane(AbstractSequencerProjectContainer project) {
+    public TextLane(SequencerProjectContainer project) {
         super("Text " + nameCount++, project);
         long ticks = project.getSequencer().getTickPosition();
         createNewTextPart(ticks);
@@ -80,7 +80,7 @@ public class TextLane extends Lane {
     }
 
     public String getAllText(String delim) {
-        ArrayList<String> l = new ArrayList<>();
+        List<String> l = new ArrayList<>();
         for (Part p : getParts()) {
             String s = ((TextPart) p).getText().trim();
             l.add(s);

@@ -28,7 +28,7 @@ import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.sequencer.FrinikaSequencer;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
 import com.frinika.tools.ProgressBarInputStream;
 import java.awt.Font;
@@ -48,12 +48,12 @@ public class RenderDialog extends JDialog implements Runnable {
     JProgressBar progressBar;
     MyMidiRenderer midiRenderer;
 
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
 
     int numberOfSamples;
 
     public RenderDialog(JFrame frame,
-            AbstractSequencerProjectContainer project,
+            SequencerProjectContainer project,
             long startTick,
             long endTick) {
         super(frame, true);

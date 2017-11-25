@@ -112,7 +112,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
      *
      * @param project
      */
-    final public void install(ProjectContainer project) {
+    final public void install(FrinikaProjectContainer project) {
         if (isInstalled) {
             return;
         }
@@ -150,7 +150,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
         setProjectName(projectName);
     }
 
-    private void attachToSynthLane(ProjectContainer project) {
+    private void attachToSynthLane(FrinikaProjectContainer project) {
 
         // **************** PJL
         // System. out.println(" Resolving Synth lane ");
@@ -190,7 +190,7 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
      *
      * @param project
      */
-    protected void installImp(ProjectContainer project) {
+    protected void installImp(FrinikaProjectContainer project) {
         MidiDevice dev = null;
 
         try {
@@ -241,12 +241,12 @@ public class MidiDeviceDescriptor implements MidiDeviceDescriptorIntf, Serializa
 
     @Override
     public Icon getIcon() {
-        return ProjectContainer.getMidiDeviceIcon(midiDevice);
+        return FrinikaProjectContainer.getMidiDeviceIcon(midiDevice);
     }
 
     @Override
     public Icon getLargeIcon() {
-        return ProjectContainer.getMidiDeviceLargeIcon(midiDevice);
+        return FrinikaProjectContainer.getMidiDeviceLargeIcon(midiDevice);
     }
 
     @Override

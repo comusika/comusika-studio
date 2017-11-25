@@ -33,7 +33,7 @@ import javax.swing.JComboBox;
  */
 public class ChannelComboBox extends JComboBox implements GlobalInstrumentNameListener {
 
-    private SynthRack synth;
+    private final SynthRack synth;
 
     public ChannelComboBox(SynthRack synth) {
         this.synth = synth;

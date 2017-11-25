@@ -27,7 +27,6 @@ import com.frinika.synth.settings.SynthSettings;
 
 /**
  * @author Peter Johan Salomonsen
- *
  */
 public interface ProjectSettings {
 

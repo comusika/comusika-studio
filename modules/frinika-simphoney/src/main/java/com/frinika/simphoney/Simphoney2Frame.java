@@ -25,11 +25,11 @@ package com.frinika.simphoney;
 
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.midi.MidiMessageListener;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.project.RecordingManager;
 import com.frinika.tootX.gui.ControlFocus;
-import com.frinika.tootX.midi.MidiRouterSerialization; 
+import com.frinika.tootX.midi.MidiRouterSerialization;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import javax.swing.JFrame;
@@ -42,25 +42,19 @@ import uk.org.toot.swingui.controlui.BooleanControlPanel;
 
 public class Simphoney2Frame extends JFrame {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1L;
-    private ProjectContainer project;
+    private FrinikaProjectContainer project;
     private Viewport viewport;
 //    FrinikaGAWrapper wrapper;
     JPanel content;
-    
-    
+
     ControlFocus controlFocus;
-    
 
     Simphoney2Frame(ProjectFrame projectFrame) {
-        this.project = (ProjectContainer) projectFrame.getProjectContainer();
-        controlFocus=new ControlFocus(projectFrame.getMidiLearnIF());
+        this.project = (FrinikaProjectContainer) projectFrame.getProjectContainer();
+        controlFocus = new ControlFocus(projectFrame.getMidiLearnIF());
 
         // detach current recordingManager
-
         for (MidiMessageListener l : project.getSequencer().getMidiMessageListeners()) {
             if (l instanceof RecordingManager) {
                 project.getSequencer().removeMidiMessageListener(l);
@@ -68,16 +62,15 @@ public class Simphoney2Frame extends JFrame {
             }
         }
 
-        SimphoneyRecordManager rec=new SimphoneyRecordManager(projectFrame);
+        SimphoneyRecordManager rec = new SimphoneyRecordManager(projectFrame);
 
-        BooleanControl loop=rec.getLoopMarkerControl();
+        BooleanControl loop = rec.getLoopMarkerControl();
         project.getControlResolver().register(loop);
-        JPanel loopBut=new BooleanControlPanel(loop);
+        JPanel loopBut = new BooleanControlPanel(loop);
         controlFocus.addComponent(loopBut);
-        
-  //      createWrapper();
-        createMenus();
 
+        //      createWrapper();
+        createMenus();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -85,9 +78,9 @@ public class Simphoney2Frame extends JFrame {
 
         content = new JPanel(new BorderLayout());
         setContentPane(content);
-        content.add(loopBut,BorderLayout.NORTH);
-        
-        content.add((JPanel)projectFrame.getMidiLearnIF(),BorderLayout.SOUTH);
+        content.add(loopBut, BorderLayout.NORTH);
+
+        content.add((JPanel) projectFrame.getMidiLearnIF(), BorderLayout.SOUTH);
 //
 //		viewport = new Viewport();
 //
@@ -102,30 +95,25 @@ public class Simphoney2Frame extends JFrame {
         setBounds(rect);
 
         // plugin context menus
-
-
-
-     //   content.add(new PlayerFocusPanel(wrapper));
-
+        //   content.add(new PlayerFocusPanel(wrapper));
 //        wrapper.setListening(true);
-
-        MidiRouterSerialization s=project.getMidiRouterSerialization();
-        if (s != null) s.buildDeviceRouter(project.getControlResolver(),
+        MidiRouterSerialization s = project.getMidiRouterSerialization();
+        if (s != null) {
+            s.buildDeviceRouter(project.getControlResolver(),
                     project.getMidiDeviceRouter());
-        else
+        } else {
             System.out.println(" MidiRouter serializer is null ");
+        }
     }
 
 //    void createWrapper() {
 //        wrapper = new FrinikaGAWrapper(project);
 //    }
-
     @SuppressWarnings("serial")
     void createMenus() {
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         JMenu menu = new JMenu("AI");
-
 
 //        MenuPlugin plugin = new SimphoneyPartMenuPlugin(wrapper);
 //        Part.addPluginRightButtonMenu(plugin);

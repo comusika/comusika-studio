@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
@@ -124,9 +123,6 @@ public class AboutPanel extends javax.swing.JPanel {
             + "<br></html>";
 
     private static final long serialVersionUID = 1L;
-
-    int sel = 0;
-    int ix = 0;
 
     public void showLicense() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -254,8 +250,8 @@ public class AboutPanel extends javax.swing.JPanel {
         panel.add(label, BorderLayout.NORTH);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setOpaque(false);
 
         {
             JButton button = new JButton("License");
@@ -265,7 +261,8 @@ public class AboutPanel extends javax.swing.JPanel {
                     showLicense();
                 }
             });
-            buttonPanel.add(button);
+            button.setOpaque(false);
+            buttonsPanel.add(button);
         }
 
         {
@@ -276,7 +273,8 @@ public class AboutPanel extends javax.swing.JPanel {
                     showCredits();
                 }
             });
-            buttonPanel.add(button);
+            button.setOpaque(false);
+            buttonsPanel.add(button);
         }
 
         {
@@ -287,7 +285,8 @@ public class AboutPanel extends javax.swing.JPanel {
                     showSystemInfo();
                 }
             });
-            buttonPanel.add(button);
+            button.setOpaque(false);
+            buttonsPanel.add(button);
         }
 
         {
@@ -300,10 +299,11 @@ public class AboutPanel extends javax.swing.JPanel {
             });
             okButton.setDefaultCapable(true);
             // getRootPane().setDefaultButton(okButton);
-            buttonPanel.add(okButton);
+            okButton.setOpaque(false);
+            buttonsPanel.add(okButton);
         }
 
-        panel.add(buttonPanel, BorderLayout.CENTER);
+        panel.add(buttonsPanel, BorderLayout.CENTER);
 
         JPanel copyrightPanel = new JPanel();
         copyrightPanel.setOpaque(false);

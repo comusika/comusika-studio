@@ -33,7 +33,7 @@ import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequence;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,10 +74,9 @@ public class SynthLane extends Lane implements RecordableLane {
     transient boolean isInstalled = false;
 
     public SynthLane() {
-
     }
 
-    public SynthLane(AbstractSequencerProjectContainer project, MidiDeviceDescriptorIntf desc) {
+    public SynthLane(SequencerProjectContainer project, MidiDeviceDescriptorIntf desc) {
         super(null, project);
         install(desc);
         channelLabel = new MetaInfo(getName());
@@ -121,8 +120,7 @@ public class SynthLane extends Lane implements RecordableLane {
         };
 
         try {
-            mixerControls = project.addMixerInput(audioProcess, (stripNo++)
-                    + "X");
+            mixerControls = frinikaProject.addMixerInput(audioProcess, (stripNo++) + "X");
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -197,7 +195,6 @@ public class SynthLane extends Lane implements RecordableLane {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
                 return false;
-
             }
         }
 
@@ -262,7 +259,7 @@ public class SynthLane extends Lane implements RecordableLane {
             return clipFile;
         }
 
-        AbstractSequencerProjectContainer proj = getProject();
+        SequencerProjectContainer proj = getProject();
         File audioDir = proj.getAudioDirectory();
         String audioFileName = getName() + ".wav";
         clipFile = new File(audioDir, audioFileName);
@@ -288,7 +285,7 @@ public class SynthLane extends Lane implements RecordableLane {
                 e.printStackTrace();
             }
         }
-        project.getEditHistoryContainer().notifyEditHistoryListeners();
+        frinikaProject.getEditHistoryContainer().notifyEditHistoryListeners();
     }
 
     @Override
@@ -398,8 +395,8 @@ public class SynthLane extends Lane implements RecordableLane {
         @Override
         public void run() {
 
-            sequencer = project.getSequencer();
-            sequence = project.getSequence();
+            sequencer = frinikaProject.getSequencer();
+            sequence = frinikaProject.getSequence();
             int ticksPerbeat = sequence.getResolution();
             currentPos = sequencer.getTickPosition();
             startTick = sequencer.getLoopStartPoint();
@@ -411,7 +408,7 @@ public class SynthLane extends Lane implements RecordableLane {
             frame.pack();
             frame.setVisible(true);
 
-            project.getEditHistoryContainer().mark(
+            frinikaProject.getEditHistoryContainer().mark(
                     getMessage("sequencer.project.render_synth"));
             sampleRate = FrinikaConfig.sampleRate;
 
@@ -445,7 +442,7 @@ public class SynthLane extends Lane implements RecordableLane {
             sequencer.setTickPosition(startTick);
 
             // Stop the server calling the mixer.
-            project.getAudioServer().stealAudioServer(this, null);
+            frinikaProject.getAudioServer().stealAudioServer(this, null);
             server.stop();
 
             sequencer.setRealtime(false);
@@ -470,15 +467,15 @@ public class SynthLane extends Lane implements RecordableLane {
             sequencer.setTickPosition(currentPos);
             writer.close();
 
-            double startTime = project.getTempoList().getTimeAtTick(startTick);
+            double startTime = frinikaProject.getTempoList().getTimeAtTick(startTick);
 
 //			setAudioFile(clipFile, (long) (startTick * 1000000.0
 //					* samplesPerTick / sampleRate));
             setAudioFile(clipFile, startTime * 1000000.0);
 
-            project.getEditHistoryContainer().notifyEditHistoryListeners();
+            frinikaProject.getEditHistoryContainer().notifyEditHistoryListeners();
             server.start();
-            project.getAudioServer().returnAudioServer(this);
+            frinikaProject.getAudioServer().returnAudioServer(this);
             isRendering = false;
             isRendered = true;
 

@@ -37,7 +37,7 @@ import com.frinika.sequencer.gui.selection.SelectionListener;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.Part;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -70,12 +70,12 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
     PopupSelectorButton cntrlBut;
 
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
 
     PadPanel pianoHeader;
 
     @SuppressWarnings("serial")
-    public PianoControllerSplitPane(final AbstractSequencerProjectContainer project) {
+    public PianoControllerSplitPane(final SequencerProjectContainer project) {
 
         this.project = project;
 
@@ -281,7 +281,7 @@ public class PianoControllerSplitPane extends ItemScrollPane implements
 
     MultiEventEditPanel noteEditPanel;
 
-    public PianoRoll createPianoRoll(AbstractSequencerProjectContainer project) {
+    public PianoRoll createPianoRoll(SequencerProjectContainer project) {
         return pianoRoll;
     }
 

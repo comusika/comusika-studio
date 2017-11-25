@@ -23,7 +23,6 @@
  */
 package com.frinika.project;
 
-import com.frinika.base.AbstractProjectContainer;
 import com.frinika.tootX.MixerControlsMidiStreamSnapshotAutomation;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,14 +37,12 @@ public class TootMixerSerializer implements Serializable {
 
     // Do versioning the hard way
     int version;
-    AbstractProjectContainer project;
+    ProjectContainer project;
 
-    // transient MixerControls mixerControls;
     private TootMixerSerializer() {
-
     }
 
-    public TootMixerSerializer(AbstractProjectContainer project) {
+    public TootMixerSerializer(ProjectContainer project) {
         this.project = project;
     }
 
@@ -67,20 +64,14 @@ public class TootMixerSerializer implements Serializable {
 
         //	project.mixerControls = new MixerControls("Mixer");
         MixerControlsMidiStreamSnapshotAutomation snapshotAutomation = new MixerControlsMidiStreamSnapshotAutomation(
-                project.getMixerControls());
+                project.mixerControls);
 
         snapshotAutomation.load(in);
     }
 
-//	void setMixerControls(MixerControls mixerControls) {
-//		this.mixerControls=mixerControls;
-//	}
-//	MixerControls getMixerControls() {
-//		return mixerControls;
-//	}
     private void saveMixer(OutputStream out) {
         MixerControlsMidiStreamSnapshotAutomation snapshotAutomation = new MixerControlsMidiStreamSnapshotAutomation(
-                project.getMixerControls());
+                project.mixerControls);
 
         snapshotAutomation.store(out);
     }

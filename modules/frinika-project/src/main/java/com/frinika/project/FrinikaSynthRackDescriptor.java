@@ -71,7 +71,7 @@ public class FrinikaSynthRackDescriptor extends MidiDeviceDescriptor implements 
     /**
      * Fix the lane program change event for older projects
      */
-    public static void fixLaneProgramChange(ProjectContainer project, MidiDevice midiDevice) {
+    public static void fixLaneProgramChange(FrinikaProjectContainer project, MidiDevice midiDevice) {
         for (Lane lane : project.getLanes()) {
             if (MidiLane.class.isInstance(lane)) {
                 MidiLane midiLane = ((MidiLane) lane);
@@ -85,7 +85,7 @@ public class FrinikaSynthRackDescriptor extends MidiDeviceDescriptor implements 
     }
 
     @Override
-    protected void installImp(ProjectContainer project) {
+    protected void installImp(FrinikaProjectContainer project) {
         midiDevice = new SynthWrapper(project, new SynthRack(null));
         ((SynthRack) ((SynthWrapper) midiDevice).getRealDevice()).loadSynthSetup(synthSetup);
         try {

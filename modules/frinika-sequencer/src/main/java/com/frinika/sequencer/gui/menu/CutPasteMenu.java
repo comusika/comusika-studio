@@ -25,7 +25,7 @@ package com.frinika.sequencer.gui.menu;
 
 import static com.frinika.localization.CurrentLocale.getMessage;
 import com.frinika.sequencer.gui.ProjectFrame;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import javax.swing.Icon;
@@ -59,7 +59,7 @@ public class CutPasteMenu extends JMenu {
         return new javax.swing.ImageIcon(ProjectFrame.class.getResource("/icons/" + name));
     }
 
-    public CutPasteMenu(final AbstractSequencerProjectContainer project) {
+    public CutPasteMenu(final SequencerProjectContainer project) {
 
         setText(getMessage("project.menu.edit"));
 

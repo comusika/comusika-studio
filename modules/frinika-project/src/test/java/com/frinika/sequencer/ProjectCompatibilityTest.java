@@ -1,6 +1,6 @@
 package com.frinika.sequencer;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.settings.projectsettingsversions.Project20050227;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.synths.MySampler;
@@ -43,7 +43,7 @@ import junit.framework.TestCase;
  * @author Peter Johan Salomonsen
  */
 public class ProjectCompatibilityTest  extends TestCase {
-	ProjectContainer proj;
+	FrinikaProjectContainer proj;
 
 	float tempo = 120f;
 	
@@ -83,7 +83,7 @@ public class ProjectCompatibilityTest  extends TestCase {
             ObjectOutputStream out = new ObjectOutputStream(baos);
             out.writeObject(project);
 
-            proj = ProjectContainer.loadProject(new ByteArrayInputStream(baos.toByteArray()));
+            proj = FrinikaProjectContainer.loadProject(new ByteArrayInputStream(baos.toByteArray()));
 	}
 	
 	

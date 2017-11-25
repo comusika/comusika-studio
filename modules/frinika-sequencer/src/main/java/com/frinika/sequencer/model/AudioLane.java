@@ -29,7 +29,7 @@ import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SequencerListener;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -84,24 +84,23 @@ public class AudioLane extends Lane implements RecordableLane,
 
     static int nameCount = 0;
 
-    public AudioLane(AbstractSequencerProjectContainer project) {
+    public AudioLane(SequencerProjectContainer project) {
         super("Audio " + nameCount++, project);
         attachAudioProcessToMixer();
     }
 
     public void dispose() {
-        project.getSequencer().removeSequencerListener(this);
+        frinikaProject.getSequencer().removeSequencerListener(this);
         writer.discard();
     }
 
     @Override
     public void removeFromModel() {
-        project.removeStrip(stripInt + "");
+        frinikaProject.removeStrip(stripInt + "");
         super.removeFromModel();
     }
 
     private void attachAudioProcessToMixer() {
-
         peakMonitor = new AudioPeakMonitor();
 
         audioProcess = new AudioProcess() {
@@ -133,7 +132,7 @@ public class AudioLane extends Lane implements RecordableLane,
                         buffer.makeSilence();
                     }
                 } else {
-                    if (project.getSequencer().isRunning()) {
+                    if (frinikaProject.getSequencer().isRunning()) {
                         buffer.setChannelFormat(ChannelFormat.STEREO);
                         buffer.makeSilence();
                         for (Part part : getParts()) {
@@ -154,8 +153,7 @@ public class AudioLane extends Lane implements RecordableLane,
         };
 
         try {
-            mixerControls = project.addMixerInput(audioProcess, (stripInt = stripNo++)
-                    + "");
+            mixerControls = frinikaProject.addMixerInput(audioProcess, (stripInt = stripNo++) + "");
 
             // project.getMixer().getStrip((stripNo++) + "").setInputProcess(
             // audioProcess);
@@ -164,7 +162,7 @@ public class AudioLane extends Lane implements RecordableLane,
             e.printStackTrace();
         }
 
-        sequencer = project.getSequencer();
+        sequencer = frinikaProject.getSequencer();
         sequencer.addSequencerListener(this);
     }
 
@@ -201,7 +199,7 @@ public class AudioLane extends Lane implements RecordableLane,
     public void setRecording(boolean b) {
         if (b && audioInProcess == null) {
             armed = false;
-            project.message(CurrentLocale.getMessage("recording.please_select_audio_input"));
+            frinikaProject.message(CurrentLocale.getMessage("recording.please_select_audio_input"));
             return;
         }
 
@@ -220,7 +218,71 @@ public class AudioLane extends Lane implements RecordableLane,
     private void readObject(ObjectInputStream in)
             throws ClassNotFoundException, IOException {
         in.defaultReadObject();
-        attachAudioProcessToMixer();
+
+        // attachAudioProcessToMixer
+        peakMonitor = new AudioPeakMonitor();
+
+        audioProcess = new AudioProcess() {
+            @Override
+            public void close() {
+            }
+
+            @Override
+            public void open() {
+            }
+
+            @Override
+            public int processAudio(AudioBuffer buffer) {
+                // Process audio of all parts in this lane
+                // do we need to zero the buffer here ?
+
+                if (armed) {
+                    audioInProcess.processAudio(buffer);
+                    peakMonitor.processAudio(buffer);
+                    if (audioInsert != null) {
+                        audioInsert.processAudio(buffer);
+                    }
+                    if (isRecording) {
+                        // TODO handle DISCONNECT
+                        writer.processAudio(buffer);
+                        hasRecorded = true;
+                    }
+                    if (FrinikaConfig.getDirectMonitoring()) {
+                        buffer.makeSilence();
+                    }
+                } else {
+                    if (frinikaProject.getSequencer().isRunning()) {
+                        buffer.setChannelFormat(ChannelFormat.STEREO);
+                        buffer.makeSilence();
+                        for (Part part : getParts()) {
+                            if (((AudioPart) part).getAudioProcess() != null) {
+                                ((AudioPart) part).getAudioProcess()
+                                        .processAudio(buffer);
+                            }
+                        }
+                        peakMonitor.processAudio(buffer);
+                    } else {
+                        buffer.makeSilence();
+                    }
+                }
+
+                buffer.setMetaInfo(channelLabel);
+                return AUDIO_OK;
+            }
+        };
+
+        try {
+            mixerControls = project.addMixerInput(audioProcess, (stripInt = stripNo++) + "");
+
+            // project.getMixer().getStrip((stripNo++) + "").setInputProcess(
+            // audioProcess);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        sequencer = project.getSequencer();
+        sequencer.addSequencerListener(this);
     }
 
     public AudioProcess getAudioInDevice() {
@@ -266,7 +328,7 @@ public class AudioLane extends Lane implements RecordableLane,
     }
 
     public File newFilename() {
-        AbstractSequencerProjectContainer proj = getProject();
+        SequencerProjectContainer proj = getProject();
 
         File audioDir = proj.getAudioDirectory();
         String audioFileName = getName() + ".wav";
@@ -285,7 +347,7 @@ public class AudioLane extends Lane implements RecordableLane,
 
     @Override
     public void start() {
-        isRecording = project.getSequencer().isRecording();
+        isRecording = frinikaProject.getSequencer().isRecording();
         if (isRecording) {
             recordStartTimeInMicros = sequencer.getMicrosecondPosition();
         }
@@ -295,13 +357,13 @@ public class AudioLane extends Lane implements RecordableLane,
     public void stop() {
         isRecording = false;
         if (hasRecorded) {
-            project.getEditHistoryContainer().mark(
+            frinikaProject.getEditHistoryContainer().mark(
                     CurrentLocale.getMessage("sequencer.audiolane.record"));
 
             writer.close();
             hasRecorded = false;
-            AudioServer server = project.getAudioServer();
-            int latencyInframes = project.getAudioServer().getTotalLatencyFrames();
+            AudioServer server = frinikaProject.getAudioServer();
+            int latencyInframes = frinikaProject.getAudioServer().getTotalLatencyFrames();
 
             System.out.println(" latency in frames is " + latencyInframes);
             double latencyInMicros = latencyInframes * 1000000.0
@@ -322,7 +384,7 @@ public class AudioLane extends Lane implements RecordableLane,
                 e.printStackTrace();
 
             }
-            project.getEditHistoryContainer().notifyEditHistoryListeners();
+            frinikaProject.getEditHistoryContainer().notifyEditHistoryListeners();
         }
     }
 

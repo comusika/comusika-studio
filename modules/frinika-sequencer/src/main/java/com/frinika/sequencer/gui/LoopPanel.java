@@ -28,7 +28,7 @@ import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.SwingSongPositionListenerWrapper;
 import com.frinika.sequencer.model.util.TimeUtils;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.sound.midi.Sequencer;
@@ -201,7 +201,7 @@ public class LoopPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    AbstractSequencerProjectContainer project;
+    SequencerProjectContainer project;
     FrinikaSequencer sequencer;
 
     TimeSelector sectionStartTimeSelector;
@@ -209,7 +209,7 @@ public class LoopPanel extends JPanel {
 
     TimeUtils timeUtil;
 
-    public LoopPanel(AbstractSequencerProjectContainer project) {
+    public LoopPanel(SequencerProjectContainer project) {
         this.project = project;
         this.sequencer = project.getSequencer();
         timeUtil = new TimeUtils(project);

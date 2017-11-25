@@ -3,7 +3,7 @@ package com.frinika.sequencer.gui.transport;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.gui.RecordingDialog;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -14,9 +14,9 @@ public class RecordAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
     private FrinikaSequencer sequencer;
-    private AbstractSequencerProjectContainer project;
+    private SequencerProjectContainer project;
 
-    public RecordAction(AbstractSequencerProjectContainer project) {
+    public RecordAction(SequencerProjectContainer project) {
         super(CurrentLocale.getMessage("sequencer.project.record"));
         this.sequencer = project.getSequencer();
         this.project = project;

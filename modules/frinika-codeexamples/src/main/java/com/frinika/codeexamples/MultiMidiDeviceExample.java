@@ -23,7 +23,7 @@
  */
 package com.frinika.codeexamples;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.NoteEvent;
@@ -45,7 +45,7 @@ public class MultiMidiDeviceExample {
         // Create the audio context
         new AudioContext();
         // Create the project container
-        ProjectContainer proj = new ProjectContainer();
+        FrinikaProjectContainer proj = new FrinikaProjectContainer();
         // Create a lane
         MidiLane lane = proj.createMidiLane();
 

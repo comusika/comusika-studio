@@ -2,7 +2,7 @@ package com.frinika.sequencer.gui.selection;
 
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.Part;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 
 /**
  *
@@ -10,7 +10,7 @@ import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
  */
 public class PartSelection extends SelectionContainer<Part> {
 
-    public PartSelection(AbstractSequencerProjectContainer project) {
+    public PartSelection(SequencerProjectContainer project) {
         super(project);
 
     }

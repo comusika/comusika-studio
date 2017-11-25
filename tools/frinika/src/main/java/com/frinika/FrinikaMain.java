@@ -31,7 +31,7 @@ import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.frame.FrinikaFrame;
 import com.frinika.frame.action.CreateProjectAction;
 import com.frinika.frame.action.OpenProjectAction;
@@ -136,7 +136,7 @@ public class FrinikaMain {
 
         FrinikaFrame.addProjectFocusListener(new ProjectFocusListener() {
             @Override
-            public void projectFocusNotify(ProjectContainer project) {
+            public void projectFocusNotify(FrinikaProjectContainer project) {
                 FrinikaAudioSystem.installClient(project.getAudioClient());
             }
         });

@@ -30,7 +30,7 @@ import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.MultiEventChangeRecorder;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.util.TimeUtils;
-import com.frinika.sequencer.project.AbstractSequencerProjectContainer;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 
 /**
  * @author Peter Johan Salomonsen
@@ -61,7 +61,7 @@ public class MultiEventTableModel extends MyAbstractTableModel {
     int quantize;
     TimeUtils time;
 
-    public MultiEventTableModel(AbstractSequencerProjectContainer project, MultiEvent note, int quantize, int ticksPerBeat) {
+    public MultiEventTableModel(SequencerProjectContainer project, MultiEvent note, int quantize, int ticksPerBeat) {
         this.event = note;
         this.quantize = quantize;
         this.ticksPerBeat = ticksPerBeat;

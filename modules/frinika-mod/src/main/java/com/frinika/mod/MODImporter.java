@@ -24,7 +24,7 @@
 package com.frinika.mod;
 
 import com.frinika.localization.CurrentLocale;
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.midi.message.TempoMessage;
 import com.frinika.sequencer.model.ControllerEvent;
@@ -120,7 +120,7 @@ public class MODImporter {
                     return;
                 }
 
-                ProjectContainer project = new ProjectContainer();
+                FrinikaProjectContainer project = new FrinikaProjectContainer();
                 load(newFile, project);
                 // TODO MOD ProjectFrame frame = new ProjectFrame(project);
                 // TODO MOD ProjectFrame frame = ProjectContainer.createFrinikaFrame(project);
@@ -444,9 +444,9 @@ public class MODImporter {
 
     int trackcount;
 
-    ProjectContainer project;
+    FrinikaProjectContainer project;
 
-    private MODImporter(File file, ProjectContainer project) throws InvalidFormatException, IOException {
+    private MODImporter(File file, FrinikaProjectContainer project) throws InvalidFormatException, IOException {
 
         this.project = project;
 
@@ -892,7 +892,7 @@ public class MODImporter {
         finish();
     }
 
-    public static void load(File file, ProjectContainer project) throws InvalidFormatException, IOException {
+    public static void load(File file, FrinikaProjectContainer project) throws InvalidFormatException, IOException {
         new MODImporter(file, project).load();
         project.validate();
     }

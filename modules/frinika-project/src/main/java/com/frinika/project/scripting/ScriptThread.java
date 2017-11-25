@@ -23,7 +23,7 @@
  */
 package com.frinika.project.scripting;
 
-import com.frinika.project.ProjectContainer;
+import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 
 /**
@@ -35,10 +35,10 @@ import com.frinika.project.scripting.gui.ScriptingDialog;
 class ScriptThread extends Thread {
 
     private final FrinikaScript script;
-    private final ProjectContainer project;
+    private final FrinikaProjectContainer project;
     private final ScriptingDialog dialog;
 
-    ScriptThread(FrinikaScript script, ProjectContainer project, ScriptingDialog dialog) {
+    ScriptThread(FrinikaScript script, FrinikaProjectContainer project, ScriptingDialog dialog) {
         super();
         this.script = script;
         this.project = project;
