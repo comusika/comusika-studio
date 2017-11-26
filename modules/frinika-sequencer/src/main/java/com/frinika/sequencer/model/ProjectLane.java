@@ -60,7 +60,6 @@ public class ProjectLane extends Lane {
 
     public ProjectLane(SequencerProjectContainer project) {
         super("project", project);
-        this.frinikaProject = project;
         setHidden(true);
     }
 

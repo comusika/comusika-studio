@@ -191,7 +191,6 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
         generateButton.setEnabled(false);
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 progressBar.setIndeterminate(true);
@@ -291,13 +290,28 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
             List<MidiLane> lanes = new ArrayList<>();
             List<MidiPart> parts = new ArrayList<>();
             for (int i = 0; i < arrangement.size(); i++) {
-                Arrangement.ArrangementEntry entry = arrangement.get(i);
+                Arrangement.ArrangementEntry arrangeEntry = arrangement.get(i);
                 MidiLane lane = project.createMidiLane();
                 lane.setMidiChannel(i);
                 lane.setMidiDevice(sw);
                 MidiPart part = (MidiPart) lane.createPart();
-                part.setName(entry.getInstrument());
-                part.setEndTick(100);
+                part.setName(arrangeEntry.getInstrument());
+                
+                // Compute end tick
+                long endTick = 0;
+                for (int j = 0; j < arrangeEntry.getTrack().size(); j++) {
+                    long pos = 0;
+                    Sequence sequence = arrangeEntry.getTrack().get(j);
+                    for (int k = 0; k < sequence.size(); k++) {
+                        Sequence.SequenceEntry entry = sequence.get(k);
+                        pos += entry.getTicks() * 24;
+                        if (pos > endTick) {
+                            endTick = pos;
+                        }
+                    }
+                }
+                
+                part.setEndTick(endTick);
 //                        part.setEndTick(entry.getTrack().size() * 24); // SIZE is getTicks() ?
                 lanes.add(lane);
                 parts.add(part);
@@ -319,13 +333,13 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
             int i = 0;
 
             while (entryIterator.hasNext()) {
-                Arrangement.ArrangementEntry ae = entryIterator.next();
+                Arrangement.ArrangementEntry arrangeEntry = entryIterator.next();
                 if (i < 11) {
                     MidiPart part = parts.get(i);
                     long partPos = 0;
-                    for (int j = 0; j < ae.getTrack().size(); j++) {
+                    for (int j = 0; j < arrangeEntry.getTrack().size(); j++) {
                         long pos = 0;
-                        Sequence sequence = ae.getTrack().get(j);
+                        Sequence sequence = arrangeEntry.getTrack().get(j);
                         for (int k = 0; k < sequence.size(); k++) {
                             Sequence.SequenceEntry entry = sequence.get(k);
                             if (entry.isNote()) {
@@ -343,6 +357,7 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
                 }
                 i++;
             }
+            project.repaintViews();
 
             performOk();
         } catch (Exception e) {
@@ -427,6 +442,7 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
                     }
                 }
             }
+            project.repaintViews();
 
             performOk();
         } catch (Exception e) {

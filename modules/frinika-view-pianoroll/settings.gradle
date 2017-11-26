@@ -1,4 +1,4 @@
-rootProject.name = 'frinika-pianoroll'
+rootProject.name = 'frinika-view-pianoroll'
 
 apply from: '../modules-settings.gradle'
 
