@@ -10,5 +10,6 @@ if (!hasProperty('mainClass')) {
 
 dependencies {
     compile(project(':modules:frinika-core'))
+    compile(project(':modules:frinika-audio-toot'))
     compile ':RasmusDSP'
 }

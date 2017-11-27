@@ -35,6 +35,7 @@ import com.frinika.global.FrinikaConfig;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.sequencer.FrinikaSequence;
 import com.frinika.sequencer.FrinikaSequencer;
+import com.frinika.sequencer.TempoChangeListener;
 import com.frinika.sequencer.model.ProjectLane;
 import com.frinika.sequencer.model.tempo.TempoList;
 import com.frinika.sequencer.model.timesignature.TimeSignatureList;
@@ -47,12 +48,14 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Sequence;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.audio.core.AudioProcess;
+import uk.org.toot.audio.core.Taps;
 import uk.org.toot.audio.mixer.AudioMixer;
 import uk.org.toot.audio.mixer.AudioMixerStrip;
 import uk.org.toot.audio.mixer.MixControls;
 import uk.org.toot.audio.mixer.MixerControls;
 import uk.org.toot.audio.mixer.MixerControlsFactory;
 import uk.org.toot.audio.mixer.MixerControlsIds;
+import uk.org.toot.misc.Tempo;
 
 /**
  * Use to load Frinika projects.
@@ -131,12 +134,18 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
     public transient AudioMixer mixer;
     public transient int count = 1;
     public transient MixerControls mixerControls;
+    public transient FrinikaAudioServer audioServer;
     public transient FrinikaSequence sequence = null;
     public transient FrinikaSequencer sequencer;
 
     public ProjectContainer() {
         mixerSerializer = new TootMixerSerializer(this);
         sequencer = new FrinikaSequencer();
+        try {
+            sequencer.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -169,12 +178,25 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
     }
 
     private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException, Exception {
+        scriptingEngine = new FrinikaScriptingEngine(); // Jens
+        // defaults to having one main bus
+        // create 2 aux send busses for effects and 1 aux monitor bus
+        // because if you don't have any aux busses you can't insert
+        // effects :(
+        mixerSerializer = new TootMixerSerializer(this);
+        sequencer = new FrinikaSequencer();
         try {
-            mixerControls = new MixerControls("Mixer");
-            MixerControlsFactory.createBusses(mixerControls, 2, 1);
-            MixerControlsFactory.createBusStrips(mixerControls);
+            sequencer.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        attachTootNotifications();
 
-            FrinikaAudioServer audioServer = FrinikaAudioSystem.getAudioServer();
+        mixerControls = new MixerControls("Mixer");
+        MixerControlsFactory.createBusses(mixerControls, 2, 1);
+        MixerControlsFactory.createBusStrips(mixerControls);
+        audioServer = FrinikaAudioSystem.getAudioServer();
+        try {
             mixer = new AudioMixer(mixerControls, audioServer);
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -182,10 +204,9 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
             System.err.println(" \n Sorry but I do not want to go on without an audio output device. \n Bye bye . . .  ");
             System.exit(1);
         }
-        String outDev = FrinikaAudioSystem.configureServerOutput();
 
+        String outDev = FrinikaAudioSystem.configureServerOutput();
         if (outDev != null) {
-            FrinikaAudioServer audioServer = FrinikaAudioSystem.getAudioServer();
             AudioInjector outputProcess = new AudioInjector(audioServer.openAudioOutput(outDev, "output"));
             System.out.println("Using " + outDev + " as audio out device");
             mixer.getMainBus().setOutputProcess(outputProcess);
@@ -193,13 +214,6 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
             // message(" No output devices found ");
         }
 
-        scriptingEngine = new FrinikaScriptingEngine(); // Jens
-        mixerSerializer = new TootMixerSerializer(this);
-        // defaults to having one main bus
-        // create 2 aux send busses for effects and 1 aux monitor bus
-        // because if you don't have any aux busses you can't insert
-        // effects :(
-        sequencer = new FrinikaSequencer();
         in.defaultReadObject();
     }
 
@@ -227,5 +241,15 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
             e.printStackTrace();
         }
         return mixControls;
+    }
+
+    private void attachTootNotifications() {
+        Taps.setAudioServer(audioServer);
+        sequencer.addTempoChangeListener(new TempoChangeListener() {
+            @Override
+            public void notifyTempoChange(float bpm) {
+                Tempo.setTempo(bpm);
+            }
+        });
     }
 }
