@@ -39,6 +39,7 @@ public class AudioServerUIServices extends Services
             	final JComponent theUi = ui;
             	try {
             		SwingUtilities.invokeAndWait(new Runnable() {
+                                    @Override
             			public void run() {
             				new SetupDialog(theUi);    		
             			}
@@ -90,6 +91,7 @@ public class AudioServerUIServices extends Services
 	        setVisible(true);
 	    }
 	 
+            @Override
 	    public void actionPerformed(ActionEvent e) {
 	        dispose();
 	    }

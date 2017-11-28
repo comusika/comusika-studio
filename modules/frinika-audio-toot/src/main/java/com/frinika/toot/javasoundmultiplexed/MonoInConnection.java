@@ -43,11 +43,13 @@ class MonoInConnection implements AudioLine {
 		isBigendian = dev.getFormat().isBigEndian();
 	}
 
+        @Override
 	public void open() {
 		System.out.println(" JavaSoundConnection OPEN" + dev);
 		dev.open();
 	}
 
+        @Override
 	public int processAudio(AudioBuffer buffer) {
 
 		float out[] = buffer.getChannel(0);
@@ -86,6 +88,7 @@ class MonoInConnection implements AudioLine {
 
 	}
 
+        @Override
 	public void close() {
 		// null op for 
 	}
@@ -96,15 +99,18 @@ class MonoInConnection implements AudioLine {
 		return 0;
 	}
 
+        @Override
 	 public String getName() {
 		return "in " + (chan + 1);
 	 }
 
+        @Override
 	public int getLatencyFrames() {
 	 // TODO Auto-generated method stub
 	 return 0;
 	 }
 
+        @Override
 	public ChannelFormat getChannelFormat() {
 		// TODO Auto-generated method stub
 		return ChannelFormat.MONO;

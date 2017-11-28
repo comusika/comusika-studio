@@ -54,6 +54,7 @@ class StereoOutConnection implements AudioLine {
 //		dev.open();
 //	}
 
+        @Override
 	public int processAudio(AudioBuffer buffer) {
 
 		byte bytes[] = dev.getBuffer();
@@ -97,6 +98,7 @@ class StereoOutConnection implements AudioLine {
 
 	}
 
+        @Override
 	public void close() {
 		// TODO Auto-generated method stub
 
@@ -115,20 +117,24 @@ class StereoOutConnection implements AudioLine {
 		return 0;
 	}
 
+        @Override
 	public String getName() {
 		return "out " + (chan[0] + 1) + "/" + (chan[1] + 1);
 	}
 
+        @Override
 	public int getLatencyFrames() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public ChannelFormat getChannelFormat() {
 		// TODO Auto-generated method stub
 		return ChannelFormat.MONO;
 	}
 
+        @Override
 	public void open() {
 		// TODO Auto-generated method stub
 		

@@ -49,6 +49,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         sharedByteBuffer = createByteBuffer();
     }
 
+    @Override
     public int getSampleSizeInBits() {
         return sampleSizeInBits;
     }
@@ -60,6 +61,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         this.sampleSizeInBits = sampleSizeInBits;
     }
 
+    @Override
     public float getSampleRate() {
     	return sampleRate;
     }
@@ -71,14 +73,17 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
     	this.sampleRate = sampleRate;
     }
     
+    @Override
     public List<AudioLine> getOutputs() {
         return Collections.<AudioLine>unmodifiableList(outputs);
     }
 
+    @Override
     public List<AudioLine> getInputs() {
         return Collections.<AudioLine>unmodifiableList(inputs);
     }
 
+    @Override
     protected void resizeBuffers(int bufferFrames) {
         super.resizeBuffers(bufferFrames);
         sharedByteBuffer = createByteBuffer(); // recreate because can't resize an array
@@ -91,16 +96,19 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         return ret;
     }
 
+    @Override
     public int getOutputLatencyFrames() {
     	if ( syncLine == null ) return 0;
     	return syncLine.getLatencyFrames();
     }
     
+    @Override
     public int getInputLatencyFrames() {
     	if ( inputs.size() == 0 ) return 0;
     	return inputs.get(0).getLatencyFrames();
     }
     
+    @Override
     public List<String> getAvailableOutputNames() {
         List<String> names = new java.util.ArrayList<String>();
         Mixer.Info[] infos = AudioSystem.getMixerInfo();
@@ -117,6 +125,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         return names;
     }
 
+    @Override
     public List<String> getAvailableInputNames() {
         List<String> names = new java.util.ArrayList<String>();
         Mixer.Info[] infos = AudioSystem.getMixerInfo();
@@ -167,6 +176,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         return null; // !!!
     }
 
+    @Override
     protected void startImpl() {
 		// start our inputs
 		for ( JavaSoundAudioLine input : inputs ) {
@@ -188,6 +198,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         super.startImpl();
     }
 
+    @Override
     protected void stopImpl() {
         // stop the server and it's thread
         super.stopImpl();
@@ -210,6 +221,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
     }
 
     // has to temporarily stop a running server
+    @Override
     public IOAudioProcess openAudioOutput(String name, String label)
     		throws Exception {
         JavaSoundAudioOutput output;
@@ -235,6 +247,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         return output;
     }
 
+    @Override
     public void closeAudioOutput(IOAudioProcess output) {
         if ( !(output instanceof JavaSoundAudioOutput) ) {
             throw new IllegalArgumentException(output.getName()+" is not a JavaSoundAudioOutput");
@@ -247,6 +260,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         outputs.remove(output);
     }
 
+    @Override
     public IOAudioProcess openAudioInput(String name, String label)
         	throws Exception {
         JavaSoundAudioInput input;
@@ -263,6 +277,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
    	    return input;
     }
 
+    @Override
     public void closeAudioInput(IOAudioProcess input) {
         if ( !(input instanceof JavaSoundAudioInput) ) {
             throw new IllegalArgumentException(input.getName()+" is not a JavaSoundAudioInput");
@@ -275,6 +290,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         inputs.remove(input);
     }
 
+    @Override
     public void setLatencyMilliseconds(float ms) {
         if ( ms < getLatencyMilliseconds() ) {
             minimiseInputLatency();
@@ -291,6 +307,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         }
     }
 
+    @Override
     protected void controlGained() {
         minimiseInputLatency();
         super.controlGained();
@@ -314,14 +331,17 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
             }
         }
 
+        @Override
         public String getName() {
             return label;
         }
 
+        @Override
         public ChannelFormat getChannelFormat() {
             return channelFormat;
         }
 
+        @Override
         public int getLatencyFrames() {
             return latencyFrames;
         }
@@ -348,6 +368,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
             if ( syncLine == null ) syncLine = this;
         }
 
+        @Override
         public void open() throws Exception {
         	if ( lineOut != null && lineOut.isOpen()) return;
         	lineOut = (SourceDataLine)AudioSystem.getMixer(mixerInfo).getLine(infoOut);
@@ -366,20 +387,24 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         	}
         }
 
+        @Override
         public void start() throws Exception {
             framesWritten = lineOut.getLongFramePosition();
            	lineOut.start();
         }
 
+        @Override
         public void stop() {
        	    lineOut.stop();
             lineOut.flush();
         }
 
+        @Override
     	public void close() {
 			if ( lineOut != null && lineOut.isOpen() ) lineOut.close();
     	}
 
+        @Override
         public int processAudio(AudioBuffer buffer) {
             if ( !buffer.isRealTime() ) return AUDIO_OK;
 /*            if ( buffer.getChannelCount() != format.getChannels() ) {
@@ -407,6 +432,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
             return AUDIO_OK;
         }
 
+        @Override
         public boolean isActive() {
             if ( lineOut == null ) return false;
             return lineOut.isActive();
@@ -433,6 +459,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
 //            System.out.println(mixerInfo+" supports "+infoIn);
         }
 
+        @Override
         public void open() throws Exception {
         	if ( lineIn != null && lineIn.isOpen()) return;
         	lineIn = (TargetDataLine)AudioSystem.getMixer(mixerInfo).getLine(infoIn);
@@ -440,12 +467,14 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         	lineIn.open(format, lineBufferBytes);
         }
 
+        @Override
         public void start() throws Exception {
             framesRead = lineIn.getLongFramePosition();
 //            System.out.println(label+" Started at "+framesRead+", "+lineIn.available()+" bytes available");
            	lineIn.start();
         }
 
+        @Override
         public void stop() {
        	    lineIn.stop();
 //            System.out.println(label+" Stopping at "+lineIn.getLongFramePosition()+", "+lineIn.available()+" bytes available");
@@ -453,6 +482,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
 //            System.out.println(label+" Stopped at "+lineIn.getLongFramePosition()+", "+lineIn.available()+" bytes available");
         }
 
+        @Override
     	public void close() {
 	        if ( lineIn != null && lineIn.isOpen() ) lineIn.close();
     	}
@@ -465,6 +495,7 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
         // which is the opposite need of outputs
         // because if no space we will overrun and lose time and data
         // or on Windows, DirectSound will buffer up to 2 seconds invisibly !!!
+        @Override
         public int processAudio(AudioBuffer buffer) {
             buffer.setMetaInfo(metaInfo);
             if ( !buffer.isRealTime() ) return AUDIO_DISCONNECT;
@@ -499,11 +530,13 @@ public class JavaSoundAudioServer extends PriorityAudioServer //BasicAudioServer
             return AUDIO_OK;
         }
 
+        @Override
         public boolean isActive() {
             if ( lineIn == null ) return false;
             return lineIn.isActive();
         }
     }
     
+    @Override
     public String getConfigKey() { return "javasound"; }
 }

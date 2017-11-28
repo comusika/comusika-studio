@@ -23,6 +23,7 @@ public class FrinikaAudioServerServiceProvider extends AudioServerServiceProvide
 		}	
     }
 
+    @Override
     public AudioServerConfiguration createServerConfiguration(AudioServer server) {	
     	if ( server instanceof MultiplexedJavaSoundAudioServer ) {
     		return new ExtendedAudioServerConfiguration((ExtendedAudioServer)server);

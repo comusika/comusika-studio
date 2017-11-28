@@ -58,18 +58,22 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 
 	}
 
+        @Override
 	public float getSampleRate() {
 		return 44100.0f; // format.getSampleRate();
 	}
 
+        @Override
 	public int getSampleSizeInBits() {
 		return 16; // format.getSampleSizeInBits();
 	}
 
+        @Override
 	public List<AudioLine> getOutputs() {
 		return Collections.<AudioLine> unmodifiableList(outputs);
 	}
 
+        @Override
 	public List<AudioLine> getInputs() {
 		return Collections.<AudioLine> unmodifiableList(inputs);
 	}
@@ -123,18 +127,21 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 		}
 	}
 
+        @Override
 	public int getOutputLatencyFrames() {
 		if (syncLine == null)
 			return 0;
 		return syncLine.getLatencyFrames();
 	}
 
+        @Override
 	public int getInputLatencyFrames() {
 		if (inDevice == null)
 			return 0;
 		return inDevice.getLatencyFrames();
 	}
 
+        @Override
 	public List<String> getAvailableOutputNames() {
 		List<String> names = new java.util.ArrayList<String>();
 
@@ -144,6 +151,7 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 		return names;
 	}
 
+        @Override
 	public List<String> getAvailableInputNames() {
 		List<String> names = new java.util.ArrayList<String>();
 		for (AudioLine line : inputs) {
@@ -152,6 +160,7 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 		return names;
 	}
 
+        @Override
 	public void start() {
 
 		if (isRunning)
@@ -176,6 +185,7 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 		// isOpen=true;
 	}
 
+        @Override
 	public void stop() {
 		if (!isRunning)
 			return;
@@ -200,6 +210,7 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 	}
 
 	// has to temporarily stop a running server
+        @Override
 	public IOAudioProcess openAudioOutput(String name, String label)
 			throws Exception {
 
@@ -210,9 +221,11 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 		return null;
 	}
 
+        @Override
 	public void closeAudioOutput(IOAudioProcess output) {
 	}
 
+        @Override
 	public IOAudioProcess openAudioInput(String name, String label)
 			throws Exception {
 		for (AudioLine line : inputs) {
@@ -223,9 +236,11 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 
 	}
 
+        @Override
 	public void closeAudioInput(IOAudioProcess input) {
 	}
 
+        @Override
 	public void setLatencyMilliseconds(float ms) {
 		if (ms < getLatencyMilliseconds()) {
 			flushInputs();
@@ -246,14 +261,17 @@ public class MultiplexedJavaSoundAudioServer extends PriorityAudioServer {
 //	}
 	  
 	  
+        @Override
 	protected void controlGained() {
 		flushInputs();
 	}
 
+        @Override
 	public String getConfigKey() {
 		return "java_multiplexed";
 	}
 
+        @Override
 	public void work() {
 
 		if (inDevice != null)

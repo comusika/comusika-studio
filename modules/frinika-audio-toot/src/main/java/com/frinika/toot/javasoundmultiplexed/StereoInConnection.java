@@ -47,11 +47,13 @@ class StereoInConnection implements AudioLine {
 
 	}
 
+        @Override
 	public void open() {
 		System.out.println(" JavaSoundConnection OPEN" + dev);
 		dev.open();
 	}
 
+        @Override
 	public int processAudio(AudioBuffer buffer) {
 		byte bytes[] = dev.getBuffer();
 
@@ -100,6 +102,7 @@ class StereoInConnection implements AudioLine {
 
 	}
 
+        @Override
 	public void close() {
 		// null op for
 	}
@@ -110,15 +113,18 @@ class StereoInConnection implements AudioLine {
 		return 0;
 	}
 
+        @Override
 	public String getName() {
 		return "in " + (chan[0] + 1) + "/" + (chan[1] + 1);
 	}
 
+        @Override
 	public int getLatencyFrames() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+        @Override
 	public ChannelFormat getChannelFormat() {
 		// TODO Auto-generated method stub
 		return ChannelFormat.STEREO;

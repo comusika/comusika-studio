@@ -24,6 +24,7 @@ public class TootAudioServerUIServiceProvider
         // or more simply, it works
     }
 
+    @Override
     public JComponent createServerUI(AudioServer server, AudioServerConfiguration p) {
         if ( server instanceof ExtendedAudioServer ) {
             return new AudioServerPanel((ExtendedAudioServer)server, p);
@@ -37,6 +38,7 @@ public class TootAudioServerUIServiceProvider
      * @param server the AudioServer to provide the UI for.
      * @return JComponent the UI, null representing no UI.
      */
+    @Override
     public JComponent createSetupUI(AudioServer server, AudioServerConfiguration p) {
     	if ( server instanceof JavaSoundAudioServer ) {
     		return new JavaSoundAudioServerSetupPanel((JavaSoundAudioServer)server, p);

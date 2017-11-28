@@ -57,6 +57,7 @@ public class AudioServerPanel extends AbstractAudioServerPanel
         add(buildButtonPanel(), BorderLayout.SOUTH);
     }
 
+    @Override
   	protected void updatePeriodic() {
         if ( server == null ) return;
         if ( !isShowing() ) return;
@@ -95,6 +96,7 @@ public class AudioServerPanel extends AbstractAudioServerPanel
     	JPanel p = new JPanel();
     	JButton reset = new JButton("Reset");
     	reset.addActionListener(new ActionListener() {
+                    @Override
     		public void actionPerformed(ActionEvent ae) {
     			server.resetMetrics(true);
     		}
@@ -118,6 +120,7 @@ public class AudioServerPanel extends AbstractAudioServerPanel
             final JSpinner priority = new Spinner(priorityModel);
             priority.addChangeListener(
                 new ChangeListener() {
+                        @Override
                 	public void stateChanged(ChangeEvent e) {
                     	pas.requestPriority(priorityModel.getNumber().intValue());
                     	config.update();
@@ -132,6 +135,7 @@ public class AudioServerPanel extends AbstractAudioServerPanel
         bufferMillis = new Spinner(bufferModel);
         bufferMillis.addChangeListener(
             new ChangeListener() {
+                    @Override
             	public void stateChanged(ChangeEvent e) {
                 	server.setBufferMilliseconds((float)bufferModel.getNumber().intValue());
                 	config.update();
@@ -145,6 +149,7 @@ public class AudioServerPanel extends AbstractAudioServerPanel
         latencyMillis = new Spinner(latencyModel);
         latencyMillis.addChangeListener(
             new ChangeListener() {
+                    @Override
             	public void stateChanged(ChangeEvent e) {
             		float latencyms = (float)latencyModel.getNumber().intValue();
            			server.setLatencyMilliseconds(latencyms);
@@ -196,10 +201,12 @@ public class AudioServerPanel extends AbstractAudioServerPanel
             super(model);
         }
 
+        @Override
         public Dimension getMaximumSize() {
             return spinnerSize;
         }
 
+        @Override
         public Dimension getPreferredSize() {
             return spinnerSize;
         }

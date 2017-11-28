@@ -51,6 +51,7 @@ class JavaSoundDevice {
 		byteBuffer=new byte[bufferSizeInFrames*bytesPerFrame];
 	}
 
+        @Override
 	public String toString() {
 		if (af.getChannels() == 1)
 			return mixer.getMixerInfo().getName() + " (MONO)"; // +

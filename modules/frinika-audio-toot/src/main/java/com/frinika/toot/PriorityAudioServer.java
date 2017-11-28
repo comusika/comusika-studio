@@ -58,6 +58,7 @@ public abstract class PriorityAudioServer extends TimedAudioServer  {
 		if ( isLinux && Priority.priorityLibraryLoaded) {
 			Thread thr = new Thread()
 			{
+                                @Override
 				public void run()
 				{
 					while(true)

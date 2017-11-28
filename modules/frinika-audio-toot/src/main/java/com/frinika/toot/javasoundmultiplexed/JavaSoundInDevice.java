@@ -126,6 +126,7 @@ class JavaSoundInDevice extends JavaSoundDevice {
 	}
 
 	
+        @Override
 	public boolean isActive() {
 		if (line == null)
 			return false;

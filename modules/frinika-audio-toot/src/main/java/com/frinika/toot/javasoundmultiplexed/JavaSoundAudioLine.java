@@ -53,14 +53,17 @@ abstract class JavaSoundAudioLine implements AudioLine {
 		}
 	}
 
+        @Override
 	public String getName() {
 		return label;
 	}
 
+        @Override
 	public ChannelFormat getChannelFormat() {
 		return channelFormat;
 	}
 
+        @Override
 	public int getLatencyFrames() {
 		return latencyFrames;
 	}

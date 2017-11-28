@@ -26,6 +26,7 @@ public class FrinikaAudioServerUIServiceProvider
         // or more simply, it works
     }
 
+    @Override
     public JComponent createServerUI(AudioServer server, AudioServerConfiguration p) {
         if ( server instanceof MultiplexedJavaSoundAudioServer ) {
             return new AudioServerPanel((ExtendedAudioServer)server, p);

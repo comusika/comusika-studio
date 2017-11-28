@@ -28,6 +28,7 @@ public class JavaSoundAudioServerSetupPanel extends AbstractAudioServerPanel
 			addItem("96000");
 			addItemListener(
 				new ItemListener() {
+                                        @Override
 					public void itemStateChanged(ItemEvent arg0) {
 						float sampleRate = Float.parseFloat((String)sampleRateCombo.getSelectedItem());
 						server.setSampleRate(sampleRate);

@@ -112,6 +112,7 @@ class JavaSoundOutDevice extends JavaSoundDevice implements AudioSyncLine {
 	}
 
 	
+        @Override
 	public int getLatencyFrames() {
 		return latencyFrames;
 	}

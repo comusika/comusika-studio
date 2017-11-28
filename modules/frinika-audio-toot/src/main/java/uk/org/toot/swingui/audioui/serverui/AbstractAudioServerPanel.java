@@ -20,6 +20,7 @@ public abstract class AbstractAudioServerPanel extends JPanel
 		if ( periodMilliseconds > 0 ) {
 			Timer timer = new Timer(periodMilliseconds,
 				new ActionListener() {
+                                        @Override
 					public void actionPerformed(ActionEvent arg0) {
 						updatePeriodic();
 					}				

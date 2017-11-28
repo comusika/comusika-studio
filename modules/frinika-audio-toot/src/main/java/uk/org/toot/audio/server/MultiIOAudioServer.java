@@ -38,6 +38,7 @@ public class MultiIOAudioServer extends AbstractAudioServerDecorator
 	public MultiIOAudioServer(AudioServer server) {
 		super(server);
 	}
+        @Override
 	public IOAudioProcess openAudioOutput(String name,String label)  throws Exception {
         if ( name == null ) {
             // use the first available output if null is passed
@@ -52,6 +53,7 @@ public class MultiIOAudioServer extends AbstractAudioServerDecorator
 	}
 
 	
+        @Override
 	public IOAudioProcess openAudioInput(String name,String label) throws Exception {
         if ( name == null ) {
             // use the first available output if null is passed
@@ -73,25 +75,30 @@ public class MultiIOAudioServer extends AbstractAudioServerDecorator
 			this.process=process;
 		}
 
+                @Override
 		public void open() throws Exception {
 			if (openCount== 0 ) process.open();
 			openCount++;
 		}
 
+                @Override
 		public int processAudio(AudioBuffer buffer) {
 			return process.processAudio(buffer);
 		}
 
+                @Override
 		public void close() throws Exception {
 			openCount--;
 			if (openCount==0) process.close();
 			
 		}
 
+                @Override
 		public ChannelFormat getChannelFormat() {
 			return process.getChannelFormat();
 		}
 
+                @Override
 		public String getName() {
 			// TODO Auto-generated method stub
 			return process.getName();
@@ -99,11 +106,13 @@ public class MultiIOAudioServer extends AbstractAudioServerDecorator
 				
 	}
 
+        @Override
 	public void closeAudioInput(IOAudioProcess input) {
 		// TODO Auto-generated method stub
 		
 	}
 
+        @Override
 	public void closeAudioOutput(IOAudioProcess output) {
 		// TODO Auto-generated method stub
 		
