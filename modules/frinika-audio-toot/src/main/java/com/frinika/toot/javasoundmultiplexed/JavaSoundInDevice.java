@@ -25,10 +25,10 @@
 package com.frinika.toot.javasoundmultiplexed;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.DataLine.Info;
 
 class JavaSoundInDevice extends JavaSoundDevice {
 	private int latencyFrames;

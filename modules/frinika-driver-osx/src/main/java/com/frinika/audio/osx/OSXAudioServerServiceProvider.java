@@ -24,10 +24,10 @@
 package com.frinika.audio.osx;
 
 import java.util.Properties;
+import uk.org.toot.audio.id.ProviderId;
 import uk.org.toot.audio.server.AudioServer;
 import uk.org.toot.audio.server.AudioServerConfiguration;
 import uk.org.toot.audio.server.spi.AudioServerServiceProvider;
-import uk.org.toot.audio.id.ProviderId;
 
 public class OSXAudioServerServiceProvider extends AudioServerServiceProvider {
 

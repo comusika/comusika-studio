@@ -23,6 +23,7 @@
 package com.frinika.simphoney;
 
 import com.frinika.project.FrinikaProjectContainer;
+import com.frinika.project.RecordingManager;
 import com.frinika.sequencer.FrinikaTrackWrapper;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.sequencer.model.ControllerEvent;
@@ -32,7 +33,6 @@ import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
 import com.frinika.sequencer.model.PitchBendEvent;
-import com.frinika.project.RecordingManager;
 import javax.sound.midi.ShortMessage;
 import uk.org.toot.control.BooleanControl;
 

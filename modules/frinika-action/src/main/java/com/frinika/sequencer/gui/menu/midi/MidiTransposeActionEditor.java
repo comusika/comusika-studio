@@ -37,9 +37,6 @@ class MidiTransposeActionEditor extends JPanel {
 
     private MidiTransposeAction action;
 
-    /**
-     * Creates new form MidiTransposeActionEditor
-     */
     public MidiTransposeActionEditor(MidiTransposeAction action) {
         this.action = action;
         initComponents();

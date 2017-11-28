@@ -23,8 +23,8 @@
  */
 package com.frinika.sequencer.model;
 
-import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import java.util.Vector;
 import javax.sound.midi.MidiDevice;
 

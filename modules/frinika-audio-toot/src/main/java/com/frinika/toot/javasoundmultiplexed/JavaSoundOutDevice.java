@@ -25,13 +25,11 @@
 package com.frinika.toot.javasoundmultiplexed;
 
 import java.util.Arrays;
-
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.DataLine.Info;
-
 import uk.org.toot.audio.server.AudioSyncLine;
 
 class JavaSoundOutDevice extends JavaSoundDevice implements AudioSyncLine {

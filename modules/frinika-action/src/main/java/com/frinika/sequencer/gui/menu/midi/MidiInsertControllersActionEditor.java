@@ -67,9 +67,6 @@ public class MidiInsertControllersActionEditor extends JPanel implements Options
     private Map<AbstractButton, MidiInsertControllersAction.ControllerFunction> functionButtons;
     private Map<MidiInsertControllersAction.ControllerFunction, JComponent> functions;
 
-    /**
-     * Creates new form MidiInsertControllersActionEditor
-     */
     public MidiInsertControllersActionEditor(SequencerProjectContainer project, MidiInsertControllersAction action) {
         super();
         this.project = project;

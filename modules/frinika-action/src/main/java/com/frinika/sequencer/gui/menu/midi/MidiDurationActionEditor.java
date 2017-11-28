@@ -42,9 +42,6 @@ public class MidiDurationActionEditor extends JPanel {
 
     private MidiDurationAction action;
 
-    /**
-     * Creates new form MidiDurationActionEditor
-     */
     public MidiDurationActionEditor(MidiDurationAction action, SequencerProjectContainer project) {
         super();
         this.action = action;

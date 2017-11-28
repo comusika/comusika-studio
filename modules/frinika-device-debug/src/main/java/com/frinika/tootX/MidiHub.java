@@ -1,7 +1,6 @@
 package com.frinika.tootX;
 
 import com.frinika.midi.MidiDebugDevice;
-import com.frinika.tootX.MidiDeviceHandle;
 import java.util.Vector;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;

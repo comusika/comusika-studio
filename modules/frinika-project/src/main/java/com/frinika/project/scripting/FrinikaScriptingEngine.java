@@ -23,8 +23,8 @@
  */
 package com.frinika.project.scripting;
 
-import com.frinika.global.FrinikaConfig;
 import com.frinika.base.MessageDialog;
+import com.frinika.global.FrinikaConfig;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 import com.frinika.project.scripting.javascript.JavascriptScope;

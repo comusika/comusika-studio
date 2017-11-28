@@ -5,11 +5,11 @@
 
 package uk.org.toot.audio.server;
 
-import java.util.List;
+import com.frinika.toot.PriorityAudioServer;
 import java.util.Collections;
+import java.util.List;
 import javax.sound.sampled.*;
 import uk.org.toot.audio.core.*;
-import com.frinika.toot.PriorityAudioServer;
 
 /**
  * JavaSoundAudioServer extends BasicAudioServer with JavaSound-style byte[]

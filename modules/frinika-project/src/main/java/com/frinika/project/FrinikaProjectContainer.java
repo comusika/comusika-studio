@@ -23,12 +23,12 @@
  */
 package com.frinika.project;
 
-import com.frinika.base.MessageDialog;
 import com.frinika.audio.DynamicMixer;
 import com.frinika.audio.io.BufferedRandomAccessFileManager;
 import com.frinika.audio.toot.AudioInjector;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.base.MessageDialog;
 import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.midi.MidiDebugDevice;
@@ -69,9 +69,9 @@ import com.frinika.sequencer.model.tempo.TempoList;
 import com.frinika.sequencer.model.timesignature.TimeSignatureList;
 import com.frinika.sequencer.model.timesignature.TimeSignatureList.TimeSignatureEvent;
 import com.frinika.sequencer.model.util.TimeUtils;
-import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import com.frinika.sequencer.project.ProjectSettings;
+import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.project.SoundBankNameHolder;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.settings.SynthSettings;

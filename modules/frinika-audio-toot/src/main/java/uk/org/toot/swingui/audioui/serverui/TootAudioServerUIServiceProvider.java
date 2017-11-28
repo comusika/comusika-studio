@@ -5,10 +5,10 @@
 
 package uk.org.toot.swingui.audioui.serverui;
 
+import javax.swing.JComponent;
+import uk.org.toot.audio.id.ProviderId;
 import uk.org.toot.audio.server.*;
 import uk.org.toot.swingui.audioui.serverui.spi.AudioServerUIServiceProvider;
-import uk.org.toot.audio.id.ProviderId;
-import javax.swing.JComponent;
 
 public class TootAudioServerUIServiceProvider
     extends AudioServerUIServiceProvider

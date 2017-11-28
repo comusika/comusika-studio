@@ -26,10 +26,7 @@ package com.frinika.toot.javasoundmultiplexed;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
-//import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
-//import javax.sound.sampled.TargetDataLine;
-
 class JavaSoundDevice {
 
 	protected byte byteBuffer[];

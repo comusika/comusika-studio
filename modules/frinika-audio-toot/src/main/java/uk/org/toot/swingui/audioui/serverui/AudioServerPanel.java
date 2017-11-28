@@ -5,23 +5,19 @@
 
 package uk.org.toot.swingui.audioui.serverui;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import com.frinika.toot.PriorityAudioServer;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import uk.org.toot.swingui.SpringUtilities;
-import uk.org.toot.audio.server.*;
-//import uk.org.toot.swing.DisposablePanel;
-import java.util.List;
-import java.util.Date;
 import java.text.DateFormat;
-//import java.beans.PropertyChangeListener;
-//import java.beans.PropertyChangeEvent;
-import com.frinika.toot.PriorityAudioServer;
+import java.util.Date;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import uk.org.toot.audio.server.*;
+import uk.org.toot.swingui.SpringUtilities;
 
 /**
  * An AudioServerPanel provides a UI for an AudioServer which allows control

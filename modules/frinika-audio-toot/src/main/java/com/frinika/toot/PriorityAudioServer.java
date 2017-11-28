@@ -25,7 +25,6 @@
 package com.frinika.toot;
 
 import com.frinika.priority.Priority;
-
 import uk.org.toot.audio.server.TimedAudioServer;
 
 /**

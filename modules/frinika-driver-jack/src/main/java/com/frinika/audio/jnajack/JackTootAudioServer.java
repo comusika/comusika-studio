@@ -31,7 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jaudiolibs.audioservers.AudioClient;
 import org.jaudiolibs.audioservers.AudioConfiguration;
-
 import org.jaudiolibs.audioservers.AudioServerProvider;
 import org.jaudiolibs.audioservers.ext.ClientID;
 import org.jaudiolibs.audioservers.ext.Connections;

@@ -7,9 +7,7 @@ package uk.org.toot.swingui.audioui.serverui;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-
 import uk.org.toot.audio.server.AudioServerServices;
  
 public class AudioServerChooser extends JDialog implements ActionListener 

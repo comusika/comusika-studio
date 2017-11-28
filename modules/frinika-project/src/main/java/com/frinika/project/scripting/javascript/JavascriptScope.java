@@ -23,8 +23,8 @@
  */
 package com.frinika.project.scripting.javascript;
 
-import com.frinika.localization.CurrentLocale;
 import com.frinika.base.MessageDialog;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.project.scripting.gui.ScriptingDialog;

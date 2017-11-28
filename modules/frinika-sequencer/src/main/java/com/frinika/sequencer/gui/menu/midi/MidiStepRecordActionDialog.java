@@ -32,7 +32,6 @@ import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.SwingSongPositionListenerWrapper;
 import com.frinika.sequencer.gui.TimeFormat;
 import com.frinika.sequencer.gui.TimeSelector;
-import com.frinika.sequencer.gui.menu.midi.MidiStepRecordAction;
 import com.frinika.sequencer.gui.selection.SelectionContainer;
 import com.frinika.sequencer.gui.selection.SelectionListener;
 import com.frinika.sequencer.model.MidiLane;

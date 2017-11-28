@@ -26,7 +26,6 @@ package com.frinika.toot.javasoundmultiplexed;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Mixer;
-
 import uk.org.toot.audio.core.ChannelFormat;
 import uk.org.toot.audio.server.AudioLine;
 

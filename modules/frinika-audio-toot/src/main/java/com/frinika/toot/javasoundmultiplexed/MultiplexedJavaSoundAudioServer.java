@@ -6,14 +6,10 @@
 
 package com.frinika.toot.javasoundmultiplexed;
 
-import java.util.List;
-import java.util.Collections;
-//import javax.sound.sampled.*;
-
 import com.frinika.toot.PriorityAudioServer;
-
+import java.util.Collections;
+import java.util.List;
 import uk.org.toot.audio.server.AudioLine;
-
 import uk.org.toot.audio.server.IOAudioProcess;
 
 

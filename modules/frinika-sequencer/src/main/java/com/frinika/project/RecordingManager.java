@@ -4,7 +4,6 @@
  */
 package com.frinika.project;
 
-import com.frinika.project.MultiPart;
 import com.frinika.midi.MidiMessageListener;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.FrinikaTrackWrapper;

@@ -23,9 +23,9 @@
  */
 package com.frinika.project.scripting.gui;
 
+import com.frinika.base.MessageDialog;
 import com.frinika.gui.AbstractDialog;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.base.MessageDialog;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.gui.action.ScriptingAction;
 import com.frinika.project.scripting.DefaultFrinikaScript;

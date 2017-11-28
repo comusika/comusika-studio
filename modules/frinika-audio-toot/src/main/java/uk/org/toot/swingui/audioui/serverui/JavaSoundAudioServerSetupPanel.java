@@ -2,9 +2,7 @@ package uk.org.toot.swingui.audioui.serverui;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.JComboBox;
-
 import uk.org.toot.audio.server.AudioServerConfiguration;
 import uk.org.toot.audio.server.JavaSoundAudioServer;
 

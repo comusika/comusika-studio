@@ -6,8 +6,8 @@
 
 package uk.org.toot.audio.server;
 
-import uk.org.toot.audio.server.spi.AudioServerServiceProvider;
 import uk.org.toot.audio.id.ProviderId;
+import uk.org.toot.audio.server.spi.AudioServerServiceProvider;
 
 public class TootAudioServerServiceProvider extends AudioServerServiceProvider
 {

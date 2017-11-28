@@ -22,8 +22,8 @@
 
 package com.frinika.radio;
 
-import com.frinika.project.MidiDeviceDescriptor;
 import com.frinika.project.FrinikaProjectContainer;
+import com.frinika.project.MidiDeviceDescriptor;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;

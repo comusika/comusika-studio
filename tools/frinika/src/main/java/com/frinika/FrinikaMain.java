@@ -25,21 +25,20 @@ package com.frinika;
 
 import com.bulenkov.darcula.DarculaLaf;
 import com.bulenkov.darcula.DarculaLookAndFeelInfo;
+import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.frame.FrinikaFrame;
 import com.frinika.frame.WelcomeDialog;
-import com.frinika.project.dialog.SplashDialog;
+import com.frinika.frame.action.CreateProjectAction;
+import com.frinika.frame.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.project.FrinikaProjectContainer;
-import com.frinika.frame.FrinikaFrame;
-import com.frinika.frame.action.CreateProjectAction;
-import com.frinika.frame.action.OpenProjectAction;
+import com.frinika.project.dialog.SplashDialog;
 import com.frinika.project.dialog.VersionProperties;
 import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

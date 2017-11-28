@@ -26,7 +26,6 @@ package com.frinika.toot.javasoundmultiplexed;
 
 import java.util.List;
 import java.util.Vector;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;

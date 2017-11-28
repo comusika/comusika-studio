@@ -5,14 +5,13 @@
 
 package com.frinika.toot;
 
+import com.frinika.toot.javasoundmultiplexed.MultiplexedJavaSoundAudioServer;
+import uk.org.toot.audio.id.ProviderId;
 import uk.org.toot.audio.server.AudioServer;
 import uk.org.toot.audio.server.AudioServerConfiguration;
 import uk.org.toot.audio.server.ExtendedAudioServer;
 import uk.org.toot.audio.server.ExtendedAudioServerConfiguration;
 import uk.org.toot.audio.server.spi.AudioServerServiceProvider;
-import uk.org.toot.audio.id.ProviderId;
-
-import com.frinika.toot.javasoundmultiplexed.MultiplexedJavaSoundAudioServer;
 
 public class FrinikaAudioServerServiceProvider extends AudioServerServiceProvider
 {

@@ -6,11 +6,11 @@
 package com.frinika.toot.gui;
 
 import com.frinika.toot.javasoundmultiplexed.MultiplexedJavaSoundAudioServer;
+import javax.swing.JComponent;
+import uk.org.toot.audio.id.ProviderId;
 import uk.org.toot.audio.server.*;
 import uk.org.toot.swingui.audioui.serverui.AudioServerPanel;
 import uk.org.toot.swingui.audioui.serverui.spi.AudioServerUIServiceProvider;
-import uk.org.toot.audio.id.ProviderId;
-import javax.swing.JComponent;
 
 public class FrinikaAudioServerUIServiceProvider
     extends AudioServerUIServiceProvider

@@ -24,8 +24,13 @@
 package com.frinika.global;
 
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.gui.DefaultOptionsBinder;
+import com.frinika.gui.util.FontChooser;
+import com.frinika.gui.util.PresentationPanel;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Frame;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,23 +47,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
 import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.MidiDevice.Info;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
-
-import com.frinika.gui.DefaultOptionsBinder;
-import com.frinika.gui.util.FontChooser;
-import com.frinika.gui.util.PresentationPanel;
-import java.awt.Component;
-import java.awt.Frame;
 
 /**
  * Global settings to be stored and restored when starting the program.
