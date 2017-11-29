@@ -78,7 +78,6 @@ public class CreateProjectAction extends AbstractAction {
         }
 
         try {
-
             JFileChooser chooser = new JFileChooser();
             chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.new_project.dialogtitle"));
             chooser.setFileFilter(new ProjectFileFilter());
