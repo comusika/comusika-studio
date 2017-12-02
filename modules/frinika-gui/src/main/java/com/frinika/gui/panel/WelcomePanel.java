@@ -17,7 +17,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.frame.panel;
+package com.frinika.gui.panel;
 
 import com.frinika.gui.util.WindowUtils;
 
@@ -41,9 +41,14 @@ public class WelcomePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        lafButtonGroup = new javax.swing.ButtonGroup();
+        projectsTabbedPane = new javax.swing.JTabbedPane();
         recentProjectsPanel = new javax.swing.JPanel();
+        recentListScrollPane = new javax.swing.JScrollPane();
+        recentList = new javax.swing.JList<>();
         sampleProjectsPanel = new javax.swing.JPanel();
+        samplListScrollPane = new javax.swing.JScrollPane();
+        sampleList = new javax.swing.JList<>();
         separator = new javax.swing.JSeparator();
         newProjectButton = new javax.swing.JButton();
         lafPanel = new javax.swing.JPanel();
@@ -51,41 +56,45 @@ public class WelcomePanel extends javax.swing.JPanel {
         darculaLafToggleButton = new javax.swing.JToggleButton();
         openProjectButton = new javax.swing.JButton();
         optionsPanel = new javax.swing.JPanel();
+        configureAudioButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
 
-        javax.swing.GroupLayout recentProjectsPanelLayout = new javax.swing.GroupLayout(recentProjectsPanel);
-        recentProjectsPanel.setLayout(recentProjectsPanelLayout);
-        recentProjectsPanelLayout.setHorizontalGroup(
-            recentProjectsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 363, Short.MAX_VALUE)
-        );
-        recentProjectsPanelLayout.setVerticalGroup(
-            recentProjectsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
-        );
+        recentProjectsPanel.setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.addTab("Recent Projects", recentProjectsPanel);
+        recentList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        recentListScrollPane.setViewportView(recentList);
 
-        javax.swing.GroupLayout sampleProjectsPanelLayout = new javax.swing.GroupLayout(sampleProjectsPanel);
-        sampleProjectsPanel.setLayout(sampleProjectsPanelLayout);
-        sampleProjectsPanelLayout.setHorizontalGroup(
-            sampleProjectsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 363, Short.MAX_VALUE)
-        );
-        sampleProjectsPanelLayout.setVerticalGroup(
-            sampleProjectsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
-        );
+        recentProjectsPanel.add(recentListScrollPane, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Sample Projects", sampleProjectsPanel);
+        projectsTabbedPane.addTab("Recent Projects", recentProjectsPanel);
+
+        sampleProjectsPanel.setLayout(new java.awt.BorderLayout());
+
+        sampleList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        samplListScrollPane.setViewportView(sampleList);
+
+        sampleProjectsPanel.add(samplListScrollPane, java.awt.BorderLayout.CENTER);
+
+        projectsTabbedPane.addTab("Sample Projects", sampleProjectsPanel);
 
         newProjectButton.setText("Create new project");
         newProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         lafPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Look and Feel"));
 
+        lafButtonGroup.add(legacyLafToggleButton);
         legacyLafToggleButton.setText("Legacy");
 
+        lafButtonGroup.add(darculaLafToggleButton);
         darculaLafToggleButton.setSelected(true);
         darculaLafToggleButton.setText("Darcula");
 
@@ -102,12 +111,9 @@ public class WelcomePanel extends javax.swing.JPanel {
         );
         lafPanelLayout.setVerticalGroup(
             lafPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lafPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(lafPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(legacyLafToggleButton)
-                    .addComponent(darculaLafToggleButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(lafPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(legacyLafToggleButton)
+                .addComponent(darculaLafToggleButton))
         );
 
         openProjectButton.setText("Open project");
@@ -115,18 +121,45 @@ public class WelcomePanel extends javax.swing.JPanel {
 
         optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
 
+        configureAudioButton.setText("Configure audio...");
+        configureAudioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                configureAudioButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(configureAudioButton)
+                .addContainerGap(118, Short.MAX_VALUE))
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 43, Short.MAX_VALUE)
+            .addComponent(configureAudioButton, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         closeButton.setText("Close");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(513, Short.MAX_VALUE)
+                .addComponent(closeButton)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(closeButton)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -134,35 +167,35 @@ public class WelcomePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(projectsTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(separator)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(lafPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(optionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addContainerGap())
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 154, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(openProjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(newProjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(176, 176, 176))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(closeButton)
+                                .addGap(176, 176, 176))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lafPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(separator))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(projectsTabbedPane)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -170,16 +203,18 @@ public class WelcomePanel extends javax.swing.JPanel {
                         .addComponent(newProjectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openProjectButton)
-                        .addGap(64, 64, 64)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lafPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(174, 174, 174)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lafPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14)
-                        .addComponent(closeButton))
-                    .addComponent(jTabbedPane1))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void configureAudioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configureAudioButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_configureAudioButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -192,14 +227,21 @@ public class WelcomePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
+    private javax.swing.JButton configureAudioButton;
     private javax.swing.JToggleButton darculaLafToggleButton;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.ButtonGroup lafButtonGroup;
     private javax.swing.JPanel lafPanel;
     private javax.swing.JToggleButton legacyLafToggleButton;
     private javax.swing.JButton newProjectButton;
     private javax.swing.JButton openProjectButton;
     private javax.swing.JPanel optionsPanel;
+    private javax.swing.JTabbedPane projectsTabbedPane;
+    private javax.swing.JList<String> recentList;
+    private javax.swing.JScrollPane recentListScrollPane;
     private javax.swing.JPanel recentProjectsPanel;
+    private javax.swing.JScrollPane samplListScrollPane;
+    private javax.swing.JList<String> sampleList;
     private javax.swing.JPanel sampleProjectsPanel;
     private javax.swing.JSeparator separator;
     // End of variables declaration//GEN-END:variables

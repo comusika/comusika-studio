@@ -23,7 +23,7 @@
  */
 package com.frinika.codeexamples;
 
-import com.frinika.frame.FrinikaFrame;
+import com.frinika.gui.FrinikaFrame;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.audio.DAudioReader;
 import com.frinika.voiceserver.AudioContext;

@@ -47,56 +47,51 @@ public class SimphoneyRecordManager extends RecordingManager {
     //  boolean armed=false;
 
     BooleanControl loopMarker;
-    private boolean createTakeRequest=false;
-       
+    private boolean createTakeRequest = false;
+
     public SimphoneyRecordManager(ProjectFrame frame) {
         super((FrinikaProjectContainer) frame.getProjectContainer(), 1000);
         this.frame = frame;
-    //    puncEvent = null;
+        //    puncEvent = null;
         loopMarker = new BooleanControl(0, "loopMarker", false, true) {
-          
 
             @Override
             public void setValue(boolean flag) {
-                System.out.println(" LOOP MARKER  " + flag );
-                
+                System.out.println(" LOOP MARKER  " + flag);
+
                 if (true) {
-                    createTakeRequest=true;
+                    createTakeRequest = true;
                 }
                 notifyParent(this);
-                
-                
+
             }
         };
-        
- //       frame.setStatusBarMessage(" Hit special key to define ");
+
+        //       frame.setStatusBarMessage(" Hit special key to define ");
     }
 
-    
     public BooleanControl getLoopMarkerControl() {
-        return loopMarker;       
+        return loopMarker;
     }
-
 
     /**
-     * 
+     *
      * Do the processing on a low priority Tick notification thread
-     *  
+     *
      * @param tick
      */
     @Override
     public void notifyTickPosition(long tick) {
-        
+
         if (createTakeRequest) {
             createTake();
-            createTakeRequest=false;
+            createTakeRequest = false;
         }
-           
+
         processEvents();
     }
 
     void processEvents() {
-
 
 //        if (currentRecordingTake.size() == 0 && (!stack.isEmpty())) {
 //            if (lastPart != null) {    
@@ -105,7 +100,6 @@ public class SimphoneyRecordManager extends RecordingManager {
 //                project.getEditHistoryContainer().notifyEditHistoryListeners();
 //            }
 //        }
-
         Event e = null;
 
         while ((e = stack.pop()) != null) {
@@ -168,9 +162,11 @@ public class SimphoneyRecordManager extends RecordingManager {
                 continue;
             }
 
-            if (!((MidiLane)lane).isRecording()) continue;
-       
-            ml = (MidiLane)lane;
+            if (!((MidiLane) lane).isRecording()) {
+                continue;
+            }
+
+            ml = (MidiLane) lane;
             break;
         }
 
@@ -181,7 +177,6 @@ public class SimphoneyRecordManager extends RecordingManager {
         project.getEditHistoryContainer().mark(" Recording take ");
         MidiPart part = new MidiPart(ml);
 
-        
         for (MultiEvent event : currentRecordingTake) {
 
             try {
@@ -195,6 +190,4 @@ public class SimphoneyRecordManager extends RecordingManager {
         project.getEditHistoryContainer().notifyEditHistoryListeners();
         currentRecordingTake.clear();
     }
-    
-    
 }

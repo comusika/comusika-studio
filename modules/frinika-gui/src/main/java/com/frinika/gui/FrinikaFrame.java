@@ -1,7 +1,32 @@
-package com.frinika.frame;
+/*
+ * Created on Mar 6, 2006
+ *
+ * Copyright (c) 2004-2006 Peter Johan Salomonsen (http://www.petersalomonsen.com)
+ * 
+ * Copyright (c) 2007 Karl Helgason (added flexdock support)
+ * 
+ * http://www.frinika.com
+ * 
+ * This file is part of Frinika.
+ * 
+ * Frinika is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Frinika is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Frinika; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+package com.frinika.gui;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.frame.action.CreateProjectAction;
+import com.frinika.gui.action.CreateProjectAction;
 import com.frinika.global.ConfigDialog;
 import com.frinika.global.ConfigDialogPanel;
 import com.frinika.global.ConfigError;
@@ -16,13 +41,13 @@ import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryListener;
 import com.frinika.notation.NotationPanel;
 import com.frinika.project.FrinikaProjectContainer;
-import com.frinika.project.dialog.About;
+import com.frinika.gui.action.About;
 import com.frinika.project.dialog.BounceToLane;
 import com.frinika.project.dialog.ExportWavDialog;
 import com.frinika.project.gui.MultiPartMenuPlugin;
 import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.project.gui.ProjectNewFileFilter;
-import com.frinika.project.gui.SelectAllAction;
+import com.frinika.gui.action.SelectAllAction;
 import com.frinika.project.gui.StatusBar;
 import com.frinika.project.gui.action.ScriptingAction;
 import com.frinika.radio.LocalOGGHttpRadio;
@@ -165,31 +190,6 @@ import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
 import uk.org.toot.swingui.audioui.mixerui.CompactMixerPanel;
 
-/*
- * Created on Mar 6, 2006
- *
- * Copyright (c) 2004-2006 Peter Johan Salomonsen (http://www.petersalomonsen.com)
- * 
- * Copyright (c) 2007 Karl Helgason (added flexdock support)
- * 
- * http://www.frinika.com
- * 
- * This file is part of Frinika.
- * 
- * Frinika is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Frinika is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Frinika; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 /**
  * Frinika is designed to have one basis frame per project. A projectframe is
  * the main window for a project.
@@ -426,7 +426,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
         setIconImage(new javax.swing.ImageIcon(FrinikaFrame.class
                 .getResource("/icons/frinika.png")).getImage());
-
     }
 
     public FrinikaFrame(final FrinikaProjectContainer project) throws Exception {

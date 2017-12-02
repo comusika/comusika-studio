@@ -17,7 +17,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.project.panel;
+package com.frinika.gui.panel;
 
 import com.frinika.gui.util.BareBonesBrowserLaunch;
 import com.frinika.gui.util.WindowUtils;
@@ -28,11 +28,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -43,36 +38,27 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.TreeSet;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 /**
+ * Panel for about dialog.
  *
  * @author hajdam
  */
 public class AboutPanel extends javax.swing.JPanel {
 
-    private boolean darkMode = WindowUtils.isDarkMode();
-
     private WindowUtils.OkCancelListener okCancelListener;
-    private JLabel light_label;
-    private JLabel light_cloud1;
-    private JLabel light_cloud2;
-    private int cloud_width;
-    private Thread animation;
 
     public static final char COPYRIGHT_SYMBOL = (char) 169; // The (C) Symbol
 
@@ -83,11 +69,11 @@ public class AboutPanel extends javax.swing.JPanel {
             + "</html>";
 
     public static final String COPYRIGHT_NOTICE
-            = "<html><center>"
+            = "<html><font size=\"3\"><center>"
             + "Copyright " + COPYRIGHT_SYMBOL + " " + VersionProperties.getCopyrightStart() + "-" + VersionProperties.getCopyrightEnd() + " The Frinika developers. All rights reserved<br>"
             + "This software is licensed under the GNU General Public License (GPL) version 2<br>"
-            + "<a href=\"http://www.gnu.org/licenses/gpl.htm\">http://www.gnu.org/licenses/gpl.htm</a>"
-            + "</html>";
+            + "<a href=\"http://www.gnu.org/licenses/gpl.html\">http://www.gnu.org/licenses/gpl.html</a>"
+            + "</center></font></html>";
 
     public static final String CREDITS
             = "<html>"
@@ -123,6 +109,125 @@ public class AboutPanel extends javax.swing.JPanel {
             + "<br></html>";
 
     private static final long serialVersionUID = 1L;
+
+    public AboutPanel() {
+        initComponents();
+        init();
+    }
+
+    private void init() {
+        boolean darkMode = WindowUtils.isDarkMode();
+        AnimatedLogoPanel animatedLogo = new AnimatedLogoPanel();
+        add(animatedLogo, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        JEditorPane mainTitle = new JEditorPane();
+        mainTitle.setOpaque(false);
+        mainTitle.setContentType("text/html");
+        mainTitle.setEditable(false);
+        mainTitle.setText(MAIN_TITLE);
+        mainTitle.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent event) {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
+                }
+            }
+        });
+        panel.add(mainTitle, BorderLayout.NORTH);
+
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setOpaque(false);
+
+        {
+            JButton button = new JButton("License");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showLicense();
+                }
+            });
+            button.setOpaque(false);
+            buttonsPanel.add(button);
+        }
+
+        {
+            JButton button = new JButton("Credits");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showCredits();
+                }
+            });
+            button.setOpaque(false);
+            buttonsPanel.add(button);
+        }
+
+        {
+            JButton button = new JButton("System Info");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    showSystemInfo();
+                }
+            });
+            button.setOpaque(false);
+            buttonsPanel.add(button);
+        }
+
+        {
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    okCancelListener.okEvent();
+                }
+            });
+            okButton.setDefaultCapable(true);
+            // getRootPane().setDefaultButton(okButton);
+            okButton.setOpaque(false);
+            buttonsPanel.add(okButton);
+        }
+
+        panel.add(buttonsPanel, BorderLayout.CENTER);
+
+        JPanel copyrightPanel = new JPanel();
+        copyrightPanel.setOpaque(false);
+
+        JEditorPane copyrightNotice = new JEditorPane();
+        copyrightNotice.setOpaque(false);
+        copyrightNotice.setContentType("text/html");
+        copyrightNotice.setEditable(false);
+        copyrightNotice.setText(COPYRIGHT_NOTICE);
+        copyrightNotice.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent event) {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
+                }
+            }
+        });
+        copyrightPanel.add(copyrightNotice);
+
+        panel.add(copyrightPanel, BorderLayout.SOUTH);
+
+        panel.setSize(getPreferredSize().width, getPreferredSize().height);
+
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        panel.registerKeyboardAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                okCancelListener.cancelEvent();
+            }
+        },
+                stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        add(panel, BorderLayout.CENTER);
+    }
 
     public void showLicense() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -165,6 +270,7 @@ public class AboutPanel extends javax.swing.JPanel {
     }
 
     public void whitening(Container co) {
+        boolean darkMode = WindowUtils.isDarkMode();
         Component[] comps = co.getComponents();
         for (Component comp : comps) {
             if (comp instanceof JOptionPane) {
@@ -231,166 +337,6 @@ public class AboutPanel extends javax.swing.JPanel {
                 new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)));
     }
 
-    public AboutPanel() {
-        initComponents();
-        init();
-    }
-
-    private void init() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
-        Icon welcome = new javax.swing.ImageIcon(AboutPanel.class.getResource(darkMode ? "/frinika-dark.png" : "/frinika.png"));
-        JLabel label = new JLabel(welcome);
-        label.setHorizontalTextPosition(SwingConstants.CENTER);
-        label.setVerticalTextPosition(SwingConstants.BOTTOM);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        label.setText(MAIN_TITLE);
-        label.setBorder(BorderFactory.createEmptyBorder(25, 5, 5, 5));
-        panel.add(label, BorderLayout.NORTH);
-        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setOpaque(false);
-
-        {
-            JButton button = new JButton("License");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showLicense();
-                }
-            });
-            button.setOpaque(false);
-            buttonsPanel.add(button);
-        }
-
-        {
-            JButton button = new JButton("Credits");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showCredits();
-                }
-            });
-            button.setOpaque(false);
-            buttonsPanel.add(button);
-        }
-
-        {
-            JButton button = new JButton("System Info");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showSystemInfo();
-                }
-            });
-            button.setOpaque(false);
-            buttonsPanel.add(button);
-        }
-
-        {
-            JButton okButton = new JButton("OK");
-            okButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    okCancelListener.okEvent();
-                }
-            });
-            okButton.setDefaultCapable(true);
-            // getRootPane().setDefaultButton(okButton);
-            okButton.setOpaque(false);
-            buttonsPanel.add(okButton);
-        }
-
-        panel.add(buttonsPanel, BorderLayout.CENTER);
-
-        JPanel copyrightPanel = new JPanel();
-        copyrightPanel.setOpaque(false);
-
-        JLabel line = new JLabel(COPYRIGHT_NOTICE);
-        line.setHorizontalTextPosition(SwingConstants.CENTER);
-        line.setFont(line.getFont().deriveFont(10f).deriveFont(Font.PLAIN));
-
-        copyrightPanel.add(line);
-
-        panel.add(copyrightPanel, BorderLayout.SOUTH);
-
-        panel.setSize(getPreferredSize().width, getPreferredSize().height);
-
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        panel.registerKeyboardAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                okCancelListener.cancelEvent();
-            }
-        },
-                stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-
-        layeredPane.add(panel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        Rectangle windowSize;
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-        if (gc == null) {
-            gc = getGraphicsConfiguration();
-        }
-
-        if (gc != null) {
-            windowSize = gc.getBounds();
-        } else {
-            windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-        }
-
-        addAnimatedLogo(windowSize);
-    }
-
-    private void createAnimationThread() {
-        animation = new Thread() {
-            boolean active = true;
-            Runnable gui = new Runnable() {
-                @Override
-                public void run() {
-                    Point loc1 = light_cloud1.getLocation();
-                    loc1.x -= 1;
-                    if (loc1.x < -cloud_width) {
-                        loc1.x += 2 * cloud_width;
-                    }
-                    light_cloud1.setLocation(loc1);
-                    Point loc2 = light_cloud2.getLocation();
-                    loc2.x -= 1;
-                    if (loc2.x < -cloud_width) {
-                        loc2.x += 2 * cloud_width;
-                    }
-                    light_cloud2.setLocation(loc2);
-
-                    Point loc = light_label.getLocation();
-                    loc.x += 3;
-                    if (loc.x > 350) {
-                        loc.x = -400;
-                    }
-                    light_label.setLocation(loc);
-                    if (!isVisible()) {
-                        active = false;
-                    }
-                }
-            };
-
-            @Override
-            public void run() {
-                while (active) {
-                    gui.run();
-                    try {
-                        Thread.sleep(70);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-    }
-
     public void setOkCancelListener(WindowUtils.OkCancelListener okCancelListener) {
         this.okCancelListener = okCancelListener;
     }
@@ -404,68 +350,9 @@ public class AboutPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        layeredPane = new javax.swing.JLayeredPane();
-
         setLayout(new java.awt.BorderLayout());
-
-        layeredPane.setPreferredSize(new java.awt.Dimension(470, 400));
-
-        javax.swing.GroupLayout layeredPaneLayout = new javax.swing.GroupLayout(layeredPane);
-        layeredPane.setLayout(layeredPaneLayout);
-        layeredPaneLayout.setHorizontalGroup(
-            layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
-        );
-        layeredPaneLayout.setVerticalGroup(
-            layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 412, Short.MAX_VALUE)
-        );
-
-        add(layeredPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLayeredPane layeredPane;
     // End of variables declaration//GEN-END:variables
-
-    private void addAnimatedLogo(Rectangle windowSize) {
-        // Toolkit toolkit = Toolkit.getDefaultToolkit();
-        GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-        if (gc == null) {
-            gc = getGraphicsConfiguration();
-        }
-
-        /*if(gc != null) {
-	    	windowSize = gc.getBounds();
-	    } else {
-	    	windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-	    } */
-        // Dimension size = layeredPanel.getSize();
-        Icon frinika_light = new javax.swing.ImageIcon(AboutPanel.class.getResource("/com/frinika/resources/frinika_light_gradient.png"));
-        light_label = new JLabel(frinika_light);
-        light_label.setLocation(-400, 60);
-        light_label.setSize(frinika_light.getIconWidth(), frinika_light.getIconHeight());
-        layeredPane.add(light_label, javax.swing.JLayeredPane.MODAL_LAYER);
-
-        Icon frinika_cloud = new javax.swing.ImageIcon(AboutPanel.class.getResource("/com/frinika/resources/frinika_score.png"));
-        cloud_width = frinika_cloud.getIconWidth();
-        light_cloud1 = new JLabel(frinika_cloud);
-        light_cloud1.setLocation(cloud_width, 75);
-        light_cloud1.setSize(frinika_light.getIconWidth(), frinika_light.getIconHeight());
-        layeredPane.add(light_cloud1, javax.swing.JLayeredPane.MODAL_LAYER);
-        light_cloud2 = new JLabel(frinika_cloud);
-        light_cloud2.setLocation(0, 75);
-        light_cloud2.setSize(frinika_light.getIconWidth(), frinika_light.getIconHeight());
-        layeredPane.add(light_cloud2, javax.swing.JLayeredPane.MODAL_LAYER);
-
-        Icon frinika_overscan = new javax.swing.ImageIcon(AboutPanel.class.getResource("/com/frinika/resources/frinika_overscan.png"));
-        JLabel light_overscan = new JLabel(frinika_overscan);
-        light_overscan.setLocation(22, 43);
-        light_overscan.setSize(frinika_overscan.getIconWidth(), frinika_overscan.getIconHeight());
-        layeredPane.add(light_overscan, javax.swing.JLayeredPane.POPUP_LAYER);
-
-        createAnimationThread();
-        animation.start();
-    }
 }

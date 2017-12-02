@@ -21,10 +21,10 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.project.dialog;
+package com.frinika.gui.action;
 
 import com.frinika.gui.util.WindowUtils;
-import com.frinika.project.panel.AboutPanel;
+import com.frinika.gui.panel.AboutPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -43,11 +43,12 @@ import javax.swing.JFrame;
 public class About {
 
     public static void about(JFrame parentFrame) {
+        boolean darkMode = WindowUtils.isDarkMode();
         final JDialog aboutDialog = new JDialog(parentFrame);
         aboutDialog.setUndecorated(true);
         aboutDialog.setModal(true);
         aboutDialog.setTitle("About Frinika");
-        aboutDialog.getRootPane().setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        aboutDialog.getRootPane().setBorder(BorderFactory.createLineBorder(darkMode ? Color.WHITE : Color.BLACK, 2));
         AboutPanel aboutPanel = new AboutPanel();
         aboutDialog.add(aboutPanel, BorderLayout.CENTER);
         aboutDialog.pack();

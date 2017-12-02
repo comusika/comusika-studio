@@ -23,7 +23,7 @@
  */
 package com.frinika.simphoney;
 
-import com.frinika.frame.FrinikaFrame;
+import com.frinika.gui.FrinikaFrame;
 import com.frinika.midi.MidiMessageListener;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.RecordingManager;

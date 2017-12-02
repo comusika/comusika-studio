@@ -89,7 +89,7 @@ repositories {
 
 dependencies {
     compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-frame'))
+    compile(project(':modules:frinika-gui'))
     compile(project(':modules:frinika-mod'))
     compile(project(':modules:frinika-radio'))
     compile(project(':modules:frinika-view-notation'))

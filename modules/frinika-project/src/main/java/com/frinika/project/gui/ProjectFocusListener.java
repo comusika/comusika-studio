@@ -21,13 +21,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.project.gui;
 
 import com.frinika.project.FrinikaProjectContainer;
 
 public interface ProjectFocusListener {
-	
-	public void projectFocusNotify(FrinikaProjectContainer project);
 
+    void projectFocusNotify(FrinikaProjectContainer project);
 }
