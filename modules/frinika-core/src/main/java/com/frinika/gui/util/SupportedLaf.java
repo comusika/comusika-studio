@@ -20,6 +20,7 @@
 package com.frinika.gui.util;
 
 /**
+ * Enumeration of look and feels supported by Frinika.
  *
  * @author hajdam
  */

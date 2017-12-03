@@ -10,6 +10,9 @@ import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -23,7 +26,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
-import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -68,10 +70,9 @@ public class WindowUtils {
             case DEFAULT: {
                 try {
                     UIManager.setLookAndFeel(PlasticXPLookAndFeel.class.getCanonicalName());
-                    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
                     MetalTheme currentTheme = PlasticXPLookAndFeel.getCurrentTheme();
                     if (!(currentTheme instanceof SkyBlue)) {
-                        ((PlasticXPLookAndFeel) lookAndFeel).setCurrentTheme(PlasticXPLookAndFeel.getPlasticTheme());
+                        PlasticXPLookAndFeel.setCurrentTheme(PlasticXPLookAndFeel.getPlasticTheme());
                         UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
                     }
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
@@ -300,6 +301,35 @@ public class WindowUtils {
         dialogPanel.add(mainPanel, BorderLayout.CENTER);
         dialogPanel.add(controlPanel, BorderLayout.SOUTH);
         return dialogPanel;
+    }
+
+    public static void setWindowCenterPosition(Window window) {
+        setWindowCenterPosition(window, 0);
+    }
+
+    public static void setWindowCenterPosition(Window window, int screen) {
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] allDevices = env.getScreenDevices();
+        int topLeftX, topLeftY, screenX, screenY, windowPosX, windowPosY;
+
+        if (screen < allDevices.length && screen > -1) {
+            topLeftX = allDevices[screen].getDefaultConfiguration().getBounds().x;
+            topLeftY = allDevices[screen].getDefaultConfiguration().getBounds().y;
+
+            screenX = allDevices[screen].getDefaultConfiguration().getBounds().width;
+            screenY = allDevices[screen].getDefaultConfiguration().getBounds().height;
+        } else {
+            topLeftX = allDevices[0].getDefaultConfiguration().getBounds().x;
+            topLeftY = allDevices[0].getDefaultConfiguration().getBounds().y;
+
+            screenX = allDevices[0].getDefaultConfiguration().getBounds().width;
+            screenY = allDevices[0].getDefaultConfiguration().getBounds().height;
+        }
+
+        windowPosX = ((screenX - window.getWidth()) / 2) + topLeftX;
+        windowPosY = ((screenY - window.getHeight()) / 2) + topLeftY;
+
+        window.setLocation(windowPosX, windowPosY);
     }
 
     public static interface OkCancelListener {

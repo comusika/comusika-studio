@@ -19,9 +19,12 @@
  */
 package com.frinika.gui.panel;
 
+import com.frinika.gui.util.BareBonesBrowserLaunch;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
 import javax.swing.SwingUtilities;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 /**
  * Welcome panel for application start.
@@ -32,6 +35,20 @@ public class WelcomePanel extends javax.swing.JPanel {
 
     public WelcomePanel() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        mainTitleEditorPane.setOpaque(false);
+        mainTitleEditorPane.setText(AboutPanel.MAIN_TITLE);
+        mainTitleEditorPane.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent event) {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
+                }
+            }
+        });
     }
 
     /**
@@ -52,15 +69,16 @@ public class WelcomePanel extends javax.swing.JPanel {
         samplListScrollPane = new javax.swing.JScrollPane();
         sampleList = new javax.swing.JList<>();
         newProjectButton = new javax.swing.JButton();
+        openProjectButton = new javax.swing.JButton();
+        controlPanel = new javax.swing.JPanel();
+        exitButton = new javax.swing.JButton();
+        optionsPanel = new javax.swing.JPanel();
+        configureAudioButton = new javax.swing.JButton();
         lafPanel = new javax.swing.JPanel();
         defaultLafToggleButton = new javax.swing.JToggleButton();
         darculaLafToggleButton = new javax.swing.JToggleButton();
-        openProjectButton = new javax.swing.JButton();
-        optionsPanel = new javax.swing.JPanel();
-        configureAudioButton = new javax.swing.JButton();
-        controlPanel = new javax.swing.JPanel();
-        closeButton = new javax.swing.JButton();
         animatedLogoPanel = new com.frinika.gui.panel.AnimatedLogoPanel();
+        mainTitleEditorPane = new javax.swing.JEditorPane();
 
         recentProjectsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -90,6 +108,44 @@ public class WelcomePanel extends javax.swing.JPanel {
 
         newProjectButton.setText("Create new project");
         newProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        newProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newProjectButtonActionPerformed(evt);
+            }
+        });
+
+        openProjectButton.setText("Open project");
+        openProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
+
+        optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
+
+        configureAudioButton.setText("Configure audio...");
+        configureAudioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                configureAudioButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
+        optionsPanel.setLayout(optionsPanelLayout);
+        optionsPanelLayout.setHorizontalGroup(
+            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(configureAudioButton)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+        optionsPanelLayout.setVerticalGroup(
+            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(configureAudioButton, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
 
         lafPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Look and Feel"));
 
@@ -128,55 +184,33 @@ public class WelcomePanel extends javax.swing.JPanel {
                 .addComponent(darculaLafToggleButton))
         );
 
-        openProjectButton.setText("Open project");
-        openProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-
-        optionsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
-
-        configureAudioButton.setText("Configure audio...");
-        configureAudioButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                configureAudioButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
-        optionsPanel.setLayout(optionsPanelLayout);
-        optionsPanelLayout.setHorizontalGroup(
-            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(configureAudioButton)
-                .addContainerGap(41, Short.MAX_VALUE))
-        );
-        optionsPanelLayout.setVerticalGroup(
-            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(configureAudioButton, javax.swing.GroupLayout.Alignment.TRAILING)
-        );
-
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
         controlPanelLayout.setHorizontalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton)
+                .addComponent(exitButton)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addComponent(lafPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         controlPanelLayout.setVerticalGroup(
             controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(closeButton)
+                .addGroup(controlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(optionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lafPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(exitButton)
                 .addContainerGap())
         );
+
+        mainTitleEditorPane.setEditable(false);
+        mainTitleEditorPane.setContentType("text/html"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -187,44 +221,38 @@ public class WelcomePanel extends javax.swing.JPanel {
                 .addComponent(projectsTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(169, 169, 169)
+                        .addGap(145, 145, 145)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(openProjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                            .addComponent(newProjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(openProjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(newProjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 3, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lafPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(optionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap())
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(mainTitleEditorPane, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 6, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
                         .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(mainTitleEditorPane, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newProjectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openProjectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(optionsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lafPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(projectsTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)))
+                    .addComponent(projectsTabbedPane))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -241,9 +269,13 @@ public class WelcomePanel extends javax.swing.JPanel {
         switchLookAndFeel(SupportedLaf.DARCULA);
     }//GEN-LAST:event_darculaLafToggleButtonActionPerformed
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         darculaLafToggleButton.setSelected(!darculaLafToggleButton.isSelected());
-    }//GEN-LAST:event_closeButtonActionPerformed
+    }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void newProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newProjectButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -256,13 +288,14 @@ public class WelcomePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.frinika.gui.panel.AnimatedLogoPanel animatedLogoPanel;
-    private javax.swing.JButton closeButton;
     private javax.swing.JButton configureAudioButton;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JToggleButton darculaLafToggleButton;
     private javax.swing.JToggleButton defaultLafToggleButton;
+    private javax.swing.JButton exitButton;
     private javax.swing.ButtonGroup lafButtonGroup;
     private javax.swing.JPanel lafPanel;
+    private javax.swing.JEditorPane mainTitleEditorPane;
     private javax.swing.JButton newProjectButton;
     private javax.swing.JButton openProjectButton;
     private javax.swing.JPanel optionsPanel;
@@ -279,6 +312,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         WindowUtils.switchLookAndFeel(selectedLaf);
         animatedLogoPanel.switchLookAndFeel();
         SwingUtilities.updateComponentTreeUI(this);;
+        mainTitleEditorPane.setText(AboutPanel.MAIN_TITLE);
         invalidate();
     }
 }

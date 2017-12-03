@@ -70,9 +70,10 @@ public class FrinikaMain {
             WelcomePanel welcomePanel = new WelcomePanel();
             JDialog welcomeDialog = WindowUtils.createDialog(welcomePanel, welcomeFrame, Dialog.ModalityType.MODELESS);
             welcomeDialog.setTitle("Welcome to Frinika Studio");
-//            welcomeDialog.setIconImage(image);
+            welcomeDialog.setIconImage(new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")).getImage());
+            WindowUtils.initWindow(welcomeDialog);
+            WindowUtils.setWindowCenterPosition(welcomeDialog);
             welcomeDialog.setVisible(true);
-            
 
             int n;
 

@@ -28,6 +28,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -242,8 +243,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
             licenseAgreement = new JEditorPane();
             licenseAgreement.setContentType("text/html");
+            licenseAgreement.setEditable(false);
             licenseAgreement.setText(new String(bos.toByteArray()));
-
             licenseAgreement.addHyperlinkListener(new HyperlinkListener() {
                 @Override
                 public void hyperlinkUpdate(HyperlinkEvent event) {
@@ -253,11 +254,10 @@ public class AboutPanel extends javax.swing.JPanel {
                 }
             });
 
-            licenseAgreement.setEditable(false);
             JScrollPane licenseScrollPane = new JScrollPane(licenseAgreement);
             panel.add(licenseScrollPane, BorderLayout.CENTER);
+            licenseAgreement.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
             panel.setPreferredSize(new Dimension(700, 400));
-            licenseScrollPane.getVerticalScrollBar().setValue(0);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Couldn't find license agreement.. Exiting.");
