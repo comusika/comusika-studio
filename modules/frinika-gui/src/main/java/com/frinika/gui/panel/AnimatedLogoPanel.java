@@ -39,10 +39,10 @@ import javax.swing.ImageIcon;
  */
 public class AnimatedLogoPanel extends javax.swing.JPanel {
 
-    private final ImageIcon labelImage;
+    private ImageIcon labelImage;
     private final ImageIcon lightImage;
     private final ImageIcon cloudImage;
-    private final ImageIcon overscanImage;
+    private ImageIcon overscanImage;
 
     private final Point cloud1Position;
     private final Point cloud2Position;
@@ -183,5 +183,15 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
                 }
             }
         }, 0, 70);
+    }
+
+    public void switchLookAndFeel() {
+        boolean darkMode = WindowUtils.isDarkMode();
+        setBackground(darkMode ? Color.BLACK : Color.WHITE);
+
+        String postfix = darkMode ? "-dark" : "";
+        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika-studio" + postfix + ".png"));
+        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_overscan" + postfix + ".png"));
+        invalidate();
     }
 }

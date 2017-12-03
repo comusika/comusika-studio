@@ -1,5 +1,9 @@
 package com.frinika.gui.util;
 
+import com.bulenkov.darcula.DarculaLaf;
+import com.bulenkov.darcula.DarculaLookAndFeelInfo;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
+import com.jgoodies.looks.plastic.theme.SkyBlue;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -10,6 +14,8 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,7 +23,11 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.metal.MetalTheme;
 
 /**
  * Utility static methods usable for windows and dialogs.
@@ -26,9 +36,12 @@ import javax.swing.SwingUtilities;
  */
 public class WindowUtils {
 
-    private static boolean darkMode = true;
+    private static boolean darkMode = false;
 
     private static final int BUTTON_CLICK_TIME = 150;
+
+    private WindowUtils() {
+    }
 
     public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, ImageIcon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
@@ -50,7 +63,46 @@ public class WindowUtils {
         dialog.setSize(dialog.getWidth(), height);
     }
 
-    private WindowUtils() {
+    public static void switchLookAndFeel(SupportedLaf selectedLaf) {
+        switch (selectedLaf) {
+            case DEFAULT: {
+                try {
+                    UIManager.setLookAndFeel(PlasticXPLookAndFeel.class.getCanonicalName());
+                    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+                    MetalTheme currentTheme = PlasticXPLookAndFeel.getCurrentTheme();
+                    if (!(currentTheme instanceof SkyBlue)) {
+                        ((PlasticXPLookAndFeel) lookAndFeel).setCurrentTheme(PlasticXPLookAndFeel.getPlasticTheme());
+                        UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+                    }
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                    try {
+                        PlasticXPLookAndFeel plasticXPLookAndFeel = new PlasticXPLookAndFeel();
+                        UIManager.setLookAndFeel(plasticXPLookAndFeel);
+                    } catch (UnsupportedLookAndFeelException ex2) {
+                        Logger.getLogger(WindowUtils.class.getName()).log(Level.SEVERE, null, ex2);
+                    }
+                }
+                WindowUtils.setDarkMode(false);
+                break;
+            }
+            case DARCULA: {
+                try {
+                    // Workaround for https://github.com/bulenkov/iconloader/issues/14
+                    javax.swing.UIManager.getFont("Label.font");
+
+                    UIManager.setLookAndFeel(DarculaLaf.class.getCanonicalName());
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                    try {
+                        UIManager.installLookAndFeel(new DarculaLookAndFeelInfo());
+                        UIManager.setLookAndFeel(new DarculaLaf());
+                    } catch (UnsupportedLookAndFeelException ex2) {
+                        Logger.getLogger(WindowUtils.class.getName()).log(Level.SEVERE, null, ex2);
+                    }
+                }
+                WindowUtils.setDarkMode(true);
+                break;
+            }
+        }
     }
 
     public static void invokeWindow(final Window window) {
@@ -220,7 +272,7 @@ public class WindowUtils {
     }
 
     public static boolean isDarkMode() {
-        return false; // darkMode;
+        return darkMode;
     }
 
     public static void setDarkMode(boolean darkMode) {

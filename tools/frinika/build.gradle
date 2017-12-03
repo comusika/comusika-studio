@@ -104,8 +104,6 @@ dependencies {
     compile(project(':modules:frinika-mystudio'))
     compile 'com.apple:AppleJavaExtensions:1.4'
     compile 'com.jgoodies:looks:2.1.4'
-    compile ':darcula'
-    compile ':iconloader'
 
     runtime ':FrinikaVorbisSPI'
     runtime ':gervill'

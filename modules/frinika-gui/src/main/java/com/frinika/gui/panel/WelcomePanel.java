@@ -19,7 +19,9 @@
  */
 package com.frinika.gui.panel;
 
+import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
+import javax.swing.SwingUtilities;
 
 /**
  * Welcome panel for application start.
@@ -58,7 +60,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         configureAudioButton = new javax.swing.JButton();
         controlPanel = new javax.swing.JPanel();
         closeButton = new javax.swing.JButton();
-        animatedLogoPanel1 = new com.frinika.gui.panel.AnimatedLogoPanel();
+        animatedLogoPanel = new com.frinika.gui.panel.AnimatedLogoPanel();
 
         recentProjectsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -102,6 +104,11 @@ public class WelcomePanel extends javax.swing.JPanel {
         lafButtonGroup.add(darculaLafToggleButton);
         darculaLafToggleButton.setSelected(true);
         darculaLafToggleButton.setText("Darcula");
+        darculaLafToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                darculaLafToggleButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout lafPanelLayout = new javax.swing.GroupLayout(lafPanel);
         lafPanel.setLayout(lafPanelLayout);
@@ -148,6 +155,11 @@ public class WelcomePanel extends javax.swing.JPanel {
         );
 
         closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlPanelLayout = new javax.swing.GroupLayout(controlPanel);
         controlPanel.setLayout(controlPanelLayout);
@@ -185,7 +197,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                             .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(animatedLogoPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 3, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lafPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -199,7 +211,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
-                        .addComponent(animatedLogoPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(newProjectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -222,8 +234,16 @@ public class WelcomePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_configureAudioButtonActionPerformed
 
     private void defaultLafToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultLafToggleButtonActionPerformed
-        
+        switchLookAndFeel(SupportedLaf.DEFAULT);
     }//GEN-LAST:event_defaultLafToggleButtonActionPerformed
+
+    private void darculaLafToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_darculaLafToggleButtonActionPerformed
+        switchLookAndFeel(SupportedLaf.DARCULA);
+    }//GEN-LAST:event_darculaLafToggleButtonActionPerformed
+
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        darculaLafToggleButton.setSelected(!darculaLafToggleButton.isSelected());
+    }//GEN-LAST:event_closeButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -235,7 +255,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.frinika.gui.panel.AnimatedLogoPanel animatedLogoPanel1;
+    private com.frinika.gui.panel.AnimatedLogoPanel animatedLogoPanel;
     private javax.swing.JButton closeButton;
     private javax.swing.JButton configureAudioButton;
     private javax.swing.JPanel controlPanel;
@@ -254,4 +274,11 @@ public class WelcomePanel extends javax.swing.JPanel {
     private javax.swing.JList<String> sampleList;
     private javax.swing.JPanel sampleProjectsPanel;
     // End of variables declaration//GEN-END:variables
+
+    private void switchLookAndFeel(SupportedLaf selectedLaf) {
+        WindowUtils.switchLookAndFeel(selectedLaf);
+        animatedLogoPanel.switchLookAndFeel();
+        SwingUtilities.updateComponentTreeUI(this);;
+        invalidate();
+    }
 }

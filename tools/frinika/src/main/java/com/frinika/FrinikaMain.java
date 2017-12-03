@@ -23,8 +23,6 @@
  */
 package com.frinika;
 
-import com.bulenkov.darcula.DarculaLaf;
-import com.bulenkov.darcula.DarculaLookAndFeelInfo;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.gui.FrinikaFrame;
 import com.frinika.gui.WelcomeDialog;
@@ -32,6 +30,9 @@ import com.frinika.gui.action.CreateProjectAction;
 import com.frinika.gui.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
+import com.frinika.gui.panel.WelcomePanel;
+import com.frinika.gui.util.SupportedLaf;
+import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.SplashDialog;
@@ -39,14 +40,13 @@ import com.frinika.project.dialog.VersionProperties;
 import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 /**
  * The main entry class for Frinika
@@ -66,6 +66,14 @@ public class FrinikaMain {
         configureUI();
 
         try {
+            JFrame welcomeFrame = new JFrame("title");
+            WelcomePanel welcomePanel = new WelcomePanel();
+            JDialog welcomeDialog = WindowUtils.createDialog(welcomePanel, welcomeFrame, Dialog.ModalityType.MODELESS);
+            welcomeDialog.setTitle("Welcome to Frinika Studio");
+//            welcomeDialog.setIconImage(image);
+            welcomeDialog.setVisible(true);
+            
+
             int n;
 
             Object[] options = {
@@ -146,18 +154,9 @@ public class FrinikaMain {
     }
 
     public static void configureUI() {
-
         String lcOSName = System.getProperty("os.name").toLowerCase();
 
-        try {
-//            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-            // Workaround for https://github.com/bulenkov/iconloader/issues/14
-            javax.swing.UIManager.getFont("Label.font");
-            UIManager.installLookAndFeel(new DarculaLookAndFeelInfo());
-            UIManager.setLookAndFeel(new DarculaLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        WindowUtils.switchLookAndFeel(SupportedLaf.DARCULA);
     }
 
     static class FrinikaExitHandler extends Thread {
