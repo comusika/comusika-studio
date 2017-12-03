@@ -22,11 +22,15 @@ package com.frinika.gui.panel;
 import com.frinika.gui.util.WindowUtils;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
-import javax.swing.Icon;
-import javax.swing.JLabel;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.util.Timer;
+import java.util.TimerTask;
+import javax.swing.ImageIcon;
 
 /**
  * Panel for animated logo.
@@ -35,13 +39,46 @@ import javax.swing.JLabel;
  */
 public class AnimatedLogoPanel extends javax.swing.JPanel {
 
-    private JLabel light_label;
-    private JLabel light_cloud1;
-    private JLabel light_cloud2;
-    private int cloud_width;
-    private Thread animation;
+    private final ImageIcon labelImage;
+    private final ImageIcon lightImage;
+    private final ImageIcon cloudImage;
+    private final ImageIcon overscanImage;
+
+    private final Point cloud1Position;
+    private final Point cloud2Position;
+    private final Point lightPosition;
+    private final Point overscanPosition;
+
+    private BufferedImage animationBuffer;
+    private final ImageObserver observer = new ImageObserver() {
+        @Override
+        public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+            return true;
+        }
+    };
+
+    // Cached values
+    private int labelWidth = 0;
+    private int cloudWidth = 0;
+    private int lightWidth = 0;
 
     public AnimatedLogoPanel() {
+        boolean darkMode = WindowUtils.isDarkMode();
+        String postfix = darkMode ? "-dark" : "";
+        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika-studio" + postfix + ".png"));
+        lightImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_light_gradient.png"));
+        cloudImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_score.png"));
+        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_overscan" + postfix + ".png"));
+
+        cloudWidth = cloudImage.getIconWidth();
+        labelWidth = labelImage.getIconWidth();
+        lightWidth = lightImage.getIconWidth();
+
+        cloud1Position = new Point(0, 75);
+        cloud2Position = new Point(cloudWidth, 75);
+        lightPosition = new Point(0, 0);
+        overscanPosition = new Point(0, 0);
+
         initComponents();
         init();
     }
@@ -55,40 +92,16 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        layeredPane = new javax.swing.JLayeredPane();
-
         setLayout(new java.awt.BorderLayout());
-
-        layeredPane.setPreferredSize(new java.awt.Dimension(470, 400));
-
-        javax.swing.GroupLayout layeredPaneLayout = new javax.swing.GroupLayout(layeredPane);
-        layeredPane.setLayout(layeredPaneLayout);
-        layeredPaneLayout.setHorizontalGroup(
-            layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 618, Short.MAX_VALUE)
-        );
-        layeredPaneLayout.setVerticalGroup(
-            layeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 328, Short.MAX_VALUE)
-        );
-
-        add(layeredPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void init() {
         boolean darkMode = WindowUtils.isDarkMode();
         setBackground(darkMode ? Color.BLACK : Color.WHITE);
-        setMinimumSize(new Dimension(470, 260));
-        setPreferredSize(new Dimension(470, 260));
+        setMinimumSize(new Dimension(lightWidth, 203));
+        setPreferredSize(new Dimension(lightWidth, 203));
 
-        Icon logoImage = new javax.swing.ImageIcon(AnimatedLogoPanel.class.getResource(WindowUtils.isDarkMode() ? "/frinika-studio-dark.png" : "/frinika.png"));
-        JLabel welcomeLabel = new JLabel(logoImage);
-        welcomeLabel.setLocation(22, 43);
-        welcomeLabel.setSize(logoImage.getIconWidth(), logoImage.getIconHeight());
-        layeredPane.add(welcomeLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        layeredPane.setBackground(Color.red);
-
-        addAnimatedLogo();
+        startAnimationThread();
     }
 
     /**
@@ -101,92 +114,74 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLayeredPane layeredPane;
     // End of variables declaration//GEN-END:variables
-
-    private void addAnimatedLogo() {
-        // Toolkit toolkit = Toolkit.getDefaultToolkit();
-        GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-        if (gc == null) {
-            gc = getGraphicsConfiguration();
-        }
-
-        /*if(gc != null) {
-	    	windowSize = gc.getBounds();
-	    } else {
-	    	windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-	    } */
-        // Dimension size = layeredPanel.getSize();
-        Icon frinika_light = new javax.swing.ImageIcon(AnimatedLogoPanel.class.getResource("/com/frinika/resources/frinika_light_gradient.png"));
-        light_label = new JLabel(frinika_light);
-        light_label.setLocation(-400, 60);
-        light_label.setSize(frinika_light.getIconWidth(), frinika_light.getIconHeight());
-        layeredPane.add(light_label, javax.swing.JLayeredPane.MODAL_LAYER);
-
-        Icon frinika_cloud = new javax.swing.ImageIcon(AnimatedLogoPanel.class.getResource("/com/frinika/resources/frinika_score.png"));
-        cloud_width = frinika_cloud.getIconWidth();
-        light_cloud1 = new JLabel(frinika_cloud);
-        light_cloud1.setLocation(cloud_width, 75);
-        light_cloud1.setSize(frinika_light.getIconWidth(), frinika_light.getIconHeight());
-        layeredPane.add(light_cloud1, javax.swing.JLayeredPane.MODAL_LAYER);
-        light_cloud2 = new JLabel(frinika_cloud);
-        light_cloud2.setLocation(0, 75);
-        light_cloud2.setSize(frinika_light.getIconWidth(), frinika_light.getIconHeight());
-        layeredPane.add(light_cloud2, javax.swing.JLayeredPane.MODAL_LAYER);
-
-        Icon frinika_overscan = new javax.swing.ImageIcon(AnimatedLogoPanel.class.getResource("/com/frinika/resources/frinika_overscan.png"));
-        JLabel light_overscan = new JLabel(frinika_overscan);
-        light_overscan.setLocation(22, 43);
-        light_overscan.setSize(frinika_overscan.getIconWidth(), frinika_overscan.getIconHeight());
-        layeredPane.add(light_overscan, javax.swing.JLayeredPane.POPUP_LAYER);
-
-        createAnimationThread();
-        animation.start();
+    @Override
+    public void invalidate() {
+        animationBuffer = null;
+        updateBuffer();
+        super.invalidate();
     }
 
-    private void createAnimationThread() {
-        animation = new Thread() {
-            boolean active = true;
-            Runnable gui = new Runnable() {
-                @Override
-                public void run() {
-                    Point loc1 = light_cloud1.getLocation();
-                    loc1.x -= 1;
-                    if (loc1.x < -cloud_width) {
-                        loc1.x += 2 * cloud_width;
-                    }
-                    light_cloud1.setLocation(loc1);
-                    Point loc2 = light_cloud2.getLocation();
-                    loc2.x -= 1;
-                    if (loc2.x < -cloud_width) {
-                        loc2.x += 2 * cloud_width;
-                    }
-                    light_cloud2.setLocation(loc2);
+    @Override
+    protected void paintComponent(Graphics g) {
+        if (animationBuffer != null) {
+            g.drawImage(animationBuffer, 0, 0, this);
+        }
+    }
 
-                    Point loc = light_label.getLocation();
-                    loc.x += 3;
-                    if (loc.x > 350) {
-                        loc.x = -400;
-                    }
-                    light_label.setLocation(loc);
-                    if (!isVisible()) {
-                        active = false;
-                    }
-                }
-            };
+    protected void updateBuffer() {
+        int width = getWidth();
+        int height = getHeight();
+        if (width > 0 && height > 0) {
+            if (animationBuffer == null) {
+                animationBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = animationBuffer.createGraphics();
 
+                int panelWidth = width;
+                int startPoint = (panelWidth - labelWidth) / 2;
+                g.setColor(getBackground());
+                g.fillRect(0, 0, width, height);
+                g.drawImage(labelImage.getImage(), startPoint, 0, observer);
+                g.drawImage(cloudImage.getImage(), startPoint + cloud1Position.x, cloud1Position.y, observer);
+                g.drawImage(cloudImage.getImage(), startPoint + cloud2Position.x, cloud2Position.y, observer);
+                g.drawImage(lightImage.getImage(), startPoint + lightPosition.x, lightPosition.y, observer);
+                g.drawImage(overscanImage.getImage(), startPoint + overscanPosition.x, overscanPosition.y, observer);
+                g.fillRect(0, 0, startPoint, height);
+                g.fillRect(startPoint + labelWidth, 0, width - startPoint + labelWidth, height);
+                g.dispose();
+            }
+        }
+    }
+
+    private void animate() {
+        cloud1Position.x--;
+        if (cloud1Position.x < -cloudWidth) {
+            cloud1Position.x = cloudWidth;
+        }
+
+        cloud2Position.x--;
+        if (cloud2Position.x < -cloudWidth) {
+            cloud2Position.x = cloudWidth;
+        }
+
+        lightPosition.x += 3;
+        if (lightPosition.x > labelWidth) {
+            lightPosition.x = -lightWidth;
+        }
+
+        invalidate();
+        repaint();
+    }
+
+    private void startAnimationThread() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                while (active) {
-                    gui.run();
-                    try {
-                        Thread.sleep(70);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                if (isVisible()) {
+                    animate();
                 }
             }
-        };
+        }, 0, 70);
     }
 }

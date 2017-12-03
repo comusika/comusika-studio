@@ -220,7 +220,7 @@ public class WindowUtils {
     }
 
     public static boolean isDarkMode() {
-        return darkMode;
+        return false; // darkMode;
     }
 
     public static void setDarkMode(boolean darkMode) {

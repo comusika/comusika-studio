@@ -269,6 +269,15 @@ public class AboutPanel extends javax.swing.JPanel {
                 new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)));
     }
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new AboutPanel());
+    }
+
     public void whitening(Container co) {
         boolean darkMode = WindowUtils.isDarkMode();
         Component[] comps = co.getComponents();
