@@ -311,7 +311,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     private void switchLookAndFeel(SupportedLaf selectedLaf) {
         WindowUtils.switchLookAndFeel(selectedLaf);
         animatedLogoPanel.switchLookAndFeel();
-        SwingUtilities.updateComponentTreeUI(this);;
+        SwingUtilities.updateComponentTreeUI(this);
         mainTitleEditorPane.setText(AboutPanel.MAIN_TITLE);
         invalidate();
     }
