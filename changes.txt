@@ -3,3 +3,4 @@
 - Added darcula dark look and feel
 - Added SoundHelix generator
 - About dialog made animated
+- Replaced welcome dialog

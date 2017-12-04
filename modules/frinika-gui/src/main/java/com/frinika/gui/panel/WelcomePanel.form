@@ -25,7 +25,7 @@
               <Component id="projectsTabbedPane" min="-2" pref="365" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="openProjectButton" max="32767" attributes="0"/>
                           <Component id="newProjectButton" min="-2" pref="251" max="-2" attributes="0"/>
@@ -38,7 +38,7 @@
                           <Component id="controlPanel" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="mainTitleEditorPane" min="-2" pref="517" max="-2" attributes="0"/>
+                                  <Component id="mainTitleTextPane" min="-2" pref="517" max="-2" attributes="0"/>
                                   <Component id="animatedLogoPanel" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
@@ -58,12 +58,12 @@
                   <Group type="102" attributes="0">
                       <Component id="animatedLogoPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="mainTitleEditorPane" min="-2" pref="54" max="-2" attributes="0"/>
+                      <Component id="mainTitleTextPane" min="-2" pref="54" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="newProjectButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="openProjectButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="15" max="32767" attributes="0"/>
                       <Component id="controlPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="projectsTabbedPane" max="32767" attributes="0"/>
@@ -102,17 +102,6 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
                 <Component class="javax.swing.JList" name="recentList">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
-                        <StringItem index="4" value="Item 5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -145,17 +134,6 @@
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
                 <Component class="javax.swing.JList" name="sampleList">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="5">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
-                        <StringItem index="4" value="Item 5"/>
-                      </StringArray>
-                    </Property>
-                  </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -168,6 +146,9 @@
     </Container>
     <Component class="javax.swing.JButton" name="newProjectButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/new.gif"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Create new project"/>
         <Property name="horizontalAlignment" type="int" value="2"/>
       </Properties>
@@ -177,9 +158,15 @@
     </Component>
     <Component class="javax.swing.JButton" name="openProjectButton">
       <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/icons/open.gif"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Open project"/>
         <Property name="horizontalAlignment" type="int" value="2"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openProjectButtonActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JPanel" name="controlPanel">
 
@@ -320,10 +307,9 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
     </Container>
-    <Component class="javax.swing.JEditorPane" name="mainTitleEditorPane">
+    <Component class="javax.swing.JTextPane" name="mainTitleTextPane">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
-        <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>

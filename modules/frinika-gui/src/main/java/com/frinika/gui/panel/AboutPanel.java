@@ -43,14 +43,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  * Panel for about dialog.
@@ -126,19 +129,10 @@ public class AboutPanel extends javax.swing.JPanel {
         panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JEditorPane mainTitle = new JEditorPane();
+        JTextPane mainTitle = new JTextPane();
         mainTitle.setOpaque(false);
-        mainTitle.setContentType("text/html");
-        mainTitle.setEditable(false);
+        initializeTextPane(mainTitle);
         mainTitle.setText(MAIN_TITLE);
-        mainTitle.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
-                }
-            }
-        });
         panel.add(mainTitle, BorderLayout.NORTH);
 
         JPanel buttonsPanel = new JPanel();
@@ -152,7 +146,9 @@ public class AboutPanel extends javax.swing.JPanel {
                     showLicense();
                 }
             });
-            button.setOpaque(false);
+            if (WindowUtils.isDarkMode()) {
+                button.setOpaque(false);
+            }
             buttonsPanel.add(button);
         }
 
@@ -164,7 +160,9 @@ public class AboutPanel extends javax.swing.JPanel {
                     showCredits();
                 }
             });
-            button.setOpaque(false);
+            if (WindowUtils.isDarkMode()) {
+                button.setOpaque(false);
+            }
             buttonsPanel.add(button);
         }
 
@@ -176,7 +174,9 @@ public class AboutPanel extends javax.swing.JPanel {
                     showSystemInfo();
                 }
             });
-            button.setOpaque(false);
+            if (WindowUtils.isDarkMode()) {
+                button.setOpaque(false);
+            }
             buttonsPanel.add(button);
         }
 
@@ -190,7 +190,9 @@ public class AboutPanel extends javax.swing.JPanel {
             });
             okButton.setDefaultCapable(true);
             // getRootPane().setDefaultButton(okButton);
-            okButton.setOpaque(false);
+            if (WindowUtils.isDarkMode()) {
+                okButton.setOpaque(false);
+            }
             buttonsPanel.add(okButton);
         }
 
@@ -199,19 +201,10 @@ public class AboutPanel extends javax.swing.JPanel {
         JPanel copyrightPanel = new JPanel();
         copyrightPanel.setOpaque(false);
 
-        JEditorPane copyrightNotice = new JEditorPane();
+        JTextPane copyrightNotice = new JTextPane();
         copyrightNotice.setOpaque(false);
-        copyrightNotice.setContentType("text/html");
-        copyrightNotice.setEditable(false);
+        initializeTextPane(copyrightNotice);
         copyrightNotice.setText(COPYRIGHT_NOTICE);
-        copyrightNotice.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
-                }
-            }
-        });
         copyrightPanel.add(copyrightNotice);
 
         panel.add(copyrightPanel, BorderLayout.SOUTH);
@@ -233,7 +226,7 @@ public class AboutPanel extends javax.swing.JPanel {
     public void showLicense() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JEditorPane licenseAgreement;
+        JTextPane licenseAgreement;
         try {
             InputStream is = AboutPanel.class.getResource("/com/frinika/resources/license-gpl2.html").openStream();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -241,18 +234,10 @@ public class AboutPanel extends javax.swing.JPanel {
                 bos.write(is.read());
             }
 
-            licenseAgreement = new JEditorPane();
-            licenseAgreement.setContentType("text/html");
-            licenseAgreement.setEditable(false);
+            licenseAgreement = new JTextPane();
+            initializeTextPane(licenseAgreement);
             licenseAgreement.setText(new String(bos.toByteArray()));
-            licenseAgreement.addHyperlinkListener(new HyperlinkListener() {
-                @Override
-                public void hyperlinkUpdate(HyperlinkEvent event) {
-                    if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                        BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
-                    }
-                }
-            });
+            licenseAgreement.setCaretPosition(0);
 
             JScrollPane licenseScrollPane = new JScrollPane(licenseAgreement);
             panel.add(licenseScrollPane, BorderLayout.CENTER);
@@ -302,16 +287,9 @@ public class AboutPanel extends javax.swing.JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        JEditorPane creditsTextArea = new JEditorPane("text/html", CREDITS);
-        creditsTextArea.setEditable(false);
-        creditsTextArea.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
-                }
-            }
-        });
+        JTextPane creditsTextArea = new JTextPane();
+        initializeTextPane(creditsTextArea);
+        creditsTextArea.setText(CREDITS);
         creditsTextArea.setFont(creditsTextArea.getFont().deriveFont(11f).deriveFont(Font.PLAIN));
 
         panel.add(creditsTextArea);
@@ -364,4 +342,17 @@ public class AboutPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+    public static void initializeTextPane(JTextPane textPane) {
+        textPane.setContentType("text/html");
+        textPane.setEditable(false);
+        textPane.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent event) {
+                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
+                }
+            }
+        });
+        // TODO set black as default color for light theme
+    }
 }

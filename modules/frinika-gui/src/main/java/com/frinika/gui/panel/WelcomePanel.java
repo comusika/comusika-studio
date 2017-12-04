@@ -22,6 +22,7 @@ package com.frinika.gui.panel;
 import com.frinika.gui.util.BareBonesBrowserLaunch;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
+import java.awt.Color;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -33,15 +34,18 @@ import javax.swing.event.HyperlinkListener;
  */
 public class WelcomePanel extends javax.swing.JPanel {
 
+    private ActionListener actionListener = null;
+
     public WelcomePanel() {
         initComponents();
         init();
     }
 
     private void init() {
-        mainTitleEditorPane.setOpaque(false);
-        mainTitleEditorPane.setText(AboutPanel.MAIN_TITLE);
-        mainTitleEditorPane.addHyperlinkListener(new HyperlinkListener() {
+        mainTitleTextPane.setOpaque(false);
+        mainTitleTextPane.setContentType("text/html");
+        mainTitleTextPane.setText(AboutPanel.MAIN_TITLE);
+        mainTitleTextPane.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate(HyperlinkEvent event) {
                 if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -78,15 +82,10 @@ public class WelcomePanel extends javax.swing.JPanel {
         defaultLafToggleButton = new javax.swing.JToggleButton();
         darculaLafToggleButton = new javax.swing.JToggleButton();
         animatedLogoPanel = new com.frinika.gui.panel.AnimatedLogoPanel();
-        mainTitleEditorPane = new javax.swing.JEditorPane();
+        mainTitleTextPane = new javax.swing.JTextPane();
 
         recentProjectsPanel.setLayout(new java.awt.BorderLayout());
 
-        recentList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         recentListScrollPane.setViewportView(recentList);
 
         recentProjectsPanel.add(recentListScrollPane, java.awt.BorderLayout.CENTER);
@@ -95,17 +94,13 @@ public class WelcomePanel extends javax.swing.JPanel {
 
         sampleProjectsPanel.setLayout(new java.awt.BorderLayout());
 
-        sampleList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         samplListScrollPane.setViewportView(sampleList);
 
         sampleProjectsPanel.add(samplListScrollPane, java.awt.BorderLayout.CENTER);
 
         projectsTabbedPane.addTab("Sample Projects", sampleProjectsPanel);
 
+        newProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/new.gif"))); // NOI18N
         newProjectButton.setText("Create new project");
         newProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         newProjectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -114,8 +109,14 @@ public class WelcomePanel extends javax.swing.JPanel {
             }
         });
 
+        openProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/open.gif"))); // NOI18N
         openProjectButton.setText("Open project");
         openProjectButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        openProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openProjectButtonActionPerformed(evt);
+            }
+        });
 
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -209,8 +210,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        mainTitleEditorPane.setEditable(false);
-        mainTitleEditorPane.setContentType("text/html"); // NOI18N
+        mainTitleTextPane.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -221,7 +221,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                 .addComponent(projectsTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
+                        .addGap(139, 139, 139)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(openProjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(newProjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -232,7 +232,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                             .addComponent(controlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(mainTitleEditorPane, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(mainTitleTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 6, Short.MAX_VALUE)))
                         .addContainerGap())))
@@ -245,12 +245,12 @@ public class WelcomePanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(mainTitleEditorPane, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mainTitleTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newProjectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openProjectButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                         .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(projectsTabbedPane))
                 .addContainerGap())
@@ -258,7 +258,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void configureAudioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configureAudioButtonActionPerformed
-        // TODO add your handling code here:
+        actionListener.configureAudio();
     }//GEN-LAST:event_configureAudioButtonActionPerformed
 
     private void defaultLafToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultLafToggleButtonActionPerformed
@@ -270,12 +270,16 @@ public class WelcomePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_darculaLafToggleButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        darculaLafToggleButton.setSelected(!darculaLafToggleButton.isSelected());
+        actionListener.closeDialog();
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void newProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectButtonActionPerformed
-        // TODO add your handling code here:
+        actionListener.newProject();
     }//GEN-LAST:event_newProjectButtonActionPerformed
+
+    private void openProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openProjectButtonActionPerformed
+        actionListener.openProject();
+    }//GEN-LAST:event_openProjectButtonActionPerformed
 
     /**
      * Test method for this panel.
@@ -295,7 +299,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     private javax.swing.JButton exitButton;
     private javax.swing.ButtonGroup lafButtonGroup;
     private javax.swing.JPanel lafPanel;
-    private javax.swing.JEditorPane mainTitleEditorPane;
+    private javax.swing.JTextPane mainTitleTextPane;
     private javax.swing.JButton newProjectButton;
     private javax.swing.JButton openProjectButton;
     private javax.swing.JPanel optionsPanel;
@@ -312,7 +316,21 @@ public class WelcomePanel extends javax.swing.JPanel {
         WindowUtils.switchLookAndFeel(selectedLaf);
         animatedLogoPanel.switchLookAndFeel();
         SwingUtilities.updateComponentTreeUI(this);
-        mainTitleEditorPane.setText(AboutPanel.MAIN_TITLE);
         invalidate();
+    }
+
+    public void setActionListener(ActionListener actionListener) {
+        this.actionListener = actionListener;
+    }
+
+    public static interface ActionListener {
+
+        void newProject();
+
+        void openProject();
+
+        void configureAudio();
+
+        void closeDialog();
     }
 }
