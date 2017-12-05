@@ -19,13 +19,13 @@
  */
 package com.frinika.gui.panel;
 
-import com.frinika.gui.util.BareBonesBrowserLaunch;
+import com.frinika.gui.model.ProjectFileRecord;
+import com.frinika.gui.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
-import java.awt.Color;
+import javax.swing.DefaultListModel;
+import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 
 /**
  * Welcome panel for application start.
@@ -43,16 +43,18 @@ public class WelcomePanel extends javax.swing.JPanel {
 
     private void init() {
         mainTitleTextPane.setOpaque(false);
-        mainTitleTextPane.setContentType("text/html");
+        AboutPanel.initializeTextPane(mainTitleTextPane);
         mainTitleTextPane.setText(AboutPanel.MAIN_TITLE);
-        mainTitleTextPane.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
-                }
-            }
-        });
+        DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
+        recentList.setModel(recentListModel);
+        recentList.setCellRenderer(new ProjectFileRecordCellRenderer());
+        recentListModel.addElement(new ProjectFileRecord("Name", "Path"));
+        recentListModel.addElement(new ProjectFileRecord("Name2", "some file path"));
+
+        DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
+        sampleList.setModel(sampleListModel);
+        sampleList.setCellRenderer(new ProjectFileRecordCellRenderer());
+        sampleListModel.addElement(new ProjectFileRecord("Name", "Path"));
     }
 
     /**
@@ -221,7 +223,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                 .addComponent(projectsTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(139, 139, 139)
+                        .addGap(140, 140, 140)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(openProjectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(newProjectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -245,12 +247,12 @@ public class WelcomePanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(animatedLogoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(mainTitleTextPane, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mainTitleTextPane, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newProjectButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(openProjectButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(controlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(projectsTabbedPane))
                 .addContainerGap())
@@ -304,11 +306,11 @@ public class WelcomePanel extends javax.swing.JPanel {
     private javax.swing.JButton openProjectButton;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JTabbedPane projectsTabbedPane;
-    private javax.swing.JList<String> recentList;
+    private javax.swing.JList<ProjectFileRecord> recentList;
     private javax.swing.JScrollPane recentListScrollPane;
     private javax.swing.JPanel recentProjectsPanel;
     private javax.swing.JScrollPane samplListScrollPane;
-    private javax.swing.JList<String> sampleList;
+    private javax.swing.JList<ProjectFileRecord> sampleList;
     private javax.swing.JPanel sampleProjectsPanel;
     // End of variables declaration//GEN-END:variables
 

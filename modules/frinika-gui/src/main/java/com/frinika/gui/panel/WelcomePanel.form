@@ -25,7 +25,7 @@
               <Component id="projectsTabbedPane" min="-2" pref="365" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="openProjectButton" max="32767" attributes="0"/>
                           <Component id="newProjectButton" min="-2" pref="251" max="-2" attributes="0"/>
@@ -58,12 +58,12 @@
                   <Group type="102" attributes="0">
                       <Component id="animatedLogoPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="mainTitleTextPane" min="-2" pref="54" max="-2" attributes="0"/>
+                      <Component id="mainTitleTextPane" pref="64" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="newProjectButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="openProjectButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="controlPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="projectsTabbedPane" max="32767" attributes="0"/>
@@ -103,7 +103,7 @@
               <SubComponents>
                 <Component class="javax.swing.JList" name="recentList">
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ProjectFileRecord&gt;"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
@@ -135,7 +135,7 @@
               <SubComponents>
                 <Component class="javax.swing.JList" name="sampleList">
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;ProjectFileRecord&gt;"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
