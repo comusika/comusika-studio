@@ -19,13 +19,15 @@
  */
 package com.frinika.gui.panel;
 
+import com.frinika.global.FrinikaConfig;
 import com.frinika.gui.model.ProjectFileRecord;
 import com.frinika.gui.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
 import javax.swing.DefaultListModel;
-import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * Welcome panel for application start.
@@ -48,7 +50,19 @@ public class WelcomePanel extends javax.swing.JPanel {
         DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
         recentList.setModel(recentListModel);
         recentList.setCellRenderer(new ProjectFileRecordCellRenderer());
-        recentListModel.addElement(new ProjectFileRecord("Name", "Path"));
+        recentList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int index = e.getFirstIndex();
+                if (index >= 0) {
+                    ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                    actionListener.openRecentProject(projectFileRecord);
+                }
+            }
+        });
+
+        String lastProjectFile = FrinikaConfig.lastProjectFile();
+        recentListModel.addElement(new ProjectFileRecord("Name", lastProjectFile));
         recentListModel.addElement(new ProjectFileRecord("Name2", "some file path"));
 
         DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
@@ -334,5 +348,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         void configureAudio();
 
         void closeDialog();
+
+        void openRecentProject(ProjectFileRecord projectFileRecord);
     }
 }

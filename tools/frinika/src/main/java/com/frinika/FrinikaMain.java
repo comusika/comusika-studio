@@ -29,6 +29,7 @@ import com.frinika.gui.action.CreateProjectAction;
 import com.frinika.gui.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
+import com.frinika.gui.model.ProjectFileRecord;
 import com.frinika.gui.panel.WelcomePanel;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
@@ -40,6 +41,8 @@ import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.awt.Dialog;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
@@ -96,6 +99,16 @@ public class FrinikaMain {
             public void closeDialog() {
                 welcomeDialog.setVisible(false);
                 System.exit(0);
+            }
+
+            @Override
+            public void openRecentProject(ProjectFileRecord projectFileRecord) {
+                try {
+                    FrinikaFrame project = new FrinikaFrame(FrinikaProjectContainer
+                            .loadProject(new File(projectFileRecord.getFilePath())));
+                } catch (Exception ex) {
+                    Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         welcomeDialog.setVisible(true);
