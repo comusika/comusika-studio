@@ -19,6 +19,8 @@
  */
 package com.frinika.gui.panel;
 
+import com.frinika.gui.util.WindowUtils;
+
 /**
  *
  * @author hajdam
@@ -43,17 +45,31 @@ public class ProgressPanel extends javax.swing.JPanel {
 
         progressBar = new javax.swing.JProgressBar();
         cancelButton = new javax.swing.JButton();
+        actionLabel = new javax.swing.JLabel();
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
         setLayout(new java.awt.BorderLayout());
         add(progressBar, java.awt.BorderLayout.CENTER);
 
         cancelButton.setText("Cancel");
         cancelButton.setEnabled(false);
         add(cancelButton, java.awt.BorderLayout.EAST);
+
+        actionLabel.setText("Loading...");
+        add(actionLabel, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new ProgressPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel actionLabel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
