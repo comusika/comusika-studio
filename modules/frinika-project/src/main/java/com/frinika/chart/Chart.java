@@ -123,7 +123,6 @@ public class Chart extends Observable implements Serializable {
                     e.printStackTrace();
                 }
             }
-
         }
 
         @Override
@@ -146,7 +145,6 @@ public class Chart extends Observable implements Serializable {
             spaceChords();
             setChanged();
         }
-
     }
 
     public class Chord implements Serializable {

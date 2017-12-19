@@ -2,7 +2,14 @@ apply plugin: 'base'
 apply plugin: 'distribution'
 apply plugin: 'com.bmuschko.izpack'
 
-version = '0.1.0-SNAPSHOT'
+def baseVersion = '0.1.0'
+version = baseVersion + '-' + getDate('yyyyMMdd')
+
+def getDate(dateFormat) {
+    def date = new Date()
+    def formattedDate = date.format(dateFormat)
+    return formattedDate
+}
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
     gradleVersion = '4.0'
@@ -10,10 +17,22 @@ task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
+task versionFile() {
+    doLast {
+        new File("$projectDir/modules/frinika-core/src/main/resources/version.properties").text = """
+version = $baseVersion
+build-date = ${getDate('YYYY-MM-dd')}
+copyrightStart = 2004
+copyrightEnd = ${getDate('YYYY')}
+"""
+    }
+}
+
+assemble.dependsOn project.tasks['versionFile']
 distZip.dependsOn project(':tools').subprojects.assemble
-distZip.dependsOn project(':tools:frinika').tasks['launch4j']
+distZip.dependsOn project(':tools:frinika').tasks['createExe']
 distTar.dependsOn project(':tools').subprojects.assemble
-distTar.dependsOn project(':tools:frinika').tasks['launch4j']
+distTar.dependsOn project(':tools:frinika').tasks['createExe']
 
 distributions {
     main {

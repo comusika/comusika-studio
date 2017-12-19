@@ -50,9 +50,6 @@ public class ChartPanel extends JPanel implements Observer {
         setBackground(Color.WHITE);
 
         TableModel dataModel = new AbstractTableModel() {
-            /**
-             *
-             */
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -90,7 +87,6 @@ public class ChartPanel extends JPanel implements Observer {
 
                 }
             }
-
         };
 
         setLayout(new BorderLayout());

@@ -186,7 +186,6 @@ public class ChartPrintTest extends JPanel {
             paintChord(chord, g2, x, y);
             x += chordWid;
         }
-
     }
 
     private void paintChord(Chord chord, Graphics2D g2, int x, int y) {
