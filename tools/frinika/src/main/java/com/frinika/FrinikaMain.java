@@ -35,7 +35,6 @@ import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.VersionProperties;
-import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.awt.Dialog;
@@ -69,6 +68,7 @@ public class FrinikaMain {
         JDialog welcomeDialog = WindowUtils.createDialog(welcomePanel, welcomeFrame, Dialog.ModalityType.MODELESS);
         welcomeDialog.setTitle("Welcome to Frinika Studio");
         welcomeDialog.setIconImage(new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")).getImage());
+        welcomeDialog.setResizable(false);
         WindowUtils.initWindow(welcomeDialog);
         WindowUtils.setWindowCenterPosition(welcomeDialog);
 
@@ -196,11 +196,8 @@ public class FrinikaMain {
         exitHook = new FrinikaExitHandler();
         Runtime.getRuntime().addShutdownHook(exitHook);
 
-        FrinikaFrame.addProjectFocusListener(new ProjectFocusListener() {
-            @Override
-            public void projectFocusNotify(FrinikaProjectContainer project) {
-                FrinikaAudioSystem.installClient(project.getAudioClient());
-            }
+        FrinikaFrame.addProjectFocusListener((FrinikaProjectContainer project) -> {
+            FrinikaAudioSystem.installClient(project.getAudioClient());
         });
 
         FrinikaAudioSystem.getAudioServer().start();
@@ -252,7 +249,7 @@ public class FrinikaMain {
                         System.setProperty("java.library.path", tmp);
                     } catch (IOException ioe) {
                         System.err.println("Native library extraction failed. Problems may occur.");
-                        ioe.printStackTrace();
+                        Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ioe);
                     }
                 }
             }

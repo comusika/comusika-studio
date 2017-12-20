@@ -24,10 +24,11 @@ import com.frinika.gui.model.ProjectFileRecord;
 import com.frinika.gui.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Welcome panel for application start.
@@ -50,13 +51,18 @@ public class WelcomePanel extends javax.swing.JPanel {
         DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
         recentList.setModel(recentListModel);
         recentList.setCellRenderer(new ProjectFileRecordCellRenderer());
-        recentList.addListSelectionListener(new ListSelectionListener() {
+        recentList.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                int index = e.getFirstIndex();
-                if (index >= 0) {
-                    ProjectFileRecord projectFileRecord = recentListModel.get(index);
-                    actionListener.openRecentProject(projectFileRecord);
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    Object source = event.getSource();
+                    if (source instanceof JList<?>) {
+                        int index = ((JList<?>) source).locationToIndex(event.getPoint());
+                        if (index >= 0) {
+                            ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                            actionListener.openRecentProject(projectFileRecord);
+                        }
+                    }
                 }
             }
         });
