@@ -24,6 +24,8 @@ import com.frinika.gui.model.ProjectFileRecord;
 import com.frinika.gui.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.DefaultListModel;
@@ -51,6 +53,21 @@ public class WelcomePanel extends javax.swing.JPanel {
         DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
         recentList.setModel(recentListModel);
         recentList.setCellRenderer(new ProjectFileRecordCellRenderer());
+        recentList.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+                    Object source = event.getSource();
+                    if (source instanceof JList<?>) {
+                        int index = ((JList<?>) source).getSelectedIndex();
+                        if (index >= 0) {
+                            ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                            actionListener.openRecentProject(projectFileRecord);
+                        }
+                    }
+                }
+            }
+        });
         recentList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
@@ -74,7 +91,13 @@ public class WelcomePanel extends javax.swing.JPanel {
         DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
         sampleList.setModel(sampleListModel);
         sampleList.setCellRenderer(new ProjectFileRecordCellRenderer());
-        sampleListModel.addElement(new ProjectFileRecord("Name", "Path"));
+        sampleListModel.addElement(new ProjectFileRecord("C'est pas grave", "pasgrave.frinika"));
+        sampleListModel.addElement(new ProjectFileRecord("Frinikation", "frinikation.frinika"));
+        sampleListModel.addElement(new ProjectFileRecord("Karl - Frinika Song", "karl-0_4_0_beta2_thefrinikasong.frinika"));
+        sampleListModel.addElement(new ProjectFileRecord("Karl - Slow Strings", "karl-0_4_0_slowstrings.frinika"));
+        sampleListModel.addElement(new ProjectFileRecord("Karl - FM Dream", "karl-0_4_0_fmdream.frinika"));
+        sampleListModel.addElement(new ProjectFileRecord("Tea Party", "peter_salomonsen-teaparty-0_4_0_compressed.frinika"));
+        sampleListModel.addElement(new ProjectFileRecord("Tracker Slave", "PeterSalomonsen_TrackerSlave.frinika.bz2"));
     }
 
     /**

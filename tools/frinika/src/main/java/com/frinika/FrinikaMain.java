@@ -37,12 +37,10 @@ import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.VersionProperties;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
-import java.awt.Dialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 /**
@@ -63,19 +61,19 @@ public class FrinikaMain {
         configureUI();
 
 //        try {
-        JFrame welcomeFrame = new JFrame("title");
+        JFrame welcomeFrame = new JFrame();
+        welcomeFrame.setTitle("Welcome to Frinika Studio");
+        welcomeFrame.setIconImage(new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")).getImage());
+        welcomeFrame.setResizable(false);
+
         WelcomePanel welcomePanel = new WelcomePanel();
-        JDialog welcomeDialog = WindowUtils.createDialog(welcomePanel, welcomeFrame, Dialog.ModalityType.MODELESS);
-        welcomeDialog.setTitle("Welcome to Frinika Studio");
-        welcomeDialog.setIconImage(new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")).getImage());
-        welcomeDialog.setResizable(false);
-        WindowUtils.initWindow(welcomeDialog);
-        WindowUtils.setWindowCenterPosition(welcomeDialog);
+        WindowUtils.initWindowByComponent(welcomeFrame, welcomePanel);
+        WindowUtils.setWindowCenterPosition(welcomeFrame);
 
         welcomePanel.setActionListener(new WelcomePanel.ActionListener() {
             @Override
             public void newProject() {
-                welcomeDialog.setVisible(false);
+                welcomeFrame.setVisible(false);
                 new CreateProjectAction().actionPerformed(null);
                 startProject();
             }
@@ -97,7 +95,7 @@ public class FrinikaMain {
 
             @Override
             public void closeDialog() {
-                welcomeDialog.setVisible(false);
+                welcomeFrame.setVisible(false);
                 System.exit(0);
             }
 
@@ -111,7 +109,7 @@ public class FrinikaMain {
                 }
             }
         });
-        welcomeDialog.setVisible(true);
+        welcomeFrame.setVisible(true);
 
 //            int n;
 //

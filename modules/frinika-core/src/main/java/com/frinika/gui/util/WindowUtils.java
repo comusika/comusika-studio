@@ -123,17 +123,13 @@ public class WindowUtils {
 
     public static JDialog createDialog(final Component component, Window parent, Dialog.ModalityType modalityType) {
         JDialog dialog = new JDialog(parent, modalityType);
-        Dimension size = component.getPreferredSize();
-        dialog.add(component);
-        dialog.setSize(size.width + 8, size.height + 24);
+        initWindowByComponent(dialog, component);
         return dialog;
     }
 
     public static JDialog createDialog(final Component component) {
         JDialog dialog = new JDialog();
-        Dimension size = component.getPreferredSize();
-        dialog.add(component);
-        dialog.setSize(size.width + 8, size.height + 24);
+        initWindowByComponent(dialog, component);
         return dialog;
     }
 
@@ -146,6 +142,12 @@ public class WindowUtils {
 //        if (window.getParent() instanceof XBEditorFrame) {
 //            window.setIconImage(((XBEditorFrame) window.getParent()).getMainFrameManagement().getFrameIcon());
 //        }
+    }
+
+    public static void initWindowByComponent(Window window, final Component component) {
+        Dimension size = component.getPreferredSize();
+        window.add(component, BorderLayout.CENTER);
+        window.setSize(size.width + 8, size.height + 24);
     }
 
     public static void closeWindow(Window window) {
