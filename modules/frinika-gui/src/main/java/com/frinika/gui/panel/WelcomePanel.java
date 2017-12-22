@@ -83,10 +83,8 @@ public class WelcomePanel extends javax.swing.JPanel {
                 }
             }
         });
-
         String lastProjectFile = FrinikaConfig.lastProjectFile();
         recentListModel.addElement(new ProjectFileRecord("Name", lastProjectFile));
-        recentListModel.addElement(new ProjectFileRecord("Name2", "some file path"));
 
         DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
         sampleList.setModel(sampleListModel);
@@ -98,6 +96,37 @@ public class WelcomePanel extends javax.swing.JPanel {
         sampleListModel.addElement(new ProjectFileRecord("Karl - FM Dream", "karl-0_4_0_fmdream.frinika"));
         sampleListModel.addElement(new ProjectFileRecord("Tea Party", "peter_salomonsen-teaparty-0_4_0_compressed.frinika"));
         sampleListModel.addElement(new ProjectFileRecord("Tracker Slave", "PeterSalomonsen_TrackerSlave.frinika.bz2"));
+
+        sampleList.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+                    Object source = event.getSource();
+                    if (source instanceof JList<?>) {
+                        int index = ((JList<?>) source).getSelectedIndex();
+                        if (index >= 0) {
+                            ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                            actionListener.openSampleProject(projectFileRecord);
+                        }
+                    }
+                }
+            }
+        });
+        sampleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    Object source = event.getSource();
+                    if (source instanceof JList<?>) {
+                        int index = ((JList<?>) source).locationToIndex(event.getPoint());
+                        if (index >= 0) {
+                            ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                            actionListener.openSampleProject(projectFileRecord);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -379,5 +408,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         void closeDialog();
 
         void openRecentProject(ProjectFileRecord projectFileRecord);
+
+        void openSampleProject(ProjectFileRecord projectFileRecord);
     }
 }

@@ -76,6 +76,7 @@ public class FrinikaMain {
                 welcomeFrame.setVisible(false);
                 new CreateProjectAction().actionPerformed(null);
                 startProject();
+                welcomeFrame.setVisible(false);
             }
 
             @Override
@@ -86,6 +87,7 @@ public class FrinikaMain {
                 }
                 new OpenProjectAction().actionPerformed(null);
                 startProject();
+                welcomeFrame.setVisible(false);
             }
 
             @Override
@@ -102,11 +104,21 @@ public class FrinikaMain {
             @Override
             public void openRecentProject(ProjectFileRecord projectFileRecord) {
                 try {
-                    FrinikaFrame project = new FrinikaFrame(FrinikaProjectContainer
-                            .loadProject(new File(projectFileRecord.getFilePath())));
+                    File file = new File(projectFileRecord.getFilePath());
+                    FrinikaFrame frinikaFrame = new FrinikaFrame(FrinikaProjectContainer
+                            .loadProject(file));
+                    startProject();
+                    welcomeFrame.setVisible(false);
                 } catch (Exception ex) {
                     Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+
+            @Override
+            public void openSampleProject(ProjectFileRecord projectFileRecord) {
+                // TODO: Download
+                // TODO: Open
+                throw new UnsupportedOperationException("Not supported yet.");
             }
         });
         welcomeFrame.setVisible(true);

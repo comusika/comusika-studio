@@ -27,11 +27,12 @@ import com.frinika.gui.util.WindowUtils;
  */
 public class ProgressPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form ProgressPanel
-     */
     public ProgressPanel() {
         initComponents();
+    }
+
+    public void setActivity(String activity) {
+        actionLabel.setText(activity);
     }
 
     /**
