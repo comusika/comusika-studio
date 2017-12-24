@@ -1,7 +1,7 @@
 Frinika Studio
 ==============
 
-Frinika Studio is experimental fork of frinika (http://frinika.com).
+Frinika Studio is experimental fork of Frinika (http://frinika.com).
 
 Screenshot
 ----------
@@ -26,25 +26,24 @@ Some of the features:
 <li>VST/VSTi support</li>
 </ul>
 
-Code is based on Frinika music workstation software: http://frinika.com
-
 Structure
 ---------
 
  * doc - Documentation + related presentations
  * gradle - Gradle wrapper
  * src - Sources related to building distribution packages
- * modules - Libraries and other
- * plugins - Catalog plugins
+ * modules - Application parts and library modules
+ * plugins - Optional plugins
+ * tools - Distributable applictions or runnable subprojects and utilities
+ * lib - External libraries
  * resources - Related resource files, like sample files, images, etc.
- * tools - Distributable subprojects encapsulating modules to runnable applications
 
 Compiling
 ---------
 
-Java Development Kit (JDK) version 7 or later is required to build this project.
+Java Development Kit (JDK) version 8 or later is required to build this project.
 
-For project compiling Gradle 2.0 build system is used. You can either download and install gradle and run "gradle distZip" command in project folder or gradlew or gradlew.bat scripts to download separate copy of gradle to perform the project build.
+For project compiling Gradle 4.0 build system is used. You can either download and install gradle and run "gradle distZip" command in project folder or gradlew or gradlew.bat scripts to download separate copy of gradle to perform the project build.
 
 Build system website: http://gradle.org
 
@@ -64,4 +63,4 @@ The Gradle build system provides support for various IDEs. See gradle website fo
 License
 -------
 
-GNU General Public License version 2.0 (GPLv2)
+GNU General Public License version 2.0 or later (GPLv2+)

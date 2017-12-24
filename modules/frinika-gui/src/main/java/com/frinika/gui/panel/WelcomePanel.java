@@ -28,6 +28,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.annotation.Nonnull;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
@@ -89,13 +90,9 @@ public class WelcomePanel extends javax.swing.JPanel {
         DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
         sampleList.setModel(sampleListModel);
         sampleList.setCellRenderer(new ProjectFileRecordCellRenderer());
-        sampleListModel.addElement(new ProjectFileRecord("C'est pas grave", "pasgrave.frinika"));
-        sampleListModel.addElement(new ProjectFileRecord("Frinikation", "frinikation.frinika"));
-        sampleListModel.addElement(new ProjectFileRecord("Karl - Frinika Song", "karl-0_4_0_beta2_thefrinikasong.frinika"));
-        sampleListModel.addElement(new ProjectFileRecord("Karl - Slow Strings", "karl-0_4_0_slowstrings.frinika"));
-        sampleListModel.addElement(new ProjectFileRecord("Karl - FM Dream", "karl-0_4_0_fmdream.frinika"));
-        sampleListModel.addElement(new ProjectFileRecord("Tea Party", "peter_salomonsen-teaparty-0_4_0_compressed.frinika"));
-        sampleListModel.addElement(new ProjectFileRecord("Tracker Slave", "PeterSalomonsen_TrackerSlave.frinika.bz2"));
+        for (ExampleFile exampleFile : ExampleFile.values()) {
+            sampleListModel.addElement(new ProjectFileRecord(exampleFile.getName(), exampleFile.getFileName()));
+        }
 
         sampleList.addKeyListener(new KeyAdapter() {
             @Override
@@ -410,5 +407,35 @@ public class WelcomePanel extends javax.swing.JPanel {
         void openRecentProject(ProjectFileRecord projectFileRecord);
 
         void openSampleProject(ProjectFileRecord projectFileRecord);
+    }
+
+    public enum ExampleFile {
+        PASGRAVE("C'est pas grave", "pasgrave.frinika"),
+        FRINIKATION("Frinikation", "frinikation.frinika"),
+        KARL_FRINIKA_SONG("Karl - Frinika Song", "karl-0_4_0_beta2_thefrinikasong.frinika"),
+        KARL_SLOW_STRINGS("Karl - Slow Strings", "karl-0_4_0_slowstrings.frinika"),
+        KARL_FM_DREAMS("Karl - FM Dream", "karl-0_4_0_fmdream.frinika"),
+        TEA_PARTY("Tea Party", "peter_salomonsen-teaparty-0_4_0_compressed.frinika"),
+        TRACKER_SLAVE("Tracker Slave", "PeterSalomonsen_TrackerSlave.frinika.bz2");
+
+        @Nonnull
+        private final String name;
+        @Nonnull
+        private final String fileName;
+
+        private ExampleFile(@Nonnull String name, @Nonnull String fileName) {
+            this.name = name;
+            this.fileName = fileName;
+        }
+
+        @Nonnull
+        public String getName() {
+            return name;
+        }
+
+        @Nonnull
+        public String getFileName() {
+            return fileName;
+        }
     }
 }
