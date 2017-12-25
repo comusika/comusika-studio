@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
+import javax.swing.text.html.HTMLDocument;
 
 /**
  * Welcome panel for application start.
@@ -49,8 +50,7 @@ public class WelcomePanel extends javax.swing.JPanel {
 
     private void init() {
         mainTitleTextPane.setOpaque(false);
-        AboutPanel.initializeTextPane(mainTitleTextPane);
-        mainTitleTextPane.setText(AboutPanel.MAIN_TITLE);
+        AboutPanel.initializeTextPane(mainTitleTextPane, AboutPanel.MAIN_TITLE);
         DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
         recentList.setModel(recentListModel);
         recentList.setCellRenderer(new ProjectFileRecordCellRenderer());
@@ -387,6 +387,14 @@ public class WelcomePanel extends javax.swing.JPanel {
         WindowUtils.switchLookAndFeel(selectedLaf);
         animatedLogoPanel.switchLookAndFeel();
         SwingUtilities.updateComponentTreeUI(this);
+
+        HTMLDocument doc = (HTMLDocument) mainTitleTextPane.getDocument();
+        if (!WindowUtils.isDarkMode()) {
+            doc.getStyleSheet().addRule("body { color: #000000; }");
+        } else {
+            doc.getStyleSheet().addRule("body { color: #C0C0C0; }");
+        }
+
         invalidate();
     }
 
