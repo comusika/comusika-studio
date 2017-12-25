@@ -30,7 +30,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -38,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.TreeSet;
+import javax.annotation.Nonnull;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -50,7 +50,7 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLDocument;
 
 /**
  * Panel for about dialog.
@@ -128,8 +128,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
         JTextPane mainTitle = new JTextPane();
         mainTitle.setOpaque(false);
-        initializeTextPane(mainTitle);
-        mainTitle.setText(MAIN_TITLE);
+        initializeTextPane(mainTitle, MAIN_TITLE);
         panel.add(mainTitle, BorderLayout.NORTH);
 
         JPanel buttonsPanel = new JPanel();
@@ -137,11 +136,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
         {
             JButton button = new JButton("License");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showLicense();
-                }
+            button.addActionListener((ActionEvent e) -> {
+                showLicense();
             });
             if (WindowUtils.isDarkMode()) {
                 button.setOpaque(false);
@@ -151,11 +147,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
         {
             JButton button = new JButton("Credits");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showCredits();
-                }
+            button.addActionListener((ActionEvent e) -> {
+                showCredits();
             });
             if (WindowUtils.isDarkMode()) {
                 button.setOpaque(false);
@@ -165,11 +158,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
         {
             JButton button = new JButton("System Info");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showSystemInfo();
-                }
+            button.addActionListener((ActionEvent e) -> {
+                showSystemInfo();
             });
             if (WindowUtils.isDarkMode()) {
                 button.setOpaque(false);
@@ -179,11 +169,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
         {
             JButton okButton = new JButton("OK");
-            okButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    okCancelListener.okEvent();
-                }
+            okButton.addActionListener((ActionEvent e) -> {
+                okCancelListener.okEvent();
             });
             okButton.setDefaultCapable(true);
             // getRootPane().setDefaultButton(okButton);
@@ -200,8 +187,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
         JTextPane copyrightNotice = new JTextPane();
         copyrightNotice.setOpaque(false);
-        initializeTextPane(copyrightNotice);
-        copyrightNotice.setText(COPYRIGHT_NOTICE);
+        initializeTextPane(copyrightNotice, COPYRIGHT_NOTICE);
         copyrightPanel.add(copyrightNotice);
 
         panel.add(copyrightPanel, BorderLayout.SOUTH);
@@ -209,11 +195,8 @@ public class AboutPanel extends javax.swing.JPanel {
         panel.setSize(getPreferredSize().width, getPreferredSize().height);
 
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        panel.registerKeyboardAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                okCancelListener.cancelEvent();
-            }
+        panel.registerKeyboardAction((ActionEvent e) -> {
+            okCancelListener.cancelEvent();
         },
                 stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
@@ -232,8 +215,7 @@ public class AboutPanel extends javax.swing.JPanel {
             }
 
             licenseAgreement = new JTextPane();
-            initializeTextPane(licenseAgreement);
-            licenseAgreement.setText(new String(bos.toByteArray()));
+            initializeTextPane(licenseAgreement, new String(bos.toByteArray()));
             licenseAgreement.setCaretPosition(0);
 
             JScrollPane licenseScrollPane = new JScrollPane(licenseAgreement);
@@ -285,8 +267,7 @@ public class AboutPanel extends javax.swing.JPanel {
         panel.setLayout(new BorderLayout());
 
         JTextPane creditsTextArea = new JTextPane();
-        initializeTextPane(creditsTextArea);
-        creditsTextArea.setText(CREDITS);
+        initializeTextPane(creditsTextArea, CREDITS);
         creditsTextArea.setFont(creditsTextArea.getFont().deriveFont(11f).deriveFont(Font.PLAIN));
 
         panel.add(creditsTextArea);
@@ -339,17 +320,21 @@ public class AboutPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public static void initializeTextPane(JTextPane textPane) {
+    public static void initializeTextPane(@Nonnull JTextPane textPane, @Nonnull String text) {
         textPane.setContentType("text/html");
         textPane.setEditable(false);
-        textPane.addHyperlinkListener(new HyperlinkListener() {
-            @Override
-            public void hyperlinkUpdate(HyperlinkEvent event) {
-                if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                    BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
-                }
+        textPane.addHyperlinkListener((HyperlinkEvent event) -> {
+            if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                BareBonesBrowserLaunch.openDesktopURL(event.getURL().toExternalForm());
             }
         });
-        // TODO set black as default color for light theme
+
+        // Set default text color
+        textPane.setText(text);
+
+        if (!WindowUtils.isDarkMode()) {
+            HTMLDocument doc = (HTMLDocument) textPane.getDocument();
+            doc.getStyleSheet().addRule("body { color: #000000; }");
+        }
     }
 }
