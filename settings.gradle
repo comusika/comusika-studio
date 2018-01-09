@@ -1,4 +1,4 @@
-rootProject.name = 'frinika-studio'
+rootProject.name = 'frinika'
 
 include ":modules:frinika-action"
 include ":modules:frinika-core"
@@ -26,4 +26,4 @@ include ":modules:frinika-device-opl3"
 include ":modules:frinika-generator-soundhelix"
 include ":modules:sevenzip"
 
-include ":tools:frinika"
+include ":tools:frinika-app"

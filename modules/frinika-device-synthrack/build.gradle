@@ -1,6 +1,6 @@
 group = 'com.frinika'
-ext.libraryName = 'Frinika My Studio library'
-ext.libraryDescription = 'My Studio library for Frinika'
+ext.libraryName = 'Frinika SynthRack library'
+ext.libraryDescription = 'SynthRack library for Frinika'
 
 apply from: '../modules.gradle'
 

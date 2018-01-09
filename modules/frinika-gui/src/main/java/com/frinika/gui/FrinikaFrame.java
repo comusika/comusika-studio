@@ -32,7 +32,6 @@ import com.frinika.global.ConfigDialogPanel;
 import com.frinika.global.ConfigError;
 import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
-import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PresentationPanel;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;

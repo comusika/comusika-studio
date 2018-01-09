@@ -1,17 +1,22 @@
-Frinika Studio
-==============
+Frinika
+=======
 
-Frinika Studio is experimental fork of Frinika (http://frinika.com).
+Note: This is fork of Frinika under development, see
+https://sourceforge.net/p/frinika/discussion/447356/thread/bf64b5f5/
+
+
+Frinika is a free music workstation software for Linux, Windows, Mac OSX and other operating systems running Java. 
+It features sequencer, soft-synths, realtime effects, MIDI and audio recording. 
+
+See http://frinika.com for more 
 
 Screenshot
 ----------
 
-![Frinika Studio Screenshot](images/screenshot.png?raw=true)
+![Frinika Screenshot](images/screenshot.png?raw=true)
 
-Frinika is a free, complete music workstation software for Linux, Windows, Mac OSX and other operating systems running Java. 
-It features sequencer, soft-synths, realtime effects and audio recording.
-
-Some of the features:
+Features
+--------
 
 <ul>
 <li>Sequencer</li>
@@ -25,6 +30,11 @@ Some of the features:
 <li>Mastering</li>
 <li>VST/VSTi support</li>
 </ul>
+
+License
+-------
+
+GNU General Public License version 2.0 or later (GPLv2+)
 
 Structure
 ---------
@@ -59,8 +69,3 @@ The Gradle build system provides support for various IDEs. See gradle website fo
  * NetBeans 8.0 or later
 
    Install Gradle support plugin: http://plugins.netbeans.org/plugin/44510/gradle-support
-
-License
--------
-
-GNU General Public License version 2.0 or later (GPLv2+)

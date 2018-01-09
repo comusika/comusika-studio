@@ -1,7 +1,7 @@
 // Shared modules build
 
-version = '0.1.0-SNAPSHOT'
-def repositoryName = "frinika-studio"
+version = '0.9.0-SNAPSHOT'
+def repositoryName = "frinika"
 def libraryUrl = 'http://frinika.com'
 
 buildscript {

@@ -2,7 +2,7 @@ apply plugin: 'base'
 apply plugin: 'distribution'
 apply plugin: 'com.bmuschko.izpack'
 
-def baseVersion = '0.1.0'
+def baseVersion = '0.9.0'
 version = baseVersion + '-' + getDate('yyyyMMdd')
 
 def getDate(dateFormat) {
@@ -30,9 +30,9 @@ copyrightEnd = ${getDate('YYYY')}
 
 assemble.dependsOn project.tasks['versionFile']
 distZip.dependsOn project(':tools').subprojects.assemble
-distZip.dependsOn project(':tools:frinika').tasks['createExe']
+distZip.dependsOn project(':tools:frinika-app').tasks['createExe']
 distTar.dependsOn project(':tools').subprojects.assemble
-distTar.dependsOn project(':tools:frinika').tasks['createExe']
+distTar.dependsOn project(':tools:frinika-app').tasks['createExe']
 
 distributions {
     main {
@@ -48,13 +48,13 @@ distributions {
                 include '**'
             }
             into('resources') {
-                from 'tools/frinika/resources'
+                from 'tools/frinika-app/resources'
                 include 'soundhelix/**'
                 include 'soundhelix-legacy/**'
             }
 
-            from project(':tools:frinika').projectDir.absolutePath + '/build/launch4j'
-            include "frinika-studio.exe"
+            from project(':tools:frinika-app').projectDir.absolutePath + '/build/launch4j'
+            include "frinika.exe"
 
             into('lib') {
                 from 'lib'
@@ -83,7 +83,7 @@ distributions {
                     into('') {
                         from p.jar.archivePath
                         include '*'
-                        rename { filename -> p.name + "-studio.jar" }
+                        rename { filename -> "frinika.jar" }
                     }
                 }
             }
@@ -116,9 +116,9 @@ dependencies {
 izpack {
     baseDir = file("$buildDir/distributions")
     installFile = file('src/install-definition.xml')
-    outputFile = file("$buildDir/distributions/frinika-studio-${version}-installer.jar")
+    outputFile = file("$buildDir/distributions/frinika-${version}-installer.jar")
     compression = 'deflate'
     compressionLevel = 9
-    appProperties = ['app.group': 'frinika-studio', 'app.name': 'frinika-studio', 'app.title': 'Frinika Studio',
-                     'app.version': version, 'app.subpath': "frinika-studio-$version"]
+    appProperties = ['app.group': 'frinika', 'app.name': 'frinika', 'app.title': 'Frinika',
+                     'app.version': version, 'app.subpath': "frinika-$version"]
 }
