@@ -80,7 +80,7 @@ public class WelcomeDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.setBackground(darkMode ? Color.BLACK : Color.WHITE);
-        Icon welcome = new javax.swing.ImageIcon(ProjectFrame.class.getResource(darkMode ? "/frinika-studio-dark.png" : "/frinika.png"));
+        Icon welcome = new javax.swing.ImageIcon(ProjectFrame.class.getResource(darkMode ? "/frinika-dark.png" : "/frinika.png"));
         JLabel label = new JLabel(welcome);
         label.setHorizontalTextPosition(SwingConstants.CENTER);
         label.setVerticalTextPosition(SwingConstants.BOTTOM);

@@ -62,7 +62,7 @@ public class FrinikaMain {
 
 //        try {
         JFrame welcomeFrame = new JFrame();
-        welcomeFrame.setTitle("Welcome to Frinika Studio");
+        welcomeFrame.setTitle("Welcome to Frinika");
         welcomeFrame.setIconImage(new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")).getImage());
         welcomeFrame.setResizable(false);
 
