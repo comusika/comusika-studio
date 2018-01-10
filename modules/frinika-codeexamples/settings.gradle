@@ -3,5 +3,5 @@ rootProject.name = 'frinika-codeexamples'
 apply from: '../modules-settings.gradle'
 
 include ":modules:frinika-core"
-include ":modules:frinika-gui"
+include ":modules:frinika-main"
 include ":modules:frinika-device-debug"

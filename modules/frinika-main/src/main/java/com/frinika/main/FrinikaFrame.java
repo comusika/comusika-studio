@@ -23,15 +23,16 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.gui;
+package com.frinika.main;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.gui.action.CreateProjectAction;
+import com.frinika.main.action.CreateProjectAction;
 import com.frinika.global.ConfigDialog;
 import com.frinika.global.ConfigDialogPanel;
 import com.frinika.global.ConfigError;
 import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PresentationPanel;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
@@ -40,13 +41,13 @@ import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryListener;
 import com.frinika.notation.NotationPanel;
 import com.frinika.project.FrinikaProjectContainer;
-import com.frinika.gui.action.About;
+import com.frinika.main.action.About;
 import com.frinika.project.dialog.BounceToLane;
 import com.frinika.project.dialog.ExportWavDialog;
 import com.frinika.project.gui.MultiPartMenuPlugin;
 import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.project.gui.ProjectNewFileFilter;
-import com.frinika.gui.action.SelectAllAction;
+import com.frinika.main.action.SelectAllAction;
 import com.frinika.project.gui.StatusBar;
 import com.frinika.project.gui.action.ScriptingAction;
 import com.frinika.radio.LocalOGGHttpRadio;

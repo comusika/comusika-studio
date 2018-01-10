@@ -47,15 +47,15 @@
 package com.frinika.simphoney;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.gui.FrinikaFrame;
-import com.frinika.gui.WelcomeDialog;
-import com.frinika.gui.action.CreateProjectAction;
-import com.frinika.gui.action.OpenProjectAction;
+import com.frinika.main.FrinikaFrame;
+import com.frinika.main.WelcomeDialog;
+import com.frinika.main.action.CreateProjectAction;
+import com.frinika.main.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.project.FrinikaProjectContainer;
-import com.frinika.gui.action.About;
+import com.frinika.main.action.About;
 import com.frinika.project.dialog.SplashDialog;
 import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.sequencer.gui.ProjectFrame;

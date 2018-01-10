@@ -21,10 +21,10 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.gui.action;
+package com.frinika.main.action;
 
 import com.frinika.gui.util.WindowUtils;
-import com.frinika.gui.panel.AboutPanel;
+import com.frinika.main.panel.AboutPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

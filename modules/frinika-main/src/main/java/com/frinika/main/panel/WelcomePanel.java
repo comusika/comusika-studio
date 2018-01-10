@@ -17,11 +17,11 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.gui.panel;
+package com.frinika.main.panel;
 
 import com.frinika.global.FrinikaConfig;
-import com.frinika.gui.model.ProjectFileRecord;
-import com.frinika.gui.model.ProjectFileRecordCellRenderer;
+import com.frinika.main.model.ProjectFileRecord;
+import com.frinika.main.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
 import java.awt.event.KeyAdapter;
@@ -152,7 +152,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         lafPanel = new javax.swing.JPanel();
         defaultLafToggleButton = new javax.swing.JToggleButton();
         darculaLafToggleButton = new javax.swing.JToggleButton();
-        animatedLogoPanel = new com.frinika.gui.panel.AnimatedLogoPanel();
+        animatedLogoPanel = new com.frinika.main.panel.AnimatedLogoPanel();
         mainTitleTextPane = new javax.swing.JTextPane();
 
         recentProjectsPanel.setLayout(new java.awt.BorderLayout());
@@ -362,7 +362,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.frinika.gui.panel.AnimatedLogoPanel animatedLogoPanel;
+    private com.frinika.main.panel.AnimatedLogoPanel animatedLogoPanel;
     private javax.swing.JButton configureAudioButton;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JToggleButton darculaLafToggleButton;

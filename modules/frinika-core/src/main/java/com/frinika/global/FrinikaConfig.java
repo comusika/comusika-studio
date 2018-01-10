@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import javax.annotation.Nonnull;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
@@ -479,7 +480,8 @@ public class FrinikaConfig {
         }
     }
 
-    private static Field findField(String name) {
+    @Nonnull
+    private static Field findField(@Nonnull String name) {
         Field field = fieldsByName.get(name);
         if (field == null) { // severe error, should fail here to ensure hard binding
             throw new ConfigError("dynamic bind error: configuration field " + name + " does not exist.");
@@ -737,7 +739,7 @@ public class FrinikaConfig {
         return LAST_PROJECT_FILENAME;
     }
 
-    public static void setLastProjectFilename(String filename) {
+    public static void setLastProjectFilename(@Nonnull String filename) {
         setFieldValue(findField("LAST_PROJECT_FILENAME"), filename);
     }
 

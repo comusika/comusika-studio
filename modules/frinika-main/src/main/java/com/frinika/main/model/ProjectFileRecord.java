@@ -1,6 +1,4 @@
 /*
- * Copyright (c) Frinika
- * 
  * http://www.frinika.com
  * 
  * This file is part of Frinika.
@@ -9,36 +7,37 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
-
+ *
  * Frinika is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
-
+ *
  * You should have received a copy of the GNU General Public License
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.global;
-
-import java.awt.Frame;
+package com.frinika.main.model;
 
 /**
- * Interface for project frame.
- * 
- * TODO: Drop it
+ *
+ * @author hajdam
  */
-public interface ProjectFrameIntf {
+public class ProjectFileRecord {
 
-    /**
-     * Returns frame.
-     *
-     * @return frame
-     */
-    Frame getFrame();
+    private final String projectName;
+    private final String filePath;
 
-    /**
-     * Repaints all views.
-     */
-    void repaintViews();
+    public ProjectFileRecord(String projectName, String filePath) {
+        this.projectName = projectName;
+        this.filePath = filePath;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
 }

@@ -23,7 +23,7 @@
 package com.frinika.codeexamples;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.gui.FrinikaFrame;
+import com.frinika.main.FrinikaFrame;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;

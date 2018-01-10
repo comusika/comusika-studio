@@ -303,7 +303,7 @@
         </Container>
       </SubComponents>
     </Container>
-    <Container class="com.frinika.gui.panel.AnimatedLogoPanel" name="animatedLogoPanel">
+    <Container class="com.frinika.main.panel.AnimatedLogoPanel" name="animatedLogoPanel">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
     </Container>

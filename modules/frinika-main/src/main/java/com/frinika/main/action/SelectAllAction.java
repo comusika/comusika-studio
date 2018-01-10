@@ -1,6 +1,6 @@
-package com.frinika.gui.action;
+package com.frinika.main.action;
 
-import com.frinika.gui.FrinikaFrame;
+import com.frinika.main.FrinikaFrame;
 import com.frinika.sequencer.gui.ProjectFrame;
 import java.awt.event.KeyEvent;
 

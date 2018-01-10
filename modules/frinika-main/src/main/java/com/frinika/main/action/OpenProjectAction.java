@@ -21,9 +21,9 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.gui.action;
+package com.frinika.main.action;
 
-import com.frinika.gui.FrinikaFrame;
+import com.frinika.main.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.project.FrinikaProjectContainer;

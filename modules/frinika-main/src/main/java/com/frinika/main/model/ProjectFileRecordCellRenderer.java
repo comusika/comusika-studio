@@ -17,7 +17,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.gui.model;
+package com.frinika.main.model;
 
 import java.awt.Component;
 import javax.swing.ImageIcon;

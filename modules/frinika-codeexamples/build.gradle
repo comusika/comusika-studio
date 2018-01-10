@@ -6,6 +6,6 @@ apply from: '../modules.gradle'
 
 dependencies {
     compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-gui'))
+    compile(project(':modules:frinika-main'))
     compile(project(':modules:frinika-device-debug'))
 }

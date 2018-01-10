@@ -1,7 +1,7 @@
 rootProject.name = 'frinika-app'
 include ":modules:frinika-core"
 include ":modules:frinika-audio"
-include ":modules:frinika-gui"
+include ":modules:frinika-main"
 include ":modules:frinika-mod"
 include ":modules:frinika-radio"
 include ":modules:frinika-view-notation"

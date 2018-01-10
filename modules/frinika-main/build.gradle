@@ -1,5 +1,5 @@
 group = 'com.frinika'
-ext.libraryName = 'Frinika GUI library'
+ext.libraryName = 'Frinika main library'
 ext.libraryDescription = 'Main library for graphical components for Frinika'
 
 apply from: '../modules.gradle'

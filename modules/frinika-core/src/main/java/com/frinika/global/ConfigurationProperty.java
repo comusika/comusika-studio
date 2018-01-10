@@ -17,27 +17,39 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.gui.model;
+package com.frinika.global;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
+ * Configuration property.
  *
  * @author hajdam
+ * @param <T> property type
  */
-public class ProjectFileRecord {
+public class ConfigurationProperty<T> {
 
-    private final String projectName;
-    private final String filePath;
+    @Nonnull
+    private final String fieldName;
+    @Nullable
+    private T value;
 
-    public ProjectFileRecord(String projectName, String filePath) {
-        this.projectName = projectName;
-        this.filePath = filePath;
+    public ConfigurationProperty(@Nonnull String fieldName, @Nullable T value) {
+        this.fieldName = fieldName;
+        this.value = value;
     }
 
-    public String getProjectName() {
-        return projectName;
+    @Nonnull
+    public String getFieldName() {
+        return fieldName;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 }
