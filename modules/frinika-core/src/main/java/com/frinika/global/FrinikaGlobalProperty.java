@@ -21,7 +21,9 @@ package com.frinika.global;
 
 import java.awt.Font;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -30,7 +32,7 @@ import javax.annotation.Nullable;
  *
  * @author hajdam
  */
-public enum FinikaProperty {
+public enum FrinikaGlobalProperty {
 
     TICKS_PER_QUARTER(128),
     SEQUENCER_PRIORITY(0),
@@ -60,20 +62,28 @@ public enum FinikaProperty {
     DEFAULT_SOUNDFONT(new File(System.getProperty("user.home"), "frinika/soundfonts/8MBGMSFX.SF2")),
     // Recent files
     LAST_PROJECT_FILENAME(new ConfigurationProperty<String>("LAST_PROJECT_FILENAME", null)),
-    RECENT_FILENAMES(new ConfigurationProperty<List<String>>("RECENT_FILENAMES", null));
+    RECENT_FILENAMES(new RecentFileNamesProperty("RECENT_FILENAMES", null));
 
+    private final static Map<String, FrinikaGlobalProperty> properties = new HashMap<>();
     private final ConfigurationProperty<?> property;
 
-    private FinikaProperty(@Nonnull ConfigurationProperty<?> property) {
+    private FrinikaGlobalProperty(@Nonnull ConfigurationProperty<?> property) {
         this.property = property;
+        registerProperty();
     }
 
-    private <T> FinikaProperty(@Nullable T value) {
+    private <T> FrinikaGlobalProperty(@Nullable T value) {
         this.property = new ConfigurationProperty<>(getName(), value);
+        registerProperty();
     }
 
-    private <T> FinikaProperty(@Nonnull String propertyName, @Nullable T value) {
+    private <T> FrinikaGlobalProperty(@Nonnull String propertyName, @Nullable T value) {
         this.property = new ConfigurationProperty<>(propertyName, value);
+        registerProperty();
+    }
+
+    private void registerProperty() {
+        properties.put(property.getFieldName(), this);
     }
 
     @Nonnull
@@ -84,5 +94,10 @@ public enum FinikaProperty {
     @Nonnull
     public ConfigurationProperty<?> getProperty() {
         return property;
+    }
+
+    @Nullable
+    public static FrinikaGlobalProperty getPropertyByName(@Nullable String propertyName) {
+        return properties.get(propertyName);
     }
 }

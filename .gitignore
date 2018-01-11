@@ -5,3 +5,4 @@ target/
 /release
 *~
 /resources/private/
+modules/frinika-core/src/main/resources/version.properties
