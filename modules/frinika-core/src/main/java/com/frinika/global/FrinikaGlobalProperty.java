@@ -22,7 +22,6 @@ package com.frinika.global;
 import java.awt.Font;
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,6 +61,8 @@ public enum FrinikaGlobalProperty {
     DEFAULT_SOUNDFONT(new File(System.getProperty("user.home"), "frinika/soundfonts/8MBGMSFX.SF2")),
     // Recent files
     LAST_PROJECT_FILENAME(new ConfigurationProperty<String>("LAST_PROJECT_FILENAME", null)),
+    LAST_PROJECT_TYPE(new ConfigurationProperty<String>("LAST_PROJECT_TYPE", null)),
+    LAST_PROJECT_NAME(new ConfigurationProperty<String>("LAST_PROJECT_NAME", null)),
     RECENT_FILENAMES(new RecentFileNamesProperty("RECENT_FILENAMES", null));
 
     private final static Map<String, FrinikaGlobalProperty> properties = new HashMap<>();

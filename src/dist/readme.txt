@@ -1,11 +1,11 @@
-Frinika Studio
-==============
+Frinika
+=======
 
-Frinika Studio is experimental fork of Frinika (http://frinika.com).
+Frinika is a free music workstation software for Linux, Windows, Mac OSX and other operating systems running Java.
 
-Frinika is a free, complete music workstation software for Linux, Windows, Mac OSX and other operating systems running Java.
+It features sequencer, soft-synths, realtime effects, MIDI and audio recording.
 
-It features sequencer, soft-synths, realtime effects and audio recording.
+See http://frinika.com for more.
 
 Features
 --------
@@ -64,4 +64,4 @@ Simply start Jack before launching Frinika
 Mac OSX (warning: Sometimes using this option causes a terrible noise,
 so turn the volume down before launching. If it happens, try restarting.)
 
-java -DuseOSXAudioServer=true -jar frinika.jar 	
+java -DuseOSXAudioServer=true -jar frinika.jar

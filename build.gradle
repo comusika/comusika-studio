@@ -89,6 +89,7 @@ distributions {
             }
             into('doc') {
                 from 'doc'
+                exclude 'dev'
                 include '**'
             }
             into('samples') {
