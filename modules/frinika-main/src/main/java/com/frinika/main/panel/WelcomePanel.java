@@ -19,10 +19,10 @@
  */
 package com.frinika.main.panel;
 
-import com.frinika.main.model.ProjectFileRecord;
-import com.frinika.main.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.main.model.ProjectFileRecord;
+import com.frinika.main.model.ProjectFileRecordCellRenderer;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;

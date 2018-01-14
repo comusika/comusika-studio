@@ -23,9 +23,9 @@
  */
 package com.frinika.sequencer.model;
 
+import com.frinika.global.FrinikaConfig;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.global.property.FrinikaGlobalProperty;
-import com.frinika.global.FrinikaConfig;
 import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.OptionsBinder;
 import com.frinika.gui.OptionsEditor;
@@ -42,6 +42,8 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,8 +51,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * In-place editable text part.

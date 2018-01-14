@@ -24,8 +24,8 @@
 package com.frinika.gui;
 
 import com.frinika.global.ConfigError;
-import com.frinika.global.property.ConfigurationProperty;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.ConfigurationProperty;
 import com.frinika.global.property.FrinikaGlobalProperty;
 import java.util.ArrayList;
 import java.util.Collection;

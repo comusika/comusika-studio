@@ -47,15 +47,15 @@
 package com.frinika.simphoney;
 
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.global.Toolbox;
+import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.main.FrinikaFrame;
 import com.frinika.main.WelcomeDialog;
+import com.frinika.main.action.About;
 import com.frinika.main.action.CreateProjectAction;
 import com.frinika.main.action.OpenProjectAction;
-import com.frinika.global.FrinikaConfig;
-import com.frinika.global.Toolbox;
-import com.frinika.localization.CurrentLocale;
 import com.frinika.project.FrinikaProjectContainer;
-import com.frinika.main.action.About;
 import com.frinika.project.dialog.SplashDialog;
 import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.sequencer.gui.ProjectFrame;
@@ -109,7 +109,7 @@ public class Simphoney2Main {
             WelcomeDialog welcome = new WelcomeDialog(options);
 
             // if (setup == null) {
-            if (!FrinikaConfig.setupFinished) {
+            if (!FrinikaGlobalProperties.SETUP_DONE.getValue()) {
                 // welcome = new WelcomeDialog(options);
                 welcome.setModal(false);
                 welcome.setVisible(true);
@@ -143,7 +143,7 @@ public class Simphoney2Main {
                     break;
                 case 1:
                     SplashDialog.showSplash();
-                    String lastFile = FrinikaConfig.getLastProjectFile();
+                    String lastFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
                     if (lastFile != null) {
                         OpenProjectAction.setSelectedFile(new File(lastFile));
                     }

@@ -26,7 +26,7 @@ package com.frinika.codeexamples;
 import com.frinika.audio.analysis.CycliclyBufferedAudio;
 import com.frinika.audio.analysis.gui.CyclicBufferFFTAnalysisPanel;
 import com.frinika.audio.toot.AudioPeakMonitor;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -64,7 +64,7 @@ public class AudioInOut {
 
     public static void main(String args[]) throws Exception {
 
-        buffer = new CycliclyBufferedAudio(cacheSize, FrinikaConfig.sampleRate);
+        buffer = new CycliclyBufferedAudio(cacheSize, FrinikaGlobalProperties.getSampleRate());
         fftpanel = new CyclicBufferFFTAnalysisPanel(buffer);
 
         audioServer = new MultiIOJavaSoundAudioServer();

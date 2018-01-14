@@ -2,7 +2,7 @@ package com.frinika.codeexamples;
 
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
@@ -46,7 +46,7 @@ public class StandaloneProjectWavExport {
         File outputFile = new File("/home/peter/mystudio/faro.wav");
 
         try {
-            AudioInputStream ais = new AudioInputStream(midiRenderer, new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true), numberOfSamples);
+            AudioInputStream ais = new AudioInputStream(midiRenderer, new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
 
             sequencer.setRealtime(false);

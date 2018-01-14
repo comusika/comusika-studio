@@ -23,10 +23,10 @@
  */
 package com.frinika.global;
 
-import com.frinika.global.property.ConfigurationProperty;
-import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.global.property.ConfigurationProperty;
 import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.gui.util.FontChooser;
 import java.awt.Component;
 import java.awt.Font;

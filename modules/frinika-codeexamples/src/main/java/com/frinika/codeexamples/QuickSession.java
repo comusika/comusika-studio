@@ -23,7 +23,7 @@
  */
 package com.frinika.codeexamples;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.MidiLane;
@@ -66,7 +66,7 @@ public class QuickSession {
         // audioLane.setAudioInDevice(AudioHub.getAudioInHandles().get(1));
         //Create a MidiLane and set the Midi out device
         MidiLane midiLane = project.createMidiLane();
-        List<String> midiInList = FrinikaConfig.getMidiInDeviceList();
+        List<String> midiInList = FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList();
         // Use same midi out as midi in
         throw new Exception("FIXME");
 //		SynthWrapper midiOut = new SynthWrapper(null,MidiHub.getMidiOutDeviceByName(midiInList.get(0)));

@@ -23,10 +23,9 @@
  */
 package com.frinika.main.action;
 
-import com.frinika.main.FrinikaFrame;
-import com.frinika.global.FrinikaConfig;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
+import com.frinika.main.FrinikaFrame;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
 import com.frinika.tracker.ProjectFileFilter;

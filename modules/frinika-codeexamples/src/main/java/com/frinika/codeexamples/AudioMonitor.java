@@ -1,6 +1,6 @@
 package com.frinika.codeexamples;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.voiceserver.AudioContext;
 import com.frinika.voiceserver.AudioInput;
 import com.frinika.voiceserver.Voice;
@@ -31,7 +31,7 @@ public class AudioMonitor {
          * JACK doesn't require any input line - provide your own line if not
          * using jack
          */
-        final AudioInput input = new AudioInput(AudioSystem.getTargetDataLine(new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true)), FrinikaConfig.sampleRate);
+        final AudioInput input = new AudioInput(AudioSystem.getTargetDataLine(new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true)), FrinikaGlobalProperties.getSampleRate());
 
         input.start();
         input.getLine().start();

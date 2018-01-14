@@ -26,7 +26,6 @@ package com.frinika.project;
 import com.frinika.audio.toot.AudioInjector;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.global.FrinikaConfig;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.sequencer.FrinikaSequence;

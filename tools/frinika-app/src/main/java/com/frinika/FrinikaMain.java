@@ -24,18 +24,18 @@
 package com.frinika;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.main.FrinikaFrame;
-import com.frinika.main.action.CreateProjectAction;
-import com.frinika.main.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.global.property.RecentFileName;
 import com.frinika.gui.util.SupportedLaf;
+import com.frinika.gui.util.WindowUtils;
+import com.frinika.main.FrinikaFrame;
+import com.frinika.main.action.CreateProjectAction;
+import com.frinika.main.action.OpenProjectAction;
+import com.frinika.main.model.ExampleProjectFile;
 import com.frinika.main.model.ProjectFileRecord;
 import com.frinika.main.panel.WelcomePanel;
-import com.frinika.gui.util.WindowUtils;
-import com.frinika.main.model.ExampleProjectFile;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.VersionProperties;
 import com.frinika.settings.SetupDialog;

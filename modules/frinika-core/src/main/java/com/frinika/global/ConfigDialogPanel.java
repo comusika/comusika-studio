@@ -23,9 +23,9 @@
  */
 package com.frinika.global;
 
-import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PropertiesEditor;
 import java.awt.Frame;

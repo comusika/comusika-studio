@@ -24,7 +24,6 @@
 package com.frinika.voiceserver;
 
 import com.frinika.global.property.FrinikaGlobalProperties;
-import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.localization.CurrentLocale;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
