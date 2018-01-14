@@ -20,6 +20,7 @@
 package com.frinika.main.panel;
 
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.main.model.ProjectFileRecord;
 import com.frinika.main.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
@@ -84,7 +85,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                 }
             }
         });
-        String lastProjectFile = FrinikaConfig.lastProjectFile();
+        String lastProjectFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
         recentListModel.addElement(new ProjectFileRecord("Name", lastProjectFile));
 
         DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();

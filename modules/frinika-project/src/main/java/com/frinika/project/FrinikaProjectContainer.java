@@ -31,6 +31,7 @@ import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.base.MessageDialog;
 import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.midi.MidiDebugDevice;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.model.EditHistoryRecordableAction;
@@ -525,13 +526,13 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     }
 
     private void createSequencerPriorityListener() {
-        sequencer.setPlayerPriority(FrinikaConfig.SEQUENCER_PRIORITY);
+        sequencer.setPlayerPriority(FrinikaGlobalProperties.SEQUENCER_PRIORITY.getValue());
         FrinikaConfig.addConfigListener(new ConfigListener() {
 
             @Override
             public void configurationChanged(ChangeEvent event) {
-                if (event.getSource() == FrinikaConfig._SEQUENCER_PRIORITY) {
-                    sequencer.setPlayerPriority(FrinikaConfig.SEQUENCER_PRIORITY);
+                if (event.getSource() == FrinikaGlobalProperties.SEQUENCER_PRIORITY) {
+                    sequencer.setPlayerPriority(FrinikaGlobalProperties.SEQUENCER_PRIORITY.getValue());
                 }
             }
         });
@@ -1204,7 +1205,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         if (sequence == null) {
             try {
                 if (ticksPerQuarterNote == 0) {
-                    ticksPerQuarterNote = FrinikaConfig.TICKS_PER_QUARTER;
+                    ticksPerQuarterNote = FrinikaGlobalProperties.TICKS_PER_QUARTER.getValue();
                 }
                 sequence = new FrinikaSequence(Sequence.PPQ, ticksPerQuarterNote, 1);
                 sequencer.setSequence(sequence);
@@ -1590,10 +1591,10 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
             }
         }
 
-        file = new File(FrinikaConfig.AUDIO_DIRECTORY, base);
+        file = new File(FrinikaGlobalProperties.AUDIO_DIRECTORY.getValue(), base);
 
         while (file.exists()) {
-            file = new File(FrinikaConfig.AUDIO_DIRECTORY, base + "_" + count++);
+            file = new File(FrinikaGlobalProperties.AUDIO_DIRECTORY.getValue(), base + "_" + count++);
         }
 
         file.mkdirs();
@@ -1919,7 +1920,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         double ticksPerBuffer;
 
         ProjectAudioClient() {
-            sampleRate = FrinikaConfig.sampleRate;
+            sampleRate = FrinikaGlobalProperties.getSampleRate();
 
         }
 

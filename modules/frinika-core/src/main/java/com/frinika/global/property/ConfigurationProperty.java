@@ -17,8 +17,10 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.global;
+package com.frinika.global.property;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -31,18 +33,35 @@ import javax.annotation.Nullable;
 public class ConfigurationProperty<T> {
 
     @Nonnull
-    private final String fieldName;
+    private static final Map<String, ConfigurationProperty<?>> propertiesByName = new HashMap<>();
+
+    @Nonnull
+    private final FrinikaGlobalProperty globalProperty;
     @Nullable
     private T value;
+    @Nonnull
+    private final Class<T> typeClass;
 
-    public ConfigurationProperty(@Nonnull String fieldName, @Nullable T value) {
-        this.fieldName = fieldName;
+    public ConfigurationProperty(@Nonnull Class<T> typeClass, @Nonnull FrinikaGlobalProperty globalProperty, @Nullable T value) {
+        this.globalProperty = globalProperty;
         this.value = value;
+        this.typeClass = typeClass;
+
+        registerProperty(globalProperty);
+    }
+
+    private void registerProperty(FrinikaGlobalProperty globalProperty) {
+        propertiesByName.put(globalProperty.getName(), this);
     }
 
     @Nonnull
-    public String getFieldName() {
-        return fieldName;
+    public String getName() {
+        return globalProperty.getName();
+    }
+
+    @Nonnull
+    public Class<T> getType() {
+        return typeClass;
     }
 
     public T getValue() {
@@ -51,5 +70,10 @@ public class ConfigurationProperty<T> {
 
     public void setValue(T value) {
         this.value = value;
+    }
+
+    @Nullable
+    public static ConfigurationProperty<?> findByName(@Nonnull String name) {
+        return propertiesByName.get(name);
     }
 }

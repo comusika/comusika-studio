@@ -29,6 +29,7 @@ import com.frinika.main.action.CreateProjectAction;
 import com.frinika.main.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.main.model.ProjectFileRecord;
 import com.frinika.main.panel.WelcomePanel;
 import com.frinika.gui.util.SupportedLaf;
@@ -81,7 +82,7 @@ public class FrinikaMain {
 
             @Override
             public void openProject() {
-                String lastFile = FrinikaConfig.lastProjectFile();
+                String lastFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
                 if (lastFile != null) {
                     OpenProjectAction.setSelectedFile(new File(lastFile));
                 }

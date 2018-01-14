@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.transport;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SongPositionListener;
@@ -235,7 +235,7 @@ public class TransportPanel extends JPanel {
 
         switch (displayMode) {
             case FRAME:
-                int frames = (int) ((sequencer.getMicrosecondPosition() / 1000000.0) * FrinikaConfig.sampleRate);
+                int frames = (int) ((sequencer.getMicrosecondPosition() / 1000000.0) * FrinikaGlobalProperties.getSampleRate());
                 timeDisplay.setText(String.format("%07d", frames));
                 break;
 

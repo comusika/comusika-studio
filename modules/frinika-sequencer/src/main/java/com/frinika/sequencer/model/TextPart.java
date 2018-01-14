@@ -23,6 +23,8 @@
  */
 package com.frinika.sequencer.model;
 
+import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.OptionsBinder;
@@ -40,8 +42,6 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Field;
-import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,6 +49,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * In-place editable text part.
@@ -179,7 +181,7 @@ public class TextPart extends Part { //implements ConfigListener {
         renderLabel.setSize(rect.width, rect.height);
         //renderLabel.setText("<html>"+getText()+"</html>");
         renderLabel.setText(getText());
-        renderLabel.setFont(FrinikaConfig.TEXT_LANE_FONT);
+        renderLabel.setFont(FrinikaGlobalProperties.TEXT_LANE_FONT.getValue());
         g.setColor(Color.WHITE);
         g.fillRect(rect.x + 1, rect.y + 1, rect.width - 1, rect.height - 1); // fill (again) with white background (avoid double filling would require more subtle ColorScheme or changes to PartView)
         g.translate(rect.x, rect.y);
@@ -312,8 +314,8 @@ public class TextPart extends Part { //implements ConfigListener {
             fontpanel.setLayout(new BorderLayout(5, 5));
             final JTextField fontTextField = new JTextField();
             JButton fontButton = new JButton("Pick Font...");
-            Map<Field, Object> bindMap = new HashMap<>();
-            bindMap.put(FrinikaConfig._TEXT_LANE_FONT.getField(), fontTextField);
+            Map<FrinikaGlobalProperty, Object> bindMap = new HashMap<>();
+            bindMap.put(FrinikaGlobalProperty.TEXT_LANE_FONT, fontTextField);
             binder = new DefaultOptionsBinder(bindMap, null);
             fontTextField.addActionListener(new ActionListener() {
                 @Override
@@ -337,7 +339,7 @@ public class TextPart extends Part { //implements ConfigListener {
         private void updateFont(String s) { // will lead to immediate update in gui (via TextPartView's ConfigListener)
             Font font = FrinikaConfig.stringToFont(s);
             if (font != null) {
-                FrinikaConfig._TEXT_LANE_FONT.set(font);
+                FrinikaGlobalProperties.TEXT_LANE_FONT.setValue(font);
                 frame.repaintPartView();
             }
         }

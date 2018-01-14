@@ -23,7 +23,7 @@
  */
 package com.frinika.audio.analysis;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import uk.org.toot.audio.core.AudioBuffer;
 
 public class OscillatorNode implements Oscillator {
@@ -55,7 +55,7 @@ public class OscillatorNode implements Oscillator {
         this.amp2 = amp;
         this.freq1 = this.freq2 = freq;
         this.dphase1 = this.dphase2 = 2.0 * Math.PI * freq
-                / FrinikaConfig.sampleRate;
+                / FrinikaGlobalProperties.getSampleRate();
         phase = phaseRef;
         if (phase < 0) {
             phase += twoPI;
@@ -128,7 +128,7 @@ public class OscillatorNode implements Oscillator {
         this.amp2 = amp;
         this.freq2 = freq;
         // this.phaseRef = phaseRef;
-        this.dphase2 = 2.0 * Math.PI * freq2 / FrinikaConfig.sampleRate;
+        this.dphase2 = 2.0 * Math.PI * freq2 / FrinikaGlobalProperties.getSampleRate();
         steady = false;
         active = true;
     }

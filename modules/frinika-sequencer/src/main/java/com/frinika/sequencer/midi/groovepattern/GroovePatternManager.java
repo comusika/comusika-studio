@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.midi.groovepattern;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.sequencer.model.MidiPart;
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,7 +78,7 @@ public class GroovePatternManager {
 
     private static void loadUserPatterns() {
         userPatterns = new HashMap<>();
-        File dir = FrinikaConfig.GROOVE_PATTERN_DIRECTORY; //new File( FrinikaConfig.GROOVE_PATTERN_DIRECTORY );
+        File dir = FrinikaGlobalProperties.GROOVE_PATTERN_DIRECTORY.getValue(); //new File( FrinikaConfig.GROOVE_PATTERN_DIRECTORY );
         if (dir.exists()) {
             File[] files = dir.listFiles();
             for (File file : files) {
@@ -117,7 +117,7 @@ public class GroovePatternManager {
 
     private static void storeUserPattern(GroovePatternFromSequence groovePattern) throws IOException {
         // ensure storage dir exists
-        File dir = FrinikaConfig.GROOVE_PATTERN_DIRECTORY; //new File(STORAGE_DIRECTORY);
+        File dir = FrinikaGlobalProperties.GROOVE_PATTERN_DIRECTORY.getValue(); //new File(STORAGE_DIRECTORY);
         dir.mkdir();
         // save
         groovePattern.saveAsMidiFile(storageFile(groovePattern));
@@ -194,7 +194,7 @@ public class GroovePatternManager {
     }
 
     private static File storageFile(GroovePatternFromSequence gp) {
-        return new File(FrinikaConfig.GROOVE_PATTERN_DIRECTORY, normalizeName(gp.getName()) + ".mid");
+        return new File(FrinikaGlobalProperties.GROOVE_PATTERN_DIRECTORY.getValue(), normalizeName(gp.getName()) + ".mid");
     }
 
     private static void ensureUniqueName(String name) throws IOException {

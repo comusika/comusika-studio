@@ -23,7 +23,7 @@
  */
 package com.frinika.voiceserver;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.TargetDataLine;
 
@@ -37,7 +37,7 @@ import javax.sound.sampled.TargetDataLine;
 public class MonoAudioInput {
 
     TargetDataLine lineIn;
-    AudioFormat format = new AudioFormat((float) FrinikaConfig.sampleRate, 16, 1, true, true);
+    AudioFormat format = new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 1, true, true);
 
     public MonoAudioInput(TargetDataLine in) throws Exception {
         /*

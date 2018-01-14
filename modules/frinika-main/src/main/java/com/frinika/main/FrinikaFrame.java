@@ -32,6 +32,9 @@ import com.frinika.global.ConfigDialogPanel;
 import com.frinika.global.ConfigError;
 import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.ConfigurationProperty;
+import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PresentationPanel;
 import com.frinika.gui.util.WindowUtils;
@@ -714,7 +717,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
         overRideKeys();
 
-        if (FrinikaConfig.MAXIMIZE_WINDOW) {
+        if (FrinikaGlobalProperties.MAXIMIZE_WINDOW.getValue()) {
             this.setExtendedState(MAXIMIZED_BOTH);
         }
     }
@@ -1359,7 +1362,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 try {
                     if (project.getProjectFile() != null) {
                         project.saveProject(project.getProjectFile());
-                        FrinikaConfig.setLastProjectFilename(project
+                        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(project
                                 .getProjectFile().getAbsolutePath());
                     } else {
                         withRef = false;
@@ -1403,7 +1406,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 try {
                     if (project.getProjectFile() != null) {
                         project.saveProject(project.getProjectFile());
-                        FrinikaConfig.setLastProjectFilename(project
+                        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(project
                                 .getProjectFile().getAbsolutePath());
                     } else {
                         withRef = true;
@@ -1560,7 +1563,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                     byte[] data = new byte[16];
                     AudioFormat format = new AudioFormat(
-                            (float) FrinikaConfig.sampleRate, 16, 2, true, true);
+                            (float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true);
                     AudioInputStream ais = new AudioInputStream(
                             new ByteArrayInputStream(data), format, 4);
                     ;
@@ -1724,15 +1727,12 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                     @Override
                     public void configurationChanged(ChangeEvent event) {
-                        FrinikaConfig.Meta meta = (FrinikaConfig.Meta) event
+                        ConfigurationProperty<?> meta = (ConfigurationProperty<?>) event
                                 .getSource();
-                        try {
-                            System.out.println("configuration changed: "
-                                    + meta.getField().getName() + "="
-                                    + meta.getField().get(null));
-                        } catch (IllegalAccessException iae) {
-                            iae.printStackTrace();
-                        }
+
+                        System.out.println("configuration changed: "
+                                + meta.getName() + "="
+                                + meta.getValue());
                     }
 
                 };
@@ -2188,7 +2188,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         // boolean dm = FrinikaConfig.getDirectMonitoring();
         item = new CheckBoxMenuItemConfig(
                 CurrentLocale.getMessage("project.menu.settings.direct_monitoring"),
-                FrinikaConfig._DIRECT_MONITORING);
+                FrinikaGlobalProperties.DIRECT_MONITORING);
         /*
 		 * item.addActionListener(new ActionListener() { public void
 		 * actionPerformed(ActionEvent e) {
@@ -2204,7 +2204,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         // }
         item = new CheckBoxMenuItemConfig(
                 CurrentLocale.getMessage("project.menu.settings.multiplexed_audio"),
-                FrinikaConfig._MULTIPLEXED_AUDIO);
+                FrinikaGlobalProperties.MULTIPLEXED_AUDIO);
         /*
 		 * item.addActionListener(new ActionListener() { public void
 		 * actionPerformed(ActionEvent e) {
@@ -2244,7 +2244,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
         item = new CheckBoxMenuItemConfig(
                 CurrentLocale.getMessage("project.menu.settings.jack_autoconnect"),
-                FrinikaConfig._JACK_AUTO_CONNECT);
+                FrinikaGlobalProperties.JACK_AUTO_CONNECT);
         /*
 		 * item.addActionListener(new ActionListener() { public void
 		 * actionPerformed(ActionEvent e) {
@@ -2624,7 +2624,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     public static void midiInDeviceChange() {
         System.out.println("MIDIIN CHANGER");
-        MidiInDeviceManager.reset(FrinikaConfig.getMidiInDeviceList());
+        MidiInDeviceManager.reset(FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList());
     }
 
     @Override
@@ -2833,7 +2833,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 }
 
                 project.saveProject(newProject);
-                FrinikaConfig.setLastProjectFilename(newProject
+                FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(newProject
                         .getAbsolutePath());
                 setTitle(newProject.getName());
             }
@@ -2902,10 +2902,10 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     static class CheckBoxMenuItemConfig extends JCheckBoxMenuItem implements
             ActionListener, ConfigListener {
 
-        private FrinikaConfig.Meta configOption;
+        private ConfigurationProperty<Boolean> configOption;
 
         public CheckBoxMenuItemConfig(String text,
-                FrinikaConfig.Meta configOption) {
+                ConfigurationProperty<Boolean> configOption) {
             super(text);
             this.configOption = configOption;
             if ((configOption.getType() == boolean.class)
@@ -2937,13 +2937,13 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         }
 
         private void refresh() {
-            boolean b = Boolean.valueOf(configOption.get().toString());
+            boolean b = Boolean.valueOf(configOption.getValue().toString());
             this.setSelected(b);
         }
 
         private void update() {
             boolean b = this.isSelected();
-            configOption.set(b);
+            configOption.setValue(b);
         }
     }
 
@@ -2970,8 +2970,8 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     protected static JDialog createDialog(ProjectFrame frame) {
         ConfigDialogPanel configDialogPanel = new ConfigDialogPanel(frame.getFrame());
-        Map<FrinikaConfig.Meta, Object> m = FrinikaConfig.bindMap(configDialogPanel);
-        Map<Field, Object> map = FrinikaConfig.convertMap(m);
+        Map<FrinikaGlobalProperty, Object> map = ConfigDialogPanel.bindMap(configDialogPanel);
+        //Map<Field, Object> map = FrinikaConfig.convertMap(m);
         /*Object[][] m2 = dynamicBindMap(configDialogPanel);
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		for (int i = 0; i < m2.length; i++) {

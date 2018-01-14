@@ -28,7 +28,7 @@ import com.frinika.audio.io.BufferedRandomAccessFileManager;
 import com.frinika.audio.toot.AudioInjector;
 import com.frinika.base.BaseProjectContainer;
 import com.frinika.base.FrinikaAudioServer;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.model.EditHistoryRecorder;
@@ -93,7 +93,7 @@ import uk.org.toot.audio.mixer.AudioMixer;
 public abstract class SequencerProjectContainer implements BaseProjectContainer,
         EditHistoryRecorder<Lane>, MidiConsumer, DynamicMixer {
 
-    protected int ticksPerQuarterNote = FrinikaConfig.TICKS_PER_QUARTER;
+    protected int ticksPerQuarterNote = FrinikaGlobalProperties.TICKS_PER_QUARTER.getValue();
     protected transient MidiResource midiResource;
     protected transient FrinikaSequencer sequencer;
 

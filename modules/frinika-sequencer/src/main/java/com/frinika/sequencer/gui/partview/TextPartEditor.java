@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.partview;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.sequencer.model.TextPart;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -57,7 +57,7 @@ public class TextPartEditor extends JPanel implements FocusListener {
         this.partView = partView;
         this.setLayout(new BorderLayout());
         textArea = new JTextArea();
-        textArea.setFont(FrinikaConfig.TEXT_LANE_FONT);
+        textArea.setFont(FrinikaGlobalProperties.TEXT_LANE_FONT.getValue());
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setText(part.getText());

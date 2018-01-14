@@ -24,7 +24,7 @@
 package com.frinika.sequencer.gui.partview;
 
 import com.frinika.audio.gui.ListProvider;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.MidiResource;
 import com.frinika.sequencer.gui.JSpinnerDraggable;
@@ -470,10 +470,10 @@ public class MidiVoiceView extends LaneView {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser chooser;
 
-                if (FrinikaConfig.PATCHNAME_DIRECTORY == null) {
+                if (FrinikaGlobalProperties.PATCHNAME_DIRECTORY.getValue() == null) {
                     chooser = new JFileChooser();
                 } else {
-                    chooser = new JFileChooser(FrinikaConfig.PATCHNAME_DIRECTORY);
+                    chooser = new JFileChooser(FrinikaGlobalProperties.PATCHNAME_DIRECTORY.getValue());
                 }
                 chooser.setDialogTitle(CurrentLocale.getMessage("midilane.properties.select_patchmap"));
 
@@ -481,7 +481,7 @@ public class MidiVoiceView extends LaneView {
                     File file = chooser.getSelectedFile();
                     String patchMapName = file.getAbsolutePath();
                     ((MidiLane) lane).setPatchMapName(patchMapName);
-                    FrinikaConfig.PATCHNAME_DIRECTORY = chooser.getCurrentDirectory();
+                    FrinikaGlobalProperties.PATCHNAME_DIRECTORY.setValue(chooser.getCurrentDirectory());
                     init();
                 }
 

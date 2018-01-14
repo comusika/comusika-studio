@@ -17,7 +17,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.global;
+package com.frinika.global.property;
 
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -30,9 +30,13 @@ import javax.annotation.Nullable;
  */
 public class RecentFileNamesProperty extends ConfigurationProperty<List<RecentFileName>> {
 
-    public RecentFileNamesProperty(@Nonnull String fieldName, @Nullable List<RecentFileName> value) {
-        super(fieldName, value);
+    public RecentFileNamesProperty(@Nonnull FrinikaGlobalProperty globalProperty, @Nullable List<RecentFileName> value) {
+        super(generify(List.class), globalProperty, value);
     }
 
     // TODO conversion to/from XML
+    @SuppressWarnings("unchecked")
+    private static <T> Class<T> generify(Class<?> cls) {
+        return (Class<T>) cls;
+    }
 }

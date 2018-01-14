@@ -27,6 +27,7 @@ import com.frinika.audio.toot.AudioInjector;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.sequencer.FrinikaSequence;
 import com.frinika.sequencer.FrinikaSequencer;
@@ -113,7 +114,7 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
      * a different resolution - and when saving to a project - the sequence
      * created when reloading will have the resolution stored here.
      */
-    public int ticksPerQuarterNote = FrinikaConfig.TICKS_PER_QUARTER;
+    public int ticksPerQuarterNote = FrinikaGlobalProperties.TICKS_PER_QUARTER.getValue();
     public TempoList tempoList;
     public double pianoRollSnapQuantization = 0;
     public double partViewSnapQuantization = 0;
@@ -167,7 +168,7 @@ public class ProjectContainer implements Serializable, SequencerProjectSerialize
         if (sequence == null) {
             try {
                 if (ticksPerQuarterNote == 0) {
-                    ticksPerQuarterNote = FrinikaConfig.TICKS_PER_QUARTER;
+                    ticksPerQuarterNote = FrinikaGlobalProperties.TICKS_PER_QUARTER.getValue();
                 }
                 sequence = new FrinikaSequence(Sequence.PPQ, ticksPerQuarterNote, 1);
                 sequencer.setSequence(sequence);

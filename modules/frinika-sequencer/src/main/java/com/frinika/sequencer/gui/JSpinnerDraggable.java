@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -96,7 +96,7 @@ public class JSpinnerDraggable extends JSpinner implements MouseMotionListener {
             diff = (y > 0) ? 1 : -1;
             drag = y;
         }
-        diff /= FrinikaConfig.MOUSE_NUMBER_DRAG_INTENSITY; // speed factor
+        diff /= FrinikaGlobalProperties.MOUSE_NUMBER_DRAG_INTENSITY.getValue(); // speed factor
         while (keysTyped < diff) {
             robot.keyPress(KeyEvent.VK_DOWN);
             robot.keyRelease(KeyEvent.VK_DOWN);

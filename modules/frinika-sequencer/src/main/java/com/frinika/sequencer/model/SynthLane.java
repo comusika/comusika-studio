@@ -27,8 +27,8 @@ import com.frinika.audio.io.AudioWriter;
 import com.frinika.audio.midi.MidiDeviceIconProvider;
 import com.frinika.audio.toot.AudioPeakMonitor;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.global.FrinikaConfig;
-import static com.frinika.localization.CurrentLocale.getMessage;
+import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequence;
 import com.frinika.sequencer.FrinikaSequencer;
@@ -409,14 +409,14 @@ public class SynthLane extends Lane implements RecordableLane {
             frame.setVisible(true);
 
             frinikaProject.getEditHistoryContainer().mark(
-                    getMessage("sequencer.project.render_synth"));
-            sampleRate = FrinikaConfig.sampleRate;
+                    CurrentLocale.getMessage("sequencer.project.render_synth"));
+            sampleRate = FrinikaGlobalProperties.getSampleRate();
 
             double samplesPerTick = samplesPerTick();
 
             int samplesPerFrame = 128;
 
-            AudioFormat format = new AudioFormat(FrinikaConfig.sampleRate, 16,
+            AudioFormat format = new AudioFormat(FrinikaGlobalProperties.getSampleRate(), 16,
                     2, true, false);
 
             AudioServer server = FrinikaAudioSystem.getAudioServer();

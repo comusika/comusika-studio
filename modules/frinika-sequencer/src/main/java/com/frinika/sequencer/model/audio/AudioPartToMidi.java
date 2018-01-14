@@ -27,7 +27,7 @@ import com.frinika.audio.analysis.constantq.FFTConstantQ;
 import com.frinika.audio.analysis.constantq.FreqToBin;
 import com.frinika.audio.analysis.gui.SpectrogramPanelOLD;
 import com.frinika.audio.model.DoubleDataSource;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.model.AudioPart;
 import com.frinika.sequencer.model.MidiPart;
@@ -41,7 +41,7 @@ public class AudioPartToMidi {
     public static MidiPart process(AudioPart part) throws IOException {
 
         double dt = .01;
-        double Fs = FrinikaConfig.sampleRate;
+        double Fs = FrinikaGlobalProperties.getSampleRate();
         MidiPart midiPart = new MidiPart();
 
         int maxpixels = 1000;

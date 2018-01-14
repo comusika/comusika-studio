@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
+ */
 package com.frinika.radio;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -40,6 +39,7 @@ import javax.sound.sampled.TargetDataLine;
  * @author Peter Johan Salomonsen
  */
 public class RadioStreamTargetDataLine implements TargetDataLine {
+
     PipedInputStream queue = null;
     PipedOutputStream pos = null;
     int bufferSize;
@@ -50,14 +50,14 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
         this.bufferSize = bufferSize;
         try {
             pos = new PipedOutputStream(queue);
-        } catch (IOException ex) {         
+        } catch (IOException ex) {
             throw new LineUnavailableException(ex.toString());
         }
     }
 
     @Override
     public void open(AudioFormat format) throws LineUnavailableException {
-        open(format, 1024*1024*8);
+        open(format, 1024 * 1024 * 8);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
 
     @Override
     public AudioFormat getFormat() {
-        return new AudioFormat((float) FrinikaConfig.sampleRate,16,2,true,false);
+        return new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, false);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
 
     @Override
     public boolean isOpen() {
-        return queue !=null;
+        return queue != null;
     }
 
     @Override
@@ -197,12 +197,11 @@ public class RadioStreamTargetDataLine implements TargetDataLine {
 
     void addFrame(byte[] b) {
         try {
-            if(queue!=null && queue.available()<(bufferSize-4))
-            {
+            if (queue != null && queue.available() < (bufferSize - 4)) {
                 pos.write(b);
             }
         } catch (IOException ex) {
         }
-    }   
+    }
 
 }

@@ -24,7 +24,7 @@ package com.frinika.sequencer.model;
 
 import com.frinika.audio.io.AudioWriter;
 import com.frinika.audio.toot.AudioPeakMonitor;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequencer;
@@ -128,7 +128,7 @@ public class AudioLane extends Lane implements RecordableLane,
                         writer.processAudio(buffer);
                         hasRecorded = true;
                     }
-                    if (FrinikaConfig.getDirectMonitoring()) {
+                    if (FrinikaGlobalProperties.DIRECT_MONITORING.getValue()) {
                         buffer.makeSilence();
                     }
                 } else {
@@ -247,7 +247,7 @@ public class AudioLane extends Lane implements RecordableLane,
                         writer.processAudio(buffer);
                         hasRecorded = true;
                     }
-                    if (FrinikaConfig.getDirectMonitoring()) {
+                    if (FrinikaGlobalProperties.DIRECT_MONITORING.getValue()) {
                         buffer.makeSilence();
                     }
                 } else {
@@ -310,7 +310,7 @@ public class AudioLane extends Lane implements RecordableLane,
         clipFile = newFilename();
 
         AudioFormat format = new AudioFormat(
-                FrinikaConfig.sampleRate,
+                FrinikaGlobalProperties.getSampleRate(),
                 16,
                 ((IOAudioProcess) audioInProcess).getChannelFormat().getCount(),
                 true, false);

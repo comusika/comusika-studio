@@ -24,7 +24,7 @@
 package com.frinika.voiceserver;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -53,8 +53,8 @@ import javax.swing.JFrame;
 public abstract class VoiceServer {
 
     private int bufferSize = 512; // Float buffer size - adjusts automatically - do not modify
-    private int sampleRate = (int) FrinikaConfig.sampleRate;
-    private long audioStartTime = System.nanoTime();
+    private int sampleRate = FrinikaGlobalProperties.getSampleRate();
+    private final long audioStartTime = System.nanoTime();
     private long frameBufferPos = 0;
     private boolean isRealtime = true;
 
@@ -94,7 +94,7 @@ public abstract class VoiceServer {
      *
      * @return
      */
-    private final long getFramePos() {
+    private long getFramePos() {
         return ((long) (((System.nanoTime() - audioStartTime)
                 * (sampleRate / 1000000000.0))));
     }
@@ -103,7 +103,7 @@ public abstract class VoiceServer {
      * Update framebuffer pos for each frame
      *
      */
-    private final void updateFrameBufferPos() {
+    private void updateFrameBufferPos() {
         frameBufferPos = getFramePos() - (getBufferSize() / 2);
     }
 
@@ -148,7 +148,7 @@ public abstract class VoiceServer {
      * that are finished, and add pending.
      *
      */
-    private final void updateGenerators() {
+    private void updateGenerators() {
         while (removedTransmitters.size() > 0) {
             audioOutputGenerators.remove(removedTransmitters.remove(0));
         }

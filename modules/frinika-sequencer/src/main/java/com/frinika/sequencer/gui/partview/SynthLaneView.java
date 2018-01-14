@@ -26,7 +26,7 @@
  */
 package com.frinika.sequencer.gui.partview;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.Lane;
@@ -141,7 +141,7 @@ public class SynthLaneView extends LaneView {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         try {
-                            JFileChooser chooser = new JFileChooser(FrinikaConfig.SOUNDFONT_DIRECTORY);
+                            JFileChooser chooser = new JFileChooser(FrinikaGlobalProperties.SOUNDFONT_DIRECTORY.getValue());
                             chooser.setDialogTitle("Open soundfont");
                             chooser.setFileFilter(new SoundFontFileFilter());
                             if (chooser.showOpenDialog(null)

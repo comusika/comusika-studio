@@ -23,7 +23,8 @@
  */
 package com.frinika.voiceserver;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.localization.CurrentLocale;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -127,7 +128,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
             ultraLowLatency = true;
         }
 
-        bufferSize = 4 * FrinikaConfig.getAudioBufferLength();
+        bufferSize = 4 * FrinikaGlobalProperties.AUDIO_BUFFER_LENGTH.getValue();
 
         startAudioOutput();
     }
@@ -347,7 +348,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
                 try {
                     stopAudioOutput();
                     JavaSoundVoiceServer.this.bufferSize = latencyListener.bufferSize * 4;
-                    FrinikaConfig.setAudioBufferLength(latencyListener.bufferSize);
+                    FrinikaGlobalProperties.AUDIO_BUFFER_LENGTH.setValue(latencyListener.bufferSize);
                     JavaSoundVoiceServer.this.lineOut = (SourceDataLine) AudioSystem.getMixer((Mixer.Info) cb.getSelectedItem()).getLine(new Line.Info(SourceDataLine.class));
                     startAudioOutput();
                 } catch (Exception ex) {
@@ -363,7 +364,7 @@ public class JavaSoundVoiceServer extends VoiceServer implements Runnable {
     public void setBufferSize(int len) throws Exception {
         stopAudioOutput();
         bufferSize = len * 4;
-        FrinikaConfig.setAudioBufferLength(len);
+        FrinikaGlobalProperties.AUDIO_BUFFER_LENGTH.setValue(len);
         startAudioOutput();
     }
 

@@ -24,7 +24,7 @@
 package com.frinika.project.scripting;
 
 import com.frinika.base.MessageDialog;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
 import com.frinika.project.scripting.javascript.JavascriptScope;
@@ -78,7 +78,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public final static File GLOBAL_PROPERTIES_FILE = new File(FrinikaConfig.SCRIPTS_DIRECTORY, "scripting.properties");
+    public final static File GLOBAL_PROPERTIES_FILE = new File(FrinikaGlobalProperties.SCRIPTS_DIRECTORY.getValue(), "scripting.properties");
 
     // --- static ---
     transient static Map<FrinikaScript, ScriptThread> runningScripts = new HashMap<FrinikaScript, ScriptThread>();

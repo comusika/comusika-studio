@@ -23,7 +23,7 @@
  */
 package com.frinika.project.dialog;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.model.AudioLane;
@@ -104,7 +104,7 @@ public class BounceToLane extends JDialog implements Runnable {
         project.getAudioServer().stop();
 
         try {
-            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true), numberOfSamples);
+            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
             sequencer.setRealtime(false);
             sequencer.start();

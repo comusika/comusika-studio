@@ -26,7 +26,7 @@ import com.frinika.audio.io.AudioReader;
 import com.frinika.audio.io.AudioReaderFactory;
 import com.frinika.audio.io.BufferedRandomAccessFile;
 import com.frinika.audio.io.VanillaRandomAccessFile;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.gui.ItemPanel;
 import com.frinika.sequencer.gui.ProjectFrame;
@@ -162,12 +162,12 @@ public class AudioPart extends Part implements AudioReaderFactory {
                 BufferedRandomAccessFile braf = new BufferedRandomAccessFile(
                         raf, buffSize, lane.getProject().getAudioFileManager());
 
-                audioPlayerIn = new EnvelopedAudioReader(braf, FrinikaConfig.sampleRate);
+                audioPlayerIn = new EnvelopedAudioReader(braf, FrinikaGlobalProperties.getSampleRate());
                 // in = new AudioReader(new VanillaRandomAccessFile(raf));
                 RandomAccessFile rafG = new RandomAccessFile(clipFile, "r");
-                thumbNailIn = new AudioReader(new VanillaRandomAccessFile(rafG), FrinikaConfig.sampleRate);
+                thumbNailIn = new AudioReader(new VanillaRandomAccessFile(rafG), FrinikaGlobalProperties.getSampleRate());
 
-                if (audioPlayerIn.getFormat().getSampleRate() != FrinikaConfig.sampleRate) {
+                if (audioPlayerIn.getFormat().getSampleRate() != FrinikaGlobalProperties.getSampleRate()) {
                     try {
                         throw new Exception(" unsupport format " + audioPlayerIn.getFormat());
                     } catch (Exception e) {
@@ -446,7 +446,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
         File clipFile = new File(audioDir, audioFileName);
         VanillaRandomAccessFile rafG = new VanillaRandomAccessFile(
                 new RandomAccessFile(clipFile, "r"));
-        AudioReader reader = new AudioReader(rafG, FrinikaConfig.sampleRate);
+        AudioReader reader = new AudioReader(rafG, FrinikaGlobalProperties.getSampleRate());
         reader.setBoundsInMicros(envelope.tOn, envelope.tOff);
         return reader;
     }
@@ -588,7 +588,7 @@ public class AudioPart extends Part implements AudioReaderFactory {
 //			double ticksPerSecond = project.getSequence().getResolution()
 //					* (project.getSequencer().getTempoInBPM() / 60.0);
 //			double framePerTick = FrinikaConfig.sampleRate / ticksPerSecond;
-            double sampleToScreen = panel.userToScreen / FrinikaConfig.sampleRate;
+            double sampleToScreen = panel.userToScreen / FrinikaGlobalProperties.getSampleRate();
 
             // int n = nChannel * 2;
             int chunkSize = 1024;

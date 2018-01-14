@@ -23,7 +23,7 @@
  */
 package com.frinika.tootX.plugins.reverb;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import java.util.Observable;
 import java.util.Observer;
 import rasmus.interpreter.sampled.util.Freeverb;
@@ -67,7 +67,7 @@ public class ReverbProcess implements AudioProcess {
 
     @Override
     public void open() {
-        freeverb = new Freeverb(FrinikaConfig.sampleRate, 1.0);
+        freeverb = new Freeverb(FrinikaGlobalProperties.getSampleRate(), 1.0);
         update();
     }
 

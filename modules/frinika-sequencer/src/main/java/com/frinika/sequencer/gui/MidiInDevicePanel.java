@@ -24,6 +24,7 @@
 package com.frinika.sequencer.gui;
 
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,7 +55,7 @@ public class MidiInDevicePanel extends JPanel {
 
         List<String> names = new ArrayList<>();
 
-        for (String name : FrinikaConfig.getMidiInDeviceList()) {
+        for (String name : FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList()) {
             names.add(name);
         }
 
@@ -68,7 +69,7 @@ public class MidiInDevicePanel extends JPanel {
                         // System.out.println(box.getText());
                     }
                 }
-                FrinikaConfig.setMidiInDeviceList(list);
+                FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.setStringList(list);
                 FrinikaConfig.store();
                 midiInDeviceChange();
             }
@@ -114,6 +115,6 @@ public class MidiInDevicePanel extends JPanel {
 
     public static void midiInDeviceChange() {
         System.out.println("MIDIIN CHANGER");
-        MidiInDeviceManager.reset(FrinikaConfig.getMidiInDeviceList());
+        MidiInDeviceManager.reset(FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList());
     }
 }

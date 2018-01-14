@@ -25,6 +25,7 @@ package com.frinika.settings;
 
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.toot.javasoundmultiplexed.MultiplexedJavaSoundAudioServer;
 import java.awt.BorderLayout;
@@ -177,8 +178,7 @@ class AudioServerSelectPanel extends JPanel {
         c.gridy = 0;
         c.gridx = 0;
 
-        final boolean multiplexIO = FrinikaConfig.MULTIPLEXED_AUDIO;
-        //.getPropertyBoolean("multiplexed_audio");
+        final boolean multiplexIO = FrinikaGlobalProperties.MULTIPLEXED_AUDIO.getValue();
 
         String opt[] = {"Default Server", "Multiplexed Server"};
 
@@ -197,7 +197,7 @@ class AudioServerSelectPanel extends JPanel {
     void done() {
         //FrinikaConfig.setProperty("multiplexed_audio", String
         //		.valueOf(cb.getSelectedIndex() == 1));
-        FrinikaConfig.setMultiplexedAudio(cb.getSelectedIndex() == 1);
+        FrinikaGlobalProperties.MULTIPLEXED_AUDIO.setValue(cb.getSelectedIndex() == 1);
         FrinikaConfig.store();
     }
 }

@@ -24,7 +24,7 @@
 package com.frinika.sequencer.gui.mixer;
 
 import com.frinika.audio.midi.MidiDeviceIconProvider;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.renderer.MidiRender;
 import com.frinika.renderer.MidiRenderFactory;
 import com.frinika.sequencer.project.SequencerProjectContainer;
@@ -314,7 +314,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory, MidiDeviceI
                     field.setAccessible(true);
                     Logger.getLogger(getClass().getName()).log(Level.FINE, "Found resource annotation in class {0} with name {1}. Injecting this resource.", new Object[]{midiDevice.getClass().getName(), resourceAnnotation.name()});
                     try {
-                        field.setInt(midiDevice, FrinikaConfig.sampleRate);
+                        field.setInt(midiDevice, FrinikaGlobalProperties.getSampleRate());
                     } catch (IllegalArgumentException | IllegalAccessException ex) {
                         Logger.getLogger(SynthWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -361,7 +361,7 @@ public class SynthWrapper implements Synthesizer, MidiRenderFactory, MidiDeviceI
         if (midiDevice instanceof AudioSynthesizer) {
             try {
                 AudioFormat.Encoding PCM_FLOAT = new AudioFormat.Encoding("PCM_FLOAT");
-                AudioFormat format = new AudioFormat(PCM_FLOAT, FrinikaConfig.sampleRate, 32, 2, 4 * 2, 44100, ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN));
+                AudioFormat format = new AudioFormat(PCM_FLOAT, FrinikaGlobalProperties.getSampleRate(), 32, 2, 4 * 2, 44100, ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN));
 
                 AudioSynthesizer audosynth = (AudioSynthesizer) midiDevice;
                 final AudioInputStream ais = audosynth.openStream(format, null);   // TODO replace null with a map

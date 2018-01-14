@@ -23,7 +23,7 @@
  */
 package com.frinika.synth.synths.sampler;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.synth.Oscillator;
 import com.frinika.synth.Synth;
 import com.frinika.voiceserver.AudioInput;
@@ -76,11 +76,11 @@ public class SamplerOscillator extends Oscillator {
         stopMonitor();
         // Allocate as much memory as possible for the recording buffer
 
-        directMonitoring = FrinikaConfig.getDirectMonitoring();
+        directMonitoring = FrinikaGlobalProperties.DIRECT_MONITORING.getValue();
 
         this.stereo = stereo;
 
-        audioInput = new AudioInput(lineIn, FrinikaConfig.sampleRate);
+        audioInput = new AudioInput(lineIn, FrinikaGlobalProperties.getSampleRate());
         audioInput.start();
         audioInput.getLine().start();
         monitorStartMillis = System.currentTimeMillis();

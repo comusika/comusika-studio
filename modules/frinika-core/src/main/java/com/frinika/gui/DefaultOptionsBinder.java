@@ -24,12 +24,12 @@
 package com.frinika.gui;
 
 import com.frinika.global.ConfigError;
+import com.frinika.global.property.ConfigurationProperty;
 import com.frinika.global.FrinikaConfig;
-import java.lang.reflect.Field;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import javax.swing.AbstractButton;
@@ -51,22 +51,22 @@ import javax.swing.SpinnerNumberModel;
  */
 public class DefaultOptionsBinder implements OptionsBinder {
 
-    protected Map<Field, Object> bindMap;
+    protected Map<FrinikaGlobalProperty, Object> bindMap;
     protected Map<String, Object> dynamicBindMap;
     protected Properties properties;
     protected Object bindInstance = null;
-    protected Map<Field, Object> back;
+    protected Map<FrinikaGlobalProperty, Object> back;
 
     /*public DefaultOptionsBinder() {
 		// nop
 	}*/
-    public DefaultOptionsBinder(Map<Field, Object> bindMap, Map<String, Object> dynamicBindMap, Properties properties) {
+    public DefaultOptionsBinder(Map<FrinikaGlobalProperty, Object> bindMap, Map<String, Object> dynamicBindMap, Properties properties) {
         this.bindMap = bindMap;
         this.dynamicBindMap = dynamicBindMap;
         this.properties = properties;
     }
 
-    public DefaultOptionsBinder(Map<Field, Object> bindMap, Properties properties) {
+    public DefaultOptionsBinder(Map<FrinikaGlobalProperty, Object> bindMap, Properties properties) {
         this(bindMap, null, properties);
     }
 
@@ -103,7 +103,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
 
         if (component instanceof JTextField) {
             gui = new GUIAbstractionText(component);
-            String s = FrinikaConfig.valueToString(value, fieldName, value.getClass());
+            String s = FrinikaConfig.valueToString(value, value.getClass());
             if (s == null) {
                 s = "";
             }
@@ -177,7 +177,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
         if (component instanceof JTextField) {
             gui = new GUIAbstractionText(component);
             String s = (String) gui.getValue();
-            return FrinikaConfig.stringToValue(s, fieldName, fieldType);
+            return FrinikaConfig.stringToValue(s, fieldType);
 
         } else if ((component instanceof JCheckBox) || (component instanceof JToggleButton)) {
             gui = new GUIAbstractionBoolean(component);
@@ -218,7 +218,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
                 //return Config.valueToString(value, fieldName, fieldType)
                 return (value != null) ? value.toString() : null;
             } else if (fieldType.isPrimitive()) { // all primitive field types
-                return FrinikaConfig.stringToValue(value.toString(), fieldName, fieldType);
+                return FrinikaConfig.stringToValue(value.toString(), fieldType);
             } else {
                 return value; // allow returning specific type
             }
@@ -233,16 +233,14 @@ public class DefaultOptionsBinder implements OptionsBinder {
      */
     @Override
     public void refresh() {
-        for (Map.Entry<Field, Object> e : bindMap.entrySet()) {
-            Field field = e.getKey();
+        for (Map.Entry<FrinikaGlobalProperty, Object> e : bindMap.entrySet()) {
+            FrinikaGlobalProperty globalProperty = e.getKey();
+            ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
             Object component = e.getValue();
-            try {
-                Object value = field.get(bindInstance);
-                toGUI(component, value, field.getName());
-            } catch (IllegalAccessException iae) {
-                System.err.println("error refreshing GUI from field " + field.getName());
-            }
+            Object value = property.getValue(); // field.get(bindInstance);
+            toGUI(component, value, globalProperty.getName());
         }
+
         if (dynamicBindMap != null) {
             for (Map.Entry<String, Object> e : dynamicBindMap.entrySet()) {
                 String key = e.getKey();
@@ -258,12 +256,13 @@ public class DefaultOptionsBinder implements OptionsBinder {
      */
     @Override
     public void update() {
-        for (Map.Entry<Field, Object> e : bindMap.entrySet()) {
-            Field field = e.getKey();
+        for (Map.Entry<FrinikaGlobalProperty, Object> e : bindMap.entrySet()) {
+            FrinikaGlobalProperty globalProperty = e.getKey();
+            ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
             Object component = e.getValue();
             if (component != null) {
-                Object value = fromGUI(component, field.getName(), field.getType());
-                FrinikaConfig.setFieldValue(field, value); // will fire ChangeEvent if necessary
+                Object value = fromGUI(component, property.getName(), property.getType());
+                FrinikaConfig.setGlobalPropertyValue(property, value); // will fire ChangeEvent if necessary
                 /*try {
 					field.set(bindInstance, value);
 				} catch (IllegalAccessException iae) {
@@ -276,7 +275,7 @@ public class DefaultOptionsBinder implements OptionsBinder {
                 String key = e.getKey();
                 Object component = e.getValue();
                 Object value = fromGUI(component, key, String.class);
-                String val = FrinikaConfig.valueToString(value, key, String.class);
+                String val = FrinikaConfig.valueToString(value, String.class);
                 if (val != null) {
                     properties.setProperty(key, val);
                 }
@@ -286,30 +285,28 @@ public class DefaultOptionsBinder implements OptionsBinder {
 
     @Override
     public void backup() {
-        back = new HashMap<>();;
-        for (Field f : bindMap.keySet()) {
-            try {
-                back.put(f, f.get(bindInstance));
-            } catch (IllegalAccessException iae) {
-                System.err.println("error reading field " + f.getName());
-            }
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
+//        back = new HashMap<>();
+//        for (FrinikaGlobalProperty f : bindMap.keySet()) {
+//            back.put(f, f.get(bindInstance));
+//        }
     }
 
     @Override
     public void restore() {
-        for (Field f : bindMap.keySet()) {
-            Object o = back.get(f);
-            try {
-                if (f.getDeclaringClass() == FrinikaConfig.class) { // make sure ChangeEvents are fired when Cancel leads to restoring old options
-                    FrinikaConfig.setFieldValue(f, o);
-                } else {
-                    f.set(bindInstance, o);
-                }
-            } catch (IllegalAccessException iae) {
-                System.err.println("error writing field " + f.getName());
-            }
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
+//        for (FrinikaGlobalProperty f : bindMap.keySet()) {
+//            Object o = back.get(f);
+//            try {
+//                if (f.getDeclaringClass() == FrinikaConfig.class) { // make sure ChangeEvents are fired when Cancel leads to restoring old options
+//                    FrinikaConfig.setGlobalPropertyValue(f, o);
+//                } else {
+//                    f.set(bindInstance, o);
+//                }
+//            } catch (IllegalAccessException iae) {
+//                System.err.println("error writing field " + f.getName());
+//            }
+//        }
     }
 
     // --- inner classes -----------------------------------------------------

@@ -23,11 +23,11 @@
  */
 package com.frinika.global;
 
+import com.frinika.global.property.ConfigurationProperty;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.gui.DefaultOptionsBinder;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.gui.util.FontChooser;
-import com.frinika.gui.util.PresentationPanel;
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Frame;
@@ -38,21 +38,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -87,120 +83,7 @@ import javax.swing.event.ChangeEvent;
  */
 public class FrinikaConfig {
 
-// --- global Frinika options here ----------------------------------------------------------	
-    public static boolean SETUP_DONE = false;
-    public static Meta _SETUP_DONE;
-
-    public static int TICKS_PER_QUARTER = 128;
-    public static Meta _TICKS_PER_QUARTER;
-
-    public static int SEQUENCER_PRIORITY = 0;
-    public static Meta _SEQUENCER_PRIORITY;
-
-    // used by JavaSoundVoiceServer
-    public static int AUDIO_BUFFER_LENGTH = 512; // TODO: IS THIS IN MILLISECONDS? OTHERWISE CONVERSION MILLISECONDS (as in gui) <-> AUDIO_BUFFER_LENGTH is needed 
-    public static Meta _AUDIO_BUFFER_LENGTH;
-
-    public static String MIDIIN_DEVICES_LIST = "";
-    public static Meta _MIDIIN_DEVICES_LIST;
-
-    public static boolean DIRECT_MONITORING = false;
-    public static Meta _DIRECT_MONITORING;
-
-    public static boolean MULTIPLEXED_AUDIO = false;
-    public static Meta _MULTIPLEXED_AUDIO;
-
-    public static boolean BIG_ENDIAN = false;
-    public static Meta _BIG_ENDIAN;
-
-    public static int sampleRate = 44100; // lowercase spelling for 'historic' reasons
-    public static Meta _sampleRate;
-
-    public static boolean JACK_AUTO_CONNECT = false;
-    public static Meta _JACK_AUTO_CONNECT;
-
-    public static boolean AUTOMATIC_CHECK_FOR_NEW_VERSION = true;
-    public static Meta _AUTOMATIC_CHECK_FOR_NEW_VERSION;
-
-    // deprecated I believe PJL
-//	public static int OS_LATENCY_MILLIS = 0;
-//	public static Meta _OS_LATENCY_MILLIS;
-    public static boolean MAXIMIZE_WINDOW = false;
-    public static Meta _MAXIMIZE_WINDOW;
-
-    public static float MOUSE_NUMBER_DRAG_INTENSITY = 2.0f;
-    public static Meta _MOUSE_NUMBER_DRAG_INTENSITY;
-
-    public static Font TEXT_LANE_FONT = new Font("Arial", Font.PLAIN, 8);
-    public static Meta _TEXT_LANE_FONT;
-
-    public static File GROOVE_PATTERN_DIRECTORY = new File(System.getProperty("user.home"), "frinika/groovepatterns/");
-    public static Meta _GROOVE_PATTERN_DIRECTORY;
-
-    public static File SCRIPTS_DIRECTORY = new File(System.getProperty("user.home"), "frinika/scripts/");
-    public static Meta _SCRIPTS_DIRECTORY;
-
-    public static File PATCHNAME_DIRECTORY = new File(System.getProperty("user.home"), "frinika/patchname/");
-    public static Meta _PATCHNAME_DIRECTORY;
-
-    public static File AUDIO_DIRECTORY = new File(System.getProperty("user.home"), "frinika/audio/");
-    public static Meta _AUDIO_DIRECTORY;
-
-    public static File SOUNDFONT_DIRECTORY = new File(System.getProperty("user.home"), "frinika/soundfonts/");
-    public static Meta _SOUNDFONT_DIRECTORY;
-
-    public static File DEFAULT_SOUNDFONT = new File(System.getProperty("user.home"), "frinika/soundfonts/8MBGMSFX.SF2");
-    public static Meta _DEFAULT_SOUNDFONT;
-
-    public static String LAST_PROJECT_FILENAME = null;
-    public static Meta _LAST_PROJECT_FILENAME;
-
 // --- gui binding ---
-    /**
-     * Binds all option fields to GUI elements in the ConfigDialogPanel (or to
-     * null, if not used in GUI).
-     *
-     * The validity of this binding is verified during application startup - ALL
-     * public static fields must be named here, none more or less - (all must be
-     * spelled correctly, of course) Otherwise the application refuses to start
-     * and gives an error.
-     *
-     * The fields are associated with concrete instances of GUI elements (e.g.
-     * JTextField, JCheckBox, ButtonGroup etc.). The DefaultOptionsBinder should
-     * know how to convert between actual GUI elements and typed field values,
-     * otherwise its refresh()/update() method should be overridden and
-     * customized here.
-     *
-     * @param d
-     * @return
-     */
-    public static Map<Meta, Object> bindMap(ConfigDialogPanel d) {
-        Map<Meta, Object> m = new HashMap<>();
-        m.put(_AUDIO_BUFFER_LENGTH, d.spinnerBufferSize);
-        m.put(_DIRECT_MONITORING, d.checkboxUseDirectMonitoring);
-        m.put(_MULTIPLEXED_AUDIO, d.checkboxUseMultiplexedJavasoundServer);
-        //	m.put( _OS_LATENCY_MILLIS, 						d.spinnerOutputLatency );
-        m.put(_JACK_AUTO_CONNECT, d.checkboxAutoconnectJack);
-        m.put(_sampleRate, d.comboboxSampleRate);
-        m.put(_TICKS_PER_QUARTER, d.spinnerTicksPerQuarter);
-        m.put(_SEQUENCER_PRIORITY, d.spinnerSequencerPriority);
-        m.put(_BIG_ENDIAN, d.checkboxBigEndian);
-        m.put(_MAXIMIZE_WINDOW, d.checkboxOpenMaximizedWindow);
-        m.put(_MOUSE_NUMBER_DRAG_INTENSITY, d.spinnerMouseDragSpeedSpinners);
-        m.put(_TEXT_LANE_FONT, d.textfieldFontTextLane);
-        m.put(_GROOVE_PATTERN_DIRECTORY, d.textfieldGroovePatternsDirectory);
-        m.put(_SCRIPTS_DIRECTORY, d.textfieldScriptsDirectory);
-        m.put(_AUDIO_DIRECTORY, d.textfieldAudioDirectory);
-        m.put(_SOUNDFONT_DIRECTORY, d.textfieldSoundFontDirectory);
-        m.put(_PATCHNAME_DIRECTORY, d.textfieldPatchNameDirectory);
-        m.put(_DEFAULT_SOUNDFONT, d.textfieldDefaultSoundFont);
-        m.put(_MIDIIN_DEVICES_LIST, null); // handled 'manually' by dialog
-        m.put(_LAST_PROJECT_FILENAME, null);
-        m.put(_SETUP_DONE, null);
-        m.put(_AUTOMATIC_CHECK_FOR_NEW_VERSION, null);
-        return m;
-    }
-
     /**
      * Bind map for options that are stored in dynamic properties, not as public
      * static fields.
@@ -228,12 +111,6 @@ public class FrinikaConfig {
      */
     private static final String DIRECTORY_SUFFIX = "_DIRECTORY";
 
-    private static Map<String, Field> fieldsByName;
-
-    private static Map<String, Field> metafieldsByName;
-
-    private static Map<Field, Meta> metasByField;
-
     private static Collection<ConfigListener> listeners;
 
     private static JDialog showingDialog = null;
@@ -244,43 +121,7 @@ public class FrinikaConfig {
 
     static { // class initializer
         properties = new Properties();
-        fieldsByName = new HashMap<>();
-        metafieldsByName = new HashMap<>();
-        metasByField = new HashMap<>();
         listeners = new ArrayList<>();
-        Field[] fields = FrinikaConfig.class.getFields();
-        for (Field f : fields) {
-            if ((f.getModifiers() & Modifier.STATIC) != 0) { // only look at static fields
-                String name = f.getName();
-                if (f.getType() == Meta.class) {
-                    if (!name.startsWith(META_PREFIX)) {
-                        throw new ConfigError("meta-field '" + name + "' does not start with prefix " + META_PREFIX);
-                    } else {
-                        metafieldsByName.put(name, f);
-                    }
-                } else {
-                    fieldsByName.put(name, f);
-                }
-            }
-        }
-
-        // resolve meta-fields
-        for (Map.Entry<String, Field> metafieldEntry : metafieldsByName.entrySet()) {
-            String metafieldName = metafieldEntry.getKey();
-            Field metafield = metafieldEntry.getValue();
-            String name = metafieldName.substring(META_PREFIX.length());
-            Field field = fieldsByName.get(name);
-            if (field == null) {
-                throw new ConfigError("no corresponding option field '" + name + "' found for meta-field '" + metafieldName + "'");
-            }
-            Meta meta = new Meta(field);
-            try {
-                metafield.set(null, meta);
-            } catch (IllegalAccessException iae) {
-                throw new ConfigError(iae);
-            }
-            metasByField.put(field, meta);
-        }
 
         try {
             load();
@@ -291,66 +132,65 @@ public class FrinikaConfig {
             e.printStackTrace();
         }
 
-        // verify static bindMap
-        // make sure all available options are at least named in the map 
-        Map<Meta, Object> m = bindMap(new ConfigDialogPanel(null)); // dummy for verifying
-        Collection<Field> boundFields = new ArrayList<>();
-        /*for (int i = 0; i < m.length; i++) {
-			Object[] pair = m[i];
-			boundFields.add(findField((String)pair[0]));
-		}*/
-        for (Map.Entry<Meta, Object> e : m.entrySet()) {
-            Meta meta = e.getKey();
-            Object component = e.getValue();
-            if ((component != null) && (component instanceof JComponent) && (((JComponent) component).getParent() == null)) {
-                throw new ConfigError("gui element bound to config option '" + meta.getName() + "' has no parent, type " + component.getClass().getName());
-            }
-            boundFields.add(meta.getField());
-        }
-        Collection<Field> allfields = new ArrayList<>(fieldsByName.values());
-        allfields.removeAll(boundFields);
-        int a = boundFields.size();
-        int b = fieldsByName.size();
-        if ((a != b) || (!allfields.isEmpty())) {
-            for (Field f : allfields) {
-                System.err.println("unbound field: " + f.getName());
-            }
-            throw new ConfigError("there are fields which are not bound to gui elements (or to null), see above");
-        }
+//        // verify static bindMap
+//        // make sure all available options are at least named in the map 
+//        Map<FrinikaGlobalProperty, Object> m = bindMap(new ConfigDialogPanel(null)); // dummy for verifying
+//        Collection<Field> boundFields = new ArrayList<>();
+//        /*for (int i = 0; i < m.length; i++) {
+//			Object[] pair = m[i];
+//			boundFields.add(findField((String)pair[0]));
+//		}*/
+//        for (Map.Entry<FrinikaGlobalProperty, Object> e : m.entrySet()) {
+//            FrinikaGlobalProperty meta = e.getKey();
+//            Object component = e.getValue();
+//            if ((component != null) && (component instanceof JComponent) && (((JComponent) component).getParent() == null)) {
+//                throw new ConfigError("gui element bound to config option '" + meta.getName() + "' has no parent, type " + component.getClass().getName());
+//            }
+//            boundFields.add(meta.getField());
+//        }
+//        Collection<Field> allfields = new ArrayList<>(fieldsByName.values());
+//        allfields.removeAll(boundFields);
+//        int a = boundFields.size();
+//        int b = fieldsByName.size();
+//        if ((a != b) || (!allfields.isEmpty())) {
+//            for (Field f : allfields) {
+//                System.err.println("unbound field: " + f.getName());
+//            }
+//            throw new ConfigError("there are fields which are not bound to gui elements (or to null), see above");
+//        }
     }
 
-    public static void showDialog(ProjectFrameIntf frame) {
-        if (showingDialog != null) { // already showing (or initialized and hidden)?
-            if (showingDialogFrame == frame) { // for same frame?
-                showingDialog.show();
-                showingDialog.toFront(); // then just put to front
-                return;
-            } else { // showing for different frame: close old one first
-                showingDialog.dispose();
-            }
-        }
-        showingDialogFrame = frame;
-        showingDialog = createDialog(frame);
-        showingDialog.show();
-    }
-
-    protected static JDialog createDialog(ProjectFrameIntf frame) {
-        ConfigDialogPanel configDialogPanel = new ConfigDialogPanel(frame.getFrame());
-        Map<Meta, Object> m = bindMap(configDialogPanel);
-        Map<Field, Object> map = convertMap(m);
-        /*Object[][] m2 = dynamicBindMap(configDialogPanel);
-		Map<String, Object> map2 = new HashMap<String, Object>();
-		for (int i = 0; i < m2.length; i++) {
-			map2.put((String)m2[i][0], m2[i][1]);
-		}*/
-        //DefaultOptionsBinder optionsBinder = new DefaultOptionsBinder(map, map2, properties);
-        DefaultOptionsBinder optionsBinder = new DefaultOptionsBinder(map, properties);
-        ConfigDialog d = new ConfigDialog(frame, optionsBinder);
-        PresentationPanel presentationPanel = new PresentationPanel(configDialogPanel.tabbedPane);
-        d.getContentPane().add(presentationPanel, BorderLayout.CENTER);
-        return d;
-    }
-
+//    public static void showDialog(ProjectFrameIntf frame) {
+//        if (showingDialog != null) { // already showing (or initialized and hidden)?
+//            if (showingDialogFrame == frame) { // for same frame?
+//                showingDialog.show();
+//                showingDialog.toFront(); // then just put to front
+//                return;
+//            } else { // showing for different frame: close old one first
+//                showingDialog.dispose();
+//            }
+//        }
+//        showingDialogFrame = frame;
+//        showingDialog = createDialog(frame);
+//        showingDialog.show();
+//    }
+//
+//    protected static JDialog createDialog(ProjectFrameIntf frame) {
+//        ConfigDialogPanel configDialogPanel = new ConfigDialogPanel(frame.getFrame());
+//        Map<FrinikaGlobalProperty, Object> m = bindMap(configDialogPanel);
+//        Map<Field, Object> map = convertMap(m);
+//        /*Object[][] m2 = dynamicBindMap(configDialogPanel);
+//		Map<String, Object> map2 = new HashMap<String, Object>();
+//		for (int i = 0; i < m2.length; i++) {
+//			map2.put((String)m2[i][0], m2[i][1]);
+//		}*/
+//        //DefaultOptionsBinder optionsBinder = new DefaultOptionsBinder(map, map2, properties);
+//        DefaultOptionsBinder optionsBinder = new DefaultOptionsBinder(map, properties);
+//        ConfigDialog d = new ConfigDialog(frame, optionsBinder);
+//        PresentationPanel presentationPanel = new PresentationPanel(configDialogPanel.tabbedPane);
+//        d.getContentPane().add(presentationPanel, BorderLayout.CENTER);
+//        return d;
+//    }
     public static Properties getProperties() {
         return properties;
     }
@@ -417,40 +257,49 @@ public class FrinikaConfig {
         properties.loadFromXML(r);
         loadFields(properties);
         // remove fields from dynamic properties
-        for (String fieldname : fieldsByName.keySet()) {
-            properties.remove(fieldname);
+        for (FrinikaGlobalProperty property : FrinikaGlobalProperty.values()) {
+            properties.remove(property.getName());
         }
     }
 
     public static void save(OutputStream w) throws IOException {
         Properties p = new Properties();
         // copy all dynamic properties into
-        for (Object key : properties.keySet()) {
+        properties.keySet().forEach((key) -> {
             p.setProperty((String) key, properties.getProperty((String) key));
-        }
-        SETUP_DONE = true;
+        });
+        FrinikaGlobalProperties.SETUP_DONE.setValue(Boolean.TRUE);
         saveFields(p);
         p.storeToXML(w, "Frinika configuration");
     }
 
     public static void loadFields(Properties p) {
-        for (Field field : fieldsByName.values()) {
-            String name = field.getName();
+        for (FrinikaGlobalProperty globalProperty : FrinikaGlobalProperty.values()) {
+            ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
+            if (property == null) {
+                throw new IllegalStateException("Missing configuration property for name " + globalProperty.getName());
+            }
+            String name = property.getName();
+            Class<?> type = property.getType();
             String prop = p.getProperty(name);
             if (prop == null) {
                 System.out.println("no saved property for configuration option " + name + ", using default");
             } else {
-                Object o = stringToValue(prop, name, field.getType());
-                setFieldValue(field, o);
+                Object o = stringToValue(prop, type);
+                property.setValue(o);
             }
         }
     }
 
     public static void saveFields(Properties p) {
-        for (Field field : fieldsByName.values()) {
-            String name = field.getName();
-            Object o = getFieldValue(field);
-            String s = valueToString(o, name, field.getType());
+        for (FrinikaGlobalProperty globalProperty : FrinikaGlobalProperty.values()) {
+            ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
+            if (property == null) {
+                throw new IllegalStateException("Missing configuration property for name " + globalProperty.getName());
+            }
+            String name = globalProperty.getName();
+            Object o = property.getValue();
+            String s = valueToString(o, property.getType());
             if (s != null) {
                 p.setProperty(name, s);
             } else {
@@ -468,124 +317,84 @@ public class FrinikaConfig {
     }
 
     /**
-     * Fire event if a public static field option has been altered. No even is
-     * fired on changes of dynamic properties-options.
+     * Fire event if a global property has been altered. No even is fired on
+     * changes of dynamic properties-options.
      *
-     * @param field
+     * @param property global property
      */
-    public static void fireConfigurationChangedEvent(Meta meta) {
-        ChangeEvent event = new ChangeEvent(meta);
-        for (ConfigListener l : listeners) {
-            l.configurationChanged(event);
+    public static void fireConfigurationChangedEvent(ConfigurationProperty<?> property) {
+        ChangeEvent event = new ChangeEvent(property);
+        listeners.forEach((listener) -> {
+            listener.configurationChanged(event);
+        });
+    }
+
+    public static <T> void setGlobalPropertyValue(@Nonnull ConfigurationProperty<T> property, T value) {
+        Object oldValue = property.getValue();
+
+        System.out.println("config: " + property.getName() + "=" + value);
+        if (value instanceof File) {
+            setupGlobalPropertyDirectory((ConfigurationProperty<File>) property, (File) value);
+        } else {
+            property.setValue(value);
+        }
+
+        if (((value != null) && (!value.equals(oldValue))) || ((value == null) && (oldValue != null))) {
+            fireConfigurationChangedEvent(property);
         }
     }
 
-    @Nonnull
-    private static Field findField(@Nonnull String name) {
-        Field field = fieldsByName.get(name);
-        if (field == null) { // severe error, should fail here to ensure hard binding
-            throw new ConfigError("dynamic bind error: configuration field " + name + " does not exist.");
+    public static void setupGlobalPropertyDirectory(ConfigurationProperty<File> property, File directory) {
+        // Make sure directories exist
+        if (property.getName().endsWith(DIRECTORY_SUFFIX)) {
+            directory.mkdirs();
         }
-        return field;
+
+        property.setValue(directory);
     }
 
-    private static Map<Field, Object> convertMap(Object[][] bindMap) {
-        Map<Field, Object> m = new HashMap<>();
-        for (Object[] pair : bindMap) {
-            Field field = findField((String) pair[0]);
-            Object component = pair[1];
-            m.put(field, component);
-        }
-        return m;
-    }
-
-    public static Map<Field, Object> convertMap(Map<Meta, Object> map) {
-        Map<Field, Object> m = new HashMap<>();
-        for (Map.Entry<Meta, Object> e : map.entrySet()) {
-            Field field = e.getKey().getField();
-            Object component = e.getValue();
-            m.put(field, component);
-        }
-        return m;
-    }
-
-    public static Object getFieldValue(Field field) {
-        try {
-            return field.get(null);
-        } catch (IllegalAccessException iae) {
-            throw new ConfigError("dynamic bind error: IllegalAccessException on getField " + iae.getMessage());
-        }
-    }
-
-    public static void setFieldValue(Field field, Object o) {
-        Object oldValue;
-        try {
-            oldValue = field.get(null);
-        } catch (IllegalAccessException iae) {
-            throw new ConfigError("dynamic bind error: IllegalAccessException on iitial get of setField " + iae.getMessage());
-        }
-
-        //	System.out.println(" set field value "+ field + "   " + o );
-        System.out.println("config: " + field.getName() + "=" + o);
-        try {
-            field.set(null, o);
-            // special: make sure directories exist
-            if ((o instanceof File) && (field.getName().endsWith(DIRECTORY_SUFFIX))) {
-                ((File) o).mkdirs();
-            }
-            if (((o != null) && (!o.equals(oldValue))) || ((o == null) && (oldValue != null))) {
-                Meta meta = metasByField.get(field);
-                if (meta != null) {
-                    fireConfigurationChangedEvent(meta);
-                }
-            }
-        } catch (IllegalAccessException iae) {
-            throw new ConfigError("dynamic bind error: IllegalAccessException on setField " + iae.getMessage());
-        }
-    }
-
-    public static Object stringToValue(String prop, String name, Class type) {
-        if (prop == null) {
+    @Nullable
+    public static Object stringToValue(@Nullable String value, @Nonnull Class type) {
+        if (value == null) {
             return null;
         }
 
-        if (int.class.isAssignableFrom(type)) {
-            return Integer.parseInt(prop);
-        } else if (long.class.isAssignableFrom(type)) {
-            return Long.parseLong(prop);
-        } else if (double.class.isAssignableFrom(type)) {
-            return Double.parseDouble(prop);
-        } else if (float.class.isAssignableFrom(type)) {
-            return Float.parseFloat(prop);
-        } else if (boolean.class.isAssignableFrom(type)) {
-            return Boolean.parseBoolean(prop);
+        if (Integer.class.isAssignableFrom(type)) {
+            return Integer.parseInt(value);
+        } else if (Long.class.isAssignableFrom(type)) {
+            return Long.parseLong(value);
+        } else if (Double.class.isAssignableFrom(type)) {
+            return Double.parseDouble(value);
+        } else if (Float.class.isAssignableFrom(type)) {
+            return Float.parseFloat(value);
+        } else if (Boolean.class.isAssignableFrom(type)) {
+            return Boolean.parseBoolean(value);
         } else if (File.class.isAssignableFrom(type)) {
-            return new File(prop);
+            return new File(value);
         } else if (Font.class.isAssignableFrom(type)) {
-            return stringToFont(prop);
+            return stringToFont(value);
         } else {
-            return prop;
+            return value;
         }
     }
 
-    public static String valueToString(Object o, String name, Class type) {
-        if (o == null) {
+    @Nullable
+    public static String valueToString(@Nullable Object value, @Nonnull Class type) {
+        if (value == null) {
             return null;
         }
         if (File.class.isAssignableFrom(type)) {
-            return ((File) o).getAbsolutePath();
+            return ((File) value).getAbsolutePath();
         } else if (Font.class.isAssignableFrom(type)) {
-            return fontToString((Font) o);
+            return fontToString((Font) value);
         } else {
-            return o.toString();
+            return value.toString();
         }
     }
 
     public static boolean isTrue(Object o) {
         if (o instanceof Boolean) {
             return ((Boolean) o);
-        } else if (o instanceof Number) {
-            return !(Math.abs(((Number) o).doubleValue()) < 0.000000001d);
         } else {
             String s = o.toString();
             s = s.trim().toLowerCase();
@@ -593,8 +402,9 @@ public class FrinikaConfig {
         }
     }
 
-    public static Font stringToFont(String s) {
-        StringTokenizer st = new StringTokenizer(s, ",", false);
+    @Nonnull
+    public static Font stringToFont(@Nonnull String fontIdentifier) {
+        StringTokenizer st = new StringTokenizer(fontIdentifier, ",", false);
         String fontName = "Helvetica";
         String fontSizeStr = "12";
         String fontStyleStr = "plain";
@@ -624,7 +434,8 @@ public class FrinikaConfig {
         return new Font(fontName, fontStyle, fontSize);
     }
 
-    public static String fontToString(Font font) {
+    @Nonnull
+    public static String fontToString(@Nonnull Font font) {
         int fontStyle = font.getStyle();
         String fontStyleStr = "";
         if ((fontStyle & Font.BOLD) != 0) {
@@ -639,14 +450,15 @@ public class FrinikaConfig {
         return font.getName() + "," + font.getSize() + "," + fontStyleStr;
     }
 
-    public static String fileToString(File file) {
-        String s;
+    @Nonnull
+    public static String fileToString(@Nonnull File file) {
+        String fileName;
         try {
-            s = file.getCanonicalPath();
+            fileName = file.getCanonicalPath();
         } catch (IOException ioe) {
-            s = file.getAbsolutePath();
+            fileName = file.getAbsolutePath();
         }
-        return s;
+        return fileName;
     }
 
     public static void pickDirectory(Component frame, JTextField boundTextField) {
@@ -683,30 +495,6 @@ public class FrinikaConfig {
     }
 
     // --- accessor methods --------------------------------------------------
-    public static int getAudioBufferLength() { // TODO: direct read-access to field instead
-        return AUDIO_BUFFER_LENGTH;
-    }
-
-    public static void setAudioBufferLength(int len) {
-        setFieldValue(findField("AUDIO_BUFFER_LENGTH"), len);
-    }
-
-    public static boolean getDirectMonitoring() { // TODO: direct read-access to field instead
-        return DIRECT_MONITORING;
-    }
-
-    public static void setDirectMonitoring(boolean dm) {
-        _DIRECT_MONITORING.set(dm);
-    }
-
-    public static void setMultiplexedAudio(boolean multiplex) {
-        _MULTIPLEXED_AUDIO.set(multiplex);
-    }
-
-    public static void setJackAutoconnect(boolean auto) {
-        _JACK_AUTO_CONNECT.set(auto);
-    }
-
     public static void setConfigLocation(String path) {
         setConfigLocation(new File(path));
     }
@@ -735,46 +523,8 @@ public class FrinikaConfig {
         }
     }
 
-    public static String lastProjectFile() { // TODO: direct read-access to field instead
-        return LAST_PROJECT_FILENAME;
-    }
-
-    public static void setLastProjectFilename(@Nonnull String filename) {
-        setFieldValue(findField("LAST_PROJECT_FILENAME"), filename);
-    }
-
-    public static void setMidiInDeviceList(List<String> list) {
-        StringBuffer buf = new StringBuffer();
-        boolean first = true;
-        for (String o : list) {
-            if (!first) {
-                buf.append(";");
-            }
-            buf.append(o.toString());
-            first = false;
-        }
-        System.out.println(buf);
-        String s = buf.toString();
-        setFieldValue(findField("MIDIIN_DEVICES_LIST"), s);
-    }
-
-    public static List<String> getMidiInDeviceList() {
-        String buf = MIDIIN_DEVICES_LIST;
-        if (buf == null) {
-            buf = "";
-        }
-        String[] list = buf.split(";");
-        List<String> vec = new ArrayList<>();
-        for (String str : list) {
-            if (!str.equals("")) {
-                vec.add(str);
-            }
-        }
-        return vec;
-    }
-
     public static Collection<String> getAvailableMidiInDevices() {
-        ArrayList<String> a = new ArrayList<>();
+        ArrayList<String> availableMidiDevices = new ArrayList<>();
         Info infos[] = MidiSystem.getMidiDeviceInfo();
         for (Info info : infos) {
             try {
@@ -783,62 +533,18 @@ public class FrinikaConfig {
                     continue;
                 }
                 String str = info.toString();
-                a.add(str);
+                availableMidiDevices.add(str);
             } catch (MidiUnavailableException e) {
                 // TODO Auto-generated catch block
                 //e.printStackTrace();
             }
 
         }
-        return a;
+        return availableMidiDevices;
     }
 
     public static Collection<String> getAvailableAudioDevices() {
         List<String> list = FrinikaAudioSystem.getAudioServer().getAvailableOutputNames();
         return list;
-    }
-
-    public static boolean getAutomaticCheckForNewVersion() {
-        return AUTOMATIC_CHECK_FOR_NEW_VERSION;
-    }
-
-    public static void setAutomatickCheckForNewVersion(boolean automaticCheckForNewVersion) {
-        AUTOMATIC_CHECK_FOR_NEW_VERSION = automaticCheckForNewVersion;
-    }
-
-    /**
-     * Meta-Info on option fields.
-     */
-    public static class Meta {
-
-        private Field field;
-
-        Meta(Field field) {
-            this.field = field;
-        }
-
-        public Field getField() {
-            return field;
-        }
-
-        public String getName() {
-            return getField().getName();
-        }
-
-        public Class getType() {
-            return getField().getType();
-        }
-
-        public Object get() {
-            try {
-                return getField().get(null);
-            } catch (IllegalAccessException iae) {
-                throw new ConfigError(iae);
-            }
-        }
-
-        public void set(Object o) {
-            FrinikaConfig.setFieldValue(getField(), o);
-        }
     }
 }

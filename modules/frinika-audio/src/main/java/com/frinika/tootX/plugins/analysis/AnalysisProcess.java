@@ -25,7 +25,7 @@ package com.frinika.tootX.plugins.analysis;
 
 import com.frinika.audio.analysis.CycliclyBufferedAudio;
 import com.frinika.audio.analysis.gui.CyclicBufferFFTAnalysisPanel;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
@@ -75,7 +75,7 @@ public class AnalysisProcess implements AudioProcess {
     public void open() {
         frame = new JFrame();
 
-        buferedAudioProcess = new CycliclyBufferedAudio(100000, FrinikaConfig.sampleRate);
+        buferedAudioProcess = new CycliclyBufferedAudio(100000, FrinikaGlobalProperties.getSampleRate());
         JPanel panel = new CyclicBufferFFTAnalysisPanel(buferedAudioProcess);
         frame.setContentPane(panel);
         frame.setSize(new Dimension(500, 400));

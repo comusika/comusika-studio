@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.model;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 
 /**
  * Data-record for providing options on how to play a MidiLane.
@@ -43,7 +43,7 @@ public class MidiPlayOptions implements java.io.Serializable {
     public boolean looped = false;
 
     // replace 128 with TICKS_PER_QUARTER
-    public long loopedTicks = 16 * FrinikaConfig.TICKS_PER_QUARTER; // 16 beats by default
+    public long loopedTicks = 16 * FrinikaGlobalProperties.TICKS_PER_QUARTER.getValue(); // 16 beats by default
 
     public long shiftedTicks = 0;
 

@@ -25,7 +25,7 @@ package com.frinika.sequencer.model;
 
 import com.frinika.audio.midi.MidiListProvider;
 import com.frinika.audio.model.ControllerListProvider;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.midi.MidiMessageListener;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaTrackWrapper;
@@ -400,7 +400,7 @@ public class MidiLane extends Lane implements RecordableLane {
     @Override
     public void setRecording(boolean b) {
 
-        MidiInDeviceManager.open(FrinikaConfig.getMidiInDeviceList()); // Possibly redundant now?
+        MidiInDeviceManager.open(FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList()); // Possibly redundant now?
         if (b) {
             frinikaProject.getSequencer().recordEnable(this);
 

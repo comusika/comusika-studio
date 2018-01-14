@@ -23,12 +23,16 @@
  */
 package com.frinika.global;
 
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PropertiesEditor;
 import java.awt.Frame;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -104,7 +108,7 @@ public class ConfigDialogPanel extends JPanel {
     }
 
     private void refreshMidiInDevicesList() {
-        final List<String> v = FrinikaConfig.getMidiInDeviceList();
+        final List<String> v = FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList();
         listInputDevices.setModel(new javax.swing.AbstractListModel() {
             @Override
             public int getSize() {
@@ -476,7 +480,9 @@ public class ConfigDialogPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         midiPanel.add(jLabel3a, gridBagConstraints);
 
-        spinnerTicksPerQuarter.setModel(new javax.swing.SpinnerNumberModel(FrinikaConfig.TICKS_PER_QUARTER, 0, 9999, 1));
+        int ticksPerQuarter = FrinikaGlobalProperties.TICKS_PER_QUARTER.getValue();
+
+        spinnerTicksPerQuarter.setModel(new javax.swing.SpinnerNumberModel((int) ticksPerQuarter, 0, 9999, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         midiPanel.add(spinnerTicksPerQuarter, gridBagConstraints);
@@ -797,9 +803,9 @@ public class ConfigDialogPanel extends JPanel {
         if (inDev == null) {
             return;
         }
-        List<String> vv = FrinikaConfig.getMidiInDeviceList();
+        List<String> vv = FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList();
         vv.add(inDev);
-        FrinikaConfig.setMidiInDeviceList(vv);
+        FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.setStringList(vv);
         refreshMidiInDevicesList();
     }//GEN-LAST:event_buttonAddInputDeviceActionPerformed
 
@@ -807,9 +813,9 @@ public class ConfigDialogPanel extends JPanel {
         // remove currently selected midi input device
         String device = listInputDevices.getSelectedValue().toString();
         if (device != null) {
-            List<String> v = FrinikaConfig.getMidiInDeviceList();
+            List<String> v = FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList();
             v.remove(device);
-            FrinikaConfig.setMidiInDeviceList(v);
+            FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.setStringList(v);
             refreshMidiInDevicesList();
         }
     }//GEN-LAST:event_buttonRemoveInputDeviceActionPerformed
@@ -908,5 +914,50 @@ public class ConfigDialogPanel extends JPanel {
 
     public JTabbedPane getTabbedPane() {
         return tabbedPane;
+    }
+
+    /**
+     * Binds all option fields to GUI elements in the ConfigDialogPanel (or to
+     * null, if not used in GUI).
+     *
+     * The validity of this binding is verified during application startup - ALL
+     * public static fields must be named here, none more or less - (all must be
+     * spelled correctly, of course) Otherwise the application refuses to start
+     * and gives an error.
+     *
+     * The fields are associated with concrete instances of GUI elements (e.g.
+     * JTextField, JCheckBox, ButtonGroup etc.). The DefaultOptionsBinder should
+     * know how to convert between actual GUI elements and typed field values,
+     * otherwise its refresh()/update() method should be overridden and
+     * customized here.
+     *
+     * @param d
+     * @return
+     */
+    public static Map<FrinikaGlobalProperty, Object> bindMap(ConfigDialogPanel d) {
+        Map<FrinikaGlobalProperty, Object> m = new HashMap<>();
+        m.put(FrinikaGlobalProperty.AUDIO_BUFFER_LENGTH, d.spinnerBufferSize);
+        m.put(FrinikaGlobalProperty.DIRECT_MONITORING, d.checkboxUseDirectMonitoring);
+        m.put(FrinikaGlobalProperty.MULTIPLEXED_AUDIO, d.checkboxUseMultiplexedJavasoundServer);
+        //	m.put(FrinikaGlobalProperty.OS_LATENCY_MILLIS, d.spinnerOutputLatency );
+        m.put(FrinikaGlobalProperty.JACK_AUTO_CONNECT, d.checkboxAutoconnectJack);
+        m.put(FrinikaGlobalProperty.SAMPLE_RATE, d.comboboxSampleRate);
+        m.put(FrinikaGlobalProperty.TICKS_PER_QUARTER, d.spinnerTicksPerQuarter);
+        m.put(FrinikaGlobalProperty.SEQUENCER_PRIORITY, d.spinnerSequencerPriority);
+        m.put(FrinikaGlobalProperty.BIG_ENDIAN, d.checkboxBigEndian);
+        m.put(FrinikaGlobalProperty.MAXIMIZE_WINDOW, d.checkboxOpenMaximizedWindow);
+        m.put(FrinikaGlobalProperty.MOUSE_NUMBER_DRAG_INTENSITY, d.spinnerMouseDragSpeedSpinners);
+        m.put(FrinikaGlobalProperty.TEXT_LANE_FONT, d.textfieldFontTextLane);
+        m.put(FrinikaGlobalProperty.GROOVE_PATTERN_DIRECTORY, d.textfieldGroovePatternsDirectory);
+        m.put(FrinikaGlobalProperty.SCRIPTS_DIRECTORY, d.textfieldScriptsDirectory);
+        m.put(FrinikaGlobalProperty.AUDIO_DIRECTORY, d.textfieldAudioDirectory);
+        m.put(FrinikaGlobalProperty.SOUNDFONT_DIRECTORY, d.textfieldSoundFontDirectory);
+        m.put(FrinikaGlobalProperty.PATCHNAME_DIRECTORY, d.textfieldPatchNameDirectory);
+        m.put(FrinikaGlobalProperty.DEFAULT_SOUNDFONT, d.textfieldDefaultSoundFont);
+        m.put(FrinikaGlobalProperty.MIDIIN_DEVICES_LIST, null); // handled 'manually' by dialog
+        m.put(FrinikaGlobalProperty.LAST_PROJECT_FILENAME, null);
+        m.put(FrinikaGlobalProperty.SETUP_DONE, null);
+        m.put(FrinikaGlobalProperty.AUTOMATIC_CHECK_FOR_NEW_VERSION, null);
+        return m;
     }
 }

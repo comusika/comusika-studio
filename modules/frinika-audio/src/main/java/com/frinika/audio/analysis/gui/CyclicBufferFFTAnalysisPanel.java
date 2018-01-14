@@ -26,7 +26,7 @@ package com.frinika.audio.analysis.gui;
 import com.frinika.audio.analysis.CycliclyBufferedAudio;
 import com.frinika.audio.analysis.Mapper;
 import com.frinika.audio.analysis.dft.CyclicBufferFFTSpectrogramDataBuilder;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.util.tweaks.Tweakable;
 import com.frinika.util.tweaks.TweakableDouble;
 import com.frinika.util.tweaks.gui.TweakerPanel;
@@ -100,7 +100,7 @@ public class CyclicBufferFFTAnalysisPanel extends JPanel {
         maxdB.addObserver(valMapper);
         mindB.addObserver(valMapper);
 
-        spectroData = new CyclicBufferFFTSpectrogramDataBuilder(bp.out, 1000, FrinikaConfig.sampleRate);
+        spectroData = new CyclicBufferFFTSpectrogramDataBuilder(bp.out, 1000, FrinikaGlobalProperties.getSampleRate());
         // spectroController=new
         // FFTSpectrumController((FFTSpectrogramControlable) spectroData);
         spectroData.setParameters(fftOpts[0].chunkSize, fftOpts[0].fftSize, bp.getSampleRate());

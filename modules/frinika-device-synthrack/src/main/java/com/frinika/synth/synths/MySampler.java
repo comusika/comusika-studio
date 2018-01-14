@@ -23,7 +23,7 @@
  */
 package com.frinika.synth.synths;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.synth.Oscillator;
 import com.frinika.synth.Pan;
 import com.frinika.synth.PitchCents;
@@ -313,7 +313,7 @@ public class MySampler extends Synth {
                 sampledSound.setLeftSamples(samples[0]);
                 sampledSound.setRightSamples(samples[1] == null ? samples[0] : samples[1]);
                 sampledSound.setRootKey(noteNumber);
-                sampledSound.setSampleRate((int) FrinikaConfig.sampleRate);
+                sampledSound.setSampleRate((int) FrinikaGlobalProperties.getSampleRate());
                 java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 sampledSound.setSampleName(dateFormat.format(new java.util.Date()));
                 switch (recordMode) {

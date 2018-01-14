@@ -25,6 +25,7 @@ package com.frinika.main.action;
 
 import com.frinika.main.FrinikaFrame;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.sequencer.gui.ProjectFrame;
@@ -94,7 +95,7 @@ public class CreateProjectAction extends AbstractAction {
 
                 frame = new FrinikaFrame(FrinikaProjectContainer
                         .loadProject(newProject));
-                FrinikaConfig.setLastProjectFilename(newProject
+                FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(newProject
                         .getAbsolutePath());
             }
 

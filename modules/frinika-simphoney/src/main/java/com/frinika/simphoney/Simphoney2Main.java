@@ -109,7 +109,7 @@ public class Simphoney2Main {
             WelcomeDialog welcome = new WelcomeDialog(options);
 
             // if (setup == null) {
-            if (!FrinikaConfig.SETUP_DONE) {
+            if (!FrinikaConfig.setupFinished) {
                 // welcome = new WelcomeDialog(options);
                 welcome.setModal(false);
                 welcome.setVisible(true);
@@ -143,7 +143,7 @@ public class Simphoney2Main {
                     break;
                 case 1:
                     SplashDialog.showSplash();
-                    String lastFile = FrinikaConfig.lastProjectFile();
+                    String lastFile = FrinikaConfig.getLastProjectFile();
                     if (lastFile != null) {
                         OpenProjectAction.setSelectedFile(new File(lastFile));
                     }

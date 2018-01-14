@@ -26,7 +26,7 @@ package com.frinika.renderer;
 
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
@@ -95,7 +95,7 @@ public class RenderDialog extends JDialog implements Runnable {
         audioServer.setRealTime(false);
 
         try {
-            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaConfig.sampleRate, 16, 2, true, true), numberOfSamples);
+            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
 
             sequencer.setRealtime(false);

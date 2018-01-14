@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.gui.menu.midi;
 
-import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.gui.AbstractDialog;
 import com.frinika.gui.OptionsEditor;
 import com.frinika.localization.CurrentLocale;
@@ -78,7 +78,7 @@ public class MidiStepRecordActionDialog extends AbstractDialog implements Option
         super(dialog, CurrentLocale.getMessage("sequencer.midi.step_record"), false); // non-modal
         this.project = project;
         this.action = action;
-        MidiInDeviceManager.open(FrinikaConfig.getMidiInDeviceList());
+        MidiInDeviceManager.open(FrinikaGlobalProperties.MIDIIN_DEVICES_LIST.getStringList());
         initComponents();
         positionTimeSelector = new TimeSelector(project, TimeFormat.BAR_BEAT_TICK);
         stepTimeSelector = new TimeSelector(project, TimeFormat.NOTE_LENGTH, true);

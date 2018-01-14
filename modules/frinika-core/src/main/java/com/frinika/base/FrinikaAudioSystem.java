@@ -26,7 +26,10 @@ package com.frinika.base;
 import com.frinika.audio.asio.AsioAudioServer;
 import com.frinika.audio.jnajack.JackTootAudioServer;
 import com.frinika.audio.osx.OSXAudioServer;
+import com.frinika.global.property.ConfigurationProperty;
 import com.frinika.global.FrinikaConfig;
+import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.FrinikaGlobalProperty;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.toot.javasoundmultiplexed.*;
 import com.frinika.tootX.LatencyTesterPanel;
@@ -46,7 +49,7 @@ import uk.org.toot.audio.server.ExtendedAudioServer;
 import uk.org.toot.audio.server.IOAudioProcess;
 import uk.org.toot.audio.server.MultiIOJavaSoundAudioServer;
 import uk.org.toot.audio.server.SwitchedAudioClient;
-import uk.org.toot.swingui.audioui.serverui.*;
+import uk.org.toot.swingui.audioui.serverui.AudioServerUIServices;
 
 /**
  * PJL 2008/4/5 made audioServer FrinikaAudioServer
@@ -84,8 +87,7 @@ public class FrinikaAudioSystem {
             // JJack will recognise this name when setting up the jjack client
             System.setProperty("jjack.client.name", "Frinika");
 
-            boolean multiplexIO = FrinikaConfig.MULTIPLEXED_AUDIO;
-            // .getPropertyBoolean("multiplexed_audio");
+            boolean multiplexIO = FrinikaGlobalProperties.MULTIPLEXED_AUDIO.getValue();
 
             if (!multiplexIO) {
                 if (System.getProperty("os.name").contains("Mac") && "true".equals(System.getProperty("useOSXAudioServer"))) {
@@ -159,8 +161,7 @@ public class FrinikaAudioSystem {
             // JJack will recognise this name when setting up the jjack client
             System.setProperty("jjack.client.name", "Frinika");
 
-            boolean multiplexIO = FrinikaConfig.MULTIPLEXED_AUDIO;
-            // .getPropertyBoolean("multiplexed_audio");
+            boolean multiplexIO = FrinikaGlobalProperties.MULTIPLEXED_AUDIO.getValue();
 
             if (!multiplexIO) {
                 realAudioServer = new MultiIOJavaSoundAudioServer();
