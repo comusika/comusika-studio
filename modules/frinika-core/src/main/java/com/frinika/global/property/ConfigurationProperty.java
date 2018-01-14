@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 public class ConfigurationProperty<T> {
 
     @Nonnull
-    private static final Map<String, ConfigurationProperty<?>> propertiesByName = new HashMap<>();
+    private static final Map<String, ConfigurationProperty<?>> PROPERTIES_BY_NAME = new HashMap<>();
 
     @Nonnull
     private final FrinikaGlobalProperty globalProperty;
@@ -50,8 +50,8 @@ public class ConfigurationProperty<T> {
         registerProperty(globalProperty);
     }
 
-    private void registerProperty(FrinikaGlobalProperty globalProperty) {
-        propertiesByName.put(globalProperty.getName(), this);
+    private void registerProperty(@Nonnull FrinikaGlobalProperty globalProperty) {
+        PROPERTIES_BY_NAME.put(globalProperty.getName(), this);
     }
 
     @Nonnull
@@ -64,16 +64,17 @@ public class ConfigurationProperty<T> {
         return typeClass;
     }
 
+    @Nullable
     public T getValue() {
         return value;
     }
 
-    public void setValue(T value) {
+    public void setValue(@Nullable T value) {
         this.value = value;
     }
 
     @Nullable
     public static ConfigurationProperty<?> findByName(@Nonnull String name) {
-        return propertiesByName.get(name);
+        return PROPERTIES_BY_NAME.get(name);
     }
 }

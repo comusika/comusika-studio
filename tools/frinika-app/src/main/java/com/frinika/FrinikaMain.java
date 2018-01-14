@@ -30,18 +30,24 @@ import com.frinika.main.action.OpenProjectAction;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.property.RecentFileName;
+import com.frinika.gui.util.SupportedLaf;
 import com.frinika.main.model.ProjectFileRecord;
 import com.frinika.main.panel.WelcomePanel;
-import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.main.model.ExampleProjectFile;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.VersionProperties;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JFrame;
 
 /**
@@ -59,6 +65,8 @@ public class FrinikaMain {
 
         prepareRunningFromSingleJar();
 
+        loadProperties();
+
         configureUI();
 
 //        try {
@@ -68,60 +76,10 @@ public class FrinikaMain {
         welcomeFrame.setResizable(false);
 
         WelcomePanel welcomePanel = new WelcomePanel();
+        setupWelcomePanel(welcomeFrame, welcomePanel);
         WindowUtils.initWindowByComponent(welcomeFrame, welcomePanel);
         WindowUtils.setWindowCenterPosition(welcomeFrame);
 
-        welcomePanel.setActionListener(new WelcomePanel.ActionListener() {
-            @Override
-            public void newProject() {
-                welcomeFrame.setVisible(false);
-                new CreateProjectAction().actionPerformed(null);
-                startProject();
-                welcomeFrame.setVisible(false);
-            }
-
-            @Override
-            public void openProject() {
-                String lastFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
-                if (lastFile != null) {
-                    OpenProjectAction.setSelectedFile(new File(lastFile));
-                }
-                new OpenProjectAction().actionPerformed(null);
-                startProject();
-                welcomeFrame.setVisible(false);
-            }
-
-            @Override
-            public void configureAudio() {
-                SetupDialog.showSettingsModal();
-            }
-
-            @Override
-            public void closeDialog() {
-                welcomeFrame.setVisible(false);
-                System.exit(0);
-            }
-
-            @Override
-            public void openRecentProject(ProjectFileRecord projectFileRecord) {
-                try {
-                    File file = new File(projectFileRecord.getFilePath());
-                    FrinikaFrame frinikaFrame = new FrinikaFrame(FrinikaProjectContainer
-                            .loadProject(file));
-                    startProject();
-                    welcomeFrame.setVisible(false);
-                } catch (Exception ex) {
-                    Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            @Override
-            public void openSampleProject(ProjectFileRecord projectFileRecord) {
-                // TODO: Download
-                // TODO: Open
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
         welcomeFrame.setVisible(true);
 
 //            int n;
@@ -217,7 +175,107 @@ public class FrinikaMain {
     public static void configureUI() {
         String lcOSName = System.getProperty("os.name").toLowerCase();
 
-        WindowUtils.switchLookAndFeel(SupportedLaf.DARCULA);
+        String theme = FrinikaGlobalProperties.THEME.getValue();
+        if (SupportedLaf.DARCULA.name().equals(theme)) {
+            WindowUtils.switchLookAndFeel(SupportedLaf.DARCULA);
+        }
+    }
+
+    private static void setupWelcomePanel(@Nonnull final JFrame welcomeFrame, @Nonnull WelcomePanel welcomePanel) {
+        welcomePanel.setActionListener(new WelcomePanel.ActionListener() {
+            @Override
+            public void newProject() {
+                welcomeFrame.setVisible(false);
+                new CreateProjectAction().actionPerformed(null);
+                startProject();
+                welcomeFrame.setVisible(false);
+            }
+
+            @Override
+            public void openProject() {
+                String lastFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
+                if (lastFile != null) {
+                    OpenProjectAction.setSelectedFile(new File(lastFile));
+                }
+                new OpenProjectAction().actionPerformed(null);
+                startProject();
+                welcomeFrame.setVisible(false);
+            }
+
+            @Override
+            public void configureAudio() {
+                SetupDialog.showSettingsModal();
+            }
+
+            @Override
+            public void closeDialog() {
+                welcomeFrame.setVisible(false);
+                System.exit(0);
+            }
+
+            @Override
+            public void openRecentProject(@Nonnull ProjectFileRecord projectFileRecord) {
+                try {
+                    File file = new File(projectFileRecord.getFilePath());
+                    FrinikaFrame frinikaFrame = new FrinikaFrame(FrinikaProjectContainer
+                            .loadProject(file));
+                    startProject();
+                    welcomeFrame.setVisible(false);
+                } catch (Exception ex) {
+                    Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            @Override
+            public void openSampleProject(@Nonnull ProjectFileRecord projectFileRecord) {
+                // TODO: Download
+                // TODO: Open
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void saveDefaultTheme(@Nullable String theme) {
+                FrinikaGlobalProperties.THEME.setValue(theme);
+            }
+        });
+
+        List<ProjectFileRecord> recentProjects = new ArrayList<>();
+        String lastProjectFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
+        if (lastProjectFile != null) {
+            String lastProjectName = FrinikaGlobalProperties.LAST_PROJECT_NAME.getValue();
+            if (lastProjectName == null) {
+                File lastFile = new File(lastProjectFile);
+                lastProjectName = lastFile.getName();
+            }
+            ProjectFileRecord lastProject = new ProjectFileRecord(lastProjectName, lastProjectFile);
+            recentProjects.add(lastProject);
+
+            List<RecentFileName> recentFiles = FrinikaGlobalProperties.RECENT_FILENAMES.getValue();
+            if (recentFiles != null) {
+                recentFiles.stream().map((recentFile) -> new ProjectFileRecord(recentFile.getProjectName(), recentFile.getProjectFile())).forEachOrdered((projectFileRecord) -> {
+                    recentProjects.add(projectFileRecord);
+                });
+            }
+        }
+        welcomePanel.setRecentProjects(recentProjects);
+
+        List<ProjectFileRecord> sampleProjects = new ArrayList<>();
+        for (ExampleProjectFile exampleFile : ExampleProjectFile.values()) {
+            sampleProjects.add(new ProjectFileRecord(exampleFile.getName(), exampleFile.getFileName()));
+        }
+        welcomePanel.setExampleProjects(sampleProjects);
+
+        String theme = FrinikaGlobalProperties.THEME.getValue();
+        welcomePanel.setInitialTheme(theme);
+    }
+
+    private static void loadProperties() {
+        FrinikaGlobalProperties.initialize();
+        try {
+            FrinikaConfig.load();
+        } catch (IOException ex) {
+            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     static class FrinikaExitHandler extends Thread {

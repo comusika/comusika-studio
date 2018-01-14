@@ -19,8 +19,6 @@
  */
 package com.frinika.main.panel;
 
-import com.frinika.global.FrinikaConfig;
-import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.main.model.ProjectFileRecord;
 import com.frinika.main.model.ProjectFileRecordCellRenderer;
 import com.frinika.gui.util.SupportedLaf;
@@ -29,7 +27,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
@@ -43,6 +43,8 @@ import javax.swing.text.html.HTMLDocument;
 public class WelcomePanel extends javax.swing.JPanel {
 
     private ActionListener actionListener = null;
+    private final DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
+    private final DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
 
     public WelcomePanel() {
         initComponents();
@@ -52,7 +54,6 @@ public class WelcomePanel extends javax.swing.JPanel {
     private void init() {
         mainTitleTextPane.setOpaque(false);
         AboutPanel.initializeTextPane(mainTitleTextPane, AboutPanel.MAIN_TITLE);
-        DefaultListModel<ProjectFileRecord> recentListModel = new DefaultListModel<>();
         recentList.setModel(recentListModel);
         recentList.setCellRenderer(new ProjectFileRecordCellRenderer());
         recentList.addKeyListener(new KeyAdapter() {
@@ -85,15 +86,9 @@ public class WelcomePanel extends javax.swing.JPanel {
                 }
             }
         });
-        String lastProjectFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
-        recentListModel.addElement(new ProjectFileRecord("Name", lastProjectFile));
 
-        DefaultListModel<ProjectFileRecord> sampleListModel = new DefaultListModel<>();
         sampleList.setModel(sampleListModel);
         sampleList.setCellRenderer(new ProjectFileRecordCellRenderer());
-        for (ExampleFile exampleFile : ExampleFile.values()) {
-            sampleListModel.addElement(new ProjectFileRecord(exampleFile.getName(), exampleFile.getFileName()));
-        }
 
         sampleList.addKeyListener(new KeyAdapter() {
             @Override
@@ -223,6 +218,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         lafPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Look and Feel"));
 
         lafButtonGroup.add(defaultLafToggleButton);
+        defaultLafToggleButton.setSelected(true);
         defaultLafToggleButton.setText("Default");
         defaultLafToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -231,7 +227,6 @@ public class WelcomePanel extends javax.swing.JPanel {
         });
 
         lafButtonGroup.add(darculaLafToggleButton);
-        darculaLafToggleButton.setSelected(true);
         darculaLafToggleButton.setText("Darcula");
         darculaLafToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -335,10 +330,12 @@ public class WelcomePanel extends javax.swing.JPanel {
 
     private void defaultLafToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultLafToggleButtonActionPerformed
         switchLookAndFeel(SupportedLaf.DEFAULT);
+        saveDefaultTheme();
     }//GEN-LAST:event_defaultLafToggleButtonActionPerformed
 
     private void darculaLafToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_darculaLafToggleButtonActionPerformed
         switchLookAndFeel(SupportedLaf.DARCULA);
+        saveDefaultTheme();
     }//GEN-LAST:event_darculaLafToggleButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
@@ -358,7 +355,7 @@ public class WelcomePanel extends javax.swing.JPanel {
      *
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(@Nonnull String args[]) {
         WindowUtils.invokeDialog(new WelcomePanel());
     }
 
@@ -384,7 +381,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     private javax.swing.JPanel sampleProjectsPanel;
     // End of variables declaration//GEN-END:variables
 
-    private void switchLookAndFeel(SupportedLaf selectedLaf) {
+    private void switchLookAndFeel(@Nonnull SupportedLaf selectedLaf) {
         WindowUtils.switchLookAndFeel(selectedLaf);
         animatedLogoPanel.switchLookAndFeel();
         SwingUtilities.updateComponentTreeUI(this);
@@ -399,8 +396,12 @@ public class WelcomePanel extends javax.swing.JPanel {
         invalidate();
     }
 
-    public void setActionListener(ActionListener actionListener) {
+    public void setActionListener(@Nonnull ActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    private void saveDefaultTheme() {
+        actionListener.saveDefaultTheme(defaultLafToggleButton.isSelected() ? null : SupportedLaf.DARCULA.name());
     }
 
     public static interface ActionListener {
@@ -413,38 +414,27 @@ public class WelcomePanel extends javax.swing.JPanel {
 
         void closeDialog();
 
-        void openRecentProject(ProjectFileRecord projectFileRecord);
+        void openRecentProject(@Nonnull ProjectFileRecord projectFileRecord);
 
-        void openSampleProject(ProjectFileRecord projectFileRecord);
+        void openSampleProject(@Nonnull ProjectFileRecord projectFileRecord);
+
+        void saveDefaultTheme(@Nullable String theme);
     }
 
-    public enum ExampleFile {
-        PASGRAVE("C'est pas grave", "pasgrave.frinika"),
-        FRINIKATION("Frinikation", "frinikation.frinika"),
-        KARL_FRINIKA_SONG("Karl - Frinika Song", "karl-0_4_0_beta2_thefrinikasong.frinika"),
-        KARL_SLOW_STRINGS("Karl - Slow Strings", "karl-0_4_0_slowstrings.frinika"),
-        KARL_FM_DREAMS("Karl - FM Dream", "karl-0_4_0_fmdream.frinika"),
-        TEA_PARTY("Tea Party", "peter_salomonsen-teaparty-0_4_0_compressed.frinika"),
-        TRACKER_SLAVE("Tracker Slave", "PeterSalomonsen_TrackerSlave.frinika.bz2");
+    public void setRecentProjects(@Nonnull List<ProjectFileRecord> projectRecord) {
+        projectRecord.forEach((projectFileRecord) -> {
+            recentListModel.addElement(projectFileRecord);
+        });
+    }
 
-        @Nonnull
-        private final String name;
-        @Nonnull
-        private final String fileName;
+    public void setExampleProjects(@Nonnull List<ProjectFileRecord> projectRecord) {
+        projectRecord.forEach((projectFileRecord) -> {
+            sampleListModel.addElement(projectFileRecord);
+        });
+    }
 
-        private ExampleFile(@Nonnull String name, @Nonnull String fileName) {
-            this.name = name;
-            this.fileName = fileName;
-        }
-
-        @Nonnull
-        public String getName() {
-            return name;
-        }
-
-        @Nonnull
-        public String getFileName() {
-            return fileName;
-        }
+    public void setInitialTheme(@Nullable String theme) {
+        SupportedLaf themeLaf = theme == null ? SupportedLaf.DEFAULT : SupportedLaf.DARCULA;
+        darculaLafToggleButton.setSelected(themeLaf == SupportedLaf.DARCULA);
     }
 }

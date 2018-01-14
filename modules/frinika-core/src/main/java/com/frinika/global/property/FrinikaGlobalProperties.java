@@ -30,6 +30,7 @@ import java.io.File;
 public class FrinikaGlobalProperties {
 
     public static final ConfigurationProperty<Boolean> SETUP_DONE = new ConfigurationProperty<>(Boolean.class, FrinikaGlobalProperty.SETUP_DONE, false);
+    public static final ConfigurationProperty<String> THEME = new ConfigurationProperty<>(String.class, FrinikaGlobalProperty.THEME, null);
     public static final ConfigurationProperty<Integer> TICKS_PER_QUARTER = new ConfigurationProperty<>(Integer.class, FrinikaGlobalProperty.TICKS_PER_QUARTER, 128);
     public static final ConfigurationProperty<Integer> SEQUENCER_PRIORITY = new ConfigurationProperty<>(Integer.class, FrinikaGlobalProperty.SEQUENCER_PRIORITY, 0);
     // used by JavaSoundVoiceServer
@@ -60,6 +61,10 @@ public class FrinikaGlobalProperties {
     public static final ConfigurationProperty<String> LAST_PROJECT_TYPE = new ConfigurationProperty<>(String.class, FrinikaGlobalProperty.LAST_PROJECT_TYPE, null);
     public static final ConfigurationProperty<String> LAST_PROJECT_NAME = new ConfigurationProperty<>(String.class, FrinikaGlobalProperty.LAST_PROJECT_NAME, null);
     public static final RecentFileNamesProperty RECENT_FILENAMES = new RecentFileNamesProperty(FrinikaGlobalProperty.RECENT_FILENAMES, null);
+
+    public static void initialize() {
+        getSampleRate();
+    }
 
     public static int getSampleRate() {
         return SAMPLE_RATE.getValue();

@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 public enum FrinikaGlobalProperty {
 
     SETUP_DONE,
+    THEME,
     TICKS_PER_QUARTER,
     SEQUENCER_PRIORITY,
     AUDIO_BUFFER_LENGTH,
