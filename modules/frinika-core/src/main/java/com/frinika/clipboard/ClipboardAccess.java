@@ -24,7 +24,6 @@
 package com.frinika.clipboard;
 
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -83,14 +82,10 @@ public class ClipboardAccess {
 
                 return "Hello world";
             }
-        }, new ClipboardOwner() {
-
-            @Override
-            public void lostOwnership(Clipboard clipboard, Transferable contents) {
-                System.out.println("Lost ownership");
-
-            }
+        }, (Clipboard clipboard, Transferable contents) -> {
+            System.out.println("Lost ownership");
         });
+
         System.out.println(getClipboard().getContents(null).getTransferData(DataFlavor.stringFlavor));
     }
 }

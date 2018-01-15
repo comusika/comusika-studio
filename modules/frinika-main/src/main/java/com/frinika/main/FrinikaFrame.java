@@ -1361,8 +1361,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 try {
                     if (project.getProjectFile() != null) {
                         project.saveProject(project.getProjectFile());
-                        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(project
-                                .getProjectFile().getAbsolutePath());
+                        FrinikaConfig.setLastProject(project.getProjectFile());
                     } else {
                         withRef = false;
                         openSaveProjectDialog();
@@ -1405,8 +1404,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 try {
                     if (project.getProjectFile() != null) {
                         project.saveProject(project.getProjectFile());
-                        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(project
-                                .getProjectFile().getAbsolutePath());
+                        FrinikaConfig.setLastProject(project.getProjectFile());
                     } else {
                         withRef = true;
                         openSaveProjectDialog();
@@ -2832,8 +2830,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 }
 
                 project.saveProject(newProject);
-                FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(newProject
-                        .getAbsolutePath());
+                FrinikaConfig.setLastProject(newProject);
                 setTitle(newProject.getName());
             }
         } catch (HeadlessException | IOException ex) {

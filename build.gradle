@@ -3,7 +3,8 @@ apply plugin: 'distribution'
 apply plugin: 'com.bmuschko.izpack'
 
 def baseVersion = '0.9.0'
-version = baseVersion + '-' + getDate('yyyyMMdd')
+def devVersion = '-dev'
+version = baseVersion + devVersion + '-' + getDate('yyyyMMdd')
 
 def getDate(dateFormat) {
     def date = new Date()

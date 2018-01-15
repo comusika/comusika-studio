@@ -23,7 +23,7 @@
  */
 package com.frinika.main.action;
 
-import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.main.FrinikaFrame;
 import com.frinika.project.FrinikaProjectContainer;
@@ -92,10 +92,8 @@ public class CreateProjectAction extends AbstractAction {
                     }
                 }
 
-                frame = new FrinikaFrame(FrinikaProjectContainer
-                        .loadProject(newProject));
-                FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(newProject
-                        .getAbsolutePath());
+                frame = new FrinikaFrame(FrinikaProjectContainer.loadProject(newProject));
+                FrinikaConfig.setLastProject(newProject);
             }
 
         } catch (Exception e1) {

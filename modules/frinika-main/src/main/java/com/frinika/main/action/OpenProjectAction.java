@@ -23,7 +23,7 @@
  */
 package com.frinika.main.action;
 
-import com.frinika.global.property.FrinikaGlobalProperties;
+import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.main.FrinikaFrame;
 import com.frinika.project.FrinikaProjectContainer;
@@ -61,10 +61,8 @@ public class OpenProjectAction extends AbstractAction {
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File newProject = chooser.getSelectedFile();
 
-                project = new FrinikaFrame(FrinikaProjectContainer
-                        .loadProject(newProject));
-                FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(newProject
-                        .getAbsolutePath());
+                project = new FrinikaFrame(FrinikaProjectContainer.loadProject(newProject));
+                FrinikaConfig.setLastProject(newProject);
             }
         } catch (Exception e1) {
             // TODO Auto-generated catch block

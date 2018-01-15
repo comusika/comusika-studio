@@ -27,6 +27,7 @@ import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.property.ConfigurationProperty;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.global.property.FrinikaGlobalProperty;
+import com.frinika.global.property.RecentFileName;
 import com.frinika.gui.util.FontChooser;
 import java.awt.Component;
 import java.awt.Font;
@@ -83,23 +84,7 @@ import javax.swing.event.ChangeEvent;
  */
 public class FrinikaConfig {
 
-// --- gui binding ---
-    /**
-     * Bind map for options that are stored in dynamic properties, not as public
-     * static fields.
-     *
-     * @param d
-     * @return
-     */
-    /*private static Object[][] dynamicBindMap(ConfigDialogPanel d) {
-		return new Object[][] {
-				//{ "javasound.output", 							d.comboboxOutputDevice},
-		};
-	}*/
-// --- end of configurable part ----------------------------------------------
     private static final String CONFIG_FILE_NAME = "FrinikaConfig.xml";
-
-    private static final String META_PREFIX = "_";
 
     private static File defaultUserFrinikaDir = new File(System.getProperty("user.home"), "frinika");
 
@@ -219,8 +204,8 @@ public class FrinikaConfig {
 		}
 	}*/
     public static void load() throws IOException {
-        InputStream r = new FileInputStream(configFile);
-        load(r);
+        InputStream inputStream = new FileInputStream(configFile);
+        load(inputStream);
     }
 
     public static boolean store() {
@@ -252,9 +237,9 @@ public class FrinikaConfig {
         System.exit(0);
     }
 
-    public static void load(InputStream r) throws IOException {
+    public static void load(@Nonnull InputStream inputStream) throws IOException {
         properties = new Properties();
-        properties.loadFromXML(r);
+        properties.loadFromXML(inputStream);
         loadFields(properties);
         // remove fields from dynamic properties
         for (FrinikaGlobalProperty property : FrinikaGlobalProperty.values()) {
@@ -262,18 +247,18 @@ public class FrinikaConfig {
         }
     }
 
-    public static void save(OutputStream w) throws IOException {
-        Properties p = new Properties();
+    public static void save(@Nonnull OutputStream outputStream) throws IOException {
+        Properties properties = new Properties();
         // copy all dynamic properties into
         properties.keySet().forEach((key) -> {
-            p.setProperty((String) key, properties.getProperty((String) key));
+            properties.setProperty((String) key, properties.getProperty((String) key));
         });
         FrinikaGlobalProperties.SETUP_DONE.setValue(Boolean.TRUE);
-        saveFields(p);
-        p.storeToXML(w, "Frinika configuration");
+        saveFields(properties);
+        properties.storeToXML(outputStream, "Frinika configuration");
     }
 
-    public static void loadFields(Properties p) {
+    public static void loadFields(@Nonnull Properties properties) {
         for (FrinikaGlobalProperty globalProperty : FrinikaGlobalProperty.values()) {
             ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
             if (property == null) {
@@ -281,39 +266,39 @@ public class FrinikaConfig {
             }
             String name = property.getName();
             Class<?> type = property.getType();
-            String prop = p.getProperty(name);
-            if (prop == null) {
+            String propertyStringValue = properties.getProperty(name);
+            if (propertyStringValue == null) {
                 System.out.println("no saved property for configuration option " + name + ", using default");
             } else {
-                Object o = stringToValue(prop, type);
-                property.setValue(o);
+                Object propertyValue = stringToValue(propertyStringValue, type);
+                property.setValue(propertyValue);
             }
         }
     }
 
-    public static void saveFields(Properties p) {
+    public static void saveFields(@Nonnull Properties properties) {
         for (FrinikaGlobalProperty globalProperty : FrinikaGlobalProperty.values()) {
             ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
             if (property == null) {
                 throw new IllegalStateException("Missing configuration property for name " + globalProperty.getName());
             }
             String name = globalProperty.getName();
-            Object o = property.getValue();
-            String s = valueToString(o, property.getType());
-            if (s != null) {
-                p.setProperty(name, s);
+            Object propertyValue = property.getValue();
+            String propertyStringValue = valueToString(propertyValue, property.getType());
+            if (propertyStringValue != null) {
+                properties.setProperty(name, propertyStringValue);
             } else {
                 // don't save entry at all if null value
             }
         }
     }
 
-    public static void addConfigListener(ConfigListener l) {
-        listeners.add(l);
+    public static void addConfigListener(@Nonnull ConfigListener listener) {
+        listeners.add(listener);
     }
 
-    public static void removeConfigListener(ConfigListener l) {
-        listeners.remove(l);
+    public static void removeConfigListener(@Nonnull ConfigListener listener) {
+        listeners.remove(listener);
     }
 
     /**
@@ -499,7 +484,7 @@ public class FrinikaConfig {
         setConfigLocation(new File(path));
     }
 
-    public static void setConfigLocation(File file) {
+    public static void setConfigLocation(@Nonnull File file) {
         if (file.exists() && file.isDirectory()) {
             file = new File(file, CONFIG_FILE_NAME);
         } else {
@@ -523,6 +508,7 @@ public class FrinikaConfig {
         }
     }
 
+    @Nonnull
     public static Collection<String> getAvailableMidiInDevices() {
         ArrayList<String> availableMidiDevices = new ArrayList<>();
         Info infos[] = MidiSystem.getMidiDeviceInfo();
@@ -543,8 +529,47 @@ public class FrinikaConfig {
         return availableMidiDevices;
     }
 
+    @Nullable
     public static Collection<String> getAvailableAudioDevices() {
         List<String> list = FrinikaAudioSystem.getAudioServer().getAvailableOutputNames();
         return list;
+    }
+
+    public static void setLastProject(@Nonnull String fileName, @Nonnull String projectName) {
+        String lastProjectFileName = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
+        String lastProjectName = FrinikaGlobalProperties.LAST_PROJECT_NAME.getValue();
+        String lastProjectType = FrinikaGlobalProperties.LAST_PROJECT_TYPE.getValue();
+
+        /* TODO
+        if (lastProjectFileName != null) {
+            if (lastProjectName == null) {
+                lastProjectName = new File(lastProjectFileName).getName();
+            }
+            List<RecentFileName> recentFileNames = FrinikaGlobalProperties.RECENT_FILENAMES.getValue();
+            if (recentFileNames == null) {
+                recentFileNames = new ArrayList<>();
+            }
+
+            for (int i = 0; i < recentFileNames.size(); i++) {
+                if (lastProjectFileName.equals(recentFileNames.get(i).getProjectFile())) {
+                    recentFileNames.remove(i);
+                    break;
+                }
+            }
+            RecentFileName recentProject = new RecentFileName(lastProjectName, lastProjectFileName, lastProjectType);
+            recentFileNames.add(0, recentProject);
+            FrinikaGlobalProperties.RECENT_FILENAMES.setValue(recentFileNames);
+        } */
+        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(fileName);
+        FrinikaGlobalProperties.LAST_PROJECT_NAME.setValue(projectName);
+    }
+
+    public static void setLastProject(@Nonnull String fileName) {
+        File projectFile = new File(fileName);
+        setLastProject(fileName, projectFile.getName());
+    }
+
+    public static void setLastProject(@Nonnull File file) {
+        setLastProject(file.getAbsolutePath(), file.getName());
     }
 }
