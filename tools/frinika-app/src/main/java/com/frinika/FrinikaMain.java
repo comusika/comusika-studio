@@ -27,7 +27,7 @@ import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
 import com.frinika.global.property.FrinikaGlobalProperties;
-import com.frinika.global.property.RecentFileName;
+import com.frinika.global.property.RecentProjectRecord;
 import com.frinika.gui.util.SupportedLaf;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.main.FrinikaFrame;
@@ -216,7 +216,10 @@ public class FrinikaMain {
             @Override
             public void openRecentProject(@Nonnull ProjectFileRecord projectFileRecord) {
                 try {
-                    File file = new File(projectFileRecord.getFilePath());
+                    String projectName = projectFileRecord.getProjectName();
+                    String filePath = projectFileRecord.getFilePath();
+                    FrinikaConfig.setLastProject(filePath, projectName);
+                    File file = new File(filePath);
                     FrinikaFrame frinikaFrame = new FrinikaFrame(FrinikaProjectContainer
                             .loadProject(file));
                     startProject();
@@ -250,9 +253,9 @@ public class FrinikaMain {
             ProjectFileRecord lastProject = new ProjectFileRecord(lastProjectName, lastProjectFile);
             recentProjects.add(lastProject);
 
-            List<RecentFileName> recentFiles = FrinikaGlobalProperties.RECENT_FILENAMES.getValue();
+            List<RecentProjectRecord> recentFiles = FrinikaGlobalProperties.RECENT_PROJECTS.getValue();
             if (recentFiles != null) {
-                recentFiles.stream().map((recentFile) -> new ProjectFileRecord(recentFile.getProjectName(), recentFile.getProjectFile())).forEachOrdered((projectFileRecord) -> {
+                recentFiles.stream().map((recentFile) -> new ProjectFileRecord(recentFile.getProjectName(), recentFile.getProjectPath())).forEachOrdered((projectFileRecord) -> {
                     recentProjects.add(projectFileRecord);
                 });
             }

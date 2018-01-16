@@ -91,7 +91,6 @@ public class DefaultOptionsBinder implements OptionsBinder {
      * @param component
      * @param value
      * @param fieldName
-     * @param fieldType
      */
     protected void toGUI(Object component, Object value, String fieldName) {
 

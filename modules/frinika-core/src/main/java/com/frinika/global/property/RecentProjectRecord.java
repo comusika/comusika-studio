@@ -28,7 +28,7 @@ import javax.annotation.concurrent.Immutable;
  * @author hajdam
  */
 @Immutable
-public class RecentFileName {
+public class RecentProjectRecord {
 
     @Nullable
     private final String projectName;
@@ -37,7 +37,7 @@ public class RecentFileName {
     @Nullable
     private final String projectType;
 
-    public RecentFileName(@Nullable String projectName, @Nullable String projectFile, @Nullable String projectType) {
+    public RecentProjectRecord(@Nullable String projectName, @Nullable String projectFile, @Nullable String projectType) {
         this.projectName = projectName;
         this.projectFile = projectFile;
         this.projectType = projectType;
@@ -49,7 +49,7 @@ public class RecentFileName {
     }
 
     @Nullable
-    public String getProjectFile() {
+    public String getProjectPath() {
         return projectFile;
     }
 

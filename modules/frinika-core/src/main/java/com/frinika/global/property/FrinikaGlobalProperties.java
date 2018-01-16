@@ -60,7 +60,7 @@ public class FrinikaGlobalProperties {
     public static final ConfigurationProperty<String> LAST_PROJECT_FILENAME = new ConfigurationProperty<>(String.class, FrinikaGlobalProperty.LAST_PROJECT_FILENAME, null);
     public static final ConfigurationProperty<String> LAST_PROJECT_TYPE = new ConfigurationProperty<>(String.class, FrinikaGlobalProperty.LAST_PROJECT_TYPE, null);
     public static final ConfigurationProperty<String> LAST_PROJECT_NAME = new ConfigurationProperty<>(String.class, FrinikaGlobalProperty.LAST_PROJECT_NAME, null);
-    public static final RecentFileNamesProperty RECENT_FILENAMES = new RecentFileNamesProperty(FrinikaGlobalProperty.RECENT_FILENAMES, null);
+    public static final RecentProjectsProperty RECENT_PROJECTS = new RecentProjectsProperty(FrinikaGlobalProperty.RECENT_PROJECTS, null);
 
     public static void initialize() {
         getSampleRate();

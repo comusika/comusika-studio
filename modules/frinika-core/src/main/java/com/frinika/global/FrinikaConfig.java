@@ -25,9 +25,10 @@ package com.frinika.global;
 
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.global.property.ConfigurationProperty;
+import com.frinika.global.property.CustomGlobalProperty;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.global.property.FrinikaGlobalProperty;
-import com.frinika.global.property.RecentFileName;
+import com.frinika.global.property.RecentProjectRecord;
 import com.frinika.gui.util.FontChooser;
 import java.awt.Component;
 import java.awt.Font;
@@ -248,14 +249,14 @@ public class FrinikaConfig {
     }
 
     public static void save(@Nonnull OutputStream outputStream) throws IOException {
-        Properties properties = new Properties();
+        Properties savedProperties = new Properties();
         // copy all dynamic properties into
         properties.keySet().forEach((key) -> {
-            properties.setProperty((String) key, properties.getProperty((String) key));
+            savedProperties.setProperty((String) key, properties.getProperty((String) key));
         });
         FrinikaGlobalProperties.SETUP_DONE.setValue(Boolean.TRUE);
-        saveFields(properties);
-        properties.storeToXML(outputStream, "Frinika configuration");
+        saveFields(savedProperties);
+        savedProperties.storeToXML(outputStream, "Frinika configuration");
     }
 
     public static void loadFields(@Nonnull Properties properties) {
@@ -264,14 +265,19 @@ public class FrinikaConfig {
             if (property == null) {
                 throw new IllegalStateException("Missing configuration property for name " + globalProperty.getName());
             }
-            String name = property.getName();
-            Class<?> type = property.getType();
-            String propertyStringValue = properties.getProperty(name);
-            if (propertyStringValue == null) {
-                System.out.println("no saved property for configuration option " + name + ", using default");
+
+            if (property instanceof CustomGlobalProperty) {
+                ((CustomGlobalProperty) property).load(properties);
             } else {
-                Object propertyValue = stringToValue(propertyStringValue, type);
-                property.setValue(propertyValue);
+                String name = property.getName();
+                Class<?> type = property.getType();
+                String propertyStringValue = properties.getProperty(name);
+                if (propertyStringValue == null) {
+                    System.out.println("no saved property for configuration option " + name + ", using default");
+                } else {
+                    Object propertyValue = stringToValue(propertyStringValue, type);
+                    property.setValue(propertyValue);
+                }
             }
         }
     }
@@ -282,13 +288,18 @@ public class FrinikaConfig {
             if (property == null) {
                 throw new IllegalStateException("Missing configuration property for name " + globalProperty.getName());
             }
-            String name = globalProperty.getName();
-            Object propertyValue = property.getValue();
-            String propertyStringValue = valueToString(propertyValue, property.getType());
-            if (propertyStringValue != null) {
-                properties.setProperty(name, propertyStringValue);
+
+            if (property instanceof CustomGlobalProperty) {
+                ((CustomGlobalProperty) property).save(properties);
             } else {
-                // don't save entry at all if null value
+                String name = globalProperty.getName();
+                Object propertyValue = property.getValue();
+                String propertyStringValue = valueToString(propertyValue, property.getType());
+                if (propertyStringValue != null) {
+                    properties.setProperty(name, propertyStringValue);
+                } else {
+                    // don't save entry at all if null value
+                }
             }
         }
     }
@@ -535,32 +546,36 @@ public class FrinikaConfig {
         return list;
     }
 
-    public static void setLastProject(@Nonnull String fileName, @Nonnull String projectName) {
-        String lastProjectFileName = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
+    public static void setLastProject(@Nonnull String projectPath, @Nonnull String projectName) {
+        String lastProjectPath = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
         String lastProjectName = FrinikaGlobalProperties.LAST_PROJECT_NAME.getValue();
         String lastProjectType = FrinikaGlobalProperties.LAST_PROJECT_TYPE.getValue();
 
-        /* TODO
-        if (lastProjectFileName != null) {
+        if (lastProjectPath != null) {
             if (lastProjectName == null) {
-                lastProjectName = new File(lastProjectFileName).getName();
+                lastProjectName = new File(lastProjectPath).getName();
             }
-            List<RecentFileName> recentFileNames = FrinikaGlobalProperties.RECENT_FILENAMES.getValue();
-            if (recentFileNames == null) {
-                recentFileNames = new ArrayList<>();
+            List<RecentProjectRecord> recentProjects = FrinikaGlobalProperties.RECENT_PROJECTS.getValue();
+            if (recentProjects == null) {
+                recentProjects = new ArrayList<>();
             }
 
-            for (int i = 0; i < recentFileNames.size(); i++) {
-                if (lastProjectFileName.equals(recentFileNames.get(i).getProjectFile())) {
-                    recentFileNames.remove(i);
+            for (int i = 0; i < recentProjects.size(); i++) {
+                if (projectPath.equals(recentProjects.get(i).getProjectPath())) {
+                    recentProjects.remove(i);
                     break;
                 }
             }
-            RecentFileName recentProject = new RecentFileName(lastProjectName, lastProjectFileName, lastProjectType);
-            recentFileNames.add(0, recentProject);
-            FrinikaGlobalProperties.RECENT_FILENAMES.setValue(recentFileNames);
-        } */
-        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(fileName);
+            if (!projectPath.equals(lastProjectPath)) {
+                RecentProjectRecord recentProject = new RecentProjectRecord(lastProjectName, lastProjectPath, lastProjectType);
+                recentProjects.add(0, recentProject);
+                if (recentProjects.size() > 10) {
+                    recentProjects.remove(recentProjects.size() - 1);
+                }
+                FrinikaGlobalProperties.RECENT_PROJECTS.setValue(recentProjects);
+            }
+        }
+        FrinikaGlobalProperties.LAST_PROJECT_FILENAME.setValue(projectPath);
         FrinikaGlobalProperties.LAST_PROJECT_NAME.setValue(projectName);
     }
 

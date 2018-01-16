@@ -54,7 +54,7 @@ public enum FrinikaGlobalProperty {
     LAST_PROJECT_FILENAME,
     LAST_PROJECT_TYPE,
     LAST_PROJECT_NAME,
-    RECENT_FILENAMES;
+    RECENT_PROJECTS;
 
     private final String propertyName;
 

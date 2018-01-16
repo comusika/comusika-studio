@@ -19,24 +19,17 @@
  */
 package com.frinika.global.property;
 
-import java.util.List;
+import java.util.Properties;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
- * Configuration property for recent filename.
+ * Interface for global properties with custom load/save.
  *
  * @author hajdam
  */
-public class RecentFileNamesProperty extends ConfigurationProperty<List<RecentFileName>> {
+public interface CustomGlobalProperty {
 
-    public RecentFileNamesProperty(@Nonnull FrinikaGlobalProperty globalProperty, @Nullable List<RecentFileName> value) {
-        super(generify(List.class), globalProperty, value);
-    }
+    void load(@Nonnull Properties properties);
 
-    // TODO conversion to/from XML
-    @SuppressWarnings("unchecked")
-    private static <T> Class<T> generify(Class<?> cls) {
-        return (Class<T>) cls;
-    }
+    void save(@Nonnull Properties properties);
 }
