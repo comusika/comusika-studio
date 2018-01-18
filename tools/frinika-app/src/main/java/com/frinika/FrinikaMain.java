@@ -51,7 +51,7 @@ import javax.annotation.Nullable;
 import javax.swing.JFrame;
 
 /**
- * The main entry class for Frinika
+ * The main entry class for Frinika.
  *
  * @author Peter Johan Salomonsen
  */
@@ -72,7 +72,7 @@ public class FrinikaMain {
 //        try {
         JFrame welcomeFrame = new JFrame();
         welcomeFrame.setTitle("Welcome to Frinika");
-        welcomeFrame.setIconImage(new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")).getImage());
+        welcomeFrame.setIconImage(new javax.swing.ImageIcon(FrinikaFrame.class.getResource("/icons/frinika.png")).getImage());
         welcomeFrame.setResizable(false);
 
         WelcomePanel welcomePanel = new WelcomePanel();
@@ -173,7 +173,7 @@ public class FrinikaMain {
     }
 
     public static void configureUI() {
-        String lcOSName = System.getProperty("os.name").toLowerCase();
+// TODO        String lcOSName = System.getProperty("os.name").toLowerCase();
 
         String theme = FrinikaGlobalProperties.THEME.getValue();
         if (SupportedLaf.DARCULA.name().equals(theme)) {
@@ -210,6 +210,7 @@ public class FrinikaMain {
             @Override
             public void closeDialog() {
                 welcomeFrame.setVisible(false);
+
                 System.exit(0);
             }
 
@@ -220,8 +221,8 @@ public class FrinikaMain {
                     String filePath = projectFileRecord.getFilePath();
                     FrinikaConfig.setLastProject(filePath, projectName);
                     File file = new File(filePath);
-                    FrinikaFrame frinikaFrame = new FrinikaFrame(FrinikaProjectContainer
-                            .loadProject(file));
+                    FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file);
+                    FrinikaFrame frinikaFrame = new FrinikaFrame(project);
                     startProject();
                     welcomeFrame.setVisible(false);
                 } catch (Exception ex) {

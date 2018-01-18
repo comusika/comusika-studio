@@ -19,6 +19,8 @@
  */
 package com.frinika.main.model;
 
+import javax.annotation.Nonnull;
+
 /**
  *
  * @author hajdam
@@ -28,15 +30,17 @@ public class ProjectFileRecord {
     private final String projectName;
     private final String filePath;
 
-    public ProjectFileRecord(String projectName, String filePath) {
+    public ProjectFileRecord(@Nonnull String projectName, @Nonnull String filePath) {
         this.projectName = projectName;
         this.filePath = filePath;
     }
 
+    @Nonnull
     public String getProjectName() {
         return projectName;
     }
 
+    @Nonnull
     public String getFilePath() {
         return filePath;
     }

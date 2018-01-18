@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 public class SelectAllAction {
 
     private static final long serialVersionUID = 1L;
-    private ProjectFrame project;
+    private final ProjectFrame project;
 
     public SelectAllAction(ProjectFrame project) {
         this.project = project;

@@ -146,6 +146,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
@@ -201,6 +202,14 @@ import uk.org.toot.swingui.audioui.mixerui.CompactMixerPanel;
 public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     private static final long serialVersionUID = 1L;
+
+    public static final String TRACKS_VIEW = "tracks";
+    public static final String VOICE_VIEW = "voice";
+    public static final String PIANOROLL_VIEW = "pianoroll";
+    public static final String TRACKER_VIEW = "tracker";
+    public static final String NOTATION_VIEW = "notation";
+    public static final String MIDIOUT_VIEW = "midiout";
+    public static final String MIXER_VIEW = "mixer";
 
     /**
      * File-filter for midi standard files. To be used with promptFile().
@@ -273,7 +282,10 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     private static JFrame showingDialogFrame = null;
 
     public FrinikaFrame() throws Exception {
+        initFrame();
+    }
 
+    private void initFrame() {
         addWindowListener(new WindowListener() {
 
             @Override
@@ -667,7 +679,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             }
         });
 
-        // Karl, flexdock, use -Dfrinika.window.flexdock=no to disble flexdock
+        // Karl, flexdock, use -Dfrinika.window.flexdock=no to disable flexdock
         if (System.getProperty("frinika.window.flexdock") == null) {
             DockingManager.setFloatingEnabled(true);
             viewport = new Viewport();
@@ -872,19 +884,19 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     public void perspectivePreset1() {
         resetViews();
 
-        viewport.dock(getView("tracks"));
-        getView("tracks").dock(getView("pianoroll"),
+        viewport.dock(getView(TRACKS_VIEW));
+        getView(TRACKS_VIEW).dock(getView(PIANOROLL_VIEW),
                 DockingConstants.SOUTH_REGION);
-        getView("tracks").dock(getView("voice"), DockingConstants.WEST_REGION);
-        getView("pianoroll").dock(getView("tracker"));
-        getView("pianoroll").dock(getView("notation"));
-        getView("tracks").dock(getView("midiout"));
-        getView("tracks").dock(getView("mixer"));
+        getView(TRACKS_VIEW).dock(getView(VOICE_VIEW), DockingConstants.WEST_REGION);
+        getView(PIANOROLL_VIEW).dock(getView(TRACKER_VIEW));
+        getView(PIANOROLL_VIEW).dock(getView(NOTATION_VIEW));
+        getView(TRACKS_VIEW).dock(getView(MIDIOUT_VIEW));
+        getView(TRACKS_VIEW).dock(getView(MIXER_VIEW));
 
-        ((JSplitPane) getView("voice").getParent().getParent())
+        ((JSplitPane) getView(VOICE_VIEW).getParent().getParent())
                 .setDividerLocation(300);
-        ((JTabbedPane) getView("tracks").getParent()).setSelectedIndex(0);
-        ((JTabbedPane) getView("pianoroll").getParent()).setSelectedIndex(0);
+        ((JTabbedPane) getView(TRACKS_VIEW).getParent()).setSelectedIndex(0);
+        ((JTabbedPane) getView(PIANOROLL_VIEW).getParent()).setSelectedIndex(0);
 
         viewport.grabFocus();
 
@@ -894,9 +906,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                ((JTabbedPane) getView("tracks").getParent())
+                ((JTabbedPane) getView(TRACKS_VIEW).getParent())
                         .setSelectedIndex(0);
-                ((JTabbedPane) getView("pianoroll").getParent())
+                ((JTabbedPane) getView(PIANOROLL_VIEW).getParent())
                         .setSelectedIndex(0);
                 viewport.grabFocus();
             }
@@ -907,22 +919,22 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     public void perspectivePreset2() {
         resetViews();
 
-        viewport.dock(getView("tracks"));
-        getView("tracks").dock(getView("mixer"), DockingConstants.EAST_REGION,
+        viewport.dock(getView(TRACKS_VIEW));
+        getView(TRACKS_VIEW).dock(getView(MIXER_VIEW), DockingConstants.EAST_REGION,
                 0.25f);
-        getView("tracks").dock(getView("pianoroll"),
+        getView(TRACKS_VIEW).dock(getView(PIANOROLL_VIEW),
                 DockingConstants.SOUTH_REGION);
-        getView("tracks").dock(getView("voice"), DockingConstants.WEST_REGION,
+        getView(TRACKS_VIEW).dock(getView(VOICE_VIEW), DockingConstants.WEST_REGION,
                 0.3f);
-        getView("pianoroll").dock(getView("tracker"));
-        getView("pianoroll").dock(getView("notation"));
-        getView("tracks").dock(getView("midiout"));
+        getView(PIANOROLL_VIEW).dock(getView(TRACKER_VIEW));
+        getView(PIANOROLL_VIEW).dock(getView(NOTATION_VIEW));
+        getView(TRACKS_VIEW).dock(getView(MIDIOUT_VIEW));
 
-        ((JSplitPane) getView("voice").getParent().getParent())
+        ((JSplitPane) getView(VOICE_VIEW).getParent().getParent())
                 .setDividerLocation(300);
 
-        ((JTabbedPane) getView("tracks").getParent()).setSelectedIndex(0);
-        ((JTabbedPane) getView("pianoroll").getParent()).setSelectedIndex(0);
+        ((JTabbedPane) getView(TRACKS_VIEW).getParent()).setSelectedIndex(0);
+        ((JTabbedPane) getView(PIANOROLL_VIEW).getParent()).setSelectedIndex(0);
 
         viewport.grabFocus();
 
@@ -932,9 +944,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                ((JTabbedPane) getView("tracks").getParent())
+                ((JTabbedPane) getView(TRACKS_VIEW).getParent())
                         .setSelectedIndex(0);
-                ((JTabbedPane) getView("pianoroll").getParent())
+                ((JTabbedPane) getView(PIANOROLL_VIEW).getParent())
                         .setSelectedIndex(0);
                 viewport.grabFocus();
             }
@@ -945,19 +957,19 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     public void perspectivePreset3() {
         resetViews();
 
-        viewport.dock(getView("tracks"));
-        getView("tracks").dock(getView("voice"), DockingConstants.WEST_REGION);
-        getView("tracks").dock(getView("pianoroll"));
-        getView("tracks").dock(getView("tracker"));
-        getView("tracks").dock(getView("notation"));
-        getView("tracks").dock(getView("midiout"));
-        getView("tracks").dock(getView("mixer"));
+        viewport.dock(getView(TRACKS_VIEW));
+        getView(TRACKS_VIEW).dock(getView(VOICE_VIEW), DockingConstants.WEST_REGION);
+        getView(TRACKS_VIEW).dock(getView(PIANOROLL_VIEW));
+        getView(TRACKS_VIEW).dock(getView(TRACKER_VIEW));
+        getView(TRACKS_VIEW).dock(getView(NOTATION_VIEW));
+        getView(TRACKS_VIEW).dock(getView(MIDIOUT_VIEW));
+        getView(TRACKS_VIEW).dock(getView(MIXER_VIEW));
 
-        ((JSplitPane) getView("voice").getParent().getParent())
+        ((JSplitPane) getView(VOICE_VIEW).getParent().getParent())
                 .setDividerLocation(300);
-        ((JTabbedPane) getView("tracks").getParent()).setSelectedIndex(0);
+        ((JTabbedPane) getView(TRACKS_VIEW).getParent()).setSelectedIndex(0);
 
-        DockingManager.setMinimized(getView("voice"), true, DockingState.LEFT);
+        DockingManager.setMinimized(getView(VOICE_VIEW), true, DockingState.LEFT);
 
         viewport.grabFocus();
 
@@ -967,7 +979,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                ((JTabbedPane) getView("tracks").getParent())
+                ((JTabbedPane) getView(TRACKS_VIEW).getParent())
                         .setSelectedIndex(0);
                 viewport.grabFocus();
             }
@@ -1022,17 +1034,17 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         trackerPanel.setMinimumSize(new Dimension(0, 0));
         mixer.setMinimumSize(new Dimension(0, 0));
 
-        createView("tracks", CurrentLocale.getMessage("project.maintabs.tracks"),
+        createView(TRACKS_VIEW, CurrentLocale.getMessage("project.maintabs.tracks"),
                 partViewEditor, dockicon_tracks);
-        createView("voice", CurrentLocale.getMessage("project.maintabs.lane_properties"), laneView, dockicon_voice);
-        createView("pianoroll", CurrentLocale.getMessage("project.maintabs.piano_roll"), pianoControllerPane,
+        createView(VOICE_VIEW, CurrentLocale.getMessage("project.maintabs.lane_properties"), laneView, dockicon_voice);
+        createView(PIANOROLL_VIEW, CurrentLocale.getMessage("project.maintabs.piano_roll"), pianoControllerPane,
                 dockicon_pianoroll);
-        createView("tracker", CurrentLocale.getMessage("project.maintabs.tracker"), trackerPanel, dockicon_tracker);
-        createView("notation", CurrentLocale.getMessage("project.maintabs.notation"), notationPanel, dockicon_notation);
-        createView("midiout", CurrentLocale.getMessage("project.maintabs.midimixer"),
+        createView(TRACKER_VIEW, CurrentLocale.getMessage("project.maintabs.tracker"), trackerPanel, dockicon_tracker);
+        createView(NOTATION_VIEW, CurrentLocale.getMessage("project.maintabs.notation"), notationPanel, dockicon_notation);
+        createView(MIDIOUT_VIEW, CurrentLocale.getMessage("project.maintabs.midimixer"),
                 new JScrollPane(midiDevicesPanel = new MidiDevicesPanel(project)),
                 dockicon_midiout);
-        createView("mixer", CurrentLocale.getMessage("project.maintabs.audiomixer"), mixer,
+        createView(MIXER_VIEW, CurrentLocale.getMessage("project.maintabs.audiomixer"), mixer,
                 dockicon_mixer);
     }
 
@@ -1091,16 +1103,17 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         return icon;
     }
 
-    private Map views = new HashMap();
+    private Map<String, View> views = new HashMap<>();
 
-    private View getView(String id) {
-        return (View) views.get(id);
+    @Nonnull
+    private View getView(@Nonnull String viewId) {
+        return (View) views.get(viewId);
     }
 
-    private View createView(String id, String text, JComponent content,
+    private View createView(@Nonnull String viewId, String text, JComponent content,
             Icon icon) {
 
-        final View view = new View(id, text);
+        final View view = new View(viewId, text);
         if (icon != null) {
             view.setIcon(icon);
         }
@@ -1108,7 +1121,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             view.setTabIcon(icon);
         }
 
-        views.put(id, view);
+        views.put(viewId, view);
 
         JMenuItem menuitem = new JMenuItem(text);
         menuitem.setIcon(icon);

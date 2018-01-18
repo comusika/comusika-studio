@@ -20,6 +20,7 @@
 package com.frinika.main.panel;
 
 import com.frinika.gui.util.WindowUtils;
+import javax.annotation.Nonnull;
 
 /**
  *
@@ -31,7 +32,7 @@ public class ProgressPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setActivity(String activity) {
+    public void setActivity(@Nonnull String activity) {
         actionLabel.setText(activity);
     }
 
