@@ -86,9 +86,9 @@ import javax.swing.event.ChangeEvent;
 public class FrinikaConfig {
 
     private static final String CONFIG_FILE_NAME = "FrinikaConfig.xml";
+    private static final String EXAMPLES_DIR = "Examples";
 
     private static File defaultUserFrinikaDir = new File(System.getProperty("user.home"), "frinika");
-
     private static File configFile = new File(defaultUserFrinikaDir, CONFIG_FILE_NAME);
 
     /**
@@ -586,5 +586,10 @@ public class FrinikaConfig {
 
     public static void setLastProject(@Nonnull File file) {
         setLastProject(file.getAbsolutePath(), file.getName());
+    }
+
+    @Nonnull
+    public static File getExampleFilesPath() {
+        return new File(defaultUserFrinikaDir, EXAMPLES_DIR);
     }
 }

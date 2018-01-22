@@ -98,7 +98,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                     if (source instanceof JList<?>) {
                         int index = ((JList<?>) source).getSelectedIndex();
                         if (index >= 0) {
-                            ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                            ProjectFileRecord projectFileRecord = sampleListModel.get(index);
                             actionListener.openSampleProject(projectFileRecord);
                         }
                     }
@@ -113,7 +113,7 @@ public class WelcomePanel extends javax.swing.JPanel {
                     if (source instanceof JList<?>) {
                         int index = ((JList<?>) source).locationToIndex(event.getPoint());
                         if (index >= 0) {
-                            ProjectFileRecord projectFileRecord = recentListModel.get(index);
+                            ProjectFileRecord projectFileRecord = sampleListModel.get(index);
                             actionListener.openSampleProject(projectFileRecord);
                         }
                     }

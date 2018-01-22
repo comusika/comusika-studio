@@ -41,7 +41,14 @@ import com.frinika.project.dialog.VersionProperties;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -58,6 +65,8 @@ import javax.swing.JFrame;
 public class FrinikaMain {
 
     static FrinikaExitHandler exitHook = null;
+    private static final String DOWNLOAD_PATH_PREFIX = "http://sourceforge.net/projects/frinika/files/frinika-example-projects/Frinka-example-projects/";
+    private static final String DOWNLOAD_PATH_POSTFIX = "/download";
 
     public static void main(String[] args) throws Exception {
 
@@ -68,6 +77,8 @@ public class FrinikaMain {
         loadProperties();
 
         configureUI();
+
+        startProject();
 
 //        try {
         JFrame welcomeFrame = new JFrame();
@@ -187,7 +198,6 @@ public class FrinikaMain {
             public void newProject() {
                 welcomeFrame.setVisible(false);
                 new CreateProjectAction().actionPerformed(null);
-                startProject();
                 welcomeFrame.setVisible(false);
             }
 
@@ -198,7 +208,6 @@ public class FrinikaMain {
                     OpenProjectAction.setSelectedFile(new File(lastFile));
                 }
                 new OpenProjectAction().actionPerformed(null);
-                startProject();
                 welcomeFrame.setVisible(false);
             }
 
@@ -222,8 +231,7 @@ public class FrinikaMain {
                     FrinikaConfig.setLastProject(filePath, projectName);
                     File file = new File(filePath);
                     FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file);
-                    FrinikaFrame frinikaFrame = new FrinikaFrame(project);
-                    startProject();
+                    FrinikaFrame projectFrame = new FrinikaFrame(project);
                     welcomeFrame.setVisible(false);
                 } catch (Exception ex) {
                     Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -232,9 +240,18 @@ public class FrinikaMain {
 
             @Override
             public void openSampleProject(@Nonnull ProjectFileRecord projectFileRecord) {
-                // TODO: Download
-                // TODO: Open
-                throw new UnsupportedOperationException("Not supported yet.");
+                File projectFile = getSampleFile(projectFileRecord.getFilePath());
+                if (!projectFile.exists()) {
+                    downloadSampleFile(projectFile, projectFileRecord.getFilePath());
+                }
+
+                try {
+                    FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(projectFile);
+                    FrinikaFrame projectFrame = new FrinikaFrame(project);
+                    welcomeFrame.setVisible(false);
+                } catch (Exception ex) {
+                    Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
             @Override
@@ -277,6 +294,46 @@ public class FrinikaMain {
         FrinikaGlobalProperties.initialize();
         try {
             FrinikaConfig.load();
+        } catch (IOException ex) {
+            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Nonnull
+    private static File getSampleFile(@Nonnull String projectFileName) {
+        File exampleFilesPath = FrinikaConfig.getExampleFilesPath();
+        exampleFilesPath.mkdirs();
+        return new File(exampleFilesPath, projectFileName);
+    }
+
+    @Nonnull
+    private static void downloadSampleFile(@Nonnull File targetFile, @Nonnull String projectFileName) {
+        try {
+            URL downloadUrl = new URL(DOWNLOAD_PATH_PREFIX + projectFileName + DOWNLOAD_PATH_POSTFIX);
+            HttpURLConnection connection = (HttpURLConnection) downloadUrl.openConnection();
+            connection.setInstanceFollowRedirects(true);
+            do {
+                int status = connection.getResponseCode();
+                boolean redirect = status == HttpURLConnection.HTTP_MOVED_TEMP
+                        || status == HttpURLConnection.HTTP_MOVED_PERM
+                        || status == HttpURLConnection.HTTP_SEE_OTHER;
+
+                if (!redirect) {
+                    break;
+                }
+
+                String newUrl = connection.getHeaderField("Location");
+                connection = (HttpURLConnection) new URL(newUrl).openConnection();
+                connection.setInstanceFollowRedirects(true);
+            } while (true);
+
+            ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
+            FileOutputStream fos = new FileOutputStream(targetFile);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
         }
