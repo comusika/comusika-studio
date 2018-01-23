@@ -107,7 +107,7 @@ public class MidiPlayer {
             });
         } else {
             proj.getAudioServer().start();
-            new FrinikaFrame(proj);
+            new FrinikaFrame().setProject(proj);
         }
     }
 }

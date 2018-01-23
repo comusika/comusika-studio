@@ -44,7 +44,8 @@ public class CreateProjectAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
 
         try {
-            frame = new FrinikaFrame(new FrinikaProjectContainer());
+            frame = new FrinikaFrame();
+            ((FrinikaFrame) frame).setProject(new FrinikaProjectContainer());
         } catch (Exception e3) {
             // TODO Auto-generated catch block
             e3.printStackTrace();
@@ -66,8 +67,8 @@ public class CreateProjectAction extends AbstractAction {
         }
 
         try {
-
-            frame = new FrinikaFrame(new FrinikaProjectContainer());
+            frame = new FrinikaFrame();
+            ((FrinikaFrame) frame).setProject(new FrinikaProjectContainer());
         } catch (Exception e2) {
             // TODO Auto-generated catch block
             e2.printStackTrace();
@@ -92,7 +93,8 @@ public class CreateProjectAction extends AbstractAction {
                     }
                 }
 
-                frame = new FrinikaFrame(FrinikaProjectContainer.loadProject(newProject));
+                frame = new FrinikaFrame();
+                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject));
                 FrinikaConfig.setLastProject(newProject);
             }
 

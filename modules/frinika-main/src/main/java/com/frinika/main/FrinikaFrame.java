@@ -442,19 +442,16 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 .getResource("/icons/frinika.png")).getImage());
     }
 
-    public FrinikaFrame(final FrinikaProjectContainer project) throws Exception {
-        this(project, null);
-    }
-
-    public FrinikaFrame(final FrinikaProjectContainer project, Rectangle position)
-            throws Exception {
-        this();
-        this.position = position;
+    public void setProject(@Nonnull final FrinikaProjectContainer project) throws Exception {
         this.project = project;
-        init();
+        initProject();
     }
 
-    private void init() throws Exception {
+    public void setPosition(Rectangle position) {
+        this.position = position;
+    }
+
+    private void initProject() throws Exception {
         project.resetEndTick();
         // This might be useful for more placement control.
         // Dimension frameSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -1327,8 +1324,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                     }
                     if (chooser.showOpenDialog(FrinikaFrame.this) == JFileChooser.APPROVE_OPTION) {
                         File newProject = chooser.getSelectedFile();
-                        new FrinikaFrame(FrinikaProjectContainer
-                                .loadProject(newProject), position);
+                        FrinikaFrame frame = new FrinikaFrame();
+                        frame.setPosition(position);
+                        frame.setProject(FrinikaProjectContainer.loadProject(newProject));
                         // FrinikaConfig.setLastProjectFilename(newProject
                         // .getAbsolutePath());
                     }
@@ -1470,13 +1468,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                         MidiDevice mididdevice = selectMidiDevice();
 
-                        FrinikaFrame frame = new FrinikaFrame(
-                                new FrinikaProjectContainer(MidiSystem
-                                        .getSequence(newMidiFile), mididdevice));
+                        FrinikaFrame frame = new FrinikaFrame();
+                        frame.setProject(new FrinikaProjectContainer(MidiSystem.getSequence(newMidiFile), mididdevice));
 
                         midiFile = newMidiFile;
                     }
-                    ;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -1522,7 +1518,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                                 newMidiFile);
                         midiFile = newMidiFile;
                     }
-                    ;
                 } catch (HeadlessException | IOException | InvalidMidiDataException ex) {
                     ex.printStackTrace();
                 }
@@ -1576,7 +1571,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                             (float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true);
                     AudioInputStream ais = new AudioInputStream(
                             new ByteArrayInputStream(data), format, 4);
-                    ;
                     javax.sound.sampled.AudioFileFormat.Type[] types = AudioSystem.getAudioFileTypes(ais);
                     AudioFileFilter[] filters = new AudioFileFilter[types.length];
                     for (int i = 0; i < types.length; i++) {
@@ -1618,7 +1612,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                         project.getSequencer().stop();
                     }
-                    ;
                 } catch (HeadlessException ex) {
                     ex.printStackTrace();
                 }
@@ -1949,7 +1942,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         addMidiDevices(menu, infos, icons);
         menu.add(new JSeparator());
         addMidiDevices(menu, infos2, icons2);
-
     }
 
     @Override

@@ -153,6 +153,6 @@ public class AudioPlayBackExample {
         });
 
         // Show the project frame
-        new FrinikaFrame(proj);
+        new FrinikaFrame().setProject(proj);
     }
 }

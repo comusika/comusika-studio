@@ -53,7 +53,7 @@ public class OpenProjectAction extends AbstractAction {
     public static void setSelectedFile(File file) {
         chooser.setSelectedFile(file);
     }
-    private ProjectFrame project;
+    private ProjectFrame frame;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -61,7 +61,8 @@ public class OpenProjectAction extends AbstractAction {
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File newProject = chooser.getSelectedFile();
 
-                project = new FrinikaFrame(FrinikaProjectContainer.loadProject(newProject));
+                frame = new FrinikaFrame();
+                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject));
                 FrinikaConfig.setLastProject(newProject);
             }
         } catch (Exception e1) {
@@ -71,6 +72,6 @@ public class OpenProjectAction extends AbstractAction {
     }
 
     public ProjectFrame getProjectFrame() {
-        return project;
+        return frame;
     }
 }

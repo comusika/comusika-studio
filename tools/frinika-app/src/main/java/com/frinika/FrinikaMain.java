@@ -231,7 +231,8 @@ public class FrinikaMain {
                     FrinikaConfig.setLastProject(filePath, projectName);
                     File file = new File(filePath);
                     FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file);
-                    FrinikaFrame projectFrame = new FrinikaFrame(project);
+                    FrinikaFrame projectFrame = new FrinikaFrame();
+                    projectFrame.setProject(project);
                     welcomeFrame.setVisible(false);
                 } catch (Exception ex) {
                     Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -247,7 +248,8 @@ public class FrinikaMain {
 
                 try {
                     FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(projectFile);
-                    FrinikaFrame projectFrame = new FrinikaFrame(project);
+                    FrinikaFrame projectFrame = new FrinikaFrame();
+                    projectFrame.setProject(project);
                     welcomeFrame.setVisible(false);
                 } catch (Exception ex) {
                     Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);

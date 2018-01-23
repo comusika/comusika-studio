@@ -88,7 +88,7 @@ public class AudioPlayBackExampleDA {
 /*			final DAAudioStreamVoice voice = new DAAudioStreamVoice(
 					voiceServer, (FrinikaSequencer) (proj.getSequencer()),
              */
-            new FrinikaFrame(proj);
+            new FrinikaFrame().setProject(proj);
         } catch (IOException ie) {
 
         } finally {

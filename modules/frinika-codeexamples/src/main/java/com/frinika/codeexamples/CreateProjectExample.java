@@ -70,6 +70,6 @@ public class CreateProjectExample {
         // Start playing sequence (Uncomment the following line)
         // proj.getSequencer().start();
         // Show the project frame (you can comment out this - if you only want to play)
-        new FrinikaFrame(proj);
+        new FrinikaFrame().setProject(proj);
     }
 }

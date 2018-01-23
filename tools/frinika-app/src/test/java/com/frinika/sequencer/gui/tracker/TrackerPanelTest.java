@@ -48,7 +48,8 @@ public class TrackerPanelTest {
         // Create a lane
         com.frinika.sequencer.model.MidiLane lane = proj.createMidiLane();
 
-        FrinikaFrame pf = new FrinikaFrame(proj);
+        FrinikaFrame pf = new FrinikaFrame();
+        pf.setProject(proj);
         pf.setVisible(false);
         // Create a MidiPart
         MidiPart part = new MidiPart(lane);
