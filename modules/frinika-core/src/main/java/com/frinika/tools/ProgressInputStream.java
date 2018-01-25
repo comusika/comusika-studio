@@ -36,11 +36,12 @@ import javax.annotation.Nonnull;
  */
 public class ProgressInputStream extends InputStream {
 
-    private ProgressObserver observer;
-    private InputStream inputStream;
+    private final ProgressObserver observer;
+    private final InputStream inputStream;
     private long processed = 0;
 
     /**
+     * Create new instance.
      *
      * @param observer the progress observer to update
      * @param inputStream the inputstream to read
@@ -54,7 +55,6 @@ public class ProgressInputStream extends InputStream {
             observer.goal(inputStream.available());
         } catch (IOException ex) {
         }
-
     }
 
     @Override

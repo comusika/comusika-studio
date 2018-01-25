@@ -41,6 +41,7 @@ import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.tools.ProgressObserver;
 import com.frinika.project.dialog.VersionProperties;
 import com.frinika.settings.SetupDialog;
+import com.frinika.tools.ProgressInputStream;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -50,6 +51,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -63,7 +65,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 /**
  * The main entry class for Frinika.
@@ -240,16 +241,13 @@ public class FrinikaMain {
                     File file = new File(filePath);
                     FrinikaFrame projectFrame = new FrinikaFrame();
 
-                    showProgressDialog(projectFrame, new ProgressPanel.ProgressOperation() {
-                        @Override
-                        public void run(ProgressPanel progressPanel) {
-                            try {
-                                ProgressObserver progressObserver = progressPanel.getProgressObserver();
-                                FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file, progressObserver);
-                                projectFrame.setProject(project);
-                            } catch (Exception ex) {
-                                Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                    showProgressDialog(projectFrame, (ProgressPanel progressPanel) -> {
+                        try {
+                            ProgressObserver progressObserver = progressPanel.getProgressObserver();
+                            FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file, progressObserver);
+                            projectFrame.setProject(project);
+                        } catch (Exception ex) {
+                            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     });
 
@@ -261,23 +259,21 @@ public class FrinikaMain {
 
             @Override
             public void openSampleProject(@Nonnull ProjectFileRecord projectFileRecord) {
-                final File projectFile = getSampleFile(projectFileRecord.getFilePath());
-                if (!projectFile.exists()) {
-                    downloadSampleFile(projectFile, projectFileRecord.getFilePath());
-                }
-
                 try {
                     FrinikaFrame projectFrame = new FrinikaFrame();
-                    showProgressDialog(projectFrame, new ProgressPanel.ProgressOperation() {
-                        @Override
-                        public void run(ProgressPanel progressPanel) {
-                            try {
-                                ProgressObserver progressObserver = progressPanel.getProgressObserver();
-                                FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(projectFile, progressObserver);
-                                projectFrame.setProject(project);
-                            } catch (Exception ex) {
-                                Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+
+                    final File projectFile = getSampleFile(projectFileRecord.getFilePath());
+                    if (!projectFile.exists()) {
+                        downloadSampleFile(projectFrame, projectFile, projectFileRecord.getFilePath());
+                    }
+
+                    showProgressDialog(projectFrame, (ProgressPanel progressPanel) -> {
+                        try {
+                            ProgressObserver progressObserver = progressPanel.getProgressObserver();
+                            FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(projectFile, progressObserver);
+                            projectFrame.setProject(project);
+                        } catch (Exception ex) {
+                            Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     });
                     welcomeFrame.setVisible(false);
@@ -339,11 +335,12 @@ public class FrinikaMain {
     }
 
     @Nonnull
-    private static void downloadSampleFile(@Nonnull File targetFile, @Nonnull String projectFileName) {
+    private static void downloadSampleFile(@Nonnull FrinikaFrame frame, @Nonnull File targetFile, @Nonnull String projectFileName) {
         try {
             URL downloadUrl = new URL(DOWNLOAD_PATH_PREFIX + projectFileName + DOWNLOAD_PATH_POSTFIX);
             HttpURLConnection connection = (HttpURLConnection) downloadUrl.openConnection();
             connection.setInstanceFollowRedirects(true);
+            long length = 0;
             do {
                 int status = connection.getResponseCode();
                 boolean redirect = status == HttpURLConnection.HTTP_MOVED_TEMP
@@ -351,6 +348,7 @@ public class FrinikaMain {
                         || status == HttpURLConnection.HTTP_SEE_OTHER;
 
                 if (!redirect) {
+                    length = connection.getContentLengthLong();
                     break;
                 }
 
@@ -359,9 +357,21 @@ public class FrinikaMain {
                 connection.setInstanceFollowRedirects(true);
             } while (true);
 
-            ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
-            FileOutputStream fos = new FileOutputStream(targetFile);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            final InputStream inputStream = connection.getInputStream();
+            final long downloadLength = length;
+            showProgressDialog(frame, (ProgressPanel progressPanel) -> {
+                progressPanel.setActionText("Downloading...");
+                try {
+                    ProgressObserver progressObserver = progressPanel.getProgressObserver();
+                    ProgressInputStream progressInputStream = new ProgressInputStream(progressObserver, inputStream);
+                    progressObserver.goal(downloadLength);
+                    ReadableByteChannel rbc = Channels.newChannel(progressInputStream);
+                    FileOutputStream fos = new FileOutputStream(targetFile);
+                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                } catch (IOException ex) {
+                    Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
         } catch (MalformedURLException ex) {
             Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {

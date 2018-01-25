@@ -114,6 +114,10 @@ public class ProgressPanel extends javax.swing.JPanel {
         this.cancelListener = cancelListener;
     }
 
+    public void setActionText(String actionText) {
+        actionLabel.setText(actionText);
+    }
+
     public interface CloseListener {
 
         void close();
