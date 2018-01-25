@@ -45,7 +45,7 @@ public class StandaloneProjectPlayer {
                     public void run() {
                         FrinikaProjectContainer projectContainer = null;
                         try {
-                            projectContainer = FrinikaProjectContainer.loadProject(f);
+                            projectContainer = FrinikaProjectContainer.loadProject(f, null);
                             projectContainer.getAudioServer().start();
                             projectContainer.getSequencer().start();
                             System.out.println("Playing");

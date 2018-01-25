@@ -94,7 +94,7 @@ public class CreateProjectAction extends AbstractAction {
                 }
 
                 frame = new FrinikaFrame();
-                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject));
+                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject, null));
                 FrinikaConfig.setLastProject(newProject);
             }
 

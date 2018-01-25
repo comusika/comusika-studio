@@ -25,7 +25,7 @@ package com.frinika.tools;
 
 import java.io.IOException;
 import java.io.InputStream;
-import javax.swing.JProgressBar;
+import javax.annotation.Nonnull;
 
 /**
  * Generic inputstream for updating a progressbar while reading. Use this
@@ -34,36 +34,56 @@ import javax.swing.JProgressBar;
  * @author Peter Johan Salomonsen
  *
  */
-public class ProgressBarInputStream extends InputStream {
+public class ProgressInputStream extends InputStream {
 
-    JProgressBar progressBar;
-    InputStream inputStream;
+    private ProgressObserver observer;
+    private InputStream inputStream;
+    private long processed = 0;
 
     /**
      *
-     * @param progressBar the progressbar to update
+     * @param observer the progress observer to update
      * @param inputStream the inputstream to read
      */
-    public ProgressBarInputStream(JProgressBar progressBar, InputStream inputStream) {
-        this.progressBar = progressBar;
+    public ProgressInputStream(@Nonnull ProgressObserver observer, @Nonnull InputStream inputStream) {
+        this.observer = observer;
         this.inputStream = inputStream;
+
+        try {
+            // TODO might not be accurate
+            observer.goal(inputStream.available());
+        } catch (IOException ex) {
+        }
+
     }
 
     @Override
     public int read() throws IOException {
-        progressBar.setValue(progressBar.getMaximum() - inputStream.available());
-        return (inputStream.read());
+        int read = inputStream.read();
+        if (read >= 0) {
+            processed++;
+            observer.progress(processed);
+        }
+        return read;
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        progressBar.setValue(progressBar.getMaximum() - inputStream.available());
-        return inputStream.read(b, off, len);
+        int read = inputStream.read(b, off, len);
+        if (read >= 0) {
+            processed += read;
+            observer.progress(processed);
+        }
+        return read;
     }
 
     @Override
     public int read(byte[] b) throws IOException {
-        progressBar.setValue(progressBar.getMaximum() - inputStream.available());
-        return inputStream.read(b);
+        int read = inputStream.read(b);
+        if (read >= 0) {
+            processed += read;
+            observer.progress(processed);
+        }
+        return read;
     }
 }

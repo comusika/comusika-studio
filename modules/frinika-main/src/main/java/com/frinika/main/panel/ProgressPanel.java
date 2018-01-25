@@ -20,6 +20,7 @@
 package com.frinika.main.panel;
 
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.tools.ProgressObserver;
 import javax.annotation.Nonnull;
 
 /**
@@ -27,6 +28,10 @@ import javax.annotation.Nonnull;
  * @author hajdam
  */
 public class ProgressPanel extends javax.swing.JPanel {
+
+    private CloseListener closeListener;
+    private CancelListener cancelListener;
+    private long goal;
 
     public ProgressPanel() {
         initComponents();
@@ -75,4 +80,52 @@ public class ProgressPanel extends javax.swing.JPanel {
     private javax.swing.JButton cancelButton;
     private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
+
+    public ProgressObserver getProgressObserver() {
+        return new ProgressObserver() {
+            @Override
+            public void goal(long maximumProgress) {
+                goal = maximumProgress;
+                progressBar.setMaximum((int) goal);
+                repaint();
+            }
+
+            @Override
+            public void progress(long progress) {
+                progressBar.setValue((int) progress);
+                repaint();
+                if (progress == goal) {
+                    finished();
+                }
+            }
+
+            @Override
+            public void finished() {
+                closeListener.close();
+            }
+        };
+    }
+
+    public void setCloseListener(@Nonnull CloseListener closeListener) {
+        this.closeListener = closeListener;
+    }
+
+    public void setCancelListener(@Nonnull CancelListener cancelListener) {
+        this.cancelListener = cancelListener;
+    }
+
+    public interface CloseListener {
+
+        void close();
+    }
+
+    public interface CancelListener {
+
+        void cancel();
+    }
+
+    public interface ProgressOperation {
+
+        void run(ProgressPanel panel);
+    }
 }

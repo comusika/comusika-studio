@@ -1326,7 +1326,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         File newProject = chooser.getSelectedFile();
                         FrinikaFrame frame = new FrinikaFrame();
                         frame.setPosition(position);
-                        frame.setProject(FrinikaProjectContainer.loadProject(newProject));
+                        frame.setProject(FrinikaProjectContainer.loadProject(newProject, null));
                         // FrinikaConfig.setLastProjectFilename(newProject
                         // .getAbsolutePath());
                     }

@@ -30,7 +30,8 @@ import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.project.SequencerProjectContainer;
 import com.frinika.sequencer.tools.MyMidiRenderer;
-import com.frinika.tools.ProgressBarInputStream;
+import com.frinika.tools.ProgressInputStream;
+import com.frinika.tools.ProgressObserver;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.IOException;
@@ -95,7 +96,22 @@ public class RenderDialog extends JDialog implements Runnable {
         audioServer.setRealTime(false);
 
         try {
-            AudioInputStream ais = new AudioInputStream(new ProgressBarInputStream(progressBar, midiRenderer), new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
+            ProgressObserver observer = new ProgressObserver() {
+                @Override
+                public void goal(long maximumProgress) {
+                    progressBar.setMaximum((int) maximumProgress);
+                }
+
+                @Override
+                public void progress(long progress) {
+                    progressBar.setValue((int) progress);
+                }
+
+                @Override
+                public void finished() {
+                }
+            };
+            AudioInputStream ais = new AudioInputStream(new ProgressInputStream(observer, midiRenderer), new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
 
             sequencer.setRealtime(false);

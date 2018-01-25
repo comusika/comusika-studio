@@ -31,7 +31,7 @@ public class StandaloneProjectWavExport {
     public static void main(String[] args) throws Exception {
         // Load a project
         FrinikaAudioSystem.usePhysicalAudioOutput = false;
-        FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(new File("/home/peter/mystudio/faro.frinika"));
+        FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(new File("/home/peter/mystudio/faro.frinika"), null);
         long startTick = 0;
         long endTick = 128 * 16;
         FrinikaAudioServer audioServer = (FrinikaAudioServer) project.getAudioServer();

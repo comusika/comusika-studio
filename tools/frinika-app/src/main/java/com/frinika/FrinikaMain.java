@@ -35,11 +35,17 @@ import com.frinika.main.action.CreateProjectAction;
 import com.frinika.main.action.OpenProjectAction;
 import com.frinika.main.model.ExampleProjectFile;
 import com.frinika.main.model.ProjectFileRecord;
+import com.frinika.main.panel.ProgressPanel;
 import com.frinika.main.panel.WelcomePanel;
 import com.frinika.project.FrinikaProjectContainer;
+import com.frinika.tools.ProgressObserver;
 import com.frinika.project.dialog.VersionProperties;
 import com.frinika.settings.SetupDialog;
 import com.frinika.tootX.midi.MidiInDeviceManager;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -55,7 +61,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * The main entry class for Frinika.
@@ -230,9 +238,21 @@ public class FrinikaMain {
                     String filePath = projectFileRecord.getFilePath();
                     FrinikaConfig.setLastProject(filePath, projectName);
                     File file = new File(filePath);
-                    FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file);
                     FrinikaFrame projectFrame = new FrinikaFrame();
-                    projectFrame.setProject(project);
+
+                    showProgressDialog(projectFrame, new ProgressPanel.ProgressOperation() {
+                        @Override
+                        public void run(ProgressPanel progressPanel) {
+                            try {
+                                ProgressObserver progressObserver = progressPanel.getProgressObserver();
+                                FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(file, progressObserver);
+                                projectFrame.setProject(project);
+                            } catch (Exception ex) {
+                                Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
+
                     welcomeFrame.setVisible(false);
                 } catch (Exception ex) {
                     Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -241,15 +261,25 @@ public class FrinikaMain {
 
             @Override
             public void openSampleProject(@Nonnull ProjectFileRecord projectFileRecord) {
-                File projectFile = getSampleFile(projectFileRecord.getFilePath());
+                final File projectFile = getSampleFile(projectFileRecord.getFilePath());
                 if (!projectFile.exists()) {
                     downloadSampleFile(projectFile, projectFileRecord.getFilePath());
                 }
 
                 try {
-                    FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(projectFile);
                     FrinikaFrame projectFrame = new FrinikaFrame();
-                    projectFrame.setProject(project);
+                    showProgressDialog(projectFrame, new ProgressPanel.ProgressOperation() {
+                        @Override
+                        public void run(ProgressPanel progressPanel) {
+                            try {
+                                ProgressObserver progressObserver = progressPanel.getProgressObserver();
+                                FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(projectFile, progressObserver);
+                                projectFrame.setProject(project);
+                            } catch (Exception ex) {
+                                Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    });
                     welcomeFrame.setVisible(false);
                 } catch (Exception ex) {
                     Logger.getLogger(FrinikaMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -354,6 +384,37 @@ public class FrinikaMain {
 //				}
 //			});
         }
+    }
+
+    @Nonnull
+    public static void showProgressDialog(@Nonnull FrinikaFrame projectFrame, @Nonnull ProgressPanel.ProgressOperation operation) {
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] allDevices = env.getScreenDevices();
+
+        final JDialog progressDialog = new JDialog(projectFrame, true);
+        progressDialog.setUndecorated(true);
+        progressDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        ProgressPanel progressPanel = new ProgressPanel();
+        progressDialog.add(progressPanel);
+        progressDialog.pack();
+
+        progressPanel.setCloseListener(() -> {
+            progressDialog.setVisible(false);
+        });
+
+        int screenWidth = allDevices[0].getDefaultConfiguration().getBounds().width;
+        progressDialog.setSize(screenWidth / 2, progressDialog.getHeight());
+        WindowUtils.setWindowCenterPosition(progressDialog);
+
+        progressDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                new Thread(() -> {
+                    operation.run(progressPanel);
+                }).start();
+            }
+        });
+        progressDialog.setVisible(true);
     }
 
     /**

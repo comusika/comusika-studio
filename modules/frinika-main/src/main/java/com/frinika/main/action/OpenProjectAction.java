@@ -62,7 +62,7 @@ public class OpenProjectAction extends AbstractAction {
                 File newProject = chooser.getSelectedFile();
 
                 frame = new FrinikaFrame();
-                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject));
+                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject, null));
                 FrinikaConfig.setLastProject(newProject);
             }
         } catch (Exception e1) {

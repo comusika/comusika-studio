@@ -23,6 +23,7 @@
  */
 package com.frinika.project;
 
+import com.frinika.tools.ProgressObserver;
 import com.frinika.audio.DynamicMixer;
 import com.frinika.audio.io.BufferedRandomAccessFileManager;
 import com.frinika.audio.toot.AudioInjector;
@@ -77,7 +78,7 @@ import com.frinika.sequencer.project.SoundBankNameHolder;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.settings.SynthSettings;
 import com.frinika.tools.ObjectInputStreamFixer;
-import com.frinika.tools.ProgressBarInputStream;
+import com.frinika.tools.ProgressInputStream;
 import com.frinika.tootX.MidiHub;
 import com.frinika.tootX.midi.ControlResolver;
 import com.frinika.tootX.midi.MidiConsumer;
@@ -102,6 +103,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiDevice;
@@ -840,13 +843,13 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         postInit();
     }
 
-    public static FrinikaProjectContainer loadProject(File file) throws Exception {
+    public static FrinikaProjectContainer loadProject(@Nonnull File file, @Nullable ProgressObserver observer) throws Exception {
         FrinikaProjectContainer proj;
         if (file.exists()) {
             if (file.getName().toLowerCase().contains(".mid")) {
                 proj = new FrinikaProjectContainer(MidiSystem.getSequence(file));
             } else {
-                proj = loadCompressedProject(file);
+                proj = loadCompressedProject(file, observer);
             }
         } else {
             proj = new FrinikaProjectContainer();
@@ -855,7 +858,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         return proj;
     }
 
-    public static FrinikaProjectContainer loadCompressedProject(File file)
+    public static FrinikaProjectContainer loadCompressedProject(@Nonnull File file, @Nullable ProgressObserver observer)
             throws Exception {
         FrinikaProjectContainer project = null;
 
@@ -876,7 +879,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
                 zipi.getNextEntry();
                 inputStream = zipi;
                 inputStream = new BufferedInputStream(inputStream);
-                project = loadProject(inputStream);
+                project = loadProject(inputStream, observer);
                 project.compression_level = 1;
             } finally {
                 fileinputStream.close();
@@ -922,7 +925,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
 
                     inputStream = new FileInputStream(tempfile);
                     try {
-                        project = loadProject(inputStream);
+                        project = loadProject(inputStream, observer);
                         project.compression_level = 2;
                     } finally {
                         inputStream.close();
@@ -940,30 +943,27 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
 
         if (project == null) {
             try (FileInputStream fileinputStream = new FileInputStream(file)) {
-                project = loadProject(fileinputStream);
+                project = loadProject(fileinputStream, observer);
             }
         }
 
         return project;
     }
 
-    public static FrinikaProjectContainer loadProject(InputStream inputStream)
+    public static FrinikaProjectContainer loadProject(@Nonnull InputStream inputStream, @Nullable ProgressObserver observer)
             throws Exception {
 
-        if (SplashDialog.isSplashVisible()) {
-            SplashDialog splash = SplashDialog.getInstance();
-            JProgressBar bar = splash.getProgressBar();
-            bar.setMaximum(inputStream.available());
-            inputStream = new ProgressBarInputStream(bar, inputStream);
+        if (observer != null) {
+            inputStream = new ProgressInputStream(observer, inputStream);
         }
 
         ObjectInputStream in = new ObjectInputStreamFixer(inputStream);
 
-        if (SplashDialog.isSplashVisible()) {
-            SplashDialog splash = SplashDialog.getInstance();
-            JProgressBar bar = splash.getProgressBar();
-            bar.setValue(bar.getMaximum());
-        }
+//        if (SplashDialog.isSplashVisible()) {
+//            SplashDialog splash = SplashDialog.getInstance();
+//            JProgressBar bar = splash.getProgressBar();
+//            bar.setValue(bar.getMaximum());
+//        }
 
         return loadLegacyProject(in);
     }

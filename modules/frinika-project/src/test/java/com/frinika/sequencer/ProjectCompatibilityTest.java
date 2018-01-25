@@ -83,7 +83,7 @@ public class ProjectCompatibilityTest  extends TestCase {
             ObjectOutputStream out = new ObjectOutputStream(baos);
             out.writeObject(project);
 
-            proj = FrinikaProjectContainer.loadProject(new ByteArrayInputStream(baos.toByteArray()));
+            proj = FrinikaProjectContainer.loadProject(new ByteArrayInputStream(baos.toByteArray()), null);
 	}
 	
 	

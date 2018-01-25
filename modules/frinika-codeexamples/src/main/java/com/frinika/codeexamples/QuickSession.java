@@ -59,7 +59,7 @@ public class QuickSession {
          * Create a project with an Audio lane and a Midi lane
          */
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-        FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(new File(fmt.format(new Date()) + ".frinika"));
+        FrinikaProjectContainer project = FrinikaProjectContainer.loadProject(new File(fmt.format(new Date()) + ".frinika"), null);
         AudioLane audioLane = project.createAudioLane();
 
         // TOOT_FIXME
