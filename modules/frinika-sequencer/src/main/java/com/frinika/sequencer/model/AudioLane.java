@@ -29,7 +29,7 @@ import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryRecordable;
 import com.frinika.sequencer.FrinikaSequencer;
 import com.frinika.sequencer.SequencerListener;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class AudioLane extends Lane implements RecordableLane,
 
     static int nameCount = 0;
 
-    public AudioLane(SequencerProjectContainer project) {
+    public AudioLane(AbstractProjectContainer project) {
         super("Audio " + nameCount++, project);
         attachAudioProcessToMixer();
     }
@@ -199,7 +199,7 @@ public class AudioLane extends Lane implements RecordableLane,
     public void setRecording(boolean b) {
         if (b && audioInProcess == null) {
             armed = false;
-            frinikaProject.message(CurrentLocale.getMessage("recording.please_select_audio_input"));
+            frinikaProject.getMessageHandler().message(CurrentLocale.getMessage("recording.please_select_audio_input"));
             return;
         }
 
@@ -328,7 +328,7 @@ public class AudioLane extends Lane implements RecordableLane,
     }
 
     public File newFilename() {
-        SequencerProjectContainer proj = getProject();
+        AbstractProjectContainer proj = getProject();
 
         File audioDir = proj.getAudioDirectory();
         String audioFileName = getName() + ".wav";

@@ -104,7 +104,7 @@ public class ConfigDialogPanel extends JPanel {
         userInterfacePanel.remove(comboboxRedrawRate);
 
         refreshMidiInDevicesList();
-        //       refreshAudioDevicesList();
+        refreshAudioDevicesList();
     }
 
     private void refreshMidiInDevicesList() {
@@ -488,7 +488,7 @@ public class ConfigDialogPanel extends JPanel {
         midiPanel.add(spinnerTicksPerQuarter, gridBagConstraints);
 
         //  
-        jLabel3b.setText("Seqeuncer Priority:");
+        jLabel3b.setText("Sequencer Priority:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;

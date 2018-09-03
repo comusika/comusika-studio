@@ -13,7 +13,7 @@ def getDate(dateFormat) {
 }
 
 task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '4.0'
+    gradleVersion = '4.6'
 }
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
@@ -60,10 +60,12 @@ distributions {
             into('lib') {
                 from 'lib'
                 include '*.txt'
+            }
+            into('lib/native') {
                 from 'lib/native'
-                exclude 'native'
                 include '**'
             }
+
             project(':modules').subprojects.each { p ->
                 p.plugins.withType(JavaPlugin) {
                     into('lib') {

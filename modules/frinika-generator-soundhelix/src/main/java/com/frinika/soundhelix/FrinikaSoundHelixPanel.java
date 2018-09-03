@@ -28,7 +28,7 @@ import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import com.soundhelix.misc.Arrangement;
 import com.soundhelix.misc.Sequence;
 import com.soundhelix.misc.SongContext;
@@ -51,10 +51,10 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
 
-    private final SequencerProjectContainer project;
+    private final AbstractProjectContainer project;
     private WindowUtils.OkCancelListener okCancelListener = null;
 
-    public FrinikaSoundHelixPanel(SequencerProjectContainer project) {
+    public FrinikaSoundHelixPanel(AbstractProjectContainer project) {
         this.project = project;
         initComponents();
     }
@@ -296,7 +296,7 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
                 lane.setMidiDevice(sw);
                 MidiPart part = (MidiPart) lane.createPart();
                 part.setName(arrangeEntry.getInstrument());
-                
+
                 // Compute end tick
                 long endTick = 0;
                 for (int j = 0; j < arrangeEntry.getTrack().size(); j++) {
@@ -310,7 +310,7 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
                         }
                     }
                 }
-                
+
                 part.setEndTick(endTick);
 //                        part.setEndTick(entry.getTrack().size() * 24); // SIZE is getTicks() ?
                 lanes.add(lane);

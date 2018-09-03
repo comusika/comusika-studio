@@ -29,7 +29,6 @@ import com.frinika.audio.io.BufferedRandomAccessFileManager;
 import com.frinika.audio.toot.AudioInjector;
 import com.frinika.base.FrinikaAudioServer;
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.base.MessageDialog;
 import com.frinika.global.ConfigListener;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.property.FrinikaGlobalProperties;
@@ -37,7 +36,6 @@ import com.frinika.midi.MidiDebugDevice;
 import com.frinika.model.EditHistoryContainer;
 import com.frinika.model.EditHistoryRecordableAction;
 import com.frinika.model.EditHistoryRecorder;
-import com.frinika.project.dialog.SplashDialog;
 import com.frinika.project.scripting.FrinikaScriptingEngine;
 import com.frinika.renderer.FrinikaRenderer;
 import com.frinika.sequencer.FrinikaSequence;
@@ -55,7 +53,9 @@ import com.frinika.sequencer.gui.selection.MultiEventSelection;
 import com.frinika.sequencer.gui.selection.PartSelection;
 import com.frinika.sequencer.gui.selection.SelectionFocusable;
 import com.frinika.sequencer.midi.DrumMapper;
-import com.frinika.sequencer.midi.DrumMapperGUI;
+import com.frinika.drummapper.DrumMapperGUI;
+import com.frinika.sequencer.gui.partview.PartView;
+import com.frinika.sequencer.gui.pianoroll.PianoRoll;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.MidiLane;
@@ -73,11 +73,11 @@ import com.frinika.sequencer.model.timesignature.TimeSignatureList.TimeSignature
 import com.frinika.sequencer.model.util.TimeUtils;
 import com.frinika.sequencer.project.MidiDeviceDescriptorIntf;
 import com.frinika.sequencer.project.ProjectSettings;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
+import com.frinika.sequencer.project.MessageHandler;
 import com.frinika.sequencer.project.SoundBankNameHolder;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.settings.SynthSettings;
-import com.frinika.tools.ObjectInputStreamFixer;
 import com.frinika.tools.ProgressInputStream;
 import com.frinika.tootX.MidiHub;
 import com.frinika.tootX.midi.ControlResolver;
@@ -117,7 +117,6 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.event.ChangeEvent;
 import uk.org.toot.audio.core.AudioControlsChain;
 import uk.org.toot.audio.core.AudioProcess;
@@ -132,7 +131,7 @@ import uk.org.toot.audio.server.AudioClient;
 import uk.org.toot.misc.Tempo;
 
 /**
- * Use to load Frinika projects.
+ * Frinika project container.
  *
  * This class links together all components of a Frinika project, and provides
  * all operations and features - including a Frinika sequencer instance.
@@ -146,7 +145,7 @@ import uk.org.toot.misc.Tempo;
  *
  * @author Peter Johan Salomonsen
  */
-public class FrinikaProjectContainer extends SequencerProjectContainer
+public class FrinikaProjectContainer extends AbstractProjectContainer
         implements EditHistoryRecorder<Lane>, MidiConsumer, DynamicMixer {
 
     private static final long serialVersionUID = 1L;
@@ -163,6 +162,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     transient LaneSelection laneSelection;
     transient MidiSelection midiSelection; // Jens
     transient SelectionFocusable selectionFocus;
+    transient MessageHandler messageHandler;
     String title = null;
     File projectFile = null;
     File audioDir = null;
@@ -292,10 +292,10 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     /**
      * Set the title of the song.
      *
-     * @param t
+     * @param title
      */
-    public void setTitle(String t) {
-        title = t;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
@@ -460,7 +460,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
                 System.out.println("Using " + outDev + " as audio out device");
                 mixer.getMainBus().setOutputProcess(outputProcess);
             } else {
-                message(" No output devices found ");
+                getMessageHandler().message(" No output devices found ");
             }
 
             // This should only be done once.
@@ -802,7 +802,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
                                 try {
                                     String txt = new String(meta.getData());
                                     title = txt;
-                                    System.out.println("setTing title \"" + txt + "\"");
+                                    System.out.println("setting title \"" + txt + "\"");
                                 } catch (Throwable t) {
                                     t.printStackTrace();
                                 }
@@ -938,7 +938,6 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
             } finally {
                 fileinputStream.close();
             }
-
         }
 
         if (project == null) {
@@ -964,20 +963,19 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
 //            JProgressBar bar = splash.getProgressBar();
 //            bar.setValue(bar.getMaximum());
 //        }
-
         return loadLegacyProject(in);
     }
 
     public transient int compression_level = 0;
     transient private TimeUtils timeUtils;    // Keep a note of all open midi out devices
-    private static List<MidiDevice> midiOutList = new ArrayList<MidiDevice>();
+    private static List<MidiDevice> midiOutList = new ArrayList<>();
 
     /**
      * Save project to a file.
      *
      * @param file
      */
-    public void saveProject(File file) throws IOException { // throw exception
+    public void saveProject(@Nonnull File file) throws IOException { // throw exception
         // so ProjectFrame
         // can show error
         // message, user
@@ -1139,6 +1137,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
 
         projectContainer.scriptingEngine.project = null;
         projectContainer.tempoList.project = null;
+        projectContainer.sequencer.setTempoList(null);
         projectContainer.projectLane.project = null;
         ((Lane) projectContainer.projectLane).project = null;
         for (Lane lane : projectContainer.projectLane.getFamilyLanes()) {
@@ -1324,7 +1323,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
      * Lanes can contain other lanes. A project is contained within a project
      * lane.
      *
-     * @return top level Lane that containes all others.
+     * @return top level Lane that contains all others.
      */
     @Override
     public ProjectLane getProjectLane() {
@@ -1347,7 +1346,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
 
     /**
      *
-     * Set the tempo of the first event in the tempo list
+     * Set the tempo of the first event in the tempo list.
      *
      * @param tempo
      */
@@ -1372,7 +1371,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     }
 
     /**
-     * Go through the mididevice descriptor map and install mididevices
+     * Go through the mididevice descriptor map and install mididevices.
      */
     public void installMidiDevices() {
         this.midiDeviceDescriptorMap = new HashMap<>();
@@ -1678,7 +1677,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
 
     /**
      * Package private method used by descriptors to install MidiOutdevices.
-     * Will create the neccesary mappings, and add the device to the sequencer
+     * Will create the necessary mappings, and add the device to the sequencer
      *
      * You should not use this to add a new Midi device - use the public method
      * addMidiOutDevice for that
@@ -1761,15 +1760,12 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     }
 
     @Override
-    public void message(String message) {
-        // NBP
-        MessageDialog.message(null, message);
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
     }
 
-    @Override
-    public void error(String message) {
-        // NBP
-        MessageDialog.error(null, message);
+    public void setMessageHandler(MessageHandler messageHandler) {
+        this.messageHandler = messageHandler;
     }
 
     public SynthLane createSynthLane(MidiDeviceDescriptor desc) {
@@ -1798,9 +1794,10 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         mixer = projectContainer.mixer;
 
         projectContainer.scriptingEngine.project = null;
-        if (tempoList != null) {
+        if (projectContainer.tempoList != null) {
             projectContainer.tempoList.project = null;
             projectContainer.tempoList.frinikaProject = this;
+            tempoList = projectContainer.tempoList;
         }
         if (projectLane != null) {
             projectContainer.projectLane.project = null;
@@ -1819,7 +1816,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
          * SynthRack is for older projects stored directly in the
          * ProjectContainer in the synthSettings property.
          *
-         * As you can see below, when the "old" project is loaded the Frinka
+         * As you can see below, when the "old" project is loaded the Frinika
          * Synthrack is put into a MidiDeviceDescriptor, so that when saved next
          * time it follows the new format.
          *
@@ -2076,14 +2073,18 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     }
 
     @Override
-    public JPanel createDrumMapperGUI(DrumMapper drumMapper, SequencerProjectContainer project, MidiLane lane) {
+    public JPanel createDrumMapperGUI(DrumMapper drumMapper, AbstractProjectContainer project, MidiLane lane) {
         return new DrumMapperGUI(drumMapper, project, lane);
+    }
+
+    @Override
+    public boolean shouldProcessKeyboardEvent(Object focusOwner) {
+        return (focusOwner instanceof PartView) || (focusOwner instanceof PianoRoll);
     }
 
     private void attachTootNotifications() {
         Taps.setAudioServer(audioServer);
         sequencer.addTempoChangeListener(new TempoChangeListener() {
-
             @Override
             public void notifyTempoChange(float bpm) {
                 Tempo.setTempo(bpm);
@@ -2094,6 +2095,8 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
     public static FrinikaProjectContainer translateFromLegacy(ProjectContainer projectContainer) throws Exception {
         FrinikaProjectContainer container = new FrinikaProjectContainer();
 
+        container.mixer = projectContainer.mixer;
+        container.mixer.getMainBus().setOutputProcess(container.outputProcess);
         container.mixerControls = projectContainer.mixerControls;
         container.projectLane = projectContainer.projectLane;
         container.title = projectContainer.title;
@@ -2107,6 +2110,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         container.timeSignitureList = projectContainer.timeSignitureList;
         container.ticksPerQuarterNote = projectContainer.ticksPerQuarterNote;
         container.tempoList = projectContainer.tempoList;
+        container.getSequencer().setTempoList(container.tempoList);
         container.pianoRollSnapQuantization = projectContainer.pianoRollSnapQuantization;
         container.partViewSnapQuantization = projectContainer.partViewSnapQuantization;
         container.isPianoRollSnapQuantized = projectContainer.isPianoRollSnapQuantized;
@@ -2127,6 +2131,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         FrinikaProjectContainer projectContainer = this;
         ProjectContainer container = new ProjectContainer();
 
+        container.mixer = projectContainer.mixer;
         container.mixerControls = projectContainer.mixerControls;
         container.projectLane = projectContainer.projectLane;
         container.title = projectContainer.title;
@@ -2140,6 +2145,7 @@ public class FrinikaProjectContainer extends SequencerProjectContainer
         container.timeSignitureList = projectContainer.timeSignitureList;
         container.ticksPerQuarterNote = projectContainer.ticksPerQuarterNote;
         container.tempoList = projectContainer.tempoList;
+        container.tempoList.project = container;
         container.pianoRollSnapQuantization = projectContainer.pianoRollSnapQuantization;
         container.partViewSnapQuantization = projectContainer.partViewSnapQuantization;
         container.isPianoRollSnapQuantized = projectContainer.isPianoRollSnapQuantized;

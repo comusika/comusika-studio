@@ -26,10 +26,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.annotation.Nonnull;
 import javax.swing.ImageIcon;
 
 /**
@@ -57,6 +61,9 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
         }
     };
 
+    private boolean firstTimeOpened = false;
+    private final Timer timer = new Timer();
+
     // Cached values
     private int labelWidth = 0;
     private int cloudWidth = 0;
@@ -65,10 +72,10 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     public AnimatedLogoPanel() {
         boolean darkMode = WindowUtils.isDarkMode();
         String postfix = darkMode ? "-dark" : "";
-        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika" + postfix + ".png"));
-        lightImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_light_gradient.png"));
-        cloudImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_score.png"));
-        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_overscan" + postfix + ".png"));
+        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika" + postfix + ".png"));
+        lightImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_light_gradient.png"));
+        cloudImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_score.png"));
+        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_overscan" + postfix + ".png"));
 
         cloudWidth = cloudImage.getIconWidth();
         labelWidth = labelImage.getIconWidth();
@@ -123,7 +130,7 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(@Nonnull Graphics g) {
         if (animationBuffer != null) {
             g.drawImage(animationBuffer, 0, 0, this);
         }
@@ -174,7 +181,6 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     }
 
     private void startAnimationThread() {
-        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -185,13 +191,36 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
         }, 0, 70);
     }
 
+    private void stopAnimationThread() {
+        timer.cancel();
+    }
+
     public void switchLookAndFeel() {
         boolean darkMode = WindowUtils.isDarkMode();
         setBackground(darkMode ? Color.BLACK : Color.WHITE);
 
         String postfix = darkMode ? "-dark" : "";
-        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika" + postfix + ".png"));
-        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/resources/frinika_overscan" + postfix + ".png"));
+        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika" + postfix + ".png"));
+        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_overscan" + postfix + ".png"));
         invalidate();
+    }
+
+    @Nonnull
+    public WindowListener getWindowListener() {
+        return new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                stopAnimationThread();
+            }
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                if (!firstTimeOpened) {
+                    firstTimeOpened = true;
+                } else {
+                    startAnimationThread();
+                }
+            }
+        };
     }
 }

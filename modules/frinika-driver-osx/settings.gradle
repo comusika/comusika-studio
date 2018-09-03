@@ -1,4 +1,4 @@
-rootProject.name = 'frinika-audio-osx'
+rootProject.name = 'frinika-driver-osx'
 
 apply from: '../modules-settings.gradle'
 

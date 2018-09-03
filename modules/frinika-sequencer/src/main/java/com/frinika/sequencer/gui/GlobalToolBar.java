@@ -33,7 +33,7 @@ import com.frinika.sequencer.TempoChangeListener;
 import com.frinika.sequencer.gui.transport.TransportPanel;
 import com.frinika.sequencer.model.tempo.TempoList;
 import com.frinika.sequencer.model.tempo.TempoList.MyTempoEvent;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import com.frinika.voiceserver.AudioContext;
 import com.frinika.voiceserver.JavaSoundVoiceServer;
 import com.frinika.voiceserver.VoiceServer;
@@ -58,7 +58,7 @@ public class GlobalToolBar extends JToolBar {
     LoopPanel loopPanel;
 
     // ProjectFrame projectFrame;
-    public GlobalToolBar(final SequencerProjectContainer project) {
+    public GlobalToolBar(final AbstractProjectContainer project) {
         Insets insets = new Insets(0, 0, 0, 0);
         setMargin(insets);
 
@@ -164,7 +164,7 @@ public class GlobalToolBar extends JToolBar {
                     metronome.setVelocity(metronomeSlider.getValue());
                 }
             });
-            panel.add(ButtonFactory.makeIconLabel(WindowUtils.isDarkMode() ? "metronome20-dark" : "metronome20"));
+            panel.add(new JLabel(new javax.swing.ImageIcon(GlobalToolBar.class.getResource("/icons/" + (WindowUtils.isDarkMode() ? "metronome20-dark.png" : "metronome20.png")))));
             panel.add(metronomeSlider);
             add(panel);
         } catch (Exception e) {
@@ -179,7 +179,7 @@ public class GlobalToolBar extends JToolBar {
             }
 
         };
-        JButton reset = ButtonFactory.makePressButton("exclamation32", "reset",
+        JButton reset = ButtonFactory.makePressButton(GlobalToolBar.class.getResource("/icons/exclamation32.png"), "reset",
                 CurrentLocale.getMessage("sequencer.toolbar.reset_tip"), act, this);
         reset.setMargin(new Insets(0, 0, 0, 0));
     }

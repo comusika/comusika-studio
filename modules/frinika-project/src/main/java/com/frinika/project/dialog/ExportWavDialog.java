@@ -112,7 +112,7 @@ public class ExportWavDialog extends JDialog implements Runnable {
         try {
             ProgressObserver observer = new ProgressObserver() {
                 @Override
-                public void goal(long maximumProgress) {
+                public void setGoal(long maximumProgress) {
                     progressBar.setMaximum((int) maximumProgress);
                 }
 
@@ -124,8 +124,15 @@ public class ExportWavDialog extends JDialog implements Runnable {
                 @Override
                 public void finished() {
                 }
+
+                @Override
+                public void fail(Exception ex) {
+                    // TODO
+                }
             };
-            AudioInputStream ais = new AudioInputStream(new ProgressInputStream(observer, midiRenderer), new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
+            ProgressInputStream progressInputStream = new ProgressInputStream(observer, midiRenderer);
+            observer.setGoal(midiRenderer.available());
+            AudioInputStream ais = new AudioInputStream(progressInputStream, new AudioFormat((float) FrinikaGlobalProperties.getSampleRate(), 16, 2, true, true), numberOfSamples);
             FrinikaSequencer sequencer = project.getSequencer();
             sequencer.setRealtime(false);
             sequencer.start();

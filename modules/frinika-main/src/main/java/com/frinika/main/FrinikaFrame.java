@@ -26,6 +26,7 @@
 package com.frinika.main;
 
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.base.MessageDialogUtils;
 import com.frinika.global.ConfigDialog;
 import com.frinika.global.ConfigDialogPanel;
 import com.frinika.global.ConfigError;
@@ -38,7 +39,7 @@ import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.PresentationPanel;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.main.action.About;
+import com.frinika.main.action.AboutAction;
 import com.frinika.main.action.CreateProjectAction;
 import com.frinika.main.action.SelectAllAction;
 import com.frinika.mod.MODImporter;
@@ -49,7 +50,6 @@ import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.dialog.BounceToLane;
 import com.frinika.project.dialog.ExportWavDialog;
 import com.frinika.project.gui.MultiPartMenuPlugin;
-import com.frinika.project.gui.ProjectFocusListener;
 import com.frinika.project.gui.ProjectNewFileFilter;
 import com.frinika.project.gui.StatusBar;
 import com.frinika.project.gui.action.ScriptingAction;
@@ -97,6 +97,7 @@ import com.frinika.sequencer.gui.transport.StartStopAction;
 import com.frinika.sequencer.model.AudioLane;
 import com.frinika.sequencer.model.Lane;
 import com.frinika.sequencer.model.Part;
+import com.frinika.sequencer.project.MessageHandler;
 import com.frinika.sequencer.project.ProjectRepaintListener;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.sequencer.tools.BufferedPlayback;
@@ -105,8 +106,8 @@ import com.frinika.tootX.gui.FrinikaMixerPanel;
 import com.frinika.tootX.gui.MidiLearnPanel;
 import com.frinika.tootX.midi.MidiInDeviceManager;
 import com.frinika.tootX.midi.MidiLearnIF;
-import com.frinika.tracker.MidiFileFilter;
-import com.frinika.tracker.ProjectFileFilter;
+import com.frinika.tools.MidiFileFilter;
+import com.frinika.tools.ProjectFileFilter;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -140,13 +141,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
@@ -194,8 +197,9 @@ import org.flexdock.view.Viewport;
 import uk.org.toot.swingui.audioui.mixerui.CompactMixerPanel;
 
 /**
- * Frinika is designed to have one basis frame per project. A projectframe is
- * the main window for a project.
+ * Frinika is designed to have one basis frame per project.
+ *
+ * A project frame is the main window for a project.
  *
  * @author Peter Johan Salomonsen
  */
@@ -211,36 +215,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     public static final String MIDIOUT_VIEW = "midiout";
     public static final String MIXER_VIEW = "mixer";
 
-    /**
-     * File-filter for midi standard files. To be used with promptFile().
-     *
-     * @see promptFile
-     */
-    public final static String[][] FILE_FILTER_MIDIFILES = new String[][]{{
-        "mid", "Midi standard files"}};
-
-    /**
-     * Vector containing currently open project frames
-     */
-    private static List<FrinikaFrame> openProjectFrames = new ArrayList<>();
-
-    private static FrinikaFrame focusFrame = null;
-
-    private static List<ProjectFocusListener> projectFocusListeners = new ArrayList<>();
-
-    // hack to stop exit when last frma is closed.
-    public static boolean doNotQuit = false;
-
     // PianoRollEditor pianoRollEditor;
-    public static FrinikaFrame findFrame(FrinikaProjectContainer project) {
-        for (FrinikaFrame pr : openProjectFrames) {
-            if (pr.project == project) {
-                return pr;
-            }
-        }
-        return null; // Frame wasn't found
-    }
-
     TrackerPanel trackerPanel;
 
     PianoControllerSplitPane pianoControllerPane;
@@ -281,6 +256,10 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     private static JDialog showingDialog = null;
     private static JFrame showingDialogFrame = null;
 
+    private Dimension frameSize;
+    private int positionX;
+    private int positionY;
+
     public FrinikaFrame() throws Exception {
         initFrame();
     }
@@ -290,21 +269,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
             @Override
             public void windowOpened(WindowEvent arg0) {
-                // System.out.println();
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void windowClosing(WindowEvent evt) {
-                // System.out.println();
-                if (openProjectFrames.size() == 1 && !doNotQuit) {
-                    tryQuit();
-                } else {
-                    if (canClose()) {
-                        evt.getWindow().dispose();
-                    }
-                }
+                FrinikaMain.getInstance().closeFrame(FrinikaFrame.this);
             }
 
             @Override
@@ -321,9 +290,10 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
             @Override
             public void windowActivated(WindowEvent arg0) {
+                FrinikaMain frinikaMain = FrinikaMain.getInstance();
                 // System.out.println(" activated ");
-                FrinikaFrame.setFocusFrame(FrinikaFrame.this);
-                FrinikaFrame.notifyProjectFocusListeners();
+                frinikaMain.setFocusFrame(FrinikaFrame.this);
+                frinikaMain.notifyProjectFocusListeners();
 //				try {
 
 //                                    	MidiInDeviceManager.setReceiver(project.getSequencer()
@@ -386,10 +356,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		 * Dimension(windowSize.getSize()); setSize(frameSize); setLocation(0,
 		 * 0);
          */
-        Dimension frameSize;
-        int x;
-        int y;
-
         if (position == null) {
             Toolkit toolkit = Toolkit.getDefaultToolkit();
             Rectangle windowSize;
@@ -415,31 +381,30 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             // == windowSize.width=1280;
             windowSize.x = 0;
 
-            int w = (windowSize.width - windowSize.x)
+            int width = (windowSize.width - windowSize.x)
                     - (windowInsets.left + windowInsets.right + 10);
-            int h = (windowSize.height - windowSize.y)
+            int height = (windowSize.height - windowSize.y)
                     - (windowInsets.top + windowInsets.bottom + 10);
-            y = windowInsets.top
-                    + ((windowSize.height - windowSize.y)
-                    - (windowInsets.top + windowInsets.bottom) - h) / 2;
-            x = windowInsets.left
+            positionX = windowInsets.left
                     + ((windowSize.width - windowSize.x)
-                    - (windowInsets.left + windowInsets.right) - w) / 2;
+                    - (windowInsets.left + windowInsets.right) - width) / 2;
+            positionY = windowInsets.top
+                    + ((windowSize.height - windowSize.y)
+                    - (windowInsets.top + windowInsets.bottom) - height) / 2;
 
-            frameSize = new Dimension(w, h);
+            frameSize = new Dimension(width, height);
 
-            setSize(new Dimension(w - 1, h - 1));
+            setSize(new Dimension(width - 1, height - 1));
         } else {
             frameSize = position.getSize();
-            y = position.y;
-            x = position.x;
+            positionY = position.y;
+            positionX = position.x;
 
         }
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        setIconImage(new javax.swing.ImageIcon(FrinikaFrame.class
-                .getResource("/icons/frinika.png")).getImage());
+        setIconImage(FrinikaFrame.getIconResource("frinika.png").getImage());
     }
 
     public void setProject(@Nonnull final FrinikaProjectContainer project) throws Exception {
@@ -477,92 +442,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
          */
         MidiInDeviceManager.setProject(project);
 
-        addWindowListener(new WindowListener() {
-
-            @Override
-            public void windowOpened(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowClosing(WindowEvent evt) {
-                // System.out.println();
-                if (openProjectFrames.size() == 1 && !doNotQuit) {
-                    tryQuit();
-                } else {
-                    if (canClose()) {
-                        evt.getWindow().dispose();
-                    }
-                }
-            }
-
-            @Override
-            public void windowClosed(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowIconified(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent arg0) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent arg0) {
-                // System.out.println(" activated ");
-                FrinikaFrame.setFocusFrame(FrinikaFrame.this);
-                FrinikaFrame.notifyProjectFocusListeners();
-//				try {
-
-//                                    	MidiInDeviceManager.setReceiver(project.getSequencer()
-//							.getReceiver());
-// 
-                MidiInDeviceManager.setProject(project);
-//
-//                                } catch (MidiUnavailableException e) {
-//					e.printStackTrace();
-//				}
-
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent arg0) {
-            }
-        });
-
-        // TODO save positioning into config
-        if (false) {
-            addComponentListener(new ComponentListener() {
-
-                @Override
-                public void componentHidden(ComponentEvent e) {
-                }
-
-                @Override
-                public void componentMoved(ComponentEvent e) {
-                    info();
-                }
-
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    info();
-                }
-
-                @Override
-                public void componentShown(ComponentEvent e) {
-                }
-
-                void info() {
-                    GraphicsConfiguration gc = FrinikaFrame.this
-                            .getGraphicsConfiguration();
-
-                    System.out.println(gc);
-
-                    System.out.println(FrinikaFrame.this.getBounds());
-                }
-
-            });
-        }
+        initFrame();
 
         project.registerProjectRepaintListener(new ProjectRepaintListener() {
             @Override
@@ -578,71 +458,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 partViewEditor.getPartview().repaintItems();
             }
         });
-
-        /*
-		 * Rectangle windowSize = GraphicsEnvironment
-		 * .getLocalGraphicsEnvironment().getDefaultScreenDevice()
-		 * .getDefaultConfiguration().getBounds();
-         */
- /*
-		 * Point p = GraphicsEnvironment.getLocalGraphicsEnvironment()
-		 * .getCenterPoint(); Dimension frameSize = new
-		 * Dimension(windowSize.getSize()); setSize(frameSize); setLocation(0,
-		 * 0);
-         */
-        Dimension frameSize;
-        int x;
-        int y;
-
-        if (position == null) {
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
-            Rectangle windowSize;
-            Insets windowInsets;
-
-            GraphicsEnvironment ge = java.awt.GraphicsEnvironment
-                    .getLocalGraphicsEnvironment();
-            GraphicsConfiguration gc = ge.getDefaultScreenDevice()
-                    .getDefaultConfiguration();
-            if (gc == null) {
-                gc = getGraphicsConfiguration();
-            }
-
-            if (gc != null) {
-                windowSize = gc.getBounds();
-                windowInsets = toolkit.getScreenInsets(gc);
-            } else {
-                windowSize = new java.awt.Rectangle(toolkit.getScreenSize());
-                windowInsets = new java.awt.Insets(0, 0, 0, 0);
-            }
-
-            // PJL using xrandr and a virtual screen 2560x1024 then windowSize.x
-            // == windowSize.width=1280;
-            windowSize.x = 0;
-
-            int w = (windowSize.width - windowSize.x)
-                    - (windowInsets.left + windowInsets.right + 10);
-            int h = (windowSize.height - windowSize.y)
-                    - (windowInsets.top + windowInsets.bottom + 10);
-            y = windowInsets.top
-                    + ((windowSize.height - windowSize.y)
-                    - (windowInsets.top + windowInsets.bottom) - h) / 2;
-            x = windowInsets.left
-                    + ((windowSize.width - windowSize.x)
-                    - (windowInsets.left + windowInsets.right) - w) / 2;
-
-            frameSize = new Dimension(w, h);
-
-            setSize(new Dimension(w - 1, h - 1));
-        } else {
-            frameSize = position.getSize();
-            y = position.y;
-            x = position.x;
-        }
-
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-        setIconImage(new javax.swing.ImageIcon(FrinikaFrame.class
-                .getResource("/icons/frinika.png")).getImage());
 
         String name = "Frinika - Copyright (c) Frinika developers - Licensed under GNU General Public License";
         File file = project.getProjectFile();
@@ -676,6 +491,53 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             }
         });
 
+        project.setMessageHandler(new MessageHandler() {
+            @Override
+            public void message(String message) {
+                MessageDialogUtils.message(FrinikaFrame.this, message);
+            }
+
+            @Override
+            public String prompt(String message, String initialValue) {
+                return MessageDialogUtils.prompt(FrinikaFrame.this, message, initialValue);
+            }
+
+            @Override
+            public String prompt(String message) {
+                return MessageDialogUtils.prompt(FrinikaFrame.this, message);
+            }
+
+            @Override
+            public String promptFile(String defaultFilename, String[][] suffices, boolean saveMode) {
+                return MessageDialogUtils.promptFile(FrinikaFrame.this, defaultFilename, suffices, saveMode);
+            }
+
+            @Override
+            public String promptFile(String defaultFilename, String[][] suffices) {
+                return MessageDialogUtils.promptFile(FrinikaFrame.this, defaultFilename, suffices);
+            }
+
+            @Override
+            public boolean confirm(String message) {
+                return MessageDialogUtils.confirm(FrinikaFrame.this, message);
+            }
+
+            @Override
+            public void error(String message) {
+                MessageDialogUtils.error(FrinikaFrame.this, message);
+            }
+
+            @Override
+            public void error(Throwable ex) {
+                MessageDialogUtils.error(FrinikaFrame.this, ex);
+            }
+
+            @Override
+            public void error(String message, Throwable t) {
+                MessageDialogUtils.error(FrinikaFrame.this, message, t);
+            }
+        });
+
         // Karl, flexdock, use -Dfrinika.window.flexdock=no to disable flexdock
         if (System.getProperty("frinika.window.flexdock") == null) {
             DockingManager.setFloatingEnabled(true);
@@ -684,6 +546,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
         createMenu();
 
+        // SIDEEFECT: injects metronome audio client to audio mixer
         globalToolBar = new GlobalToolBar(project);
 
         JPanel content = new JPanel(new BorderLayout());
@@ -699,7 +562,12 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                     createSplit(frameSize));
             midPanels.addTab(CurrentLocale.getMessage("project.maintabs.midiout_devices"),
                     new JScrollPane(midiDevicesPanel = new MidiDevicesPanel(
-                            project)));
+                            project, new MidiDevicesPanel.MidiDevicesHandler() {
+                        @Override
+                        public void addMidiDevices(JPopupMenu popup) {
+                            FrinikaFrame.this.addMidiDevices(popup);
+                        }
+                    })));
 
             midPanels.addTab(CurrentLocale.getMessage("project.maintabs.audiomixer"),
                     new FrinikaMixerPanel(project.getMixerControls(), midiLearnFrame));
@@ -719,9 +587,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         // setVisible before setSize assures that the window doesn't open blank
         // (happens always when using XGL (compiz/beryl))
         setSize(frameSize);
-        setLocation(x, y);
+        setLocation(positionX, positionY);
 
-        openProjectFrames.add(this);
+        FrinikaMain.getInstance().addFrame(this);
 
         overRideKeys();
 
@@ -730,11 +598,8 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         }
     }
 
-    private static Icon maximize_icon = new javax.swing.ImageIcon(
-            FrinikaFrame.class.getResource("/icons/maximize.gif"));
-
-    private static Icon minimize_icon = new javax.swing.ImageIcon(
-            FrinikaFrame.class.getResource("/icons/minimize.gif"));
+    private static final Icon MAXIMIZE_ICON = getIconResource("maximize.gif");
+    private static final Icon MINIMIZE_ICON = getIconResource("minimize.gif");
 
     @Override
     public MidiLearnIF getMidiLearnIF() {
@@ -743,9 +608,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     @Override
     public void resetViews() {
-        Iterator iter = views.values().iterator();
-        while (iter.hasNext()) {
-            View view = (View) iter.next();
+        for (View view : views.values()) {
             if (view.isMinimized()) {
                 DockingManager.setMinimized((Dockable) view, false);
             }
@@ -765,6 +628,11 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     public void repaintPartView() {
         partViewEditor.getPartview().repaint();
         partViewEditor.getPartview().repaintItems();
+    }
+
+    @Override
+    public boolean hasChanges() {
+        return project.getEditHistoryContainer().hasChanges();
     }
 
     JMenu perspectivemenu;
@@ -833,7 +701,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         return newLaneMenu;
     }
 
-    @Override
     public TrackerPanel getTrackerPanel() {
         return trackerPanel;
     }
@@ -1032,49 +899,46 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         mixer.setMinimumSize(new Dimension(0, 0));
 
         createView(TRACKS_VIEW, CurrentLocale.getMessage("project.maintabs.tracks"),
-                partViewEditor, dockicon_tracks);
-        createView(VOICE_VIEW, CurrentLocale.getMessage("project.maintabs.lane_properties"), laneView, dockicon_voice);
+                partViewEditor, DOCKICON_TRACKS);
+        createView(VOICE_VIEW, CurrentLocale.getMessage("project.maintabs.lane_properties"), laneView, DOCKICON_VOICE);
         createView(PIANOROLL_VIEW, CurrentLocale.getMessage("project.maintabs.piano_roll"), pianoControllerPane,
-                dockicon_pianoroll);
-        createView(TRACKER_VIEW, CurrentLocale.getMessage("project.maintabs.tracker"), trackerPanel, dockicon_tracker);
-        createView(NOTATION_VIEW, CurrentLocale.getMessage("project.maintabs.notation"), notationPanel, dockicon_notation);
+                DOCKICON_PIANOROLL);
+        createView(TRACKER_VIEW, CurrentLocale.getMessage("project.maintabs.tracker"), trackerPanel, DOCKICON_TRACKER);
+        createView(NOTATION_VIEW, CurrentLocale.getMessage("project.maintabs.notation"), notationPanel, DOCKICON_NOTATION);
         createView(MIDIOUT_VIEW, CurrentLocale.getMessage("project.maintabs.midimixer"),
-                new JScrollPane(midiDevicesPanel = new MidiDevicesPanel(project)),
-                dockicon_midiout);
+                new JScrollPane(midiDevicesPanel = new MidiDevicesPanel(project, new MidiDevicesPanel.MidiDevicesHandler() {
+                    @Override
+                    public void addMidiDevices(JPopupMenu popup) {
+                        FrinikaFrame.this.addMidiDevices(popup);
+                    }
+                })), DOCKICON_MIDIOUT);
         createView(MIXER_VIEW, CurrentLocale.getMessage("project.maintabs.audiomixer"), mixer,
-                dockicon_mixer);
+                DOCKICON_MIXER);
     }
 
-    public static Icon getIconResource(String name) {
+    @Nullable
+    public static ImageIcon getIconResource(@Nonnull String name) {
         try {
-            Icon icon = new javax.swing.ImageIcon(FrinikaFrame.class
-                    .getResource("/icons/" + name));
+            ImageIcon icon = new ImageIcon(FrinikaFrame.class.getResource("/com/frinika/resources/icons/" + name));
             return icon;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(FrinikaFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return null;
     }
 
-    private static Icon dockicon_tracks = getIconResource("track.gif");
+    private static final Icon DOCKICON_TRACKS = getIconResource("track.gif");
+    private static final Icon DOCKICON_TRACKER = getIconResource("tracker.gif");
+    private static final Icon DOCKICON_MIDIOUT = getIconResource("midi_mixer.gif");
+    private static final Icon DOCKICON_VOICE = getIconResource("properties.gif");
+    private static final Icon DOCKICON_PIANOROLL = getIconResource("piano.png");
+    private static final Icon DOCKICON_MIXER = getIconResource("mixer.gif");
+    private static final Icon DOCKICON_NOTATION = getIconResource("midilane.png");
+    private static final Icon DEFAULT_MIDI_ICON = getIconResource("midi.png");
 
-    private static Icon dockicon_tracker = getIconResource("tracker.gif");
-
-    private static Icon dockicon_midiout = getIconResource("midi_mixer.gif");
-
-    private static Icon dockicon_voice = getIconResource("properties.gif");
-
-    private static Icon dockicon_pianoroll = getIconResource("piano.png");
-
-    private static Icon dockicon_mixer = getIconResource("mixer.gif");
-
-    private static Icon dockicon_notation = getIconResource("midilane.png");
-
-    private static Icon default_midi_icon = getIconResource("midi.png");
-
-    public static Icon getMidiDeviceIcon(MidiDevice dev) {
-        Icon icon = getMidiDeviceLargeIcon(dev);
+    public static Icon getMidiDeviceIcon(MidiDevice device) {
+        Icon icon = getMidiDeviceLargeIcon(device);
         if (icon.getIconHeight() > 16 || icon.getIconWidth() > 16) {
             BufferedImage img = new BufferedImage(icon.getIconWidth(), icon
                     .getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
@@ -1087,14 +951,14 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         return icon;
     }
 
-    public static Icon getMidiDeviceLargeIcon(MidiDevice dev) {
-        if (dev instanceof SynthWrapper) {
-            dev = ((SynthWrapper) dev).getRealDevice();
+    public static Icon getMidiDeviceLargeIcon(MidiDevice device) {
+        if (device instanceof SynthWrapper) {
+            device = ((SynthWrapper) device).getRealDevice();
         }
-        Icon icon = default_midi_icon;
+        Icon icon = DEFAULT_MIDI_ICON;
         try {
-            Method icon_method = dev.getClass().getMethod("getIcon");
-            icon = (Icon) icon_method.invoke(dev);
+            Method icon_method = device.getClass().getMethod("getIcon");
+            icon = (Icon) icon_method.invoke(device);
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e) {
         }
         return icon;
@@ -1127,7 +991,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             public void actionPerformed(ActionEvent e) {
                 DockingManager.undock((Dockable) view);
                 Set dockables = viewport.getDockables();
-                if (dockables.size() == 0) {
+                if (dockables.isEmpty()) {
                     viewport.dock(view);
                 } else {
                     ((View) dockables.iterator().next()).dock(view);
@@ -1152,7 +1016,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                     return "Maximize";
                 }
                 if (key.equals("SmallIcon")) {
-                    return maximize_icon;
+                    return MAXIMIZE_ICON;
                 }
                 return super.getValue(key);
             }
@@ -1160,7 +1024,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DockingManager.toggleMaximized((Dockable) view);
-                focusFrame.repaint();
+                FrinikaFrame.this.repaint();
                 DockingManager.display((Dockable) view);
             }
 
@@ -1204,18 +1068,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         });
         view.setContentPane(content);
         return view;
-    }
-
-    protected static void setFocusFrame(FrinikaFrame frame) {
-        if (frame != focusFrame) {
-            focusFrame = frame;
-            System.out.println(" Setting focus project "
-                    + frame.getProjectContainer().getFile());
-        }
-    }
-
-    public static FrinikaFrame getFocusFrame() {
-        return focusFrame;
     }
 
     /**
@@ -1344,14 +1196,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         closeMenuItem.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (openProjectFrames.size() == 1) {
-                    tryQuit();
-                } else if (canClose()) {
-                    dispose();
-                }
+                FrinikaMain.getInstance().closeFrame(FrinikaFrame.this);
             }
         });
 
@@ -1378,7 +1225,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         openSaveProjectDialog();
                     }
                 } catch (IOException ex) {
-                    error("Error while saving", ex); // show error message,
+                    MessageDialogUtils.error(getFrame(), "Error while saving", ex); // show error message,
                     // user should know that
                     // saving went wrong
                     ex.printStackTrace();
@@ -1421,7 +1268,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                         openSaveProjectDialog();
                     }
                 } catch (IOException ex) {
-                    error("Error while saving", ex); // show error message,
+                    MessageDialogUtils.error(getFrame(), "Error while saving", ex); // show error message,
                     // user should know that
                     // saving went wrong
                     ex.printStackTrace();
@@ -1663,7 +1510,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    tryQuit();
+                    FrinikaMain.getInstance().quit(FrinikaFrame.this);
                 }
             });
 
@@ -1924,7 +1771,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                     if (dev instanceof Synthesizer) {
                         infos1.add(info);
                         icons1.add(icon);
-                    } else if (icon == default_midi_icon) {
+                    } else if (icon == DEFAULT_MIDI_ICON) {
                         infos2.add(info);
                         icons2.add(icon);
                     } else {
@@ -2429,7 +2276,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         aboutMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                About.about(FrinikaFrame.this);
+                AboutAction.about(FrinikaFrame.this);
             }
         });
         aboutMenuItem.setMnemonic(KeyEvent.VK_A);
@@ -2539,60 +2386,9 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     }
 
     @Override
-    public void tryQuit() {
-        /**
-         * Close all open frames
-         */
-        while (openProjectFrames.size() > 1) {
-            System.out
-                    .println("Open project count:" + openProjectFrames.size());
-            FrinikaFrame frame = openProjectFrames.get(0);
-            if (frame == this) {
-                frame = openProjectFrames.get(openProjectFrames.size() - 1);
-            }
-
-            if (frame.canClose()) {
-                frame.dispose();
-            }
-        }
-
-        String quitMessage;
-        if (project.getEditHistoryContainer().hasChanges()) {
-            quitMessage = CurrentLocale.getMessage("quit.doYouReallyWantTo.unsaved");
-        } else {
-            quitMessage = CurrentLocale.getMessage("quit.doYouReallyWantTo");
-        }
-
-        if (JOptionPane.showOptionDialog(this, quitMessage,
-                CurrentLocale.getMessage("quit.really"), JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, null, null) == 0) {
-            MidiInDeviceManager.close(); // VERY IMPORTANT! Make sure all
-            // midi-in devices are closed for
-            // system.exit!
-            FrinikaConfig.storeAndQuit();
-        }
-    }
-
-    private boolean canClose() {
-        if (project.getEditHistoryContainer().hasChanges()) {
-            if (JOptionPane.showOptionDialog(this,
-                    CurrentLocale.getMessage("close.unsavedChanges"),
-                    CurrentLocale.getMessage("close.unsavedChanges.dialogTitle"),
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                    null, null, null) == 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    @Override
     public void dispose() {
         project.close();
-        openProjectFrames.remove(this);
+        FrinikaMain.getInstance().removeFrame(this);
         super.dispose();
     }
 
@@ -2608,7 +2404,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
      */
     @Override
     public void infoMessage(String string) {
-        message(string);
+        MessageDialogUtils.message(this, string);
     }
 
     MidiDevicesPanel midiDevicesPanel;
@@ -2630,150 +2426,8 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     }
 
     @Override
-    public void setStatusBarMessage(String msg) {
-        statusBar.setMessage(msg);
-
-    }
-
-    @Override
-    public void message(String msg, int type) { // Jens
-        JOptionPane.showMessageDialog(this, msg, "Frinika Message", type);
-    }
-
-    @Override
-    public void message(String msg) { // Jens
-        message(msg, JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    @Override
-    public void error(String msg) { // Jens
-        message(msg, JOptionPane.ERROR_MESSAGE);
-    }
-
-    @Override
-    public void error(String msg, Throwable t) { // Jens
-        t.printStackTrace();
-        error(msg + " - " + t.getMessage());
-    }
-
-    @Override
-    public void error(Throwable t) { // Jens
-        error(t.getClass().getName(), t);
-    }
-
-    @Override
-    public boolean confirm(String msg) { // Jens
-        int result = JOptionPane.showConfirmDialog(this, msg,
-                "Frinika Question", JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        return (result == JOptionPane.OK_OPTION);
-    }
-
-    @Override
-    public String prompt(String msg, String initialValue) { // Jens
-        if (initialValue == null) {
-            initialValue = "";
-        }
-        String result = JOptionPane.showInputDialog(this, msg, initialValue);
-        return result;
-    }
-
-    @Override
-    public String prompt(String msg) { // Jens
-        return prompt(msg, null);
-    }
-
-    @Override
-    public String promptFile(String defaultFilename, String[][] suffices,
-            boolean saveMode, boolean directoryMode) { // Jens
-        JFileChooser fc = new JFileChooser();
-        if (!directoryMode) {
-            final boolean save = saveMode;
-            // final String[][] suff = suffices;
-            if (suffices != null) {
-                for (String[] suffice : suffices) {
-                    final String suffix = suffice[0];
-                    final String description = suffice[1];
-                    // if (suffix == null) suffix = "*";
-                    // if (description == null) description = "";
-                    FileFilter ff = new FileFilter() {
-                        @Override
-                        public boolean accept(File file) {
-                            if (file.isDirectory()) {
-                                return true;
-                            }
-                            String name = file.getName();
-                            return suffix.equals("*")
-                                    || name.endsWith("." + suffix)
-                                    || (save && fileDoesntExistAndDoesntEndWithAnySuffix(file));
-                        }
-
-                        @Override
-                        public String getDescription() {
-                            return "." + suffix + " - " + description;
-                        }
-                    };
-                    fc.addChoosableFileFilter(ff);
-                }
-            }
-        } else { // directory mode
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
-
-        int r;
-        if (defaultFilename != null) {
-            File file = new File(defaultFilename);
-            fc.setSelectedFile(file);
-        }
-        if (saveMode) {
-            r = fc.showSaveDialog(this);
-        } else {
-            r = fc.showOpenDialog(this);
-        }
-
-        if (r == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            String name = file.getName();
-            String extraSuffix = "";
-            if (name.indexOf('.') == -1) { // no suffix entered
-                if (suffices != null && suffices.length > 0) {
-                    extraSuffix = "." + suffices[0][0]; // use first one as
-                    // default
-                }
-            }
-            String filename = file.getAbsolutePath() + extraSuffix;
-            if (saveMode) {
-                File fl = new File(filename);
-                if (fl.exists()) {
-                    if (!confirm("File " + filename
-                            + " already exists. Overwrite?")) {
-                        return null;
-                    }
-                }
-            }
-            return filename;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public String promptFile(String defaultFilename, String[][] suffices,
-            boolean saveMode) {
-        return promptFile(defaultFilename, suffices, saveMode, false);
-    }
-
-    @Override
-    public String promptFile(String defaultFilename, String[][] suffices) {
-        return promptFile(defaultFilename, suffices, false);
-    }
-
-    private static boolean fileDoesntExistAndDoesntEndWithAnySuffix(File file) {
-        if (file.exists()) {
-            return false;
-        }
-        String name = file.getName();
-        return (name.indexOf('.') == -1);
+    public void setStatusBarMessage(String message) {
+        statusBar.setMessage(message);
     }
 
     /**
@@ -2839,7 +2493,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
                 setTitle(newProject.getName());
             }
         } catch (HeadlessException | IOException ex) {
-            error("Error while saving", ex); // show error message, user
+            MessageDialogUtils.error(this, "Error while saving", ex); // show error message, user
             // should know that saving went
             // wrong
             ex.printStackTrace();
@@ -2866,33 +2520,6 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 		 * audioPartMenu.show(invoker,x,y); } else if(part instanceof MidiPart ) {
 		 * midiPartMenu.show(invoker,x,y); }
          */
-    }
-
-    public static void addProjectFocusListener(ProjectFocusListener l) {
-        projectFocusListeners.add(l);
-    }
-
-    public static void removeProjectFocusListener(ProjectFocusListener l) {
-        projectFocusListeners.remove(l);
-    }
-
-    public static void notifyProjectFocusListeners() {
-        for (ProjectFocusListener l : projectFocusListeners) {
-            l.projectFocusNotify(focusFrame.getProjectContainer());
-        }
-    }
-
-    public static void staticMessage(FrinikaProjectContainer container, String string) {
-        for (FrinikaFrame f : openProjectFrames) {
-            if (f.project == container) {
-                f.message(string);
-                return;
-            }
-        }
-    }
-
-    static public List<FrinikaFrame> getOpenProjectFrames() {
-        return Collections.unmodifiableList(openProjectFrames);
     }
 
     /**

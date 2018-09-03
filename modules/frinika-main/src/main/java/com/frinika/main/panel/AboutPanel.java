@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -55,6 +57,8 @@ import javax.swing.text.html.HTMLDocument;
 /**
  * Panel for about dialog.
  *
+ * Migrated from About Dialog.
+ *
  * @author hajdam
  */
 public class AboutPanel extends javax.swing.JPanel {
@@ -66,7 +70,7 @@ public class AboutPanel extends javax.swing.JPanel {
     public static final String MAIN_TITLE
             = "<html><center>"
             + "<b>Frinika DEV version " + VersionProperties.getVersion() + " </b><br>"
-            + "<a href=\"http://frinika.sourceforge.net\">http://frinika.sourceforge.net</a><br><font color='#A0A0A0'><i>Build date: " + VersionProperties.getBuildDate() + "</i></font>"
+            + "<a href=\"http://frinika.com\">http://frinika.com</a><br><font color='#A0A0A0'><i>Build date: " + VersionProperties.getBuildDate() + "</i></font>"
             + "</html>";
 
     public static final String COPYRIGHT_NOTICE
@@ -86,6 +90,7 @@ public class AboutPanel extends javax.swing.JPanel {
             + "Toni (oc2pus@arcor.de) - Ant build scripts and Linux RPMs<br>"
             + "Steve Taylor - Toot integration<br>"
             + "Jens Gulden - Ghosts parts, Midi Tools menu, step recording, ctrl tools, scripting and more<br>"
+            + "Miroslav Hajda - GUI cleanup<br>"
             + "<br>"
             + "<b>Libraries:</b><br>"
             + "JJack Copyright " + COPYRIGHT_SYMBOL + " Jens Gulden<br>"
@@ -208,7 +213,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
         JTextPane licenseAgreement;
         try {
-            InputStream is = AboutPanel.class.getResource("/com/frinika/resources/license-gpl2.html").openStream();
+            InputStream is = AboutPanel.class.getResource("/com/frinika/main/resources/license-gpl2.html").openStream();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             while (is.available() > 0) {
                 bos.write(is.read());
@@ -222,8 +227,8 @@ public class AboutPanel extends javax.swing.JPanel {
             panel.add(licenseScrollPane, BorderLayout.CENTER);
             licenseAgreement.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
             panel.setPreferredSize(new Dimension(700, 400));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(AboutPanel.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("Couldn't find license agreement.. Exiting.");
             System.exit(0);
         }
@@ -242,22 +247,22 @@ public class AboutPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(new AboutPanel());
     }
 
-    public void whitening(Container co) {
+    private void whitening(@Nonnull Container container) {
         boolean darkMode = WindowUtils.isDarkMode();
-        Component[] comps = co.getComponents();
-        for (Component comp : comps) {
-            if (comp instanceof JOptionPane) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            if (component instanceof JOptionPane) {
                 if (!darkMode) {
-                    comp.setBackground(Color.WHITE);
+                    component.setBackground(Color.WHITE);
                 }
             }
-            if (comp instanceof JPanel) {
+            if (component instanceof JPanel) {
                 if (!darkMode) {
-                    comp.setBackground(Color.WHITE);
+                    component.setBackground(Color.WHITE);
                 }
             }
-            if (comp instanceof Container) {
-                whitening((Container) comp);
+            if (component instanceof Container) {
+                whitening((Container) component);
             }
         }
     }
@@ -284,17 +289,17 @@ public class AboutPanel extends javax.swing.JPanel {
 
     public void showSystemInfo() {
         // Jens:
-        Properties p = System.getProperties();
-        String[][] ss = new String[p.size()][2];
+        Properties properties = System.getProperties();
+        String[][] propertiesArray = new String[properties.size()][2];
         int i = 0;
-        for (Object o : (new TreeSet(p.keySet()))) {
+        for (Object o : (new TreeSet(properties.keySet()))) {
             String s = (String) o;
-            String value = p.getProperty(s);
-            ss[i][0] = s;
-            ss[i][1] = value;
+            String value = properties.getProperty(s);
+            propertiesArray[i][0] = s;
+            propertiesArray[i][1] = value;
             i++;
         }
-        JTable systemInfo = new JTable(ss, new String[]{"Entry", "Value"});
+        JTable systemInfo = new JTable(propertiesArray, new String[]{"Entry", "Value"});
         systemInfo.setEnabled(false);
 
         JOptionPane.showMessageDialog(this, new JScrollPane(systemInfo), "System Info",

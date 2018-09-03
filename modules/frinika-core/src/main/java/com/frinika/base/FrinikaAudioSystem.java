@@ -82,22 +82,31 @@ public class FrinikaAudioSystem {
         }
 
         try {
+//            realAudioServer = new DummyAudioServer();
+
             // JJack will recognise this name when setting up the jjack client
             System.setProperty("jjack.client.name", "Frinika");
 
+            boolean jackIO = FrinikaGlobalProperties.JACK_AUDIO.getValue();
             boolean multiplexIO = FrinikaGlobalProperties.MULTIPLEXED_AUDIO.getValue();
 
             if (!multiplexIO) {
-                if (System.getProperty("os.name").contains("Mac") && "true".equals(System.getProperty("useOSXAudioServer"))) {
-                    realAudioServer = new OSXAudioServer();
-                } else if (System.getProperty("os.name").contains("Windows") && "true".equals(System.getProperty("useASIOAudioServer"))) {
-                    realAudioServer = new AsioAudioServer();
-                } else {
+                if (jackIO) {
                     try {
                         // Try Jack first
                         realAudioServer = new JackTootAudioServer();
                     } catch (Exception e) {
                         realAudioServer = new MultiIOJavaSoundAudioServer();
+                        // realAudioServer = new FrogDiscoAudioServer();
+                    }
+                } else {
+                    if (System.getProperty("os.name").contains("Mac") && "true".equals(System.getProperty("useOSXAudioServer"))) {
+                        realAudioServer = new OSXAudioServer();
+                    } else if (System.getProperty("os.name").contains("Windows") && "true".equals(System.getProperty("useASIOAudioServer"))) {
+                        realAudioServer = new AsioAudioServer();
+                    } else {
+                        realAudioServer = new MultiIOJavaSoundAudioServer();
+                        // realAudioServer = new FrogDiscoAudioServer();
                     }
                 }
             } else {
@@ -107,22 +116,9 @@ public class FrinikaAudioSystem {
                 configureMultiplexed(s);
             }
 
-            if (!multiplexIO) {
-                realAudioServer = new MultiIOJavaSoundAudioServer();
-                //realAudioServer = new FrogDiscoAudioServer();
-            } else {
-                System.out
-                        .println(" WARNING USING EXPERIMENTAL MULTIPLEXED AUDIO SERVER ");
-                MultiplexedJavaSoundAudioServer s = new MultiplexedJavaSoundAudioServer();
-                realAudioServer = s;
-                configureMultiplexed(s);
-
-            }
-
             audioServer = new FrinikaAudioServer(realAudioServer);
 
-            serverConfig = AudioServerServices
-                    .createServerConfiguration(realAudioServer);
+            serverConfig = AudioServerServices.createServerConfiguration(realAudioServer);
             serverConfig.addObserver(new Observer() {
                 @Override
                 public void update(Observable obs, Object obj) {

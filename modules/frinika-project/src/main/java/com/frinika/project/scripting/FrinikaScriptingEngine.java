@@ -23,7 +23,7 @@
  */
 package com.frinika.project.scripting;
 
-import com.frinika.base.MessageDialog;
+import com.frinika.base.MessageDialogUtils;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.scripting.gui.ScriptingDialog;
@@ -163,10 +163,10 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
                 result = cx.evaluateString(scope, source, name, 1, null);
             } catch (Throwable t) {
                 if (t instanceof ThreadDeath) {
-                    project.message("Script execution has been aborted.");
+                    project.getMessageHandler().message("Script execution has been aborted.");
                     result = "";
                 } else {
-                    MessageDialog.error(dialog, t);
+                    MessageDialogUtils.error(dialog, t);
                     result = null;
                 }
             }
@@ -208,7 +208,7 @@ public class FrinikaScriptingEngine implements ScriptContainer, Serializable {
         try {
             return engine.eval(source);
         } catch (ScriptException ex) {
-            project.message("Script execution has been aborted.");
+            project.getMessageHandler().message("Script execution has been aborted.");
             Logger.getLogger(FrinikaScriptingEngine.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }

@@ -26,52 +26,58 @@ package com.frinika.main.action;
 import com.frinika.global.FrinikaConfig;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.main.FrinikaFrame;
-import com.frinika.project.FrinikaProjectContainer;
-import com.frinika.sequencer.gui.ProjectFrame;
-import com.frinika.tracker.ProjectFileFilter;
+import com.frinika.main.ProgressOperation;
+import com.frinika.tools.ProjectFileFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 /**
- * Triggers an open project dialog based on no Frame. Used by FrinikaMain when
- * starting up
+ * Action for opening project.
  *
  * @author peter
  */
 public class OpenProjectAction extends AbstractAction {
 
-    private static final long serialVersionUID = 1L;
-    private static JFileChooser chooser = new JFileChooser();
+    private final JFrame frame;
 
-    static {
-        chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.open_project.dialogtitle"));
-        chooser.setFileFilter(new ProjectFileFilter());
+    public OpenProjectAction(@Nonnull JFrame frame) {
+        this.frame = frame;
     }
 
-    public static void setSelectedFile(File file) {
-        chooser.setSelectedFile(file);
+    private final long serialVersionUID = 1L;
+    private File selectedFile = null;
+
+    public void setSelectedFile(@Nullable File file) {
+        selectedFile = file;
     }
-    private ProjectFrame frame;
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File newProject = chooser.getSelectedFile();
+    public void actionPerformed(ActionEvent event) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setSelectedFile(selectedFile);
+        chooser.setDialogTitle(CurrentLocale.getMessage("project.menu.file.open_project.dialogtitle"));
+        chooser.setFileFilter(new ProjectFileFilter());
 
-                frame = new FrinikaFrame();
-                ((FrinikaFrame) frame).setProject(FrinikaProjectContainer.loadProject(newProject, null));
-                FrinikaConfig.setLastProject(newProject);
+        try {
+            if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+                File projectFile = chooser.getSelectedFile();
+                openProjectFile(projectFile);
             }
-        } catch (Exception e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(OpenProjectAction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ProjectFrame getProjectFrame() {
-        return frame;
+    public static void openProjectFile(@Nonnull File projectFile) throws Exception {
+        FrinikaFrame projectFrame = new FrinikaFrame();
+        ProgressOperation.openProjectFile(projectFrame, projectFile);
+        FrinikaConfig.setLastProject(projectFile);
     }
 }

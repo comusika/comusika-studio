@@ -19,6 +19,8 @@
  */
 package com.frinika.tools;
 
+import javax.annotation.Nonnull;
+
 /**
  *
  * @author hajdam
@@ -30,7 +32,7 @@ public interface ProgressObserver {
      *
      * @param maximumProgress
      */
-    void goal(long maximumProgress);
+    void setGoal(long maximumProgress);
 
     /**
      * Sets progress related to goal.
@@ -43,4 +45,11 @@ public interface ProgressObserver {
      * Reports loading finished.
      */
     void finished();
+
+    /**
+     * Reports failure of operation.
+     *
+     * @param ex
+     */
+    void fail(@Nonnull Exception ex);
 }

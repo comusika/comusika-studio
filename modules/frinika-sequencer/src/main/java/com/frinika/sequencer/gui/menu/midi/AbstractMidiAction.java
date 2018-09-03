@@ -23,7 +23,6 @@
  */
 package com.frinika.sequencer.gui.menu.midi;
 
-import com.frinika.base.BaseProjectContainer;
 import com.frinika.gui.AbstractDialogAction;
 import com.frinika.sequencer.gui.partview.PartView;
 import com.frinika.sequencer.gui.selection.MidiSelection;
@@ -31,11 +30,12 @@ import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
 import com.frinika.sequencer.model.MultiEvent;
 import com.frinika.sequencer.model.NoteEvent;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import javax.swing.JMenuItem;
+import com.frinika.base.EditHistoryProvider;
 
 /**
  * Abstract superclass for menu-actions that modify currently selected MIDI
@@ -50,13 +50,13 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
     protected long lastTick;
     protected long endTick;
 
-    public AbstractMidiAction(SequencerProjectContainer project, String actionId) {
+    public AbstractMidiAction(AbstractProjectContainer project, String actionId) {
         super(project, actionId);
     }
 
     @Override
     public void performPrepare() {
-        MidiSelection m = ((SequencerProjectContainer) project).getMidiSelection();
+        MidiSelection m = ((AbstractProjectContainer) project).getMidiSelection();
         events = m.getSelected();
         if ((events == null) || (events.isEmpty())) {
             cancel();
@@ -67,12 +67,7 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
     public void actionPerformed(ActionEvent e) {
         if (!(java.awt.EventQueue.getCurrentEvent().getSource() instanceof JMenuItem)) { // event does not originate from JMenuItem, but from KeyStroke
             Object focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner();
-            // NBP
-//            if (!((focusOwner instanceof PartView) || (focusOwner instanceof PianoRoll))) { // otherwise any gui-element catching single-key strokes would invoke menu
-//                return;
-//            }
-
-            if (!((focusOwner instanceof PartView))) { // otherwise any gui-element catching single-key strokes would invoke menu
+            if (!((AbstractProjectContainer) project).shouldProcessKeyboardEvent(focusOwner)) { // otherwise any gui-element catching single-key strokes would invoke menu
                 return;
             }
         }
@@ -158,7 +153,7 @@ abstract public class AbstractMidiAction extends AbstractDialogAction {
         }
     }
 
-    public BaseProjectContainer getProject() {
+    public EditHistoryProvider getProject() {
         return project;
     }
 }

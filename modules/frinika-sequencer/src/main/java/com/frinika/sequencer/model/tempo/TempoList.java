@@ -25,7 +25,7 @@ package com.frinika.sequencer.model.tempo;
 
 import com.frinika.sequencer.FrinikaTrackWrapper;
 import com.frinika.sequencer.midi.message.TempoMessage;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -70,18 +70,18 @@ public class TempoList implements Serializable {
     @Deprecated
     public Serializable project = null;
 
-    public transient SequencerProjectContainer frinikaProject;
+    public transient AbstractProjectContainer frinikaProject;
 
     transient Vector<TempoListListener> listeners;
 
-    public TempoList(double ticksPerBeat, SequencerProjectContainer project) {
+    public TempoList(double ticksPerBeat, AbstractProjectContainer project) {
         this.frinikaProject = project;
         treeSet = new TreeMap<>();
         list = new Vector<>();
         this.ticksPerBeat = ticksPerBeat;
         listeners = new Vector<>();
     }
-
+    
     public void addTempoListListener(TempoListListener o) {
         listeners.add(o);
     }
@@ -310,7 +310,7 @@ public class TempoList implements Serializable {
         if (dirty) {
             reco();
         }
-        long itick = (long) tick + 1; // 
+        long itick = (long) tick + 1;
         SortedMap<Long, MyTempoEvent> head = treeSet.headMap(itick);
         MyTempoEvent ev;
         Long lastKey;

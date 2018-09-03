@@ -25,8 +25,7 @@ package com.frinika.sequencer.gui;
 
 import com.frinika.global.ProjectFrameIntf;
 import com.frinika.sequencer.gui.partview.VoicePartViewSplitPane;
-import com.frinika.sequencer.gui.tracker.TrackerPanel;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import com.frinika.sequencer.project.mididevices.gui.MidiDevicesPanel;
 import com.frinika.tootX.midi.MidiLearnIF;
 import java.awt.Component;
@@ -47,12 +46,9 @@ public interface ProjectFrame extends ProjectFrameIntf {
      *
      * @see promptFile
      */
-    final static String[][] FILE_FILTER_MIDIFILES = new String[][]{
+    public static final String[][] FILE_FILTER_MIDIFILES = new String[][]{
         {"mid", "Midi standard files"}
     };
-
-    // hack to stop exit when last frma is closed.
-    static boolean doNotQuit = false;
 
     MidiLearnIF getMidiLearnIF();
 
@@ -72,9 +68,9 @@ public interface ProjectFrame extends ProjectFrameIntf {
 
     MidiDevice selectMidiDevice();
 
-    void tryQuit();
-
-    SequencerProjectContainer getProjectContainer();
+    AbstractProjectContainer getProjectContainer();
+    
+    boolean hasChanges();
 
     /**
      *
@@ -89,30 +85,6 @@ public interface ProjectFrame extends ProjectFrameIntf {
 
     void setStatusBarMessage(String msg);
 
-    void message(String msg, int type);
-
-    void message(String msg);
-
-    void error(String msg);
-
-    void error(String msg, Throwable t);
-
-    void error(Throwable t);
-
-    boolean confirm(String msg);
-
-    String prompt(String msg, String initialValue);
-
-    String prompt(String msg);
-
-    String promptFile(String defaultFilename, String[][] suffices,
-            boolean saveMode, boolean directoryMode);
-
-    String promptFile(String defaultFilename, String[][] suffices,
-            boolean saveMode);
-
-    String promptFile(String defaultFilename, String[][] suffices);
-
     void showRightButtonPartPopup(Component invoker, int x, int y);
 
     /**
@@ -122,11 +94,6 @@ public interface ProjectFrame extends ProjectFrameIntf {
     JFrame getFrame();
 
     JPopupMenu getNewLaneMenu();
-
-    /**
-     * @return the trackerPanel
-     */
-    TrackerPanel getTrackerPanel();
 
     /**
      * @return the partViewEditor

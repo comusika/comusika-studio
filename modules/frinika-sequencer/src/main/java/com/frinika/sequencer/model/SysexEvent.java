@@ -23,12 +23,12 @@
  */
 package com.frinika.sequencer.model;
 
-import com.frinika.base.MessageDialog;
+import com.frinika.base.MessageDialogUtils;
 import com.frinika.global.Toolbox;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.model.EditHistoryAction;
 import com.frinika.model.EditHistoryRecordable;
-import com.frinika.sequencer.project.SequencerProjectContainer;
+import com.frinika.sequencer.project.AbstractProjectContainer;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.StringTokenizer;
@@ -113,13 +113,12 @@ public class SysexEvent extends MultiEvent {
         return me;
     }
 
-    public void showEditorGUI(SequencerProjectContainer project) {
+    public void showEditorGUI(AbstractProjectContainer project) {
         final String oldMacroString = this.macro;
         boolean err;
         do {
             err = false;
-            // NBP
-            final String s = MessageDialog.prompt(null, CurrentLocale.getMessage("sequencer.sysex.edit_sysex") + ":", oldMacroString);
+            final String s = project.getMessageHandler().prompt(CurrentLocale.getMessage("sequencer.sysex.edit_sysex") + ":", oldMacroString);
             if (s != null) {
                 if (!s.equals(oldMacroString)) {
                     try {
@@ -148,8 +147,7 @@ public class SysexEvent extends MultiEvent {
                         project.getEditHistoryContainer().push(action);
                         project.getEditHistoryContainer().notifyEditHistoryListeners();
                     } catch (InvalidMidiDataException imde) {
-                        // NBP
-                        MessageDialog.error(null, imde.getMessage());
+                        project.getMessageHandler().error(imde.getMessage());
                         err = true;
                     }
                 }
