@@ -69,8 +69,8 @@ public class AboutPanel extends javax.swing.JPanel {
 
     public static final String MAIN_TITLE
             = "<html><center>"
-            + "<b>Frinika DEV version " + VersionProperties.getVersion() + " </b><br>"
-            + "<a href=\"http://frinika.com\">http://frinika.com</a><br><font color='#A0A0A0'><i>Build date: " + VersionProperties.getBuildDate() + "</i></font>"
+            + "<b>Frinika Studio DEV version " + VersionProperties.getVersion() + " </b><br>"
+            + "<a href=\"https://github.com/hajdam/frinika-studio\">https://github.com/hajdam/frinika-studio</a><br><font color='#A0A0A0'><i>Build date: " + VersionProperties.getBuildDate() + "</i></font>"
             + "</html>";
 
     public static final String COPYRIGHT_NOTICE

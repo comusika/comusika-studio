@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 sourceCompatibility = '1.8'
-version = '0.9.0-SNAPSHOT'
+version = '0.1.0-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 if (!hasProperty('mainClass')) {
@@ -118,11 +118,11 @@ dependencies {
 }
 
 launch4j {
-    outfile = "frinika.exe"
+    outfile = "frinika-studio.exe"
     icon = "../../../../images/frinika.ico"
     mainClassName = "com.frinika.FrinikaApp"
-    jar = "../../build/libs/frinika-app-0.9.0-SNAPSHOT.jar"
-    copyright = "Frinika Project"
+    jar = "../../build/libs/frinika-app-0.1.0-SNAPSHOT.jar"
+    copyright = "Frinika Studio"
 }
 
 jar {

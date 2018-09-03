@@ -72,10 +72,10 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     public AnimatedLogoPanel() {
         boolean darkMode = WindowUtils.isDarkMode();
         String postfix = darkMode ? "-dark" : "";
-        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika" + postfix + ".png"));
+        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika-studio" + postfix + ".png"));
         lightImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_light_gradient.png"));
         cloudImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_score.png"));
-        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_overscan" + postfix + ".png"));
+        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika-studio_overscan" + postfix + ".png"));
 
         cloudWidth = cloudImage.getIconWidth();
         labelWidth = labelImage.getIconWidth();
@@ -200,8 +200,8 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
         setBackground(darkMode ? Color.BLACK : Color.WHITE);
 
         String postfix = darkMode ? "-dark" : "";
-        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika" + postfix + ".png"));
-        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika_overscan" + postfix + ".png"));
+        labelImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika-studio" + postfix + ".png"));
+        overscanImage = new javax.swing.ImageIcon(getClass().getResource("/com/frinika/main/resources/logo/frinika-studio_overscan" + postfix + ".png"));
         invalidate();
     }
 
