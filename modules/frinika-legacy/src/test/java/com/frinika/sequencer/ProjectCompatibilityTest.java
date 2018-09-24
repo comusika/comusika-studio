@@ -2,6 +2,7 @@ package com.frinika.sequencer;
 
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.project.settings.projectsettingsversions.Project20050227;
+import com.frinika.sequencer.FrinikaSequence;
 import com.frinika.synth.SynthRack;
 import com.frinika.synth.synths.MySampler;
 import com.frinika.voiceserver.VoiceServer;
