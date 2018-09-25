@@ -211,7 +211,6 @@ public class FrinikaMain {
 
             @Override
             public void openProject() {
-                welcomeFrame.setEnabled(false);
                 String lastFile = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
                 OpenProjectAction openProjectAction = new OpenProjectAction(welcomeFrame);
                 if (lastFile != null) {

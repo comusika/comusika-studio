@@ -4,6 +4,7 @@ apply from: '../modules-settings.gradle'
 
 include ":modules:frinika-core"
 include ":modules:frinika-audio"
+include ":modules:frinika-legacy"
 include ":modules:frinika-sequencer"
 include ":modules:frinika-view-tracker"
 include ":modules:frinika-view-pianoroll"
