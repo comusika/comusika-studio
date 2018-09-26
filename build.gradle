@@ -3,7 +3,7 @@ apply plugin: 'distribution'
 apply plugin: 'com.bmuschko.izpack'
 
 def baseVersion = '0.1.0'
-def devVersion = '-dev'
+def devVersion = ''
 version = baseVersion + devVersion + '-' + getDate('yyyyMMdd')
 
 def getDate(dateFormat) {
@@ -86,7 +86,7 @@ distributions {
                     into('') {
                         from p.jar.archivePath
                         include '*'
-                        rename { filename -> p.name + "-studio.jar" }
+                        rename { filename -> "frinika-studio.jar" }
                     }
                 }
             }
