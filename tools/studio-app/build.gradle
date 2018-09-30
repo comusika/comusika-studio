@@ -5,7 +5,7 @@ version = '0.2.0-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'com.frinika.FrinikaApp'
+    ext.mainClass = 'com.github.hajdam.frinika_studio.StudioApp'
     ext.appArgs = '-dev'
 }
 
@@ -120,8 +120,8 @@ dependencies {
 launch4j {
     outfile = "frinika-studio.exe"
     icon = "../../../../images/frinika.ico"
-    mainClassName = "com.frinika.FrinikaApp"
-    jar = "../../build/libs/frinika-app-0.1.0-SNAPSHOT.jar"
+    mainClassName = "com.github.hajdam.frinika_studio.StudioApp"
+    jar = "../../build/libs/studio-app-0.2.0-SNAPSHOT.jar"
     copyright = "Frinika Studio"
 }
 

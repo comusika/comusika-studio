@@ -1,4 +1,7 @@
-0.9.0
+0.2.0
+- 
+
+0.1.0 (2018-09-26)
 - Project modularized (internal, gradle building)
 - Added Darcula dark look and feel https://github.com/bulenkov/Darcula
 - Added SoundHelix generator http://soundhelix.com/ (Tools/Generator)

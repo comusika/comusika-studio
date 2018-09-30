@@ -33,3 +33,4 @@ include ":modules:frinika-legacy"
 include ":modules:sevenzip"
 
 include ":tools:frinika-app"
+include ":tools:studio-app"

@@ -2,8 +2,8 @@ apply plugin: 'base'
 apply plugin: 'distribution'
 apply plugin: 'com.bmuschko.izpack'
 
-def baseVersion = '0.1.0'
-def devVersion = ''
+def baseVersion = '0.2.0'
+def devVersion = 'DEV'
 version = baseVersion + devVersion + '-' + getDate('yyyyMMdd')
 
 def getDate(dateFormat) {
@@ -31,9 +31,9 @@ copyrightEnd = ${getDate('YYYY')}
 
 assemble.dependsOn project.tasks['versionFile']
 distZip.dependsOn project(':tools').subprojects.assemble
-distZip.dependsOn project(':tools:frinika-app').tasks['createExe']
+distZip.dependsOn project(':tools:studio-app').tasks['createExe']
 distTar.dependsOn project(':tools').subprojects.assemble
-distTar.dependsOn project(':tools:frinika-app').tasks['createExe']
+distTar.dependsOn project(':tools:studio-app').tasks['createExe']
 
 distributions {
     main {
@@ -49,12 +49,12 @@ distributions {
                 include '**'
             }
             into('resources') {
-                from 'tools/frinika-app/resources'
+                from 'tools/studio-app/resources'
                 include 'soundhelix/**'
                 include 'soundhelix-legacy/**'
             }
 
-            from project(':tools:frinika-app').projectDir.absolutePath + '/build/launch4j'
+            from project(':tools:studio-app').projectDir.absolutePath + '/build/launch4j'
             include "frinika-studio.exe"
 
             into('lib') {
