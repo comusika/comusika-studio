@@ -27,16 +27,14 @@ sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 tasks.withType(JavaCompile) {
-//    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     doFirst {
         options.fork = true
-        options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar"
-        options.bootClasspath += "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
     }
 }
 
 // Disable tests on build
-check.dependsOn.remove(test)
+tasks.withType(Test) {enabled = false}
 
 task testJar(type: Jar, dependsOn: testClasses) {
     classifier "tests"
@@ -55,6 +53,12 @@ artifacts {
 task sourceJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.java
+}
+
+javadoc {
+    if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+        options.addBooleanOption('html5', true)
+    }
 }
 
 task javadocJar (type: Jar, dependsOn: javadoc) {

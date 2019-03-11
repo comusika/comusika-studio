@@ -2,18 +2,15 @@ apply plugin: 'base'
 apply plugin: 'distribution'
 apply plugin: 'com.bmuschko.izpack'
 
-def baseVersion = '0.2.0'
+def baseVersion = '0.1.1'
 def devVersion = 'DEV'
 version = baseVersion + devVersion + '-' + getDate('yyyyMMdd')
+def executableName = "frinika-studio"
 
 def getDate(dateFormat) {
     def date = new Date()
     def formattedDate = date.format(dateFormat)
     return formattedDate
-}
-
-task wrapper(type: Wrapper, description: 'Creates and deploys the Gradle wrapper to the current directory.') {
-    gradleVersion = '4.6'
 }
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
@@ -24,7 +21,8 @@ task versionFile() {
 version = $baseVersion
 build-date = ${getDate('YYYY-MM-dd')}
 copyrightStart = 2004
-copyrightEnd = ${getDate('YYYY')}
+copyrightEnd = ${getDate('YYYY')}\
+executableName = $executableName
 """
     }
 }
@@ -55,7 +53,7 @@ distributions {
             }
 
             from project(':tools:studio-app').projectDir.absolutePath + '/build/launch4j'
-            include "frinika-studio.exe"
+            include executableName + ".exe"
 
             into('lib') {
                 from 'lib'
@@ -86,7 +84,7 @@ distributions {
                     into('') {
                         from p.jar.archivePath
                         include '*'
-                        rename { filename -> "frinika-studio.jar" }
+                        rename { filename -> executableName + ".jar" }
                     }
                 }
             }
