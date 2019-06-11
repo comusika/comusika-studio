@@ -24,10 +24,9 @@ import com.frinika.main.panel.ProgressPanel;
 import com.frinika.project.FrinikaProjectContainer;
 import com.frinika.tools.ProgressInputStream;
 import com.frinika.tools.ProgressObserver;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +39,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
 
 /**
  * Progress operation.
@@ -51,8 +49,8 @@ public interface ProgressOperation {
 
     void run(@Nonnull ProgressPanel panel);
 
-    public static void openProjectFile(@Nonnull FrinikaFrame projectFrame, @Nonnull File projectFile) throws Exception {
-        showProgressDialog(projectFrame, (ProgressPanel progressPanel) -> {
+    public static void openProjectFile(@Nonnull Frame parentFrame, @Nonnull FrinikaFrame projectFrame, @Nonnull File projectFile) throws Exception {
+        showProgressDialog(parentFrame, (ProgressPanel progressPanel) -> {
             ProgressObserver progressObserver = progressPanel.getProgressObserver();
             try {
                 progressObserver.setGoal(projectFile.length());
@@ -66,7 +64,7 @@ public interface ProgressOperation {
         });
     }
 
-    public static void downloadSampleFile(@Nonnull FrinikaFrame frame, @Nonnull File targetFile, @Nonnull String downloadUrlString) {
+    public static void downloadSampleFile(@Nonnull Frame parentFrame, @Nonnull FrinikaFrame frame, @Nonnull File targetFile, @Nonnull String downloadUrlString) {
         try {
             URL downloadUrl = new URL(downloadUrlString);
             HttpURLConnection connection = (HttpURLConnection) downloadUrl.openConnection();
@@ -90,7 +88,7 @@ public interface ProgressOperation {
 
             final InputStream inputStream = connection.getInputStream();
             final long downloadLength = length;
-            showProgressDialog(frame, (ProgressPanel progressPanel) -> {
+            showProgressDialog(parentFrame, (ProgressPanel progressPanel) -> {
                 progressPanel.setActionTitle("Download example project");
                 progressPanel.setActionText("Downloading...");
 
@@ -113,11 +111,11 @@ public interface ProgressOperation {
         }
     }
 
-    public static void showProgressDialog(@Nonnull FrinikaFrame projectFrame, @Nonnull ProgressOperation operation) {
+    public static void showProgressDialog(@Nonnull Frame parentFrame, @Nonnull ProgressOperation operation) {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] allDevices = env.getScreenDevices();
 
-        final JDialog progressDialog = new JDialog(projectFrame, true);
+        final JDialog progressDialog = new JDialog(parentFrame, true);
         progressDialog.setUndecorated(true);
         progressDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         ProgressPanel progressPanel = new ProgressPanel();
@@ -125,27 +123,19 @@ public interface ProgressOperation {
         progressDialog.pack();
 
         progressPanel.setCloseListener(() -> {
-            progressDialog.dispatchEvent(new WindowEvent(progressDialog, WindowEvent.WINDOW_CLOSING));
+            progressDialog.dispose();
         });
 
         int screenWidth = allDevices[0].getDefaultConfiguration().getBounds().width;
         progressDialog.setSize(screenWidth / 2, progressDialog.getHeight());
         WindowUtils.setWindowCenterPosition(progressDialog);
 
-        progressDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                new Thread(() -> {
-                    operation.run(progressPanel);
-                }).start();
-            }
-        });
+        // Perform loading operation in separate thread
+        new Thread(() -> operation.run(progressPanel)).start();
 
         try {
-            SwingUtilities.invokeLater(() -> {
-                progressDialog.setVisible(true);
-            });
-        } catch (RuntimeException ex) {
+            progressDialog.setVisible(true);
+        } catch (Exception ex) {
             Logger.getLogger(ProgressOperation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

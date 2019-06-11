@@ -21,7 +21,6 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.frinika.radio;
 
 import com.frinika.project.FrinikaProjectContainer;
@@ -43,7 +42,6 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-
 /**
  * @author Peter Johan Salomonsen
  */
@@ -55,18 +53,16 @@ public class LocalOGGHttpRadio {
 
     FrinikaProjectContainer project = null;
 
-    private LocalOGGHttpRadio()
-    {
+    private LocalOGGHttpRadio() {
 
     }
 
-    private void startListener()
-    {
+    private void startListener() {
         final RadioAudioProcess rap = new RadioAudioProcess(project);
         project.getMixer().getMainBus().setOutputProcess(rap);
 
         Server server = new Server(15000);
-        Context root = new Context(server,"/",Context.SESSIONS);
+        Context root = new Context(server, "/", Context.SESSIONS);
         root.addServlet(new ServletHolder(new HttpServlet() {
 
             @Override
@@ -75,16 +71,13 @@ public class LocalOGGHttpRadio {
                 try {
                     InputStream is = req.getInputStream();
                     int c = is.read();
-                    while(c!=-1)
-                    {
+                    while (c != -1) {
                         c = is.read();
                     }
                     AudioFileFormat.Type oggType = null;
-                    for(AudioFileFormat.Type aff : AudioSystem.getAudioFileTypes())
-                    {
+                    for (AudioFileFormat.Type aff : AudioSystem.getAudioFileTypes()) {
                         System.out.println(aff.getExtension());
-                        if (aff.getExtension().equals("ogg"))
-                        {
+                        if (aff.getExtension().equals("ogg")) {
                             oggType = aff;
                         }
                     }
@@ -96,15 +89,12 @@ public class LocalOGGHttpRadio {
                     tdl = rap.getNewTargetDataLine();
                     AudioSystem.write(new AudioInputStream(tdl), oggType, os);
                     System.out.println("Done writing");
-               } catch(org.mortbay.jetty.EofException ex) {
+                } catch (org.mortbay.jetty.EofException ex) {
                     System.out.println("Connection closed by listener");
-               }
-               catch (IOException | LineUnavailableException ex) {
+                } catch (IOException | LineUnavailableException ex) {
                     Logger.getLogger(LocalOGGHttpRadio.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                finally {
-                    if(tdl!=null)
-                    {
+                } finally {
+                    if (tdl != null) {
                         tdl.close();
                     }
                 }
@@ -119,16 +109,14 @@ public class LocalOGGHttpRadio {
         }
     }
 
-    public static void startRadio(FrinikaProjectContainer project)
-    {
+    public static void startRadio(FrinikaProjectContainer project) {
         instance.project = project;
         instance.startListener();
-        
+
         Logger.getLogger(LocalOGGHttpRadio.class.getName()).info("Local OGG Http Radio started");
     }
 
-    public static void stopRadio()
-    {
+    public static void stopRadio() {
         Logger.getLogger(LocalOGGHttpRadio.class.getName()).info("Local OGG Http Radio stopped");
     }
 }

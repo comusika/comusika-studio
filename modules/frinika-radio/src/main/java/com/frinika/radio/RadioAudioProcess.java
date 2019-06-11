@@ -18,8 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
+ */
 package com.frinika.radio;
 
 import com.frinika.project.FrinikaProjectContainer;
@@ -35,6 +34,7 @@ import uk.org.toot.audio.core.AudioProcess;
  * @author Peter Johan Salomonsen
  */
 public class RadioAudioProcess implements AudioProcess {
+
     HashSet<RadioStreamTargetDataLine> tdLines = new HashSet<>();
     ArrayList<RadioStreamTargetDataLine> newTdLines = new ArrayList<>();
     ArrayList<RadioStreamTargetDataLine> closedTdLines = new ArrayList<>();
@@ -44,7 +44,6 @@ public class RadioAudioProcess implements AudioProcess {
     public RadioAudioProcess(FrinikaProjectContainer project) {
         this.project = project;
     }
-
 
     @Override
     public void open() throws Exception {
@@ -57,57 +56,57 @@ public class RadioAudioProcess implements AudioProcess {
          * Convert floats to bytes - this is for export wav
          */
 
-        for(RadioStreamTargetDataLine tdLine : newTdLines)
+        for (RadioStreamTargetDataLine tdLine : newTdLines) {
             tdLines.add(tdLine);
+        }
 
-        for(RadioStreamTargetDataLine tdLine : tdLines)
-        {
-            if(newTdLines.contains(tdLine))
+        for (RadioStreamTargetDataLine tdLine : tdLines) {
+            if (newTdLines.contains(tdLine)) {
                 newTdLines.remove(tdLine);
+            }
 
-            if(tdLine.isOpen())
-            {
+            if (tdLine.isOpen()) {
                 int i = 0;
-                for(int n = 0;n<buffer.getSampleCount();n++)
-                {
+                for (int n = 0; n < buffer.getSampleCount(); n++) {
                     //Left
                     float floatSample = buffer.getChannel(0)[n];
                     short sample;
 
-                    if(floatSample>=1.0f)
-                        sample=0x7fff;
-                    else if(floatSample<=-1.0f)
-                        sample=-0x8000;
-                    else
-                        sample = (short)(floatSample*0x8000);
+                    if (floatSample >= 1.0f) {
+                        sample = 0x7fff;
+                    } else if (floatSample <= -1.0f) {
+                        sample = -0x8000;
+                    } else {
+                        sample = (short) (floatSample * 0x8000);
+                    }
 
                     byte[] frame = new byte[4];
-                    frame[0] = (byte)(sample & 0xff);
-                    frame[1] = (byte)((sample & 0xff00) >> 8);
+                    frame[0] = (byte) (sample & 0xff);
+                    frame[1] = (byte) ((sample & 0xff00) >> 8);
 
                     //Right
-
                     floatSample = buffer.getChannel(1)[n];
 
-                    if(floatSample>=1.0f)
-                        sample=0x7fff;
-                    else if(floatSample<=-1.0f)
-                        sample=-0x8000;
-                    else
-                        sample = (short)(floatSample*0x8000);
+                    if (floatSample >= 1.0f) {
+                        sample = 0x7fff;
+                    } else if (floatSample <= -1.0f) {
+                        sample = -0x8000;
+                    } else {
+                        sample = (short) (floatSample * 0x8000);
+                    }
 
-                   frame[2] = (byte)(sample & 0xff);
-                   frame[3] = ((byte)((sample & 0xff00) >> 8));
+                    frame[2] = (byte) (sample & 0xff);
+                    frame[3] = ((byte) ((sample & 0xff00) >> 8));
 
-                   tdLine.addFrame(frame);
+                    tdLine.addFrame(frame);
                 }
-            }
-            else {
+            } else {
                 closedTdLines.add(tdLine);
             }
         }
-        for(RadioStreamTargetDataLine tdLine : closedTdLines)
+        for (RadioStreamTargetDataLine tdLine : closedTdLines) {
             tdLines.remove(tdLine);
+        }
 
         closedTdLines.clear();
 
@@ -125,5 +124,4 @@ public class RadioAudioProcess implements AudioProcess {
     public void close() throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
 }

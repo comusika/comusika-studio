@@ -54,12 +54,7 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     private final Point overscanPosition;
 
     private BufferedImage animationBuffer;
-    private final ImageObserver observer = new ImageObserver() {
-        @Override
-        public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-            return true;
-        }
-    };
+    private final ImageObserver observer = (Image img, int infoflags, int x1, int y1, int width1, int height1) -> true;
 
     private boolean firstTimeOpened = false;
     private final Timer timer = new Timer();

@@ -56,7 +56,10 @@ public class InitialAudioServerPanel extends JPanel {
     Color bgCol = darkMode ? Color.BLACK : Color.WHITE;
 
     public InitialAudioServerPanel() {
+        init();
+    }
 
+    private void init() {
         setLayout(new BorderLayout());
 
         setBackground(bgCol);

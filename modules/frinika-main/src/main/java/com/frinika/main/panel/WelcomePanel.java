@@ -24,6 +24,7 @@ import com.frinika.gui.util.WindowUtils;
 import com.frinika.main.FrinikaFrame;
 import com.frinika.main.model.ProjectFileRecord;
 import com.frinika.main.model.ProjectFileRecordCellRenderer;
+import java.awt.Frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -67,7 +68,8 @@ public class WelcomePanel extends javax.swing.JPanel {
                         int index = ((JList<?>) source).getSelectedIndex();
                         if (index >= 0) {
                             ProjectFileRecord projectFileRecord = recentListModel.get(index);
-                            actionListener.openRecentProject(projectFileRecord);
+                            Frame parentFrame = WindowUtils.getFrame(WelcomePanel.this);
+                            actionListener.openRecentProject(parentFrame, projectFileRecord);
                         }
                     }
                 }
@@ -82,7 +84,8 @@ public class WelcomePanel extends javax.swing.JPanel {
                         int index = ((JList<?>) source).locationToIndex(event.getPoint());
                         if (index >= 0) {
                             ProjectFileRecord projectFileRecord = recentListModel.get(index);
-                            actionListener.openRecentProject(projectFileRecord);
+                            Frame parentFrame = WindowUtils.getFrame(WelcomePanel.this);
+                            actionListener.openRecentProject(parentFrame, projectFileRecord);
                         }
                     }
                 }
@@ -101,7 +104,8 @@ public class WelcomePanel extends javax.swing.JPanel {
                         int index = ((JList<?>) source).getSelectedIndex();
                         if (index >= 0) {
                             ProjectFileRecord projectFileRecord = exampleListModel.get(index);
-                            actionListener.openExampleProject(projectFileRecord);
+                            Frame parentFrame = WindowUtils.getFrame(WelcomePanel.this);
+                            actionListener.openExampleProject(parentFrame, projectFileRecord);
                         }
                     }
                 }
@@ -116,7 +120,8 @@ public class WelcomePanel extends javax.swing.JPanel {
                         int index = ((JList<?>) source).locationToIndex(event.getPoint());
                         if (index >= 0) {
                             ProjectFileRecord projectFileRecord = exampleListModel.get(index);
-                            actionListener.openExampleProject(projectFileRecord);
+                            Frame parentFrame = WindowUtils.getFrame(WelcomePanel.this);
+                            actionListener.openExampleProject(parentFrame, projectFileRecord);
                         }
                     }
                 }
@@ -425,7 +430,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         SupportedLaf themeLaf = theme == null ? SupportedLaf.DEFAULT : SupportedLaf.DARCULA;
         darculaLafToggleButton.setSelected(themeLaf == SupportedLaf.DARCULA);
     }
-    
+
     @Nonnull
     public WindowListener getWindowListener() {
         return animatedLogoPanel.getWindowListener();
@@ -441,9 +446,9 @@ public class WelcomePanel extends javax.swing.JPanel {
 
         void closeDialog();
 
-        void openRecentProject(@Nonnull ProjectFileRecord projectFileRecord);
+        void openRecentProject(@Nonnull Frame parentFrame, @Nonnull ProjectFileRecord projectFileRecord);
 
-        void openExampleProject(@Nonnull ProjectFileRecord projectFileRecord);
+        void openExampleProject(@Nonnull Frame parentFrame, @Nonnull ProjectFileRecord projectFileRecord);
 
         void saveDefaultTheme(@Nullable String theme);
     }

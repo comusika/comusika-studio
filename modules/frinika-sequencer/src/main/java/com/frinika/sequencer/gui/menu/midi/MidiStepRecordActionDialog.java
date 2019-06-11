@@ -27,7 +27,7 @@ import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.gui.AbstractDialog;
 import com.frinika.gui.OptionsEditor;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.midi.MidiMessageListener;
+import com.frinika.audio.midi.MidiMessageListener;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.SwingSongPositionListenerWrapper;
 import com.frinika.sequencer.gui.TimeFormat;

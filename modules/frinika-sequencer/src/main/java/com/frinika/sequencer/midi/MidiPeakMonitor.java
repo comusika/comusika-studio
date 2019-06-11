@@ -21,15 +21,15 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.frinika.tootX;
+package com.frinika.sequencer.midi;
 
-import com.frinika.midi.MidiMessageListener;
+import com.frinika.audio.midi.MidiMessageListener;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
 
 /**
  * A simple MidiMessageMonitor that looks for the peak value. It is reset when
- * yoiu call getPeak()
+ * you call getPeak()
  *
  * @author pjl
  */

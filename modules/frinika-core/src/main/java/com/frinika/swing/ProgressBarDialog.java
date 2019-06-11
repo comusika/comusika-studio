@@ -32,7 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 /**
- * Dialog for monitoring task progress while it's running
+ * Dialog for monitoring task progress while it's running.
  *
  * @author Peter Johan Salomonsen
  */
@@ -46,7 +46,10 @@ public class ProgressBarDialog extends JDialog {
 
     public ProgressBarDialog(JFrame frame, String labelText, int completeCount) {
         super(frame, true);
+        init(frame, labelText, completeCount);
+    }
 
+    private void init(JFrame frame, String labelText, int completeCount) {
         this.setResizable(false);
         this.setUndecorated(true);
         this.setAlwaysOnTop(true);

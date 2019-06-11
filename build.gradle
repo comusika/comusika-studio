@@ -4,6 +4,7 @@ apply plugin: 'com.bmuschko.izpack'
 
 def baseVersion = '0.1.1'
 def devVersion = 'DEV'
+def fullVersion = devVersion == '' ? baseVersion : baseVersion + ' ' + devVersion
 version = baseVersion + devVersion + '-' + getDate('yyyyMMdd')
 def executableName = "frinika-studio"
 
@@ -17,8 +18,9 @@ subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
 task versionFile() {
     doLast {
-        new File("$projectDir/modules/frinika-core/src/main/resources/version.properties").text = """
-version = $baseVersion
+        new File("$projectDir/modules/frinika-core/src/main/resources/version.properties").text = """\n\
+baseVersion = $baseVersion
+version = $fullVersion
 build-date = ${getDate('YYYY-MM-dd')}
 copyrightStart = 2004
 copyrightEnd = ${getDate('YYYY')}\

@@ -32,7 +32,7 @@ import java.awt.Color;
 public class AudioSetupPanel extends javax.swing.JPanel {
 
     private final boolean darkMode = WindowUtils.isDarkMode();
-    
+
     private InitialAudioServerPanel panel;
 
     public AudioSetupPanel() {
@@ -72,11 +72,19 @@ public class AudioSetupPanel extends javax.swing.JPanel {
 
         add(panel, BorderLayout.CENTER);
     }
-    
+
     public void close() {
         panel.close();
     }
 
+    /**
+     * Test method for this panel.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        WindowUtils.invokeDialog(new AudioSetupPanel());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

@@ -24,7 +24,7 @@
 package com.frinika.sequencer;
 
 import com.frinika.base.FrinikaAudioSystem;
-import com.frinika.midi.MidiMessageListener;
+import com.frinika.audio.midi.MidiMessageListener;
 import com.frinika.sequencer.gui.RecordingDialog;
 import com.frinika.sequencer.midi.MonitorReceiver;
 import com.frinika.sequencer.model.AudioLane;

@@ -75,9 +75,9 @@ public class OpenProjectAction extends AbstractAction {
         }
     }
 
-    public static void openProjectFile(@Nonnull File projectFile) throws Exception {
+    public void openProjectFile(@Nonnull File projectFile) throws Exception {
         FrinikaFrame projectFrame = new FrinikaFrame();
-        ProgressOperation.openProjectFile(projectFrame, projectFile);
+        ProgressOperation.openProjectFile(frame, projectFrame, projectFile);
         FrinikaConfig.setLastProject(projectFile);
     }
 }

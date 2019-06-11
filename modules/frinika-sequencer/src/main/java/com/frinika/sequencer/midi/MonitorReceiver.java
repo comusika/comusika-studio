@@ -23,7 +23,7 @@
  */
 package com.frinika.sequencer.midi;
 
-import com.frinika.midi.MidiMessageListener;
+import com.frinika.audio.midi.MidiMessageListener;
 import java.util.Collection;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;

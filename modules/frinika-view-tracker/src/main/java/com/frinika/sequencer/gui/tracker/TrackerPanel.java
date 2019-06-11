@@ -25,7 +25,7 @@ package com.frinika.sequencer.gui.tracker;
 
 import com.frinika.audio.gui.VirtualKeyboard;
 import com.frinika.localization.CurrentLocale;
-import com.frinika.midi.MidiMessageListener;
+import com.frinika.audio.midi.MidiMessageListener;
 import com.frinika.sequencer.FrinikaSequence;
 import com.frinika.sequencer.SongPositionListener;
 import com.frinika.sequencer.SwingSongPositionListenerWrapper;

@@ -28,6 +28,7 @@ import com.frinika.main.panel.AboutPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
@@ -35,14 +36,13 @@ import java.awt.Rectangle;
 import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 
 /**
  * @author peter
  */
 public class AboutAction {
 
-    public static void about(JFrame parentFrame) {
+    public static void about(Frame parentFrame) {
         boolean darkMode = WindowUtils.isDarkMode();
         final JDialog aboutDialog = new JDialog(parentFrame);
         aboutDialog.setUndecorated(true);

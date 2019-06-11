@@ -42,14 +42,14 @@ import java.util.jar.JarInputStream;
 public class Toolbox {
 
     /**
-     * Private constructor to avoid instantiaton.
+     * Private constructor to avoid instantiation.
      */
     private Toolbox() {
         // nop
     }
 
     public static String joinStrings(Collection<String> ss, String delim) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (String s : ss) {
             if (!first) {
@@ -62,7 +62,7 @@ public class Toolbox {
     }
 
     public static String joinStrings(String[] ss, String delim) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (String s : ss) {
             if (!first) {
