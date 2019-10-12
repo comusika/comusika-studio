@@ -23,7 +23,7 @@ baseVersion = $baseVersion
 version = $fullVersion
 build-date = ${getDate('YYYY-MM-dd')}
 copyrightStart = 2004
-copyrightEnd = ${getDate('YYYY')}\
+copyrightEnd = ${getDate('YYYY')}
 executableName = $executableName
 """
     }

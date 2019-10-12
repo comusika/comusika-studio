@@ -389,12 +389,9 @@ public class FrinikaMain {
         if (quitApproved) {
             // Todo changed projects with checkboxes
             // Close frame one by one
-            while (!openProjectFrames.isEmpty()) {
-                FrinikaFrame openFrame = openProjectFrames.get(0);
+            for (FrinikaFrame openFrame : openProjectFrames) {
                 if (canClose(openFrame)) {
-                    SwingUtilities.invokeLater(() -> {
-                        openFrame.dispose();
-                    });
+                    FrinikaMain.getInstance().closeFrame(openFrame);
                 }
             }
 
