@@ -5,7 +5,7 @@ apply plugin: 'com.bmuschko.izpack'
 def baseVersion = '0.1.1'
 def devVersion = 'DEV'
 def fullVersion = devVersion == '' ? baseVersion : baseVersion + ' ' + devVersion
-version = baseVersion + devVersion + '-' + getDate('yyyyMMdd')
+version = (devVersion == '' ? baseVersion : baseVersion + '-SNAPSHOT') + '-' + getDate('yyyyMMdd')
 def executableName = "frinika-studio"
 
 def getDate(dateFormat) {

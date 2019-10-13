@@ -2,6 +2,7 @@ package com.frinika.gui.util;
 
 import com.bulenkov.darcula.DarculaLaf;
 import com.bulenkov.darcula.DarculaLookAndFeelInfo;
+import com.frinika.gui.util.handler.OkCancelService;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBlue;
 import java.awt.BorderLayout;
@@ -17,8 +18,14 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -36,6 +43,7 @@ import javax.swing.plaf.metal.MetalTheme;
  *
  * @author hajdam
  */
+@ParametersAreNonnullByDefault
 public class WindowUtils {
 
     private static boolean darkMode = false;
@@ -45,24 +53,39 @@ public class WindowUtils {
     private WindowUtils() {
     }
 
-    public static void addHeaderPanel(JDialog dialog, String headerTitle, String headerDescription, ImageIcon headerIcon) {
+    public static void addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
+        addHeaderPanel(window, resourceClass, resourceBundle, null);
+    }
+
+    public static void addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle, @Nullable OkCancelService okCancelService) {
+        URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
+        Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
+        WindowHeaderPanel headerPanel = addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
+        if (okCancelService != null) {
+            WindowUtils.assignGlobalKeyListener(headerPanel, okCancelService.getOkCancelListener());
+        }
+    }
+
+    @Nonnull
+    public static WindowHeaderPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
         headerPanel.setDescription(headerDescription);
         if (headerIcon != null) {
             headerPanel.setIcon(headerIcon);
         }
-        if (dialog instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
-            ((WindowHeaderPanel.WindowHeaderDecorationProvider) dialog).setHeaderDecoration(headerPanel);
+        if (window instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
+            ((WindowHeaderPanel.WindowHeaderDecorationProvider) window).setHeaderDecoration(headerPanel);
         } else {
-            Frame frame = getFrame(dialog);
+            Frame frame = getFrame(window);
             if (frame instanceof WindowHeaderPanel.WindowHeaderDecorationProvider) {
                 ((WindowHeaderPanel.WindowHeaderDecorationProvider) frame).setHeaderDecoration(headerPanel);
             }
         }
-        int height = dialog.getHeight() + headerPanel.getPreferredSize().height;
-        dialog.getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
-        dialog.setSize(dialog.getWidth(), height);
+        int height = window.getHeight() + headerPanel.getPreferredSize().height;
+        ((JDialog) window).getContentPane().add(headerPanel, java.awt.BorderLayout.PAGE_START);
+        window.setSize(window.getWidth(), height);
+        return headerPanel;
     }
 
     public static void switchLookAndFeel(SupportedLaf selectedLaf) {
@@ -122,12 +145,14 @@ public class WindowUtils {
         });
     }
 
+    @Nonnull
     public static JDialog createDialog(final Component component, Window parent, Dialog.ModalityType modalityType) {
         JDialog dialog = new JDialog(parent, modalityType);
         initWindowByComponent(dialog, component);
         return dialog;
     }
 
+    @Nonnull
     public static JDialog createDialog(final Component component) {
         JDialog dialog = new JDialog();
         initWindowByComponent(dialog, component);
@@ -155,6 +180,7 @@ public class WindowUtils {
         window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
     }
 
+    @Nonnull
     public static JDialog createBasicDialog() {
         JDialog dialog = new JDialog(new javax.swing.JFrame(), true);
         dialog.setSize(640, 480);
@@ -168,12 +194,18 @@ public class WindowUtils {
      * @param component instantiated component
      * @return frame instance if found
      */
+    @Nullable
     public static Frame getFrame(Component component) {
         Component parentComponent = SwingUtilities.getWindowAncestor(component);
         while (!(parentComponent == null || parentComponent instanceof Frame)) {
             parentComponent = parentComponent.getParent();
         }
         return (Frame) parentComponent;
+    }
+
+    @Nullable
+    public static Window getWindow(Component component) {
+        return SwingUtilities.getWindowAncestor(component);
     }
 
     /**
@@ -295,6 +327,7 @@ public class WindowUtils {
      * @param controlPanel control panel
      * @return panel
      */
+    @Nonnull
     public static JPanel createDialogPanel(JPanel mainPanel, JPanel controlPanel) {
         JPanel dialogPanel = new JPanel(new BorderLayout());
         dialogPanel.add(mainPanel, BorderLayout.CENTER);
@@ -346,10 +379,25 @@ public class WindowUtils {
         window.setLocation(windowPosX, windowPosY);
     }
 
-    public static interface OkCancelListener {
+    @ParametersAreNonnullByDefault
+    public interface DialogWrapper {
 
-        void okEvent();
+        void show();
 
-        void cancelEvent();
+        void showCentered(@Nullable Component window);
+
+        void close();
+
+        void dispose();
+
+        @Nonnull
+        Window getWindow();
+
+        @Nonnull
+        Container getParent();
+
+        void center(@Nullable Component window);
+
+        void center();
     }
 }
