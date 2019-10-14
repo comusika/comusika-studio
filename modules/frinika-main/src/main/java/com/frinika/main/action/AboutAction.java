@@ -23,6 +23,7 @@
  */
 package com.frinika.main.action;
 
+import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.main.panel.AboutPanel;
 import java.awt.BorderLayout;
@@ -53,7 +54,7 @@ public class AboutAction {
         aboutDialog.add(aboutPanel, BorderLayout.CENTER);
         aboutDialog.pack();
         centerDialog(aboutDialog);
-        aboutPanel.setOkCancelListener(new WindowUtils.OkCancelListener() {
+        aboutPanel.setOkCancelListener(new OkCancelListener() {
             @Override
             public void okEvent() {
                 aboutDialog.setVisible(false);

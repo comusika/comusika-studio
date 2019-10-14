@@ -24,6 +24,7 @@
 package com.frinika.soundhelix;
 
 import com.frinika.gui.util.BareBonesBrowserLaunch;
+import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 
 /**
@@ -33,7 +34,7 @@ import com.frinika.gui.util.WindowUtils;
  */
 public class AboutSoundHelixPanel extends javax.swing.JPanel {
 
-    private WindowUtils.OkCancelListener okCancelListener = null;
+    private OkCancelListener okCancelListener = null;
 
     public AboutSoundHelixPanel() {
         initComponents();
@@ -118,7 +119,7 @@ public class AboutSoundHelixPanel extends javax.swing.JPanel {
         BareBonesBrowserLaunch.openURL("https://soundhelix.com");
     }//GEN-LAST:event_linkLabelMouseClicked
 
-    public void setOkCancelListener(WindowUtils.OkCancelListener okCancelListener) {
+    public void setOkCancelListener(OkCancelListener okCancelListener) {
         this.okCancelListener = okCancelListener;
     }
 

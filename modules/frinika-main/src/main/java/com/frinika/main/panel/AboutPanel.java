@@ -20,6 +20,7 @@
 package com.frinika.main.panel;
 
 import com.frinika.gui.util.BareBonesBrowserLaunch;
+import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.project.dialog.VersionProperties;
 import java.awt.BorderLayout;
@@ -63,7 +64,7 @@ import javax.swing.text.html.HTMLDocument;
  */
 public class AboutPanel extends javax.swing.JPanel {
 
-    private WindowUtils.OkCancelListener okCancelListener;
+    private OkCancelListener okCancelListener;
 
     public static final char COPYRIGHT_SYMBOL = (char) 169; // The (C) Symbol
 
@@ -307,7 +308,7 @@ public class AboutPanel extends javax.swing.JPanel {
                 new ImageIcon(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)));
     }
 
-    public void setOkCancelListener(WindowUtils.OkCancelListener okCancelListener) {
+    public void setOkCancelListener(OkCancelListener okCancelListener) {
         this.okCancelListener = okCancelListener;
     }
 

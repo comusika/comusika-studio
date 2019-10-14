@@ -22,7 +22,9 @@
 package com.frinika.soundhelix;
 
 import com.frinika.base.FrinikaAudioSystem;
+import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.gui.util.handler.DefaultControlHandler;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.MidiLane;
 import com.frinika.sequencer.model.MidiPart;
@@ -44,7 +46,9 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Synthesizer;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import org.apache.log4j.PropertyConfigurator;
+import com.frinika.gui.util.panel.DefaultControlPanel;
 
 /**
  * @author hajdam
@@ -52,7 +56,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
 
     private final AbstractProjectContainer project;
-    private WindowUtils.OkCancelListener okCancelListener = null;
+    private OkCancelListener okCancelListener = null;
 
     public FrinikaSoundHelixPanel(AbstractProjectContainer project) {
         this.project = project;
@@ -235,15 +239,12 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
         AboutSoundHelixPanel aboutPanel = new AboutSoundHelixPanel();
-        JDialog aboutDialog = WindowUtils.createDialog(aboutPanel, WindowUtils.getFrame(this), Dialog.ModalityType.APPLICATION_MODAL);
-        aboutPanel.setOkCancelListener(new WindowUtils.OkCancelListener() {
+        DefaultControlPanel controlPanel = new DefaultControlPanel();
+        JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
+        JDialog aboutDialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getFrame(this), Dialog.ModalityType.APPLICATION_MODAL);
+        controlPanel.setHandler(new DefaultControlHandler() {
             @Override
-            public void okEvent() {
-                WindowUtils.closeWindow(aboutDialog);
-            }
-
-            @Override
-            public void cancelEvent() {
+            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
                 WindowUtils.closeWindow(aboutDialog);
             }
         });
@@ -450,7 +451,7 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
         }
     }
 
-    public void setOkCancelListener(WindowUtils.OkCancelListener okCancelListener) {
+    public void setOkCancelListener(OkCancelListener okCancelListener) {
         this.okCancelListener = okCancelListener;
     }
 
