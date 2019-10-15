@@ -38,11 +38,6 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
                 performClick(MultiStepControlHandler.ControlActionType.CANCEL);
             }
         };
-        init();
-    }
-    
-    private void init() {
-        WindowUtils.assignGlobalKeyListener(this, okCancelListener);
     }
 
     public void setHandler(MultiStepControlHandler handler) {

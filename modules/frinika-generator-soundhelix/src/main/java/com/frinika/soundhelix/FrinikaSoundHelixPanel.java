@@ -24,6 +24,7 @@ package com.frinika.soundhelix;
 import com.frinika.base.FrinikaAudioSystem;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.gui.util.WindowUtils.DialogWrapper;
 import com.frinika.gui.util.handler.DefaultControlHandler;
 import com.frinika.sequencer.gui.mixer.SynthWrapper;
 import com.frinika.sequencer.model.MidiLane;
@@ -45,7 +46,6 @@ import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Synthesizer;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import org.apache.log4j.PropertyConfigurator;
 import com.frinika.gui.util.panel.DefaultControlPanel;
@@ -239,17 +239,19 @@ public class FrinikaSoundHelixPanel extends javax.swing.JPanel {
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
         AboutSoundHelixPanel aboutPanel = new AboutSoundHelixPanel();
-        DefaultControlPanel controlPanel = new DefaultControlPanel();
-        JPanel dialogPanel = WindowUtils.createDialogPanel(aboutPanel, controlPanel);
-        JDialog aboutDialog = WindowUtils.createDialog(dialogPanel, WindowUtils.getFrame(this), Dialog.ModalityType.APPLICATION_MODAL);
-        controlPanel.setHandler(new DefaultControlHandler() {
+        DialogWrapper aboutDialog = WindowUtils.createDialog(aboutPanel, this, Dialog.ModalityType.APPLICATION_MODAL);
+        aboutPanel.setOkCancelListener(new OkCancelListener() {
             @Override
-            public void controlActionPerformed(DefaultControlHandler.ControlActionType actionType) {
-                WindowUtils.closeWindow(aboutDialog);
+            public void okEvent() {
+                aboutDialog.close();
+            }
+
+            @Override
+            public void cancelEvent() {
+                aboutDialog.close();
             }
         });
-        aboutDialog.setLocationByPlatform(true);
-        aboutDialog.setVisible(true);
+        aboutDialog.showCentered(this);
     }//GEN-LAST:event_aboutButtonActionPerformed
 
     private void customizeModeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customizeModeButtonActionPerformed

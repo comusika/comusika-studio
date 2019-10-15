@@ -25,14 +25,14 @@ package com.frinika.soundhelix;
 
 import com.frinika.gui.util.BareBonesBrowserLaunch;
 import com.frinika.gui.util.OkCancelListener;
-import com.frinika.gui.util.WindowUtils;
+import com.frinika.gui.util.handler.DefaultControlHandler;
 
 /**
  * About SoundHelix generator.
  *
  * @author hajdam
  */
-public class AboutSoundHelixPanel extends javax.swing.JPanel {
+public class AboutSoundHelixPanel extends javax.swing.JPanel implements DefaultControlHandler.DefaultControlService {
 
     private OkCancelListener okCancelListener = null;
 
@@ -142,4 +142,29 @@ public class AboutSoundHelixPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void performClick(DefaultControlHandler.ControlActionType actionType) {
+        switch (actionType) {
+            case OK: {
+                performOk();
+                break;
+            }
+            case CANCEL: {
+                performCancel();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public DefaultControlHandler.DefaultControlEnablementListener createEnablementListener() {
+        return (DefaultControlHandler.ControlActionType actionType, boolean enablement) -> {
+        };
+    }
+
+    @Override
+    public OkCancelListener getOkCancelListener() {
+        return okCancelListener;
+    }
 }

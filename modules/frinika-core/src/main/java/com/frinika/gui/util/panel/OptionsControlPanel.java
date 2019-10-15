@@ -38,11 +38,6 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
                 performClick(OptionsControlHandler.ControlActionType.CANCEL);
             }
         };
-        init();
-    }
-    
-    private void init() {
-        WindowUtils.assignGlobalKeyListener(this, okCancelListener);
     }
 
     public void setHandler(OptionsControlHandler handler) {

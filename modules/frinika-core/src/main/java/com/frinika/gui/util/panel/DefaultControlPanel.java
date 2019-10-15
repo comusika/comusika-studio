@@ -26,7 +26,7 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
     public DefaultControlPanel(java.util.ResourceBundle resourceBundle) {
         this.resourceBundle = resourceBundle;
         initComponents();
-        
+
         okCancelListener = new OkCancelListener() {
             @Override
             public void okEvent() {
@@ -38,11 +38,6 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
                 performClick(DefaultControlHandler.ControlActionType.CANCEL);
             }
         };
-        init();
-    }
-    
-    private void init() {
-        WindowUtils.assignGlobalKeyListener(this, okCancelListener);
     }
 
     public void setHandler(DefaultControlHandler handler) {

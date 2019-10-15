@@ -39,6 +39,7 @@ import com.frinika.gui.DefaultOptionsBinder;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.PresentationPanel;
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.gui.util.WindowUtils.DialogWrapper;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.main.action.AboutAction;
 import com.frinika.main.action.CreateProjectAction;
@@ -2243,21 +2244,20 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 FrinikaSoundHelixPanel panel = new FrinikaSoundHelixPanel(project);
-                JDialog dialog = WindowUtils.createDialog(panel, FrinikaFrame.this, Dialog.ModalityType.APPLICATION_MODAL);
-                WindowUtils.addHeaderPanel(dialog, "SoundHelix Generator", "Generate song using SoundHelix generator", panel.getHeaderIcon());
+                DialogWrapper dialog = WindowUtils.createDialog(panel, FrinikaFrame.this, Dialog.ModalityType.APPLICATION_MODAL);
+                WindowUtils.addHeaderPanel(dialog.getWindow(), "SoundHelix Generator", "Generate song using SoundHelix generator", panel.getHeaderIcon());
                 panel.setOkCancelListener(new OkCancelListener() {
                     @Override
                     public void okEvent() {
-                        WindowUtils.closeWindow(dialog);
+                        dialog.close();
                     }
 
                     @Override
                     public void cancelEvent() {
-                        WindowUtils.closeWindow(dialog);
+                        dialog.close();
                     }
                 });
-                dialog.setLocationByPlatform(true);
-                dialog.setVisible(true);
+                dialog.showCentered(getFrame());
             }
         });
         item.setText("SoundHelix...");

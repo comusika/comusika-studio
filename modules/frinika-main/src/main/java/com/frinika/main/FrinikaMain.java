@@ -31,6 +31,7 @@ import com.frinika.global.FrinikaConfig;
 import com.frinika.global.property.FrinikaGlobalProperties;
 import com.frinika.global.property.RecentProjectRecord;
 import com.frinika.gui.util.WindowUtils;
+import com.frinika.gui.util.WindowUtils.DialogWrapper;
 import com.frinika.localization.CurrentLocale;
 import com.frinika.main.action.CreateProjectAction;
 import com.frinika.main.action.OpenProjectAction;
@@ -222,18 +223,17 @@ public class FrinikaMain {
             public void configureAudio() {
                 AudioSetupPanel audioSetupPanel = new AudioSetupPanel();
                 Dimension panelSize = audioSetupPanel.getMinimumSize();
-                JDialog audioSetupDialog = WindowUtils.createDialog(audioSetupPanel, welcomeFrame, Dialog.ModalityType.APPLICATION_MODAL);
-                audioSetupDialog.setTitle("Audio Setup");
-                audioSetupDialog.addWindowListener(new WindowAdapter() {
+                DialogWrapper audioSetupDialog = WindowUtils.createDialog(audioSetupPanel, welcomeFrame, Dialog.ModalityType.APPLICATION_MODAL);
+                ((JDialog) audioSetupDialog.getWindow()).setTitle("Audio Setup");
+                audioSetupDialog.getWindow().addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         audioSetupPanel.close();
                     }
                 });
-                WindowUtils.addHeaderPanel(audioSetupDialog, "Primary Audio Device Setup", "Select primary audio device to be used by Frinika", new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")));
-                audioSetupDialog.setMinimumSize(panelSize);
-                WindowUtils.centerWindowOnWindow(audioSetupDialog, welcomeFrame);
-                audioSetupDialog.setVisible(true);
+                WindowUtils.addHeaderPanel(audioSetupDialog.getWindow(), "Primary Audio Device Setup", "Select primary audio device to be used by Frinika", new javax.swing.ImageIcon(FrinikaMain.class.getResource("/icons/frinika.png")));
+                audioSetupDialog.getWindow().setMinimumSize(panelSize);
+                audioSetupDialog.showCentered(welcomeFrame);
             }
 
             @Override
