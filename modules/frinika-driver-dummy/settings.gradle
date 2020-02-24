@@ -1,5 +1,8 @@
 rootProject.name = 'frinika-driver-dummy'
 
-apply from: '../modules-settings.gradle'
+if (rootProject.path == ':') {
+    include ':modules:frinika-audio-toot'
+    include ':modules:frinika-priority'
+}
 
-include ":modules:frinika-audio-toot"
+apply from: '../modules-settings.gradle'

@@ -14,6 +14,16 @@ def getDate(dateFormat) {
     return formattedDate
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-izpack-plugin:2.1'
+    }
+}
+
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
 task versionFile() {
@@ -103,19 +113,9 @@ distributions {
     }
 }
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.bmuschko:gradle-izpack-plugin:2.1'
-    }
-}
-
-dependencies {
-    izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
-}
+//dependencies {
+//    izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
+//}
 
 izpack {
     baseDir = file("$buildDir/distributions")

@@ -1,8 +1,11 @@
 rootProject.name = 'frinika-core'
 
-apply from: '../modules-settings.gradle'
+if (rootProject.path == ':') {
+    include ':modules:frinika-audio-toot'
+    include ':modules:frinika-driver-dummy'
+    include ':modules:frinika-driver-jack'
+    include ':modules:frinika-driver-osx'
+    include ':modules:frinika-priority'
+}
 
-include ":modules:frinika-audio-toot"
-include ":modules:frinika-driver-dummy"
-include ":modules:frinika-driver-jack"
-include ":modules:frinika-driver-osx"
+apply from: '../modules-settings.gradle'

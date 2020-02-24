@@ -1,4 +1,6 @@
 rootProject.name = 'sevenzip'
 
-apply from: '../modules-settings.gradle'
+if (rootProject.path == ':') {
+}
 
+apply from: '../modules-settings.gradle'

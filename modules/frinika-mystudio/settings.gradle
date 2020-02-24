@@ -1,10 +1,15 @@
 rootProject.name = 'frinika-mystudio'
 
-apply from: '../modules-settings.gradle'
+if (rootProject.path == ':') {
+    include ':modules:frinika-audio'
+    include ':modules:frinika-audio-toot'
+    include ':modules:frinika-core'
+    include ':modules:frinika-device-synthrack'
+    include ':modules:frinika-driver-dummy'
+    include ':modules:frinika-driver-jack'
+    include ':modules:frinika-driver-osx'
+    include ':modules:frinika-priority'
+    include ':modules:frinika-sequencer'
+}
 
-include ":modules:frinika-core"
-include ":modules:frinika-audio"
-include ":modules:frinika-tracker"
-include ":modules:frinika-sequencer"
-include ":modules:sevenzip"
-include ":modules:frinika-project"
+apply from: '../modules-settings.gradle'

@@ -1,4 +1,7 @@
 rootProject.name = 'frinika-priority'
 
+if (rootProject.path == ':') {
+}
+
 apply from: '../modules-settings.gradle'
 

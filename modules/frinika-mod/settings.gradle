@@ -1,11 +1,23 @@
 rootProject.name = 'frinika-mod'
 
-apply from: '../modules-settings.gradle'
+if (rootProject.path == ':') {
+    include ':modules:frinika-audio'
+    include ':modules:frinika-audio-toot'
+    include ':modules:frinika-core'
+    include ':modules:frinika-device-codesynth'
+    include ':modules:frinika-device-debug'
+    include ':modules:frinika-device-drummapper'
+    include ':modules:frinika-device-jvst'
+    include ':modules:frinika-device-synthrack'
+    include ':modules:frinika-driver-dummy'
+    include ':modules:frinika-driver-jack'
+    include ':modules:frinika-driver-osx'
+    include ':modules:frinika-legacy'
+    include ':modules:frinika-priority'
+    include ':modules:frinika-project'
+    include ':modules:frinika-sequencer'
+    include ':modules:frinika-view-pianoroll'
+    include ':modules:sevenzip'
+}
 
-include ":modules:frinika-core"
-include ":modules:frinika-audio"
-include ":modules:frinika-tracker"
-include ":modules:frinika-sequencer"
-include ":modules:frinika-synth"
-include ":modules:frinika-project"
-include ":modules:sevenzip"
+apply from: '../modules-settings.gradle'

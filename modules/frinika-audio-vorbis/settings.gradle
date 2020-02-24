@@ -1,4 +1,6 @@
 rootProject.name = 'frinika-audio-vorbis'
 
-apply from: '../modules-settings.gradle'
+if (rootProject.path == ':') {
+}
 
+apply from: '../modules-settings.gradle'
