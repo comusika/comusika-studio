@@ -1,4 +1,5 @@
 apply plugin: 'java'
+import org.gradle.util.VersionNumber
 
 sourceCompatibility = '1.8'
 version = '0.2.0-SNAPSHOT'
@@ -14,13 +15,20 @@ tasks.withType(JavaCompile) {
     doFirst {
         options.fork = true
         if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-            options.bootstrapClasspath = files("${System.properties['java.home']}/lib/rt.jar", "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar")
+            if (VersionNumber.parse(gradle.gradleVersion) >= VersionNumber.parse('5.0')) {
+                options.bootstrapClasspath = files("${System.properties['java.home']}/lib/rt.jar", "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar")
+            } else {
+                options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar"
+                options.bootClasspath += "$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
+            }
         }
     }
 }
 
 // Disable tests on build
-tasks.withType(Test) {enabled = false}
+if (!gradle.startParameter.taskNames.any {it.endsWith("test")}) {
+    tasks.withType(Test) {enabled = false}
+}
 
 task testJar(type: Jar, dependsOn: testClasses) {
     classifier "tests"
