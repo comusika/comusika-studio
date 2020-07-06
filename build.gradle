@@ -6,7 +6,7 @@ def baseVersion = '0.1.1'
 def devVersion = 'DEV'
 def fullVersion = devVersion == '' ? baseVersion : baseVersion + ' ' + devVersion
 version = (devVersion == '' ? baseVersion : baseVersion + '-SNAPSHOT') + '-' + getDate('yyyyMMdd')
-def executableName = "frinika-studio"
+def executableName = "consonica-studio"
 
 def getDate(dateFormat) {
     def date = new Date()
@@ -53,7 +53,7 @@ distributions {
             from project.rootDir
             include 'license.txt'
             include 'changes.txt'
-            include 'frinika-changes.txt'
+            include 'consonica-changes.txt'
             into('') {
                 from 'src/dist'
                 include '**'
@@ -120,9 +120,9 @@ distributions {
 izpack {
     baseDir = file("$buildDir/distributions")
     installFile = file('src/install-definition.xml')
-    outputFile = file("$buildDir/distributions/frinika-studio-${version}-installer.jar")
+    outputFile = file("$buildDir/distributions/consonica-studio-${version}-installer.jar")
     compression = 'deflate'
     compressionLevel = 9
-    appProperties = ['app.group': 'frinika-studio', 'app.name': 'frinika-studio', 'app.title': 'Frinika Studio',
-                     'app.version': version, 'app.subpath': "frinika-studio-$version"]
+    appProperties = ['app.group': 'consonica-studio', 'app.name': 'consonica-studio', 'app.title': 'Consonica Studio',
+                     'app.version': version, 'app.subpath': "consonica-studio-$version"]
 }

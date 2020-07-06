@@ -1,11 +1,9 @@
-Frinika Studio
-==============
+Consonica Studio
+================
 
-Frinika Studio is a free and open source multiplatform music workstation software, experimental fork of Frinika.
+Consonica Studio is a free and open source multiplatform music workstation software written in Java.
 
-Visit http://frinika.com for more information about original software.
-
-It is written in Java and should run on Linux, Windows, Mac OS and other operating systems running Java.
+This is experimental mashup application combining various Java projects in a bigger pack.
 
 Features
 --------
@@ -48,16 +46,16 @@ If you've downloaded this as a zip file, remember to extract all the files.
 From the extracted folder either launch frinika-studio.exe from your desktop  
 (or frinika-studio.jar if supported), or enter a command prompt terminal and type:
 
-java -jar frinika-studio.jar
+java -jar consonica-studio.jar
 
 If you want lowest latency possible you can try the following:
 
 Windows users:  
-java -DuseASIOAudioServer=true -jar frinika-studio.jar
+java -DuseASIOAudioServer=true -jar consonica-studio.jar
 
 Linux users:  
-Start Jack before launching Frinika and setup audio to use it
+Start Jack before launching Consonica and setup audio to use it
 
 Mac OSX (warning: Sometimes using this option causes a terrible noise,  
 so turn the volume down before launching. If it happens, try restarting):
-java -DuseOSXAudioServer=true -jar frinika-studio.jar
+java -DuseOSXAudioServer=true -jar consonica-studio.jar

@@ -1,4 +1,4 @@
-rootProject.name = 'frinika-studio'
+rootProject.name = 'consonica-studio'
 
 include ":modules:frinika-core"
 include ":modules:frinika-audio"
