@@ -1,5 +1,5 @@
 0.1.1
-- Renamed to Consonica
+- Renamed to Comsonica
 - Minor fixes to frame handling
 - 
 

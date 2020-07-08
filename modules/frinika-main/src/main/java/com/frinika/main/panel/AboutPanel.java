@@ -70,13 +70,13 @@ public class AboutPanel extends javax.swing.JPanel {
 
     public static final String MAIN_TITLE
             = "<html><center>"
-            + "<b>Consonica Studio version " + VersionProperties.getVersion() + " </b><br>"
-            + "<a href=\"https://github.com/consonica/consonica-studio\">https://github.com/consonica/consonica-studio</a><br><font color='#A0A0A0'><i>Build date: " + VersionProperties.getBuildDate() + "</i></font>"
+            + "<b>Comsonica Studio version " + VersionProperties.getVersion() + " </b><br>"
+            + "<a href=\"https://github.com/comsonica/comsonica-studio\">https://github.com/comsonica/comsonica-studio</a><br><font color='#A0A0A0'><i>Build date: " + VersionProperties.getBuildDate() + "</i></font>"
             + "</html>";
 
     public static final String COPYRIGHT_NOTICE
             = "<html><font size=\"3\"><center>"
-            + "Copyright " + COPYRIGHT_SYMBOL + " " + VersionProperties.getCopyrightStart() + "-" + VersionProperties.getCopyrightEnd() + " Consonica Project<br>"
+            + "Copyright " + COPYRIGHT_SYMBOL + " " + VersionProperties.getCopyrightStart() + "-" + VersionProperties.getCopyrightEnd() + " Comsonica Project<br>"
             + "This software is licensed under the GNU General Public License (GPL) version 2<br>"
             + "<a href=\"http://www.gnu.org/licenses/gpl.html\">http://www.gnu.org/licenses/gpl.html</a>"
             + "</center></font></html>";

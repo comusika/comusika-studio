@@ -1,14 +1,14 @@
-Consonica Studio
+Comsonica Studio
 ================
 
-Consonica Studio is a free and open source multiplatform music workstation software written in Java.
+Comsonica Studio is a free and open source multiplatform music workstation software written in Java.
 
 This is experimental mashup application combining various Java projects in a bigger pack.
 
 Screenshot
 ----------
 
-![Consonica Studio Screenshot](images/screenshot.png?raw=true)
+![Comsonica Studio Screenshot](images/screenshot.png?raw=true)
 
 Features
 --------
@@ -29,7 +29,7 @@ License
 
 GNU General Public License version 2.0 or later (GPLv2+)
 
-See https://www.gnu.org/licenses/gpl-2.0.html or LICENSE.txt
+See https://www.gnu.org/licenses/gpl-2.0.html or license.txt
 
 Structure
 ---------
