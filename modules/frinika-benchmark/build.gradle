@@ -9,7 +9,7 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-synth'))
-    compile(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-synth'))
+    implementation(project(':modules:frinika-sequencer'))
 }

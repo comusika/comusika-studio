@@ -5,14 +5,20 @@ ext.libraryDescription = 'Main library for graphical components for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-mod'))
-    compile(project(':modules:frinika-radio'))
-    compile(project(':modules:frinika-view-notation'))
-    compile(project(':modules:frinika-view-pianoroll'))
-    compile(project(':modules:frinika-view-tracker'))
-    compile(project(':modules:frinika-view-timeline'))
-    compile(project(':modules:frinika-project'))
-    compile(project(':modules:frinika-generator-soundhelix'))
-    compile ':flexdock:0.5.1'
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation(project(':modules:frinika-mod'))
+    implementation(project(':modules:frinika-radio'))
+    implementation(project(':modules:frinika-view-notation'))
+    implementation(project(':modules:frinika-view-pianoroll'))
+    implementation(project(':modules:frinika-view-tracker'))
+    implementation(project(':modules:frinika-view-timeline'))
+    implementation(project(':modules:frinika-driver-dummy'))
+    implementation(project(':modules:frinika-driver-osx'))
+    implementation(project(':modules:frinika-driver-jack'))
+    implementation(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-project'))
+    implementation(project(':modules:frinika-generator-soundhelix'))
+    implementation ':flexdock:0.5.1'
 }

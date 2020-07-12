@@ -9,7 +9,7 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-audio-toot'))
-    compile ':RasmusDSP'
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation ':RasmusDSP'
 }

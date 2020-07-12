@@ -5,6 +5,8 @@ ext.libraryDescription = 'OPL3 library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-sequencer'))
+    implementation ':RasmusDSP'
 }

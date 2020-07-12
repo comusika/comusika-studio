@@ -9,13 +9,14 @@ if (!hasProperty('mainClass')) {
 }
 
 dependencies {
-    compile(project(':modules:frinika-audio-toot'))
-    compile(project(':modules:frinika-driver-dummy'))
-    compile(project(':modules:frinika-driver-jack'))
-    compile(project(':modules:frinika-driver-osx'))
-    compile 'commons-logging:commons-logging:1.2'
-    compile ':tootvst'
-    compile 'com.jgoodies:looks:2.1.4'
-    compile ':darcula'
-    compile ':iconloader'
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation(project(':modules:frinika-driver-dummy'))
+    implementation(project(':modules:frinika-driver-jack'))
+    implementation(project(':modules:frinika-driver-osx'))
+    implementation(project(':modules:frinika-priority'))
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation ':tootvst'
+    implementation 'com.jgoodies:looks:2.1.4'
+    implementation ':darcula'
+    implementation ':iconloader'
 }

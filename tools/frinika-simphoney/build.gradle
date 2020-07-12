@@ -5,9 +5,9 @@ ext.libraryDescription = 'Simphoney library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-audio'))
-    compile(project(':modules:frinika-main'))
-    compile ':MacStub'
-    compile 'com.jgoodies:looks:2.1.4'
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-main'))
+    implementation ':MacStub'
+    implementation 'com.jgoodies:looks:2.1.4'
 }

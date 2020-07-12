@@ -5,14 +5,17 @@ ext.libraryDescription = 'Project library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-sequencer'))
-    compile(project(':modules:frinika-legacy'))
-    compile(project(':modules:frinika-device-debug'))
-    compile(project(':modules:frinika-device-codesynth'))
-    compile(project(':modules:frinika-device-drummapper'))
-    compile(project(':modules:frinika-device-jvst'))
-    compile(project(':modules:frinika-view-pianoroll'))
-    compile(project(':modules:sevenzip'))
-    compile ':js'
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-legacy'))
+    implementation(project(':modules:frinika-device-debug'))
+    implementation(project(':modules:frinika-device-codesynth'))
+    implementation(project(':modules:frinika-device-drummapper'))
+    implementation(project(':modules:frinika-device-synthrack'))
+    implementation(project(':modules:frinika-device-jvst'))
+    implementation(project(':modules:frinika-view-pianoroll'))
+    implementation(project(':modules:sevenzip'))
+    implementation ':js'
 }

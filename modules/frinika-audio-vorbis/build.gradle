@@ -5,9 +5,9 @@ ext.libraryDescription = 'Vorbis SPI library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile ':vorbis-java'
+    implementation ':vorbis-java'
 
-    runtime ':jVorbis'
-    runtime 'com.googlecode.soundlibs:vorbisspi:1.0.3-1'
-    runtime ':jogg:0.0.7'
+    runtimeOnly ':jVorbis'
+    runtimeOnly 'com.googlecode.soundlibs:vorbisspi:1.0.3-1'
+    runtimeOnly ':jogg:0.0.7'
 }

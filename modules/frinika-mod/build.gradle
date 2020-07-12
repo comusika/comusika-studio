@@ -5,9 +5,10 @@ ext.libraryDescription = 'MOD support library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-audio'))
-    compile(project(':modules:frinika-sequencer'))
-    compile(project(':modules:frinika-project'))
-    compile ':jmod_0_9k'
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-project'))
+    implementation ':RasmusDSP'
+    implementation ':jmod_0_9k'
 }

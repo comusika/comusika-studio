@@ -5,5 +5,5 @@ ext.libraryDescription = 'Dummy audio library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-audio-toot'))
+    implementation(project(':modules:frinika-audio-toot'))
 }

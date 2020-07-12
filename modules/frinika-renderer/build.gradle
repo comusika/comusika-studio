@@ -5,5 +5,5 @@ ext.libraryDescription = 'Renderer library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-core'))
 }

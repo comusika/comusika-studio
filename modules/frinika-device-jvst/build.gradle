@@ -5,7 +5,7 @@ ext.libraryDescription = 'JVST audio library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-audio'))
-    compile ":JVstHost"
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation ":JVstHost"
 }

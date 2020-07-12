@@ -5,8 +5,8 @@ ext.libraryDescription = 'Jack library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-audio-toot'))
-    compile('org.jaudiolibs:jnajack:1.2.0')
-    compile(':jna-4.2.2')
-    compile(':audioservers-api-1.1.1')
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation('org.jaudiolibs:jnajack:1.2.0')
+    implementation(':jna-4.2.2')
+    implementation(':audioservers-api-1.1.1')
 }

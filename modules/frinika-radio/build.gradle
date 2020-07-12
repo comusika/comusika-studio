@@ -5,9 +5,12 @@ ext.libraryDescription = 'Radio library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-project'))
-    compile 'javax.servlet:servlet-api:2.4'
-    compile 'org.mortbay.jetty:jetty:6.1.12'
-    compile 'org.mortbay.jetty:jetty-util:6.1.12'
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation(project(':modules:frinika-project'))
+    implementation(project(':modules:frinika-sequencer'))
+    implementation 'javax.servlet:servlet-api:2.4'
+    implementation 'org.mortbay.jetty:jetty:6.1.12'
+    implementation 'org.mortbay.jetty:jetty-util:6.1.12'
 }

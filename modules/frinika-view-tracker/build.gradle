@@ -5,5 +5,8 @@ ext.libraryDescription = 'Tracker library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-sequencer'))
+    implementation(project(':modules:frinika-device-synthrack'))
 }

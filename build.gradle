@@ -81,7 +81,7 @@ distributions {
                     into('lib') {
                         from p.jar.archivePath
                         include '*'
-                        from p.configurations.runtime
+                        from p.configurations.runtimeClasspath
                         include '*'
                     }
                 }
@@ -89,7 +89,7 @@ distributions {
             project(':tools').subprojects.each { p ->
                 p.plugins.withType(JavaPlugin) {
                     into('lib') {
-                        from p.configurations.runtime
+                        from p.configurations.runtimeClasspath
                         include '*'
                     }
 

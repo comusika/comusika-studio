@@ -5,7 +5,9 @@ ext.libraryDescription = 'Code synth audio library for Frinika'
 apply from: '../modules.gradle'
 
 dependencies {
-    compile(project(':modules:frinika-core'))
-    compile(project(':modules:frinika-audio'))
-    compile(project(':modules:frinika-device-synthrack'))
+    implementation(project(':modules:frinika-core'))
+    implementation(project(':modules:frinika-audio'))
+    implementation(project(':modules:frinika-audio-toot'))
+    implementation(project(':modules:frinika-device-synthrack'))
+    implementation ':RasmusDSP'
 }
