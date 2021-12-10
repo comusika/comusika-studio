@@ -6,7 +6,7 @@ version = '0.2.0-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'com.github.comsonica.studio.StudioApp'
+    ext.mainClass = 'com.github.comusika.studio.StudioApp'
     ext.appArgs = '-dev'
 }
 
@@ -135,11 +135,11 @@ dependencies {
 }
 
 launch4j {
-    outfile = "comsonica-studio.exe"
+    outfile = "comusika-studio.exe"
     icon = "../../../../images/frinika.ico"
     mainClassName = mainClass
     jar = "../../build/libs/studio-app-0.2.0-SNAPSHOT.jar"
-    copyright = "Comsonica Studio"
+    copyright = "Comusika Studio"
 }
 
 jar {

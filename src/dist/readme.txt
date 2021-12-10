@@ -1,7 +1,7 @@
-Comsonica Studio
-================
+Comusika Studio
+===============
 
-Comsonica Studio is a free and open source multiplatform music workstation software written in Java.
+Comusika Studio is a free and open source multiplatform music workstation software written in Java.
 
 This is experimental mashup application combining various Java projects in a bigger pack.
 
@@ -43,19 +43,19 @@ Make sure that you have Java 8 or greater installed (http://www.java.com)
 
 If you've downloaded this as a zip file, remember to extract all the files.
 
-From the extracted folder either launch frinika-studio.exe from your desktop  
-(or frinika-studio.jar if supported), or enter a command prompt terminal and type:
+From the extracted folder either launch comusika-studio.exe from your desktop  
+(or comusika-studio.jar if supported), or enter a command prompt terminal and type:
 
-java -jar comsonica-studio.jar
+java -jar comusika-studio.jar
 
 If you want lowest latency possible you can try the following:
 
 Windows users:  
-java -DuseASIOAudioServer=true -jar comsonica-studio.jar
+java -DuseASIOAudioServer=true -jar comusika-studio.jar
 
 Linux users:  
-Start Jack before launching Comsonica and setup audio to use it
+Start Jack before launching Comusika and setup audio to use it
 
 Mac OSX (warning: Sometimes using this option causes a terrible noise,  
 so turn the volume down before launching. If it happens, try restarting):
-java -DuseOSXAudioServer=true -jar comsonica-studio.jar
+java -DuseOSXAudioServer=true -jar comusika-studio.jar

@@ -1,14 +1,14 @@
-Comsonica Studio
-================
+Comusika Studio
+===============
 
-Comsonica Studio is a free and open source multiplatform music workstation software written in Java.
+Comusika Studio is a free and open source multiplatform music workstation software written in Java.
 
 This is experimental mashup application combining various Java projects in a bigger pack.
 
 Screenshot
 ----------
 
-![Comsonica Studio Screenshot](images/screenshot.png?raw=true)
+![Comusika Studio Screenshot](images/screenshot.png?raw=true)
 
 Features
 --------
@@ -48,7 +48,7 @@ Compiling
 
 Java Development Kit (JDK) version 8 or later is required to build this project.
 
-For project compiling Gradle 4.0 or later build system is used. You can either  
+For project compiling Gradle 6.9 or later build system is used. You can either  
 download and install gradle or use gradlew script which will download separate copy of gradle by itself.
 
 Build system website: http://gradle.org  

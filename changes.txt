@@ -1,5 +1,5 @@
 0.1.1
-- Renamed to Comsonica
+- Renamed to Comusika
 - Minor fixes to frame handling
 - 
 

@@ -1,1 +1,0 @@
-@java -jar comsonica-studio.jar

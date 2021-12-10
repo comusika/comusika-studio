@@ -21,7 +21,7 @@
  * along with Frinika; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.github.comsonica.studio;
+package org.exbin.comusika.studio;
 
 import com.frinika.global.FrinikaConfig;
 import com.frinika.global.Toolbox;
@@ -85,7 +85,7 @@ public class StudioApp {
 
     /**
      * Detects whether running from a single .jar-file (e.g. via "java -jar
-     * comsonica-studio.jar"). In this case, copy native binary libraries to a
+     * comusika-studio.jar"). In this case, copy native binary libraries to a
      * file-system accessible location where the JVM can load them from. (There
      * is a comparable mechanism already implemented in
      * com.frinika.priority.Priority, but this here works for all native
@@ -119,15 +119,15 @@ public class StudioApp {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("--help")) {
-                System.out.println("Command usage is java -jar comsonica-studio.jar [options]");
+                System.out.println("Command usage is java -jar comusika-studio.jar [options]");
                 System.out.println("Available options:");
                 System.out.println("-h, --help: Display this help message and exit.");
                 System.out.println("-v, --version: Display the version number and exit");
                 System.out.println("-c, --config [path]: Specifies an alternate file at 'path' to use as a config.");
-                System.out.println("\tExample: java -jar comsonica-studio.jar -c ~/Documents/Config.xml file.prinika");
+                System.out.println("\tExample: java -jar comusika-studio.jar -c ~/Documents/Config.xml file.prinika");
                 System.exit(0);
             } else if (arg.equalsIgnoreCase("-v") || arg.equalsIgnoreCase("--version")) {
-                System.out.println("Comsonica version " + VersionProperties.getVersion() + " (build date " + VersionProperties.getBuildDate() + ")");
+                System.out.println("Comusika version " + VersionProperties.getVersion() + " (build date " + VersionProperties.getBuildDate() + ")");
                 System.exit(0);
             } else if (arg.equalsIgnoreCase("-c") || arg.equalsIgnoreCase("--config")) {
                 i++;
@@ -141,7 +141,7 @@ public class StudioApp {
                 argProjectFile = arg;
             } else {
                 System.out.println("Unknown argument " + arg + ", ignoring.");
-                System.out.println("For help with command line usage, please see java -jar comsonica-studio.jar --help");
+                System.out.println("For help with command line usage, please see java -jar comusika-studio.jar --help");
             }
         }
     }

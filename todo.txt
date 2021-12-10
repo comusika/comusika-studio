@@ -1,0 +1,6 @@
+        JPanel mainPanel = new JPanel(){
+            @Override
+            public boolean isOptimizedDrawingEnabled() {
+                return false;
+            }
+        };
