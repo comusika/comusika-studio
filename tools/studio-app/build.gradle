@@ -6,7 +6,7 @@ version = '0.2.0-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 if (!hasProperty('mainClass')) {
-    ext.mainClass = 'com.github.comusika.studio.StudioApp'
+    ext.mainClass = 'org.exbin.comusika.studio.StudioApp'
     ext.appArgs = '-dev'
 }
 

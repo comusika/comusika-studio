@@ -1,8 +1,8 @@
 // Shared modules build
 
 version = '0.1.1-SNAPSHOT'
-def repositoryName = "frinika-studio"
-def libraryUrl = 'https://github.com/hajdam/frinika-studio'
+def repositoryName = "comusika-studio"
+def libraryUrl = 'https://github.com/comusika/comusika-studio'
 
 buildscript {
     repositories {
