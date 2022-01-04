@@ -1,8 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
 group = 'com.frinika'
 ext.libraryName = 'Frinika Frog Disco library'
 ext.libraryDescription = 'Frog Disco library for Frinika'
 
 apply from: '../modules.gradle'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
 
 dependencies {
     implementation(project(':modules:frinika-core'))

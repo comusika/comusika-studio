@@ -1,5 +1,8 @@
 rootProject.name = 'comusika-studio'
 
+include ":deps"
+
+include ":modules:comusika-core"
 include ":modules:frinika-core"
 include ":modules:frinika-audio"
 include ":modules:frinika-audio-toot"
@@ -34,3 +37,25 @@ include ":modules:sevenzip"
 
 include ":tools:frinika-app"
 include ":tools:studio-app"
+
+File placeholder = file("deps/.downloaded")
+if (placeholder.exists()) {
+    placeholder.delete()
+}
+
+if (!gradle.startParameter.taskNames.contains("clean") || gradle.startParameter.projectProperties.containsKey("moduleDep")) {
+    File depsDir = file("deps")
+    // Include all downloaded dependency modules
+    depsDir.listFiles().each() { childFile ->
+        if (childFile.isDirectory() && childFile.name != ".gradle") {
+            include ':deps:' + childFile.name
+        }
+    }
+}
+
+gradle.allprojects {
+  ext {
+    depsRoot = 'Comusika'
+  }
+}
+

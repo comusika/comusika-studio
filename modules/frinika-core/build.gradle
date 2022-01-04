@@ -1,3 +1,7 @@
+plugins {
+    id 'java-library'
+}
+
 group = 'com.frinika'
 ext.libraryName = 'Frinika core library'
 ext.libraryDescription = 'Core library for Frinika'
@@ -6,6 +10,13 @@ apply from: '../modules.gradle'
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = ''
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
 }
 
 dependencies {
@@ -19,4 +30,6 @@ dependencies {
     implementation 'com.jgoodies:looks:2.1.4'
     implementation ':darcula'
     implementation ':iconloader'
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

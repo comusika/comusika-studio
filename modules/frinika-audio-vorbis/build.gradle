@@ -1,8 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
 group = 'com.frinika'
 ext.libraryName = 'Frinika Vorbis SPI library'
 ext.libraryDescription = 'Vorbis SPI library for Frinika'
 
 apply from: '../modules.gradle'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
 
 dependencies {
     implementation ':vorbis-java'
@@ -10,4 +21,6 @@ dependencies {
     runtimeOnly ':jVorbis'
     runtimeOnly 'com.googlecode.soundlibs:vorbisspi:1.0.3-1'
     runtimeOnly ':jogg:0.0.7'
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

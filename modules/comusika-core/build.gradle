@@ -1,0 +1,12 @@
+group = 'com.frinika'
+ext.libraryName = 'Comusika core library'
+ext.libraryDescription = 'Core library for Comusika'
+
+apply from: '../modules.gradle'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+dependencies {
+}

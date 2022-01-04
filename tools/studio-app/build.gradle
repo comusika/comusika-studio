@@ -1,8 +1,33 @@
-apply plugin: 'java'
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    if (!gradle.startParameter.taskNames.contains("offline")) {
+        dependencies {
+            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
+//            classpath("gradle.plugin.edu.sc.seis.gradle:launch4j:2.4.1")
+        }
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+    id 'distribution'
+    id 'maven-publish'
+    id 'edu.sc.seis.launch4j' version '2.4.1'
+}
+
+apply from: '../tools.gradle'
+
 import org.gradle.util.VersionNumber
 
 sourceCompatibility = '1.8'
-version = '0.2.0-SNAPSHOT'
+targetCompatibility = '1.8'
+version = '0.1.1-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 if (!hasProperty('mainClass')) {
@@ -30,70 +55,24 @@ if (!gradle.startParameter.taskNames.any {it.endsWith("test")}) {
     tasks.withType(Test) {enabled = false}
 }
 
-task testJar(type: Jar, dependsOn: testClasses) {
-    classifier "tests"
-    archiveBaseName = "test-${project.archivesBaseName}"
-    from sourceSets.test.output
-}
-
-configurations {
-    tests
-}
-
-artifacts {
-    tests testJar
-}
-
-task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.java
-}
-
-javadoc {
-    if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-        options.addBooleanOption('html5', true)
-    }
-}
-
-task javadocJar (type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
 def configureExec(task) {
     task.main = mainClass
     task.classpath = sourceSets.main.runtimeClasspath
 //    task.args appArgs
 }
 
-task run(type: JavaExec) {
-    task -> configureExec(task)
-}
+//task run(type: JavaExec) {
+//    task -> configureExec(task)
+//}
 
 task debug(type: JavaExec) {
     task -> configureExec(task)
     debug = true
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    if (!gradle.startParameter.taskNames.contains("offline")) {
-        dependencies {
-            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-            classpath "gradle.plugin.edu.sc.seis.gradle:launch4j:2.4.1"
-        }
-    }
-}
-
-['edu.sc.seis.launch4j'].each {
-    apply plugin: it
-}
+//['edu.sc.seis.launch4j'].each {
+//    apply plugin: it
+//}
 
 repositories {
     mavenCentral()
@@ -134,19 +113,27 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.10'
 }
 
-launch4j {
-    outfile = "comusika-studio.exe"
-    icon = "../../../../images/frinika.ico"
-    mainClassName = mainClass
-    jar = "../../build/libs/studio-app-0.2.0-SNAPSHOT.jar"
-    copyright = "Comusika Studio"
+def manifestClassPath() {
+    try {
+        return (configurations.runtimeClasspath.collect { '../lib/' + it.getName() }).join(' ')
+    } catch (Exception) {
+        return ""
+    }
 }
 
 jar {
     manifest {
         attributes(
             'Main-Class': mainClass,
-            'Class-Path': configurations.runtimeClasspath.collect {'lib/' + it.getName() }.join(' ')
+            'Class-Path': manifestClassPath()
         )
     }
+}
+
+launch4j {
+    outfile = "comusika-studio.exe"
+    icon = "../../../../images/frinika.ico"
+    mainClassName = mainClass
+    jar = "../../build/libs/studio-app-"+"0.1.1-SNAPSHOT"+".jar"
+    copyright = "Comusika Studio"
 }

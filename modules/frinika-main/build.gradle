@@ -1,8 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
 group = 'com.frinika'
 ext.libraryName = 'Frinika main library'
 ext.libraryDescription = 'Main library for graphical components for Frinika'
 
 apply from: '../modules.gradle'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
 
 dependencies {
     implementation(project(':modules:frinika-core'))
@@ -21,4 +32,6 @@ dependencies {
     implementation(project(':modules:frinika-project'))
     implementation(project(':modules:frinika-generator-soundhelix'))
     implementation ':flexdock:0.5.1'
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

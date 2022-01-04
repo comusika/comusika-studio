@@ -1,8 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
 group = 'com.frinika'
 ext.libraryName = 'Frinika radio library'
 ext.libraryDescription = 'Radio library for Frinika'
 
 apply from: '../modules.gradle'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
 
 dependencies {
     implementation(project(':modules:frinika-core'))
@@ -13,4 +24,6 @@ dependencies {
     implementation 'javax.servlet:servlet-api:2.4'
     implementation 'org.mortbay.jetty:jetty:6.1.12'
     implementation 'org.mortbay.jetty:jetty-util:6.1.12'
+    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

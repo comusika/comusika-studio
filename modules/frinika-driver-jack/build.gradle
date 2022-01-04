@@ -1,8 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
 group = 'com.frinika'
 ext.libraryName = 'Frinika Jack library'
 ext.libraryDescription = 'Jack library for Frinika'
 
 apply from: '../modules.gradle'
+
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "../../lib"
+    }
+}
 
 dependencies {
     implementation(project(':modules:frinika-audio-toot'))

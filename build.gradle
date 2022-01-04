@@ -1,6 +1,23 @@
-apply plugin: 'base'
-apply plugin: 'distribution'
-apply plugin: 'com.bmuschko.izpack'
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "https://repo1.maven.org/maven2/"
+        }
+    }
+    dependencies {
+        classpath "at.bxm.gradleplugins:gradle-svntools-plugin:2.2"
+        classpath "org.tmatesoft.svnkit:svnkit:1.10.1"
+    }
+}
+
+plugins {
+    id 'base'
+    id 'distribution'
+    id 'com.bmuschko.izpack' version '3.2'
+}
 
 def baseVersion = '0.1.1'
 def devVersion = 'DEV'
@@ -14,15 +31,24 @@ def getDate(dateFormat) {
     return formattedDate
 }
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.bmuschko:gradle-izpack-plugin:2.1'
+task cleanDeps {
+    if (gradle.startParameter.taskNames.contains("clean") && !project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
+        println "Deleting temporary dependency modules"
+        File depsCheckFile = rootProject.file("deps/dependency.txt")
+        if (depsCheckFile.exists()) {
+            File depsDir = rootProject.file("deps")
+            depsDir.listFiles().each() { childFile ->
+                if (childFile.isDirectory() && childFile.name != ".gradle") {
+                    project.delete(childFile)
+                }
+            }
+        } else {
+            throw new Exception('Invalid dependency path')
+        }
     }
 }
+
+clean.dependsOn cleanDeps
 
 subprojects.each { subproject -> evaluationDependsOn(subproject.path) }
 
@@ -45,6 +71,43 @@ distZip.dependsOn project(':tools:studio-app').tasks['createExe']
 distTar.dependsOn project(':tools').subprojects.assemble
 distTar.dependsOn project(':tools:studio-app').tasks['createExe']
 
+if (file('deps/.downloaded').exists()) {
+	file('deps/.downloaded').delete()
+    // Performs another build task for new dependency handling
+    def depsLevel
+    if (project.gradle.startParameter.projectProperties.containsKey('moduleDep')) {
+        depsLevel = project.gradle.startParameter.projectProperties['moduleDep'] + 1
+    } else {
+        depsLevel = 1
+        println "Due to dependecy download(s) gradle build must be executed again after finishing"
+    }
+    def artefactBuild = project.tasks.create([name: "depsRebuild_${depsLevel}", type: GradleBuild])
+    artefactBuild.tasks = project.gradle.startParameter.taskNames
+    artefactBuild.setDependsOn(project.tasks['assemble'].dependsOn)
+
+    def artefactProjectProperties = artefactBuild.startParameter.projectProperties
+    def currentProjectProperties = project.gradle.startParameter.projectProperties
+    artefactProjectProperties << currentProjectProperties
+    artefactProjectProperties << ['moduleDep': depsLevel]
+    
+    // Terminate currently invalid tasks
+    // TODO: Fix support for other tasks like distZip
+    subprojects.each { subproject ->
+        if (subproject.tasks.findByPath('compileJava') != null) {
+            subproject.tasks['compileJava'].setEnabled(false)
+        }
+        if (subproject.tasks.findByPath('compileTestJava') != null) {
+            subproject.tasks['compileTestJava'].setEnabled(false)
+        }
+        if (subproject.tasks.findByPath('javadoc') != null) {
+            subproject.tasks['javadoc'].setEnabled(false)
+        }
+    }
+
+    assemble.dependsOn("depsRebuild_${depsLevel}")
+}
+
+if (!project.gradle.startParameter.projectProperties.containsKey("moduleDep")) {
 distributions {
     main {
         contents {
@@ -111,6 +174,7 @@ distributions {
             }
         }
     }
+}
 }
 
 //dependencies {
