@@ -1,0 +1,10 @@
+pluginManagement {
+    repositories {
+    	maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local/" }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'studio-ng'
+
+apply from: '../apps-settings.gradle'

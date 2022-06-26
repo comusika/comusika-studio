@@ -1,4 +1,4 @@
-// Shared tools build
+// Shared apps build
 
 version = '0.1.1-SNAPSHOT'
 def repositoryName = "comusika-studio"
@@ -7,10 +7,16 @@ def libraryUrl = 'https://github.com/comusika/comusika-studio'
 
 ext.depsThis = 'Comusika'
 
+ext.depsBinedLibJava = [
+    githubProfile: 'exbin',
+    githubRepo: 'bined-lib-java',
+    version: '0.2.1-SNAPSHOT'
+]
+
 ext.depsExbinAuxiliaryJava = [
     githubProfile: 'exbin',
     githubRepo: 'exbin-auxiliary-java',
-    version: '0.2.0-SNAPSHOT'
+    version: '0.2.1-SNAPSHOT'
 ]
 
 ext.depsExbinFrameworkJava = [

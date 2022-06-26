@@ -1,6 +1,6 @@
 rootProject.name = 'studio-app'
 
-apply from: '../tools-settings.gradle'
+apply from: '../apps-settings.gradle'
 
 if (rootProject.path == ':') {
     include ':modules:frinika-audio'

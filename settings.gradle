@@ -35,8 +35,8 @@ include ":modules:frinika-generator-soundhelix"
 include ":modules:frinika-legacy"
 include ":modules:sevenzip"
 
-include ":tools:frinika-app"
-include ":tools:studio-app"
+include ":apps:frinika-app"
+include ":apps:studio-app"
 
 File placeholder = file("deps/.downloaded")
 if (placeholder.exists()) {

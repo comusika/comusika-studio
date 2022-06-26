@@ -66,10 +66,10 @@ executableName = $executableName
 }
 
 assemble.dependsOn project.tasks['versionFile']
-distZip.dependsOn project(':tools').subprojects.assemble
-distZip.dependsOn project(':tools:studio-app').tasks['createExe']
-distTar.dependsOn project(':tools').subprojects.assemble
-distTar.dependsOn project(':tools:studio-app').tasks['createExe']
+distZip.dependsOn project(':apps').subprojects.assemble
+distZip.dependsOn project(':apps:studio-app').tasks['createExe']
+distTar.dependsOn project(':apps').subprojects.assemble
+distTar.dependsOn project(':apps:studio-app').tasks['createExe']
 
 if (file('deps/.downloaded').exists()) {
 	file('deps/.downloaded').delete()
@@ -122,12 +122,12 @@ distributions {
                 include '**'
             }
             into('resources') {
-                from 'tools/studio-app/resources'
+                from 'apps/studio-app/resources'
                 include 'soundhelix/**'
                 include 'soundhelix-legacy/**'
             }
 
-            from project(':tools:studio-app').projectDir.absolutePath + '/build/launch4j'
+            from project(':apps:studio-app').projectDir.absolutePath + '/build/launch4j'
             include executableName + ".exe"
 
             into('lib') {
@@ -149,7 +149,7 @@ distributions {
                     }
                 }
             }
-            project(':tools').subprojects.each { p ->
+            project(':apps').subprojects.each { p ->
                 p.plugins.withType(JavaPlugin) {
                     into('lib') {
                         from p.configurations.runtimeClasspath

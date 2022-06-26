@@ -7,10 +7,16 @@ def libraryUrl = 'https://github.com/comusika/comusika-studio'
 
 ext.depsThis = 'Comusika'
 
-ext.depsExbinFrameworkJava = [
+ext.depsComusika = [
     githubProfile: githubProfile,
     githubRepo   : repositoryName,
     version      : version
+]
+
+ext.depsExbinFrameworkJava = [
+    githubProfile: 'exbin',
+    githubRepo: 'exbin-framework-java',
+    version: '0.2.2-SNAPSHOT'
 ]
 
 ext.depsExbinAuxiliaryJava = [

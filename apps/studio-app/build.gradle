@@ -15,13 +15,12 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'application'
     id 'distribution'
     id 'maven-publish'
     id 'edu.sc.seis.launch4j' version '2.4.1'
 }
 
-apply from: '../tools.gradle'
+apply from: '../apps.gradle'
 
 import org.gradle.util.VersionNumber
 
@@ -58,12 +57,14 @@ if (!gradle.startParameter.taskNames.any {it.endsWith("test")}) {
 def configureExec(task) {
     task.main = mainClass
     task.classpath = sourceSets.main.runtimeClasspath
-//    task.args appArgs
+    if (hasProperty('appArgs')) {
+        task.args appArgs
+    }
 }
 
-//task run(type: JavaExec) {
-//    task -> configureExec(task)
-//}
+task run(type: JavaExec) {
+    task -> configureExec(task)
+}
 
 task debug(type: JavaExec) {
     task -> configureExec(task)

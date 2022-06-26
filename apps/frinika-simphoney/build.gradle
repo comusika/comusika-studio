@@ -2,7 +2,7 @@ group = 'com.frinika'
 ext.libraryName = 'Frinika Simphoney library'
 ext.libraryDescription = 'Simphoney library for Frinika'
 
-apply from: '../modules.gradle'
+apply from: '../apps.gradle'
 
 dependencies {
     implementation(project(':modules:frinika-core'))
