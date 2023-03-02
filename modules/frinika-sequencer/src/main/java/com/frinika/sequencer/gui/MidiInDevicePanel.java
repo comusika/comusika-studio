@@ -40,6 +40,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class MidiInDevicePanel extends JPanel {
 
@@ -108,7 +109,7 @@ public class MidiInDevicePanel extends JPanel {
     public static void main(String args[]) {
 
         JFrame f = new JFrame();
-        f.setContentPane(new MidiInDevicePanel());
+        f.setContentPane(new JScrollPane(new MidiInDevicePanel()));
         f.pack();
         f.setVisible(true);
     }

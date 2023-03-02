@@ -27,6 +27,7 @@ import com.frinika.sequencer.gui.MidiInDevicePanel;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 public class MidiInSetupAction extends AbstractAction {
 
@@ -36,7 +37,7 @@ public class MidiInSetupAction extends AbstractAction {
     public MidiInSetupAction() {
         super(CurrentLocale.getMessage("project.menu.settings.midiin"));
         frame = new JFrame();
-        frame.setContentPane(new MidiInDevicePanel());
+        frame.setContentPane(new JScrollPane(new MidiInDevicePanel()));
         frame.setTitle("Select MidiIn Devices");
         frame.pack();
     }

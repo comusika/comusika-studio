@@ -1387,7 +1387,7 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
 
     @Override
     public Integer getMidiDeviceIndex(MidiDevice midiDevice) {
-        return midiDeviceIndex.get(midiDevice);
+        return midiDeviceIndex != null ? midiDeviceIndex.get(midiDevice) : null;
     }
 
     @Override
