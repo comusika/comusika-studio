@@ -7,3 +7,6 @@
         
 https://libreav.org/
 Investigate TuxGuitar
+
+https://github.com/truj/midica
+https://github.com/topics/midi-player?l=java

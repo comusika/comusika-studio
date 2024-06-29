@@ -17,7 +17,7 @@ plugins {
     id 'java'
     id 'distribution'
     id 'maven-publish'
-    id 'edu.sc.seis.launch4j' version '2.4.1'
+    id 'edu.sc.seis.launch4j' version '2.5.4'
 }
 
 apply from: '../apps.gradle'
