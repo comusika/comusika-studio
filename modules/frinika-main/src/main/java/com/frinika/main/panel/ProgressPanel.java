@@ -21,7 +21,7 @@ package com.frinika.main.panel;
 
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.tools.ProgressObserver;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Progress panel for indication of progress of long operation.
@@ -38,7 +38,7 @@ public class ProgressPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setActivity(@Nonnull String activity) {
+    public void setActivity(@NonNull String activity) {
         actionLabel.setText(activity);
     }
 
@@ -155,20 +155,20 @@ public class ProgressPanel extends javax.swing.JPanel {
         };
     }
 
-    public void setCloseListener(@Nonnull CloseListener closeListener) {
+    public void setCloseListener(@NonNull CloseListener closeListener) {
         this.closeListener = closeListener;
     }
 
-    public void setCancelListener(@Nonnull CancelListener cancelListener) {
+    public void setCancelListener(@NonNull CancelListener cancelListener) {
         this.cancelListener = cancelListener;
         cancelButton.setEnabled(true);
     }
 
-    public void setActionText(@Nonnull String actionText) {
+    public void setActionText(@NonNull String actionText) {
         actionLabel.setText(actionText);
     }
 
-    public void setActionTitle(@Nonnull String actionTitle) {
+    public void setActionTitle(@NonNull String actionTitle) {
         titleLabel.setText(" " + actionTitle);
     }
 

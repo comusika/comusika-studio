@@ -1,17 +1,15 @@
 package com.frinika.gui.util.handler;
 
 import com.frinika.gui.util.OkCancelListener;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Service for ok cancel provider.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface OkCancelService {
 
-    @Nonnull
     OkCancelListener getOkCancelListener();
 }

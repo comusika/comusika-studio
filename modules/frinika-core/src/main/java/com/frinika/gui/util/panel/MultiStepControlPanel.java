@@ -4,15 +4,14 @@ import com.frinika.gui.util.LanguageUtils;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.gui.util.handler.MultiStepControlHandler;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Multi-step control panel for options dialogs.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class MultiStepControlPanel extends javax.swing.JPanel implements MultiStepControlHandler.MultiStepControlService {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -171,13 +170,11 @@ public class MultiStepControlPanel extends javax.swing.JPanel implements MultiSt
         }
     }
 
-    @Nonnull
     @Override
     public OkCancelListener getOkCancelListener() {
         return okCancelListener;
     }
 
-    @Nonnull
     @Override
     public MultiStepControlHandler.MultiStepControlEnablementListener createEnablementListener() {
         return (MultiStepControlHandler.ControlActionType actionType, boolean enablement) -> {

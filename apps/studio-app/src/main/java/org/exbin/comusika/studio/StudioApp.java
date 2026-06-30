@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
 
 /**
  * Frinika Studio main application class.
@@ -115,7 +114,7 @@ public class StudioApp {
         }
     }
 
-    public static void parseArguments(@Nonnull String[] args) {
+    public static void parseArguments(String[] args) {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("--help")) {

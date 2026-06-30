@@ -29,7 +29,7 @@ import com.frinika.sequencer.project.AbstractProjectContainer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.sound.midi.MidiDevice;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -45,7 +45,7 @@ public class MidiDevicesPanel extends JPanel {
     JTabbedPane deviceTabs;
     AbstractProjectContainer project;
 
-    public MidiDevicesPanel(@Nonnull final AbstractProjectContainer project, @Nonnull final MidiDevicesHandler midiDevicesHandler) {
+    public MidiDevicesPanel(@NonNull final AbstractProjectContainer project, @NonNull final MidiDevicesHandler midiDevicesHandler) {
         this.project = project;
 
         setLayout(new BorderLayout());
@@ -96,6 +96,6 @@ public class MidiDevicesPanel extends JPanel {
     }
     
     public interface MidiDevicesHandler {
-        void addMidiDevices(@Nonnull JPopupMenu popup);
+        void addMidiDevices(@NonNull JPopupMenu popup);
     }
 }

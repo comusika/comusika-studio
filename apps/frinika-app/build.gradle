@@ -1,7 +1,26 @@
-apply plugin: 'java'
-import org.gradle.util.VersionNumber
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url = "https://plugins.gradle.org/m2/"
+        }
+    }
+    if (!gradle.startParameter.taskNames.contains("offline")) {
+        dependencies {
+            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
+            classpath "gradle.plugin.edu.sc.seis.gradle:launch4j:2.4.1"
+        }
+    }
+}
 
-sourceCompatibility = '1.8'
+plugins {
+    id 'java'
+    id 'edu.sc.seis.launch4j' version '3.0.7'
+}
+
+java {
+    sourceCompatibility = '1.8'
+}
 version = '0.2.0-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -14,13 +33,6 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     doFirst {
         options.fork = true
-        if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-            if (VersionNumber.parse(gradle.gradleVersion) >= VersionNumber.parse('5.0')) {
-                options.bootstrapClasspath = files("${System.properties['java.home']}/lib/rt.jar", "${System.properties['java.home']}/jre/lib/jsse.jar")
-            } else {
-                options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
-            }
-        }
     }
 }
 
@@ -31,7 +43,9 @@ if (!gradle.startParameter.taskNames.any {it.endsWith("test")}) {
 
 task testJar(type: Jar, dependsOn: testClasses) {
     archiveClassifier = "tests"
-    archiveBaseName = "test-${project.archivesBaseName}"
+    base {
+        archivesName = "test-${project.name}"
+    }
     from sourceSets.test.output
 }
 
@@ -60,7 +74,7 @@ task javadocJar (type: Jar, dependsOn: javadoc) {
 }
 
 def configureExec(task) {
-    task.main = mainClass
+    task.mainClass = mainClass
     task.classpath = sourceSets.main.runtimeClasspath
 //    task.args appArgs
 }
@@ -72,26 +86,6 @@ task run(type: JavaExec) {
 task debug(type: JavaExec) {
     task -> configureExec(task)
     debug = true
-}
-
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    if (!gradle.startParameter.taskNames.contains("offline")) {
-        dependencies {
-            classpath("at.bxm.gradleplugins:gradle-svntools-plugin:latest.integration")
-            classpath "gradle.plugin.edu.sc.seis.gradle:launch4j:2.4.1"
-        }
-    }
-}
-
-['edu.sc.seis.launch4j'].each {
-    apply plugin: it
 }
 
 repositories {
@@ -120,7 +114,7 @@ dependencies {
     implementation(project(':modules:frinika-audio-vorbis'))
     implementation 'com.apple:AppleJavaExtensions:1.4'
     implementation 'com.jgoodies:looks:2.1.4'
-    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
 
     runtimeOnly ':gervill'
     runtimeOnly 'org.codehaus.groovy:groovy-all:2.0.1'

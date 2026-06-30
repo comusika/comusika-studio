@@ -103,8 +103,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiDevice;
@@ -843,7 +843,7 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
         postInit();
     }
 
-    public static FrinikaProjectContainer loadProject(@Nonnull File file, @Nullable ProgressObserver observer) throws Exception {
+    public static FrinikaProjectContainer loadProject(@NonNull File file, @Nullable ProgressObserver observer) throws Exception {
         FrinikaProjectContainer proj;
         if (file.exists()) {
             if (file.getName().toLowerCase().contains(".mid")) {
@@ -858,7 +858,7 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
         return proj;
     }
 
-    public static FrinikaProjectContainer loadCompressedProject(@Nonnull File file, @Nullable ProgressObserver observer)
+    public static FrinikaProjectContainer loadCompressedProject(@NonNull File file, @Nullable ProgressObserver observer)
             throws Exception {
         FrinikaProjectContainer project = null;
 
@@ -949,7 +949,7 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
         return project;
     }
 
-    public static FrinikaProjectContainer loadProject(@Nonnull InputStream inputStream, @Nullable ProgressObserver observer)
+    public static FrinikaProjectContainer loadProject(@NonNull InputStream inputStream, @Nullable ProgressObserver observer)
             throws Exception {
 
         if (observer != null) {
@@ -975,7 +975,7 @@ public class FrinikaProjectContainer extends AbstractProjectContainer
      *
      * @param file
      */
-    public void saveProject(@Nonnull File file) throws IOException { // throw exception
+    public void saveProject(@NonNull File file) throws IOException { // throw exception
         // so ProjectFrame
         // can show error
         // message, user

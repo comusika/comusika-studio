@@ -23,7 +23,7 @@
  */
 package com.frinika.base;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.sound.midi.Sequence;
 
 /**
@@ -42,16 +42,16 @@ public class FrinikaControl {
         return INSTANCE;
     }
 
-    public void registerProjectHandler(@Nonnull ProjectHandler projectHandler) {
+    public void registerProjectHandler(@NonNull ProjectHandler projectHandler) {
         this.projectHandler = projectHandler;
     }
 
-    public void openProject(@Nonnull Sequence sequence) {
+    public void openProject(@NonNull Sequence sequence) {
         projectHandler.openProject(sequence);
     }
 
     public interface ProjectHandler {
 
-        void openProject(@Nonnull Sequence sequence);
+        void openProject(@NonNull Sequence sequence);
     }
 }

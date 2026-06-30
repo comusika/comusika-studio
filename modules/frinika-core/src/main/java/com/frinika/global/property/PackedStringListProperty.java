@@ -21,8 +21,8 @@ package com.frinika.global.property;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration property for list packed as single string.
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  */
 public class PackedStringListProperty extends ConfigurationProperty<String> {
 
-    public PackedStringListProperty(@Nonnull FrinikaGlobalProperty globalProperty, @Nullable String value) {
+    public PackedStringListProperty(@NonNull FrinikaGlobalProperty globalProperty, @Nullable String value) {
         super(String.class, globalProperty, value);
     }
 

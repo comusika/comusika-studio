@@ -6,9 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import javax.swing.Icon;
 
 /**
@@ -16,7 +15,7 @@ import javax.swing.Icon;
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class WindowHeaderPanel extends javax.swing.JPanel {
 
     private BackgroundDecorationMode decorationMode = BackgroundDecorationMode.COLOR_BOTTOM_RIGHT_TRANSITION;
@@ -114,7 +113,6 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 
-    @Nonnull
     public String getTitle() {
         return titleLabel.getText();
     }
@@ -123,7 +121,6 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
         titleLabel.setText(title);
     }
 
-    @Nonnull
     public String getDescription() {
         return descriptionTextArea.getText();
     }
@@ -142,7 +139,6 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
         iconLabel.setPreferredSize(new Dimension(icon == null ? 0 : 64, 64));
     }
 
-    @Nonnull
     public BackgroundDecorationMode getDecorationMode() {
         return decorationMode;
     }
@@ -220,7 +216,7 @@ public class WindowHeaderPanel extends javax.swing.JPanel {
     /**
      * Interface for decoration provider.
      */
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface WindowHeaderDecorationProvider {
 
         /**

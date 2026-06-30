@@ -4,15 +4,14 @@ import com.frinika.gui.util.LanguageUtils;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.gui.util.handler.RemovalControlHandler;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Basic control panel with support for removal.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class RemovalControlPanel extends javax.swing.JPanel implements RemovalControlHandler.RemovalControlService {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -133,13 +132,11 @@ public class RemovalControlPanel extends javax.swing.JPanel implements RemovalCo
         WindowUtils.doButtonClick(actionType == RemovalControlHandler.ControlActionType.OK ? okButton : cancelButton);
     }
 
-    @Nonnull
     @Override
     public OkCancelListener getOkCancelListener() {
         return okCancelListener;
     }
 
-    @Nonnull
     @Override
     public RemovalControlHandler.RemovalControlEnablementListener createEnablementListener() {
         return (RemovalControlHandler.ControlActionType actionType, boolean enablement) -> {

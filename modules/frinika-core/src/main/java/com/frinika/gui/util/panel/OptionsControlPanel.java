@@ -4,15 +4,14 @@ import com.frinika.gui.util.LanguageUtils;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.gui.util.handler.OptionsControlHandler;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Default control panel for options dialogs.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class OptionsControlPanel extends javax.swing.JPanel implements OptionsControlHandler.OptionsControlService {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -147,13 +146,11 @@ public class OptionsControlPanel extends javax.swing.JPanel implements OptionsCo
         }
     }
 
-    @Nonnull
     @Override
     public OkCancelListener getOkCancelListener() {
         return okCancelListener;
     }
 
-    @Nonnull
     @Override
     public OptionsControlHandler.OptionsControlEnablementListener createEnablementListener() {
         return (OptionsControlHandler.ControlActionType actionType, boolean enablement) -> {

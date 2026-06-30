@@ -54,8 +54,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import javax.sound.midi.Sequence;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -89,7 +89,7 @@ public class FrinikaMain {
     private FrinikaMain() {
     }
 
-    @Nonnull
+    @NonNull
     public static FrinikaMain getInstance() {
         if (instance == null) {
             instance = new FrinikaMain();
@@ -152,7 +152,7 @@ public class FrinikaMain {
      * @return Frinika frame or null
      */
     @Nullable
-    public FrinikaFrame findFrame(@Nonnull FrinikaProjectContainer project) {
+    public FrinikaFrame findFrame(@NonNull FrinikaProjectContainer project) {
         for (FrinikaFrame frame : openProjectFrames) {
             if (frame.project == project) {
                 return frame;
@@ -162,28 +162,28 @@ public class FrinikaMain {
         return null;
     }
 
-    protected void setFocusFrame(@Nonnull FrinikaFrame frame) {
+    protected void setFocusFrame(@NonNull FrinikaFrame frame) {
         if (frame != focusFrame) {
             focusFrame = frame;
             System.out.println(" Setting focus project " + frame.getProjectContainer().getFile());
         }
     }
 
-    @Nonnull
+    @NonNull
     public FrinikaFrame getFocusFrame() {
         Objects.requireNonNull(focusFrame, "Focused frame cannot be null");
 
         return focusFrame;
     }
 
-    @Nonnull
-    private static File getSampleFile(@Nonnull String projectFileName) {
+    @NonNull
+    private static File getSampleFile(@NonNull String projectFileName) {
         File exampleFilesPath = FrinikaConfig.getExampleFilesPath();
         exampleFilesPath.mkdirs();
         return new File(exampleFilesPath, projectFileName);
     }
 
-    @Nonnull
+    @NonNull
     private JFrame getWelcomeFrameInstance() {
         if (welcomeFrame == null) {
             welcomeFrame = new JFrame();
@@ -242,7 +242,7 @@ public class FrinikaMain {
             }
 
             @Override
-            public void openRecentProject(@Nonnull Frame parentFrame, @Nonnull ProjectFileRecord projectFileRecord) {
+            public void openRecentProject(@NonNull Frame parentFrame, @NonNull ProjectFileRecord projectFileRecord) {
                 FrinikaFrame projectFrame = null;
                 try {
                     welcomeFrame.setEnabled(false);
@@ -263,7 +263,7 @@ public class FrinikaMain {
             }
 
             @Override
-            public void openExampleProject(@Nonnull Frame parentFrame, @Nonnull ProjectFileRecord projectFileRecord) {
+            public void openExampleProject(@NonNull Frame parentFrame, @NonNull ProjectFileRecord projectFileRecord) {
                 FrinikaFrame projectFrame = null;
                 try {
                     welcomeFrame.setEnabled(false);
@@ -328,11 +328,11 @@ public class FrinikaMain {
         welcomePanel.setRecentProjects(recentProjects);
     }
 
-    public void addProjectFocusListener(@Nonnull ProjectFocusListener listener) {
+    public void addProjectFocusListener(@NonNull ProjectFocusListener listener) {
         projectFocusListeners.add(listener);
     }
 
-    public void removeProjectFocusListener(@Nonnull ProjectFocusListener listener) {
+    public void removeProjectFocusListener(@NonNull ProjectFocusListener listener) {
         projectFocusListeners.remove(listener);
     }
 
@@ -343,11 +343,11 @@ public class FrinikaMain {
     }
 
     // TODO pass this as interface to frame instead of instance access
-    public void addFrame(@Nonnull FrinikaFrame frame) {
+    public void addFrame(@NonNull FrinikaFrame frame) {
         openProjectFrames.add(frame);
     }
 
-    public void removeFrame(@Nonnull FrinikaFrame frame) {
+    public void removeFrame(@NonNull FrinikaFrame frame) {
         openProjectFrames.remove(frame);
 
         // Reopen welcome dialog on close of last project frame
@@ -357,7 +357,7 @@ public class FrinikaMain {
         }
     }
 
-    public void closeFrame(@Nonnull FrinikaFrame frame) {
+    public void closeFrame(@NonNull FrinikaFrame frame) {
         if (canClose(frame)) {
             SwingUtilities.invokeLater(() -> {
                 frame.setVisible(false);
@@ -366,7 +366,7 @@ public class FrinikaMain {
         }
     }
 
-    public void quit(@Nonnull FrinikaFrame frame) {
+    public void quit(@NonNull FrinikaFrame frame) {
         boolean hasChanges = false;
         for (FrinikaFrame openFrame : openProjectFrames) {
             if (openFrame.hasChanges()) {
@@ -410,7 +410,7 @@ public class FrinikaMain {
         System.exit(0);
     }
 
-    private boolean canClose(@Nonnull FrinikaFrame frame) {
+    private boolean canClose(@NonNull FrinikaFrame frame) {
         if (!frame.hasChanges()) {
             return true;
         }

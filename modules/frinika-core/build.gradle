@@ -30,6 +30,6 @@ dependencies {
     implementation 'com.jgoodies:looks:2.1.4'
     implementation ':darcula'
     implementation ':iconloader'
-    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
     testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

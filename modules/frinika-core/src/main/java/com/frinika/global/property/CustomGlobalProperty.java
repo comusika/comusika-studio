@@ -20,7 +20,7 @@
 package com.frinika.global.property;
 
 import java.util.Properties;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface for global properties with custom load/save.
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  */
 public interface CustomGlobalProperty {
 
-    void load(@Nonnull Properties properties);
+    void load(@NonNull Properties properties);
 
-    void save(@Nonnull Properties properties);
+    void save(@NonNull Properties properties);
 }

@@ -32,8 +32,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -47,7 +47,7 @@ public class OpenProjectAction extends AbstractAction {
 
     private final JFrame frame;
 
-    public OpenProjectAction(@Nonnull JFrame frame) {
+    public OpenProjectAction(@NonNull JFrame frame) {
         this.frame = frame;
     }
 
@@ -75,7 +75,7 @@ public class OpenProjectAction extends AbstractAction {
         }
     }
 
-    public void openProjectFile(@Nonnull File projectFile) throws Exception {
+    public void openProjectFile(@NonNull File projectFile) throws Exception {
         FrinikaFrame projectFrame = new FrinikaFrame();
         ProgressOperation.openProjectFile(frame, projectFrame, projectFile);
         FrinikaConfig.setLastProject(projectFile);

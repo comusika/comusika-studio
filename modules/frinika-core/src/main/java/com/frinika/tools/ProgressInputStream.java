@@ -25,7 +25,7 @@ package com.frinika.tools;
 
 import java.io.IOException;
 import java.io.InputStream;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Generic input stream for updating a progressbar while reading. Use this
@@ -45,7 +45,7 @@ public class ProgressInputStream extends InputStream {
      * @param observer the progress observer to update
      * @param inputStream the inputstream to read
      */
-    public ProgressInputStream(@Nonnull ProgressObserver observer, @Nonnull InputStream inputStream) {
+    public ProgressInputStream(@NonNull ProgressObserver observer, @NonNull InputStream inputStream) {
         this.observer = observer;
         this.inputStream = inputStream;
     }
@@ -61,7 +61,7 @@ public class ProgressInputStream extends InputStream {
     }
 
     @Override
-    public int read(@Nonnull byte[] buffer, int offset, int length) throws IOException {
+    public int read(@NonNull byte[] buffer, int offset, int length) throws IOException {
         int read = inputStream.read(buffer, offset, length);
         if (read >= 0) {
             processed += read;
@@ -71,7 +71,7 @@ public class ProgressInputStream extends InputStream {
     }
 
     @Override
-    public int read(@Nonnull byte[] buffer) throws IOException {
+    public int read(@NonNull byte[] buffer) throws IOException {
         int read = inputStream.read(buffer);
         if (read >= 0) {
             processed += read;

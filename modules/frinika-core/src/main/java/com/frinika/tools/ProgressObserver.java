@@ -19,7 +19,7 @@
  */
 package com.frinika.tools;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  *
@@ -51,5 +51,5 @@ public interface ProgressObserver {
      *
      * @param ex
      */
-    void fail(@Nonnull Exception ex);
+    void fail(@NonNull Exception ex);
 }

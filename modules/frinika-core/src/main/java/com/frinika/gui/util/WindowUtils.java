@@ -22,9 +22,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -46,7 +45,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class WindowUtils {
 
     private static boolean darkMode = false;
@@ -56,14 +55,12 @@ public class WindowUtils {
     private WindowUtils() {
     }
 
-    @Nonnull
     public static WindowHeaderPanel addHeaderPanel(Window window, Class<?> resourceClass, ResourceBundle resourceBundle) {
         URL iconUrl = resourceClass.getResource(resourceBundle.getString("header.icon"));
         Icon headerIcon = iconUrl != null ? new ImageIcon(iconUrl) : null;
         return addHeaderPanel(window, resourceBundle.getString("header.title"), resourceBundle.getString("header.description"), headerIcon);
     }
 
-    @Nonnull
     public static WindowHeaderPanel addHeaderPanel(Window window, String headerTitle, String headerDescription, @Nullable Icon headerIcon) {
         WindowHeaderPanel headerPanel = new WindowHeaderPanel();
         headerPanel.setTitle(headerTitle);
@@ -142,7 +139,6 @@ public class WindowUtils {
         });
     }
 
-    @Nonnull
     public static DialogWrapper createDialog(final Component component, Component parent, Dialog.ModalityType modalityType) {
         JDialog dialog = new JDialog(getWindow(parent), modalityType);
         initWindowByComponent(dialog, component);
@@ -194,7 +190,6 @@ public class WindowUtils {
         };
     }
 
-    @Nonnull
     public static JDialog createDialog(final Component component) {
         JDialog dialog = new JDialog();
         initWindowByComponent(dialog, component);
@@ -225,7 +220,6 @@ public class WindowUtils {
         window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
     }
 
-    @Nonnull
     public static JDialog createBasicDialog() {
         JDialog dialog = new JDialog(new javax.swing.JFrame(), true);
         dialog.setSize(640, 480);
@@ -370,7 +364,6 @@ public class WindowUtils {
      * @param controlPanel control panel
      * @return panel
      */
-    @Nonnull
     public static JPanel createDialogPanel(JPanel mainPanel, JPanel controlPanel) {
         JPanel dialogPanel;
         if (controlPanel instanceof OkCancelService) {
@@ -386,7 +379,7 @@ public class WindowUtils {
         return dialogPanel;
     }
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     private static final class DialogPanel extends JPanel implements OkCancelService {
 
         private final OkCancelService okCancelService;
@@ -396,7 +389,6 @@ public class WindowUtils {
             this.okCancelService = okCancelService;
         }
 
-        @Nonnull
         @Override
         public OkCancelListener getOkCancelListener() {
             return okCancelService.getOkCancelListener();
@@ -447,7 +439,7 @@ public class WindowUtils {
         window.setLocation(windowPosX, windowPosY);
     }
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface DialogWrapper {
 
         void show();
@@ -458,10 +450,8 @@ public class WindowUtils {
 
         void dispose();
 
-        @Nonnull
         Window getWindow();
 
-        @Nonnull
         Container getParent();
 
         void center(@Nullable Component window);

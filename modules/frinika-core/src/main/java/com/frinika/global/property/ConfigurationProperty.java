@@ -21,8 +21,8 @@ package com.frinika.global.property;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration property.
@@ -32,17 +32,17 @@ import javax.annotation.Nullable;
  */
 public class ConfigurationProperty<T> {
 
-    @Nonnull
+    @NonNull
     private static final Map<String, ConfigurationProperty<?>> PROPERTIES_BY_NAME = new HashMap<>();
 
-    @Nonnull
+    @NonNull
     private final FrinikaGlobalProperty globalProperty;
     @Nullable
     private T value;
-    @Nonnull
+    @NonNull
     private final Class<T> typeClass;
 
-    public ConfigurationProperty(@Nonnull Class<T> typeClass, @Nonnull FrinikaGlobalProperty globalProperty, @Nullable T value) {
+    public ConfigurationProperty(@NonNull Class<T> typeClass, @NonNull FrinikaGlobalProperty globalProperty, @Nullable T value) {
         this.globalProperty = globalProperty;
         this.value = value;
         this.typeClass = typeClass;
@@ -50,16 +50,16 @@ public class ConfigurationProperty<T> {
         registerProperty(globalProperty);
     }
 
-    private void registerProperty(@Nonnull FrinikaGlobalProperty globalProperty) {
+    private void registerProperty(@NonNull FrinikaGlobalProperty globalProperty) {
         PROPERTIES_BY_NAME.put(globalProperty.getName(), this);
     }
 
-    @Nonnull
+    @NonNull
     public String getName() {
         return globalProperty.getName();
     }
 
-    @Nonnull
+    @NonNull
     public Class<T> getType() {
         return typeClass;
     }
@@ -74,7 +74,7 @@ public class ConfigurationProperty<T> {
     }
 
     @Nullable
-    public static ConfigurationProperty<?> findByName(@Nonnull String name) {
+    public static ConfigurationProperty<?> findByName(@NonNull String name) {
         return PROPERTIES_BY_NAME.get(name);
     }
 }

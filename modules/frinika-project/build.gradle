@@ -29,6 +29,6 @@ dependencies {
     implementation(project(':modules:frinika-view-pianoroll'))
     implementation(project(':modules:sevenzip'))
     implementation ':js'
-    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
     testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

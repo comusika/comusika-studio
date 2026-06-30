@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -57,7 +57,7 @@ import org.exbin.framework.operation.undo.api.UndoFileHandler;
  * @version 0.1.1 2022/01/25
  * @author ExBin Project (http://exbin.org)
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class StudioApp {
 
     private static final String BINARY_PLUGIN_ID = "binary";

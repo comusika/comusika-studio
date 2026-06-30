@@ -40,7 +40,7 @@ import java.util.Properties;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -248,7 +248,7 @@ public class AboutPanel extends javax.swing.JPanel {
         WindowUtils.invokeDialog(new AboutPanel());
     }
 
-    private void whitening(@Nonnull Container container) {
+    private void whitening(@NonNull Container container) {
         boolean darkMode = WindowUtils.isDarkMode();
         Component[] components = container.getComponents();
         for (Component component : components) {
@@ -326,7 +326,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public static void initializeTextPane(@Nonnull JTextPane textPane, @Nonnull String text) {
+    public static void initializeTextPane(@NonNull JTextPane textPane, @NonNull String text) {
         textPane.setContentType("text/html");
         textPane.setEditable(false);
         textPane.addHyperlinkListener((HyperlinkEvent event) -> {

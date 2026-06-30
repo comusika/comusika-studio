@@ -48,7 +48,7 @@ Compiling
 
 Java Development Kit (JDK) version 8 or later is required to build this project.
 
-For project compiling Gradle 6.9 or later build system is used. You can either  
+For project compiling Gradle 8.1 or later build system is used. You can either  
 download and install gradle or use gradlew script which will download separate copy of gradle by itself.
 
 Build system website: http://gradle.org  

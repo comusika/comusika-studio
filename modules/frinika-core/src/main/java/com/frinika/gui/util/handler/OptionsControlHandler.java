@@ -1,28 +1,26 @@
 package com.frinika.gui.util.handler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Handler for options control panel.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface OptionsControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface OptionsControlService extends OkCancelService {
 
         void performClick(ControlActionType actionType);
 
-        @Nonnull
         OptionsControlEnablementListener createEnablementListener();
     }
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface OptionsControlEnablementListener {
 
         void actionEnabled(ControlActionType actionType, boolean enablement);

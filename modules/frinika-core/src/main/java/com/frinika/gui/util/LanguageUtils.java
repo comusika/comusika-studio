@@ -22,16 +22,15 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Static utility methods for central language support.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class LanguageUtils {
 
     private static ClassLoader languageClassLoader = null;
@@ -56,7 +55,6 @@ public class LanguageUtils {
      * @param targetClass target class
      * @return name path
      */
-    @Nonnull
     public static String getClassNamePath(Class<?> targetClass) {
         return targetClass.getCanonicalName().replace(".", "/");
     }
@@ -95,7 +93,7 @@ public class LanguageUtils {
      * Resource bundle which looks for language resources first and main
      * resources as fallback.
      */
-    @ParametersAreNonnullByDefault
+    @NullMarked
     private static class LanguageResourceBundle extends ResourceBundle {
 
         private final ResourceBundle mainResourceBundle;
@@ -117,7 +115,6 @@ public class LanguageUtils {
             return object;
         }
 
-        @Nonnull
         @Override
         public Enumeration<String> getKeys() {
             Set<String> keys = new HashSet<>();

@@ -26,7 +26,7 @@ package com.frinika.gui.util;
 
 import java.awt.event.ActionListener;
 import java.net.URL;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -54,7 +54,7 @@ public class ButtonFactory {
      * @param panel
      * @return
      */
-    public static JToggleButton makeToggleButton(@Nonnull URL imageUrl,
+    public static JToggleButton makeToggleButton(@NonNull URL imageUrl,
             String actionCommand, String toolTipText, ActionListener listener,
             ButtonGroup group, JPanel panel) {
 
@@ -91,7 +91,7 @@ public class ButtonFactory {
      * @param panel
      * @return
      */
-    public static JButton makePressButton(@Nonnull URL imageUrl, String actionCommand,
+    public static JButton makePressButton(@NonNull URL imageUrl, String actionCommand,
             String toolTipText, ActionListener listener, JComponent panel) {
 
         JButton button;
@@ -106,7 +106,7 @@ public class ButtonFactory {
         return button;
     }
 
-    public static JToggleButton makeToggleButton(@Nonnull URL imageUrl, String actionCommand,
+    public static JToggleButton makeToggleButton(@NonNull URL imageUrl, String actionCommand,
             String toolTipText, ActionListener listener, JComponent panel) {
 
         JToggleButton button;

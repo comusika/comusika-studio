@@ -19,8 +19,8 @@
  */
 package com.frinika.global.property;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Enumeration of configuration properties.
@@ -67,7 +67,7 @@ public enum FrinikaGlobalProperty {
         propertyName = name == null ? name() : name;
     }
 
-    @Nonnull
+    @NonNull
     public String getName() {
         return propertyName;
     }

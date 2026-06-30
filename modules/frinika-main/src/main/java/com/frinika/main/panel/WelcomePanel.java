@@ -31,8 +31,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.SwingUtilities;
@@ -363,7 +363,7 @@ public class WelcomePanel extends javax.swing.JPanel {
      *
      * @param args the command line arguments
      */
-    public static void main(@Nonnull String args[]) {
+    public static void main(@NonNull String args[]) {
         WindowUtils.invokeDialog(new WelcomePanel());
     }
 
@@ -389,7 +389,7 @@ public class WelcomePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane samplListScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    private void switchLookAndFeel(@Nonnull SupportedLaf selectedLaf) {
+    private void switchLookAndFeel(@NonNull SupportedLaf selectedLaf) {
         WindowUtils.switchLookAndFeel(selectedLaf);
         animatedLogoPanel.switchLookAndFeel();
         SwingUtilities.updateComponentTreeUI(this);
@@ -404,7 +404,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         invalidate();
     }
 
-    public void setActionListener(@Nonnull ActionListener actionListener) {
+    public void setActionListener(@NonNull ActionListener actionListener) {
         this.actionListener = actionListener;
     }
 
@@ -412,14 +412,14 @@ public class WelcomePanel extends javax.swing.JPanel {
         actionListener.saveDefaultTheme(defaultLafToggleButton.isSelected() ? null : SupportedLaf.DARCULA.name());
     }
 
-    public void setRecentProjects(@Nonnull List<ProjectFileRecord> projectRecord) {
+    public void setRecentProjects(@NonNull List<ProjectFileRecord> projectRecord) {
         recentListModel.clear();
         projectRecord.forEach((projectFileRecord) -> {
             recentListModel.addElement(projectFileRecord);
         });
     }
 
-    public void setExampleProjects(@Nonnull List<ProjectFileRecord> projectRecord) {
+    public void setExampleProjects(@NonNull List<ProjectFileRecord> projectRecord) {
         exampleListModel.clear();
         projectRecord.forEach((projectFileRecord) -> {
             exampleListModel.addElement(projectFileRecord);
@@ -431,7 +431,7 @@ public class WelcomePanel extends javax.swing.JPanel {
         darculaLafToggleButton.setSelected(themeLaf == SupportedLaf.DARCULA);
     }
 
-    @Nonnull
+    @NonNull
     public WindowListener getWindowListener() {
         return animatedLogoPanel.getWindowListener();
     }
@@ -446,9 +446,9 @@ public class WelcomePanel extends javax.swing.JPanel {
 
         void closeDialog();
 
-        void openRecentProject(@Nonnull Frame parentFrame, @Nonnull ProjectFileRecord projectFileRecord);
+        void openRecentProject(@NonNull Frame parentFrame, @NonNull ProjectFileRecord projectFileRecord);
 
-        void openExampleProject(@Nonnull Frame parentFrame, @Nonnull ProjectFileRecord projectFileRecord);
+        void openExampleProject(@NonNull Frame parentFrame, @NonNull ProjectFileRecord projectFileRecord);
 
         void saveDefaultTheme(@Nullable String theme);
     }

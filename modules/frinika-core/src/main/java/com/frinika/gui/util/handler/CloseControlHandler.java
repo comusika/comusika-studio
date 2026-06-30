@@ -1,14 +1,13 @@
 package com.frinika.gui.util.handler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Handler for close control panel.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface CloseControlHandler {
 
     void controlActionPerformed();
@@ -17,7 +16,6 @@ public interface CloseControlHandler {
 
         void performCloseClick();
 
-        @Nonnull
         CloseControlEnablementListener createEnablementListener();
     }
 

@@ -22,8 +22,8 @@ package com.frinika.global.property;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration property for recent project.
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  */
 public class RecentProjectsProperty extends ConfigurationProperty<List<RecentProjectRecord>> implements CustomGlobalProperty {
 
-    public RecentProjectsProperty(@Nonnull FrinikaGlobalProperty globalProperty, @Nullable List<RecentProjectRecord> value) {
+    public RecentProjectsProperty(@NonNull FrinikaGlobalProperty globalProperty, @Nullable List<RecentProjectRecord> value) {
         super(generify(List.class), globalProperty, value);
     }
 
@@ -43,7 +43,7 @@ public class RecentProjectsProperty extends ConfigurationProperty<List<RecentPro
     }
 
     @Override
-    public void load(@Nonnull Properties properties) {
+    public void load(@NonNull Properties properties) {
         List<RecentProjectRecord> value = new ArrayList<>();
         String name = getName();
         int i = 1;
@@ -66,7 +66,7 @@ public class RecentProjectsProperty extends ConfigurationProperty<List<RecentPro
     }
 
     @Override
-    public void save(@Nonnull Properties properties) {
+    public void save(@NonNull Properties properties) {
         String name = getName();
         int i = 1;
         List<RecentProjectRecord> value = getValue();

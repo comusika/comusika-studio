@@ -37,7 +37,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.swing.JDialog;
 
 /**
@@ -47,9 +47,9 @@ import javax.swing.JDialog;
  */
 public interface ProgressOperation {
 
-    void run(@Nonnull ProgressPanel panel);
+    void run(@NonNull ProgressPanel panel);
 
-    public static void openProjectFile(@Nonnull Frame parentFrame, @Nonnull FrinikaFrame projectFrame, @Nonnull File projectFile) throws Exception {
+    public static void openProjectFile(@NonNull Frame parentFrame, @NonNull FrinikaFrame projectFrame, @NonNull File projectFile) throws Exception {
         showProgressDialog(parentFrame, (ProgressPanel progressPanel) -> {
             ProgressObserver progressObserver = progressPanel.getProgressObserver();
             try {
@@ -64,7 +64,7 @@ public interface ProgressOperation {
         });
     }
 
-    public static void downloadSampleFile(@Nonnull Frame parentFrame, @Nonnull FrinikaFrame frame, @Nonnull File targetFile, @Nonnull String downloadUrlString) {
+    public static void downloadSampleFile(@NonNull Frame parentFrame, @NonNull FrinikaFrame frame, @NonNull File targetFile, @NonNull String downloadUrlString) {
         try {
             URL downloadUrl = new URL(downloadUrlString);
             HttpURLConnection connection = (HttpURLConnection) downloadUrl.openConnection();
@@ -111,7 +111,7 @@ public interface ProgressOperation {
         }
     }
 
-    public static void showProgressDialog(@Nonnull Frame parentFrame, @Nonnull ProgressOperation operation) {
+    public static void showProgressDialog(@NonNull Frame parentFrame, @NonNull ProgressOperation operation) {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] allDevices = env.getScreenDevices();
 

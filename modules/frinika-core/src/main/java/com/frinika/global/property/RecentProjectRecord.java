@@ -19,15 +19,14 @@
  */
 package com.frinika.global.property;
 
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Recent filename property value.
  *
  * @author hajdam
  */
-@Immutable
+// @Immutable
 public class RecentProjectRecord {
 
     @Nullable

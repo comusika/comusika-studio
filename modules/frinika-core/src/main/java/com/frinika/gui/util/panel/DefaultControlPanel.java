@@ -4,15 +4,14 @@ import com.frinika.gui.util.LanguageUtils;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.gui.util.handler.DefaultControlHandler;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Basic default control panel.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class DefaultControlPanel extends javax.swing.JPanel implements DefaultControlHandler.DefaultControlService {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -114,13 +113,11 @@ public class DefaultControlPanel extends javax.swing.JPanel implements DefaultCo
         WindowUtils.doButtonClick(actionType == DefaultControlHandler.ControlActionType.OK ? okButton : cancelButton);
     }
 
-    @Nonnull
     @Override
     public OkCancelListener getOkCancelListener() {
         return okCancelListener;
     }
 
-    @Nonnull
     @Override
     public DefaultControlHandler.DefaultControlEnablementListener createEnablementListener() {
         return (DefaultControlHandler.ControlActionType actionType, boolean enablement) -> {

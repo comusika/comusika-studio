@@ -2,7 +2,7 @@ buildscript {
     repositories {
         mavenLocal()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url = "https://plugins.gradle.org/m2/"
         }
     }
     if (!gradle.startParameter.taskNames.contains("offline")) {
@@ -17,15 +17,15 @@ plugins {
     id 'java'
     id 'distribution'
     id 'maven-publish'
-    id 'edu.sc.seis.launch4j' version '2.5.4'
+    id 'edu.sc.seis.launch4j' version '3.0.7'
 }
 
 apply from: '../apps.gradle'
 
-import org.gradle.util.VersionNumber
-
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
 version = '0.1.1-SNAPSHOT'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -38,13 +38,6 @@ tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     doFirst {
         options.fork = true
-        if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-            if (VersionNumber.parse(gradle.gradleVersion) >= VersionNumber.parse('5.0')) {
-                options.bootstrapClasspath = files("${System.properties['java.home']}/lib/rt.jar", "${System.properties['java.home']}/jre/lib/jsse.jar")
-            } else {
-                options.bootClasspath = "${System.properties['java.home']}/lib/rt.jar$File.pathSeparator${System.properties['java.home']}/jre/lib/jsse.jar"
-            }
-        }
     }
 }
 
@@ -54,7 +47,7 @@ if (!gradle.startParameter.taskNames.any {it.endsWith("test")}) {
 }
 
 def configureExec(task) {
-    task.main = mainClass
+    task.mainClass = mainClass
     task.classpath = sourceSets.main.runtimeClasspath
     if (hasProperty('appArgs')) {
         task.args appArgs
@@ -101,7 +94,7 @@ dependencies {
     implementation 'com.apple:AppleJavaExtensions:1.4'
     implementation 'com.jgoodies:looks:2.1.4'
     implementation 'commons-cli:commons-cli:1.2'
-    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
 
     runtimeOnly ':gervill'
     runtimeOnly 'org.codehaus.groovy:groovy-all:2.0.1'
@@ -134,6 +127,6 @@ launch4j {
     outfile = "comusika-studio.exe"
     icon = "../../../../images/frinika.ico"
     mainClassName = mainClass
-    jar = "../../build/libs/studio-app-"+"0.1.1-SNAPSHOT"+".jar"
+//    jar = "../../build/libs/studio-app-"+"0.1.1-SNAPSHOT"+".jar"
     copyright = "Comusika Studio"
 }

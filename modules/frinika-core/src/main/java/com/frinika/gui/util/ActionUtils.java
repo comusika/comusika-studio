@@ -6,9 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.ButtonGroup;
@@ -22,7 +21,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class ActionUtils {
 
     public static final String DIALOG_MENUITEM_EXT = "...";
@@ -109,12 +108,10 @@ public class ActionUtils {
         textActionMap.get(actionName).actionPerformed(actionEvent);
     }
 
-    @Nonnull
     public static JMenuItem actionToMenuItem(Action action) {
         return actionToMenuItem(action, null);
     }
 
-    @Nonnull
     public static JMenuItem actionToMenuItem(Action action, @Nullable Map<String, ButtonGroup> buttonGroups) {
         JMenuItem menuItem;
         ActionUtils.ActionType actionType = (ActionUtils.ActionType) action.getValue(ActionUtils.ACTION_TYPE);

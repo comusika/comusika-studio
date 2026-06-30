@@ -1,28 +1,26 @@
 package com.frinika.gui.util.handler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Handler for multi-step control panel.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface MultiStepControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface MultiStepControlService extends OkCancelService {
 
         void performClick(ControlActionType actionType);
 
-        @Nonnull
         MultiStepControlEnablementListener createEnablementListener();
     }
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface MultiStepControlEnablementListener {
 
         void actionEnabled(ControlActionType actionType, boolean enablement);

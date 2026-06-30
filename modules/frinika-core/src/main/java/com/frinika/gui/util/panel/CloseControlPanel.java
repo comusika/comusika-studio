@@ -4,15 +4,14 @@ import com.frinika.gui.util.LanguageUtils;
 import com.frinika.gui.util.OkCancelListener;
 import com.frinika.gui.util.WindowUtils;
 import com.frinika.gui.util.handler.CloseControlHandler;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Basic close control panel.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public class CloseControlPanel extends javax.swing.JPanel implements CloseControlHandler.CloseControlService {
 
     private final java.util.ResourceBundle resourceBundle;
@@ -95,13 +94,11 @@ public class CloseControlPanel extends javax.swing.JPanel implements CloseContro
         WindowUtils.doButtonClick(closeButton);
     }
 
-    @Nonnull
     @Override
     public OkCancelListener getOkCancelListener() {
         return okCancelListener;
     }
 
-    @Nonnull
     @Override
     public CloseControlHandler.CloseControlEnablementListener createEnablementListener() {
         return closeButton::setEnabled;

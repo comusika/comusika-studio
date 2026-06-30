@@ -1,28 +1,26 @@
 package com.frinika.gui.util.handler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Handler for control panel with support for remove action.
  *
  * @author hajdam
  */
-@ParametersAreNonnullByDefault
+@NullMarked
 public interface RemovalControlHandler {
 
     void controlActionPerformed(ControlActionType actionType);
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface RemovalControlService extends OkCancelService {
 
         void performClick(ControlActionType actionType);
 
-        @Nonnull
         RemovalControlEnablementListener createEnablementListener();
     }
 
-    @ParametersAreNonnullByDefault
+    @NullMarked
     public interface RemovalControlEnablementListener {
 
         void actionEnabled(ControlActionType actionType, boolean enablement);

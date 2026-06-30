@@ -45,8 +45,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiSystem;
@@ -238,7 +238,7 @@ public class FrinikaConfig {
         System.exit(0);
     }
 
-    public static void load(@Nonnull InputStream inputStream) throws IOException {
+    public static void load(@NonNull InputStream inputStream) throws IOException {
         properties = new Properties();
         properties.loadFromXML(inputStream);
         loadFields(properties);
@@ -248,7 +248,7 @@ public class FrinikaConfig {
         }
     }
 
-    public static void save(@Nonnull OutputStream outputStream) throws IOException {
+    public static void save(@NonNull OutputStream outputStream) throws IOException {
         Properties savedProperties = new Properties();
         // copy all dynamic properties into
         properties.keySet().forEach((key) -> {
@@ -259,7 +259,7 @@ public class FrinikaConfig {
         savedProperties.storeToXML(outputStream, "Frinika configuration");
     }
 
-    public static void loadFields(@Nonnull Properties properties) {
+    public static void loadFields(@NonNull Properties properties) {
         for (FrinikaGlobalProperty globalProperty : FrinikaGlobalProperty.values()) {
             ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
             if (property == null) {
@@ -282,7 +282,7 @@ public class FrinikaConfig {
         }
     }
 
-    public static void saveFields(@Nonnull Properties properties) {
+    public static void saveFields(@NonNull Properties properties) {
         for (FrinikaGlobalProperty globalProperty : FrinikaGlobalProperty.values()) {
             ConfigurationProperty<Object> property = (ConfigurationProperty<Object>) ConfigurationProperty.findByName(globalProperty.getName());
             if (property == null) {
@@ -304,11 +304,11 @@ public class FrinikaConfig {
         }
     }
 
-    public static void addConfigListener(@Nonnull ConfigListener listener) {
+    public static void addConfigListener(@NonNull ConfigListener listener) {
         listeners.add(listener);
     }
 
-    public static void removeConfigListener(@Nonnull ConfigListener listener) {
+    public static void removeConfigListener(@NonNull ConfigListener listener) {
         listeners.remove(listener);
     }
 
@@ -325,7 +325,7 @@ public class FrinikaConfig {
         });
     }
 
-    public static <T> void setGlobalPropertyValue(@Nonnull ConfigurationProperty<T> property, T value) {
+    public static <T> void setGlobalPropertyValue(@NonNull ConfigurationProperty<T> property, T value) {
         Object oldValue = property.getValue();
 
         System.out.println("config: " + property.getName() + "=" + value);
@@ -354,7 +354,7 @@ public class FrinikaConfig {
     }
 
     @Nullable
-    public static Object stringToValue(@Nullable String value, @Nonnull Class type) {
+    public static Object stringToValue(@Nullable String value, @NonNull Class type) {
         if (value == null) {
             return null;
         }
@@ -379,7 +379,7 @@ public class FrinikaConfig {
     }
 
     @Nullable
-    public static String valueToString(@Nullable Object value, @Nonnull Class type) {
+    public static String valueToString(@Nullable Object value, @NonNull Class type) {
         if (value == null) {
             return null;
         }
@@ -402,8 +402,8 @@ public class FrinikaConfig {
         }
     }
 
-    @Nonnull
-    public static Font stringToFont(@Nonnull String fontIdentifier) {
+    @NonNull
+    public static Font stringToFont(@NonNull String fontIdentifier) {
         StringTokenizer st = new StringTokenizer(fontIdentifier, ",", false);
         String fontName = "Helvetica";
         String fontSizeStr = "12";
@@ -434,8 +434,8 @@ public class FrinikaConfig {
         return new Font(fontName, fontStyle, fontSize);
     }
 
-    @Nonnull
-    public static String fontToString(@Nonnull Font font) {
+    @NonNull
+    public static String fontToString(@NonNull Font font) {
         int fontStyle = font.getStyle();
         String fontStyleStr = "";
         if ((fontStyle & Font.BOLD) != 0) {
@@ -450,8 +450,8 @@ public class FrinikaConfig {
         return font.getName() + "," + font.getSize() + "," + fontStyleStr;
     }
 
-    @Nonnull
-    public static String fileToString(@Nonnull File file) {
+    @NonNull
+    public static String fileToString(@NonNull File file) {
         String fileName;
         try {
             fileName = file.getCanonicalPath();
@@ -499,7 +499,7 @@ public class FrinikaConfig {
         setConfigLocation(new File(path));
     }
 
-    public static void setConfigLocation(@Nonnull File file) {
+    public static void setConfigLocation(@NonNull File file) {
         if (file.exists() && file.isDirectory()) {
             file = new File(file, CONFIG_FILE_NAME);
         } else {
@@ -523,7 +523,7 @@ public class FrinikaConfig {
         }
     }
 
-    @Nonnull
+    @NonNull
     public static Collection<String> getAvailableMidiInDevices() {
         ArrayList<String> availableMidiDevices = new ArrayList<>();
         Info infos[] = MidiSystem.getMidiDeviceInfo();
@@ -550,7 +550,7 @@ public class FrinikaConfig {
         return list;
     }
 
-    public static void setLastProject(@Nonnull String projectPath, @Nonnull String projectName) {
+    public static void setLastProject(@NonNull String projectPath, @NonNull String projectName) {
         String lastProjectPath = FrinikaGlobalProperties.LAST_PROJECT_FILENAME.getValue();
         String lastProjectName = FrinikaGlobalProperties.LAST_PROJECT_NAME.getValue();
         String lastProjectType = FrinikaGlobalProperties.LAST_PROJECT_TYPE.getValue();
@@ -583,16 +583,16 @@ public class FrinikaConfig {
         FrinikaGlobalProperties.LAST_PROJECT_NAME.setValue(projectName);
     }
 
-    public static void setLastProject(@Nonnull String fileName) {
+    public static void setLastProject(@NonNull String fileName) {
         File projectFile = new File(fileName);
         setLastProject(fileName, projectFile.getName());
     }
 
-    public static void setLastProject(@Nonnull File file) {
+    public static void setLastProject(@NonNull File file) {
         setLastProject(file.getAbsolutePath(), file.getName());
     }
 
-    @Nonnull
+    @NonNull
     public static File getExampleFilesPath() {
         return new File(defaultUserFrinikaDir, EXAMPLES_DIR);
     }

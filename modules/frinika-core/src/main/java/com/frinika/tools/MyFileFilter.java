@@ -24,7 +24,7 @@
 package com.frinika.tools;
 
 import java.io.File;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -41,7 +41,7 @@ public class MyFileFilter extends FileFilter {
     }
 
     @Override
-    public boolean accept(@Nonnull File file) {
+    public boolean accept(@NonNull File file) {
         return file.getName().toLowerCase().indexOf(extension) > 0 || file.isDirectory();
     }
 

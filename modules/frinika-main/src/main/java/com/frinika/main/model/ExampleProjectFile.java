@@ -19,13 +19,14 @@
  */
 package com.frinika.main.model;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Enumeration of example projects.
  *
  * @author hajdam
  */
+@NullMarked
 public enum ExampleProjectFile {
     PASGRAVE("C'est pas grave", "pasgrave.frinika"),
     FRINIKATION("Frinikation", "frinikation.frinika"),
@@ -35,22 +36,18 @@ public enum ExampleProjectFile {
     TEA_PARTY("Tea Party", "peter_salomonsen-teaparty-0_4_0_compressed.frinika"),
     TRACKER_SLAVE("Tracker Slave", "PeterSalomonsen_TrackerSlave.frinika.bz2");
 
-    @Nonnull
     private final String name;
-    @Nonnull
     private final String fileName;
 
-    private ExampleProjectFile(@Nonnull String name, @Nonnull String fileName) {
+    private ExampleProjectFile(String name, String fileName) {
         this.name = name;
         this.fileName = fileName;
     }
 
-    @Nonnull
     public String getName() {
         return name;
     }
 
-    @Nonnull
     public String getFileName() {
         return fileName;
     }

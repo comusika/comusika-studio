@@ -150,8 +150,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiSystem;
@@ -409,7 +409,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
         setIconImage(FrinikaFrame.getIconResource("frinika.png").getImage());
     }
 
-    public void setProject(@Nonnull final FrinikaProjectContainer project) throws Exception {
+    public void setProject(@NonNull final FrinikaProjectContainer project) throws Exception {
         this.project = project;
         initProject();
     }
@@ -919,7 +919,7 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
     }
 
     @Nullable
-    public static ImageIcon getIconResource(@Nonnull String name) {
+    public static ImageIcon getIconResource(@NonNull String name) {
         try {
             ImageIcon icon = new ImageIcon(FrinikaFrame.class.getResource("/com/frinika/resources/icons/" + name));
             return icon;
@@ -968,12 +968,12 @@ public class FrinikaFrame extends JFrame implements ProjectFrame {
 
     private Map<String, View> views = new HashMap<>();
 
-    @Nonnull
-    private View getView(@Nonnull String viewId) {
+    @NonNull
+    private View getView(@NonNull String viewId) {
         return (View) views.get(viewId);
     }
 
-    private View createView(@Nonnull String viewId, String text, JComponent content,
+    private View createView(@NonNull String viewId, String text, JComponent content,
             Icon icon) {
 
         final View view = new View(viewId, text);

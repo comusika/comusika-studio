@@ -33,7 +33,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 import javax.swing.ImageIcon;
 
 /**
@@ -125,7 +125,7 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
     }
 
     @Override
-    protected void paintComponent(@Nonnull Graphics g) {
+    protected void paintComponent(@NonNull Graphics g) {
         if (animationBuffer != null) {
             g.drawImage(animationBuffer, 0, 0, this);
         }
@@ -200,7 +200,7 @@ public class AnimatedLogoPanel extends javax.swing.JPanel {
         invalidate();
     }
 
-    @Nonnull
+    @NonNull
     public WindowListener getWindowListener() {
         return new WindowAdapter() {
             @Override

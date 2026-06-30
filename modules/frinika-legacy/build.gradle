@@ -19,6 +19,6 @@ dependencies {
     implementation(project(':modules:frinika-core'))
     implementation(project(':modules:frinika-device-synthrack'))
     implementation(project(':modules:frinika-sequencer'))
-    compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    compileOnly group: 'org.jspecify', name: 'jspecify', version: '1.0.0'
     testImplementation group : 'junit', name: 'junit', version: '4.10'
 }

@@ -23,7 +23,7 @@
  */
 package com.frinika.voiceserver;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An audio context is the glue between a Frinika Voice server and the audio
